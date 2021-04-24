@@ -1,0 +1,32 @@
+@baseUrl = https://localhost:44309
+
+
+# @name get
+GET {{baseUrl}}/api/applicationsettings
+Accept: application/json
+
+###
+
+# @name update
+PUT {{baseUrl}}/api/applicationsettings
+Content-Type: application/json
+
+{
+  "timestamp": "AAAAAAABAdM=",
+  "settings": {
+    "setting1": true,
+    "setting2": "test",
+    "setting3": "2021-01-01T00:00:00",
+    "setting4": "986CE6EE-90C9-406D-9161-A329D3F65D91",
+    "setting5": 10.4
+  }
+}
+###
+
+# @name auditlog
+GET {{baseUrl}}/api/applicationsettings/auditlog
+  ?pageIndex=0
+  &pageSize=10
+Accept: application/json
+
+###

@@ -1,0 +1,57 @@
+@baseUrl = https://localhost:44309
+@createdCustomerLocation = {{create.response.headers.location}}
+#@createdCustomerId = {{create.response.body.$.id}}
+
+# @name search
+GET {{baseUrl}}/api/customers
+  ?orderBy=0 
+  &orderByDescending=true
+  &pageIndex=0
+  &pageSize=10
+Accept: application/json
+
+###
+
+# @name create
+POST {{baseUrl}}/api/customers
+Content-Type: application/json
+
+{
+  "name": "Test"
+}
+
+###
+
+# @name getById
+GET {{createdCustomerLocation}}
+Accept: application/json
+
+###
+
+# @name update
+PUT {{createdCustomerLocation}}
+Content-Type: application/json
+
+{
+  "timestamp": "AAAAAAAAhNY=",
+  "name": "Test3"
+}
+
+###
+
+# @name auditlog
+GET {{createdCustomerLocation}}/auditlog
+  ?pageIndex=0
+  &pageSize=10
+Accept: application/json
+
+###
+
+# @name delete
+DELETE {{createdCustomerLocation}}
+Content-Type: application/json
+
+{
+}
+
+###

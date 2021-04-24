@@ -1,0 +1,84 @@
+@baseUrl = https://localhost:44309
+@createdInvoiceLocation = {{create.response.headers.location}}
+#@createdInvoiceId = {{create.response.body.$.id}}
+
+# @name search
+GET {{baseUrl}}/api/invoices
+  ?orderBy=0 
+  &orderByDescending=true
+  &pageIndex=0
+  &pageSize=10
+Accept: application/json
+
+###
+
+# @name create
+POST {{baseUrl}}/api/invoices
+Content-Type: application/json
+
+{
+  "customerId": "2d9d9aae-6c8c-447f-9861-08d9042c6bca",
+  "invoiceDate": "2021-04-22T14:03:20.377Z",
+  "paymentTerm": 30,
+  "orderReference": "test",
+  "invoiceLines": [
+    {
+      "quantity": 1,
+      "description": "Test",
+      "sellingPrice": 10
+    }
+  ]
+}
+
+###
+
+# @name getById
+GET {{createdInvoiceLocation}}
+Accept: application/json
+
+###
+
+# @name update
+PUT {{createdInvoiceLocation}}
+Content-Type: application/json
+
+{
+  "timestamp": "AAAAAAAA4pQ=",
+  "customerId": "2d9d9aae-6c8c-447f-9861-08d9042c6bca",
+  "invoiceDate": "2021-04-22T14:03:20.377Z",
+  "paymentTerm": 30,
+  "orderReference": "test 2",
+  "invoiceLines": [
+    {
+      "id": "598ce007-7789-4417-01ac-08d90598c564",
+      "quantity": 1,
+      "description": "Test updated2",
+      "sellingPrice": 10
+    },
+    {
+      "id": "66c8ca6c-d1e6-4b02-01ad-08d90598c564",
+      "quantity": 1,
+      "description": "Line 2",
+      "sellingPrice": 10
+    }
+  ]
+}
+
+###
+
+# @name auditlog
+GET {{createdInvoiceLocation}}/auditlog
+  ?pageIndex=0
+  &pageSize=10
+Accept: application/json
+
+###
+
+# @name delete
+DELETE {{createdInvoiceLocation}}
+Content-Type: application/json
+
+{
+}
+
+###

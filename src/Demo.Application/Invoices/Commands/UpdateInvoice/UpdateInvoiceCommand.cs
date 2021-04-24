@@ -1,0 +1,23 @@
+using Demo.Application.Invoices.Commands.UpdateInvoice.Dtos;
+using MediatR;
+using System;
+using System.Collections.Generic;
+
+namespace Demo.Application.Invoices.Commands.UpdateInvoice
+{
+    public class UpdateInvoiceCommand : IRequest<Unit>
+    {
+        internal Guid Id { get; set; }
+        public byte[] Timestamp { get; set; }
+        public Guid CustomerId { get; set; }
+        public DateTime InvoiceDate { get; set; }
+        public int PaymentTerm { get; set; }
+        public string OrderReference { get; set; }
+        public List<UpdateInvoiceCommandInvoiceLine> InvoiceLines { get; set; }
+
+        public void SetInvoiceId(Guid id)
+        {
+            Id = id;
+        }
+    }
+}

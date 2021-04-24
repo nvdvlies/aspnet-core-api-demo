@@ -1,0 +1,26 @@
+﻿using Demo.Domain.Shared.BusinessComponent;
+using System;
+using System.Collections.Generic;
+
+namespace Demo.Domain.Shared.Exceptions
+{
+    public class DomainValidationException : Exception
+    {
+        public IEnumerable<ValidationMessage> ValidationMessages { get; private set; }
+
+        public DomainValidationException()
+        { }
+
+        public DomainValidationException(IEnumerable<ValidationMessage> validationMessages)
+            : base(validationMessages.ToString())
+        {
+            ValidationMessages = validationMessages;
+        }
+
+        public DomainValidationException(IEnumerable<ValidationMessage> validationMessages, Exception innerException)
+            : base(validationMessages.ToString(), innerException)
+        {
+            ValidationMessages = validationMessages;
+        }
+    }
+}

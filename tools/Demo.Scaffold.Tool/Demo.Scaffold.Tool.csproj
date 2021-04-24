@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net5.0</TargetFramework>
+    <LangVersion>9.0</LangVersion>
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>dotnet-demo-scaffold</ToolCommandName>
+    <PackageOutputPath>./nupkg</PackageOutputPath>
+    <AssemblyName>Demo.Scaffold.Tool</AssemblyName>
+    <RootNamespace>Demo.Scaffold.Tool</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="McMaster.Extensions.CommandLineUtils" Version="3.1.0" />
+    <PackageReference Include="McMaster.Extensions.Hosting.CommandLine" Version="3.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>
