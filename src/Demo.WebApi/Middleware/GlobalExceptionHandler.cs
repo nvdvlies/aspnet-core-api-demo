@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Demo.Common.Interfaces;
 using Demo.Domain.Shared.Exceptions;
 using Demo.WebApi.Extensions;
 using FluentValidation;
@@ -55,22 +56,25 @@ namespace Demo.WebApi.Middleware
                         logger.LogInformation(exception, "A domain entity not found exception ocurred.");
 
                         statusCode = HttpStatusCode.NotFound;
-                        //problemDetails = domainEntityNotFoundException.ToProblemDetails(statusCode, includeDetails: env.IsDevelopment());
+                        problemDetails = domainEntityNotFoundException.ToProblemDetails(statusCode, includeDetails: env.IsDevelopment());
                         break;
                     case ValidationException validationException:
                         logger.LogInformation(exception, "A validation exception ocurred.");
 
-                        //problemDetails = validationException.ToValidationProblemDetails(statusCode, includeDetails: env.IsDevelopment());
+                        statusCode = HttpStatusCode.BadRequest;
+                        problemDetails = validationException.ToValidationProblemDetails(statusCode, includeDetails: env.IsDevelopment());
                         break;
                     case DbUpdateConcurrencyException dbUpdateConcurrencyException:
                         logger.LogInformation(exception, "A database update concurrency exception ocurred.");
 
                         statusCode = HttpStatusCode.BadRequest;
-                        //problemDetails = exception.ToProblemDetails(statusCode, includeDetails: env.IsDevelopment());
+                        problemDetails = dbUpdateConcurrencyException.ToProblemDetails(statusCode, includeDetails: env.IsDevelopment());
                         break;
                     default:
                         logger.LogError(exception, "An unhandled exception occured.");
-                        problemDetails.Extensions["traceId"] = Guid.NewGuid();
+
+                        var correlationIdProvider = context.RequestServices.GetRequiredService<ICorrelationIdProvider>();
+                        problemDetails.Extensions["traceId"] = correlationIdProvider.Id;
                         break;
                 }
 
@@ -92,126 +96,4 @@ namespace Demo.WebApi.Middleware
             await context.Response.WriteAsync(json);
         }
     }
-
-    //public class ExceptionHandlerMiddleware
-    //{
-    //    private readonly RequestDelegate _next;
-
-    //    public ExceptionHandlerMiddleware(RequestDelegate next)
-    //    {
-    //        _next = next;
-    //    }
-
-    //    public async Task InvokeAsync(HttpContext context, ILogger<ExceptionHandlerMiddleware> logger)
-    //    {
-    //        try
-    //        {
-    //            await _next(context);
-    //        }
-    //        catch (Exception exception)
-    //        {
-    //            if (exception is DomainException domainException)
-    //            {
-    //                logger.LogInformation(exception, "A domain exception ocurred.");
-
-    //                var dto = new ValidationExceptionDto
-    //                {
-    //                    Errors = new List<ValidationFailureDto> {
-    //                            new ValidationFailureDto {
-    //                                ErrorMessage = domainException.Message
-    //                            }
-    //                        }
-    //                };
-
-    //                await WriteResponseAsync(context, (int)HttpStatusCode.BadRequest, dto);
-    //            }
-    //            else if (exception is DomainValidationException domainValidationException)
-    //            {
-    //                logger.LogInformation(exception, "A domain validation exception ocurred.");
-
-    //                var dto = new ValidationExceptionDto
-    //                {
-    //                    Errors = domainValidationException
-    //                        .ValidationMessages
-    //                        .Select(x => new ValidationFailureDto
-    //                        {
-    //                            ErrorMessage = x.Message
-    //                        })
-    //                        .ToList()
-    //                };
-
-    //                await WriteResponseAsync(context, (int)HttpStatusCode.BadRequest, dto);
-    //            }
-    //            else if (exception is DomainEntityNotFoundException domainEntityNotFoundException)
-    //            {
-    //                logger.LogInformation(exception, "A domain entity not found exception ocurred.");
-
-    //                await WriteResponseAsync(context, (int)HttpStatusCode.NotFound, null);
-    //            }
-    //            else if (exception is ValidationException validationException)
-    //            {
-    //                logger.LogInformation(exception, "A validation exception ocurred.");
-
-    //                var dto = new ValidationExceptionDto
-    //                {
-    //                    Errors = validationException
-    //                        .Errors
-    //                        .Select(x => new ValidationFailureDto
-    //                        {
-    //                            PropertyName = x.PropertyName,
-    //                            ErrorMessage = x.ErrorMessage
-    //                        })
-    //                        .ToList()
-    //                };
-
-    //                await WriteResponseAsync(context, (int)HttpStatusCode.BadRequest, dto);
-    //            } 
-    //            else if (exception is DbUpdateConcurrencyException concurrencyException)
-    //            {
-    //                logger.LogInformation(exception, "A concurrency exception ocurred.");
-
-    //                var dto = new ValidationExceptionDto
-    //                {
-    //                    Errors = new List<ValidationFailureDto> {
-    //                            new ValidationFailureDto {
-    //                                ErrorMessage = "Het record is zojuist door een ander aangepast. Opslaan is daardoor niet mogelijk. Herlaad het scherm om de laatste gegevens op te halen. Uw wijzigingen gaan daarmee verloren."
-    //                            }
-    //                        }
-    //                };
-
-    //                await WriteResponseAsync(context, (int)HttpStatusCode.BadRequest, dto);
-    //            }
-    //            else
-    //            {
-    //                logger.LogError(exception, "An unhandled exception occured.");
-
-    //                var operationId = Guid.NewGuid().ToString(); // context.Features.Get<RequestTelemetry>().Context.Operation.Id;
-
-    //                var dto = new UnhandledExceptionDto
-    //                {
-    //                    OperationId = operationId,
-    //                    Message = $"Sorry! Er ging iets mis. Probeer het later nogmaals. Blijft het probleem zich voordoen? Neem dan contact op met onze klantenservice. Incidentcode: {operationId}"
-    //                };
-
-    //                await WriteResponseAsync(context, (int)HttpStatusCode.InternalServerError, dto);
-    //            }
-    //        }
-    //    }
-
-    //    private async Task WriteResponseAsync(HttpContext context, int statusCode, object dto)
-    //    {
-    //        context.Response.StatusCode = statusCode;
-    //        context.Response.ContentType = "application/json";
-    //        if (dto != null)
-    //        {
-    //            var options = new JsonSerializerOptions
-    //            {
-    //                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-    //            };
-    //            var json = JsonSerializer.Serialize(dto, options);
-    //            await context.Response.WriteAsync(json);
-    //        }
-    //    }
-
-    //}
 }

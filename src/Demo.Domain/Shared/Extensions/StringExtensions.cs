@@ -6,12 +6,13 @@ namespace Demo.Domain.Shared.Extensions
 {
     internal static class StringExtensions
     {
-        internal static IEnumerable<ValidationMessage> AsEnumerableOfValidationMessages(this string errorMessage)
+        internal static IEnumerable<ValidationMessage> AsEnumerableOfValidationMessages(this string errorMessage, string propertyName = null)
         {
             var validationMessages = new[]
             {
                 new ValidationMessage
                 {
+                    PropertyName = propertyName,
                     Message = errorMessage
                 }
             };

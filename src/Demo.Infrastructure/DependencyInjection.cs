@@ -21,6 +21,7 @@ namespace Demo.Infrastructure
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddTransient<IDateTime, DateTimeService>();
+            services.AddTransient<ICorrelationIdProvider, CorrelationIdProvider>();
             services.AddTransient(typeof(IJsonService<>), typeof(JsonService<>));
             services.AddTransient<IApplicationSettingsProvider, ApplicationSettingsProvider>();
             services.AddScoped<IPublishDomainEventAfterCommitQueue, PublishDomainEventAfterCommitQueue>();

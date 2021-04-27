@@ -1,38 +1,80 @@
 ﻿using Demo.Domain.Shared.Exceptions;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Net;
 
 namespace Demo.WebApi.Extensions
 {
     public static class ExceptionExtensions
     {
-        public static ProblemDetails ToProblemDetails(this DomainException domainException, HttpStatusCode statusCode, bool includeDetails = false)
+        public static ProblemDetails ToProblemDetails(this DomainException exception, HttpStatusCode statusCode, bool includeDetails = false)
         {
-            return new ValidationProblemDetails
+            return new ProblemDetails
             {
                 Status = (int)statusCode,
-                Title = domainException.Message,
-                Detail = includeDetails ? domainException.ToString() : null,
-                Type = nameof(DomainValidationException)
+                Title = exception.Message,
+                Detail = includeDetails ? exception.ToString() : null,
+                Type = nameof(DomainException)
             };
         }
 
-        public static ValidationProblemDetails ToValidationProblemDetails(this DomainValidationException domainValidationException, HttpStatusCode statusCode, bool includeDetails = false)
+        public static ValidationProblemDetails ToValidationProblemDetails(this DomainValidationException exception, HttpStatusCode statusCode, bool includeDetails = false)
         {
             var validationProblemDetails = new ValidationProblemDetails
             {
                 Status = (int)statusCode,
-                Title = domainValidationException.Message,
-                Detail = includeDetails ? domainValidationException.ToString() : null,
+                Title = exception.Message,
+                Detail = includeDetails ? exception.ToString() : null,
                 Type = nameof(DomainValidationException)
             };
 
-            foreach (var validationMessage in domainValidationException.ValidationMessages)
+            foreach (var validationMessage in exception.ValidationMessages)
             {
-                validationProblemDetails.Errors.Add("_", new[] { validationMessage.Message });
+                validationProblemDetails.Errors.Add(validationMessage.PropertyName ?? "_", new[] { validationMessage.Message });
             }
 
             return validationProblemDetails;
+        }
+
+        public static ProblemDetails ToProblemDetails(this DomainEntityNotFoundException exception, HttpStatusCode statusCode, bool includeDetails = false)
+        {
+            return new ProblemDetails
+            {
+                Status = (int)statusCode,
+                Title = exception.Message,
+                Detail = includeDetails ? exception.ToString() : null,
+                Type = nameof(DomainEntityNotFoundException)
+            };
+        }
+
+        public static ValidationProblemDetails ToValidationProblemDetails(this ValidationException exception, HttpStatusCode statusCode, bool includeDetails = false)
+        {
+            var validationProblemDetails = new ValidationProblemDetails
+            {
+                Status = (int)statusCode,
+                Title = exception.Message,
+                Detail = includeDetails ? exception.ToString() : null,
+                Type = nameof(ValidationException)
+            };
+
+            foreach (var error in exception.Errors)
+            {
+                validationProblemDetails.Errors.Add(error.PropertyName ?? "_", new[] { error.ErrorMessage });
+            }
+
+            return validationProblemDetails;
+        }
+
+        public static ProblemDetails ToProblemDetails(this DbUpdateConcurrencyException exception, HttpStatusCode statusCode, bool includeDetails = false)
+        {
+            return new ProblemDetails
+            {
+                Status = (int)statusCode,
+                Title = exception.Message,
+                Detail = includeDetails ? exception.ToString() : null,
+                Type = nameof(DbUpdateConcurrencyException)
+            };
         }
     }
 }

@@ -14,7 +14,10 @@ namespace Demo.Domain.Shared.Extensions
             {
                 foreach (var error in result.Errors)
                 {
-                    validationMessages.Add( new ValidationMessage { Message = $"{error.PropertyName}: {error.ErrorMessage}" });
+                    validationMessages.Add(new ValidationMessage { 
+                        PropertyName = error.PropertyName,
+                        Message = error.ErrorMessage 
+                    });
                 }
             }
             return validationMessages.AsEnumerable();
