@@ -26,15 +26,16 @@ namespace Demo.WebApi.Middleware
             return async context =>
             {
                 var logger = context.RequestServices.GetRequiredService<ILogger<GlobalExceptionHandler>>();
-
                 var exception = context.Features.Get<IExceptionHandlerFeature>().Error;
+
+                var includeDetailsInResponse = !env.IsProduction();
 
                 var statusCode = HttpStatusCode.InternalServerError;
                 var problemDetails = new ProblemDetails
                 {
                     Status = (int)statusCode,
                     Title = exception.Message,
-                    Detail = env.IsDevelopment() ? exception.ToString() : null,
+                    Detail = includeDetailsInResponse ? exception.ToString() : null,
                     Type = exception.GetType().Name ?? string.Empty
                 };
 
@@ -44,31 +45,31 @@ namespace Demo.WebApi.Middleware
                         logger.LogInformation(exception, "A domain exception ocurred.");
 
                         statusCode = HttpStatusCode.BadRequest;
-                        problemDetails = domainException.ToProblemDetails(statusCode, includeDetails: env.IsDevelopment());
+                        problemDetails = domainException.ToProblemDetails(statusCode, includeDetailsInResponse);
                         break;
                     case DomainValidationException domainValidationException:
                         logger.LogInformation(exception, "A domain validation exception ocurred.");
 
                         statusCode = HttpStatusCode.BadRequest;
-                        problemDetails = domainValidationException.ToValidationProblemDetails(statusCode, includeDetails: env.IsDevelopment());
+                        problemDetails = domainValidationException.ToValidationProblemDetails(statusCode, includeDetailsInResponse);
                         break;
                     case DomainEntityNotFoundException domainEntityNotFoundException:
                         logger.LogInformation(exception, "A domain entity not found exception ocurred.");
 
                         statusCode = HttpStatusCode.NotFound;
-                        problemDetails = domainEntityNotFoundException.ToProblemDetails(statusCode, includeDetails: env.IsDevelopment());
+                        problemDetails = domainEntityNotFoundException.ToProblemDetails(statusCode, includeDetailsInResponse);
                         break;
                     case ValidationException validationException:
                         logger.LogInformation(exception, "A validation exception ocurred.");
 
                         statusCode = HttpStatusCode.BadRequest;
-                        problemDetails = validationException.ToValidationProblemDetails(statusCode, includeDetails: env.IsDevelopment());
+                        problemDetails = validationException.ToValidationProblemDetails(statusCode, includeDetailsInResponse);
                         break;
                     case DbUpdateConcurrencyException dbUpdateConcurrencyException:
                         logger.LogInformation(exception, "A database update concurrency exception ocurred.");
 
                         statusCode = HttpStatusCode.BadRequest;
-                        problemDetails = dbUpdateConcurrencyException.ToProblemDetails(statusCode, includeDetails: env.IsDevelopment());
+                        problemDetails = dbUpdateConcurrencyException.ToProblemDetails(statusCode, includeDetailsInResponse);
                         break;
                     default:
                         logger.LogError(exception, "An unhandled exception occured.");

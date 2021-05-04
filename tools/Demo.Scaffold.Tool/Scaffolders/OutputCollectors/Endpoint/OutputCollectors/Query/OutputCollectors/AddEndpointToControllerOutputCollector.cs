@@ -51,7 +51,7 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint.OutputCollect
             var code = @"
         [HttpGet]
         [ProducesResponseType(typeof(%QUERYNAME%QueryResult), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(UnhandledExceptionDto), (int)HttpStatusCode.InternalServerError)]
+        [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
         public async Task<ActionResult<%QUERYNAME%QueryResult>> %ENDPOINTNAME%([FromQuery] %QUERYNAME%Query query, CancellationToken cancellationToken)
         {
             return await Mediator.Send(query, cancellationToken);
@@ -68,7 +68,7 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint.OutputCollect
         [HttpGet(""{id}"", Name = nameof(%QUERYNAME%))]
         [ProducesResponseType(typeof(%QUERYNAME%QueryResult), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        [ProducesResponseType(typeof(UnhandledExceptionDto), (int)HttpStatusCode.InternalServerError)]
+        [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
         public async Task<ActionResult<%QUERYNAME%QueryResult>> %QUERYNAME%(Guid id, CancellationToken cancellationToken)
         {
             var query = new %QUERYNAME%Query { Id = id };
@@ -91,7 +91,7 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint.OutputCollect
             var code = @"
         [HttpGet(""{id}/%QUERYNAME%"")]
         [ProducesResponseType(typeof(%QUERYNAME%QueryResult), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(UnhandledExceptionDto), (int)HttpStatusCode.InternalServerError)]
+        [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
         public async Task<ActionResult<%QUERYNAME%QueryResult>> %QUERYNAME%([FromRoute] Guid id, [FromQuery] %QUERYNAME%Query query, CancellationToken cancellationToken)
         {
             query.Set%ENTITY%Id(id);

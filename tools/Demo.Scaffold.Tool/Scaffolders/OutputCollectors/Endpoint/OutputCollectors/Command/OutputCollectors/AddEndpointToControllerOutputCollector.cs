@@ -56,8 +56,8 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint.OutputCollect
             var code = @"
         [HttpPost]
         [ProducesResponseType(typeof(%COMMANDNAME%Response), (int)HttpStatusCode.Created)]
-        [ProducesResponseType(typeof(ValidationExceptionDto), (int)HttpStatusCode.BadRequest)]
-        [ProducesResponseType(typeof(UnhandledExceptionDto), (int)HttpStatusCode.InternalServerError)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
         public async Task<ActionResult<%COMMANDNAME%Response>> %ENDPOINTNAME%(%COMMANDNAME%Command command, CancellationToken cancellationToken)
         {
             var result = await Mediator.Send(command, cancellationToken);
@@ -76,8 +76,8 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint.OutputCollect
             var code = @"
         [HttpPut(""{id}"")]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
-        [ProducesResponseType(typeof(ValidationExceptionDto), (int)HttpStatusCode.BadRequest)]
-        [ProducesResponseType(typeof(UnhandledExceptionDto), (int)HttpStatusCode.InternalServerError)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
         public async Task<ActionResult> %ENDPOINTNAME%([FromRoute] Guid id, %COMMANDNAME%Command command, CancellationToken cancellationToken)
         {
             command.Set%ENTITY%Id(id);
@@ -98,8 +98,8 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint.OutputCollect
             var code = @"
         [HttpDelete""{id}"")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(ValidationExceptionDto), (int)HttpStatusCode.BadRequest)]
-        [ProducesResponseType(typeof(UnhandledExceptionDto), (int)HttpStatusCode.InternalServerError)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
         public async Task<ActionResult> %ENDPOINTNAME%([FromRoute] Guid id, %COMMANDNAME%Command command, CancellationToken cancellationToken)
         {
             command.Set%ENTITY%Id(id);
@@ -120,8 +120,8 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint.OutputCollect
             var code = @"
         [HttpPost(""{id}/%ENDPOINTNAME%"")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(ValidationExceptionDto), (int)HttpStatusCode.BadRequest)]
-        [ProducesResponseType(typeof(UnhandledExceptionDto), (int)HttpStatusCode.InternalServerError)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
         public async Task<ActionResult> %ENDPOINTNAME%([FromRoute] Guid id, %COMMANDNAME%Command command, CancellationToken cancellationToken)
         {
             command.Set%ENTITY%Id(id);
@@ -142,8 +142,8 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint.OutputCollect
             var code = @"
         [HttpPut(""{id}/%ENDPOINTNAME%"")]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
-        [ProducesResponseType(typeof(ValidationExceptionDto), (int)HttpStatusCode.BadRequest)]
-        [ProducesResponseType(typeof(UnhandledExceptionDto), (int)HttpStatusCode.InternalServerError)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
         public async Task<ActionResult> %ENDPOINTNAME%([FromRoute] Guid id, %COMMANDNAME%Command command, CancellationToken cancellationToken)
         {
             command.Set%ENTITY%Id(id);
@@ -164,8 +164,8 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint.OutputCollect
             var code = @"
         [HttpDelete(""{id}/%ENDPOINTNAME%"")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(ValidationExceptionDto), (int)HttpStatusCode.BadRequest)]
-        [ProducesResponseType(typeof(UnhandledExceptionDto), (int)HttpStatusCode.InternalServerError)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
         public async Task<ActionResult> %ENDPOINTNAME%([FromRoute] Guid id, %COMMANDNAME%Command command, CancellationToken cancellationToken)
         {
             command.Set%ENTITY%Id(id);
