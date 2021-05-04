@@ -55,6 +55,11 @@ namespace Demo.Domain.Invoice.BusinessComponent.Hooks
                     context.Entity.PdfIsSynced = true;
                 }
             }
+
+            if (context.Entity.PdfIsSynced && context.IsPropertyDirty(x => x.PdfIsSynced))
+            {
+                context.PublishDomainEventAfterCommit(new InvoicePdfSynchronizedDomainEvent(context.Entity.Id));
+            }
         }
     }
 }
