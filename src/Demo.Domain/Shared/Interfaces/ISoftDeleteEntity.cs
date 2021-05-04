@@ -9,5 +9,6 @@ namespace Demo.Domain.Shared.Interfaces
         public DateTime? DeletedOn { get; }
 
         internal void MarkAsDeleted(Guid deletedBy, DateTime deletedOn);
+        internal void UndoMarkAsDeleted();
     }
 }

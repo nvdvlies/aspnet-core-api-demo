@@ -1,3 +1,4 @@
+using Demo.Application.Invoices.Commands.CopyInvoice;
 using Demo.Application.Invoices.Queries.GetInvoiceAuditlog;
 using Demo.Application.Invoices.Commands.MarkInvoiceAsCancelled;
 using Demo.Application.Invoices.Commands.MarkInvoiceAsSent;
@@ -131,6 +132,19 @@ namespace Demo.WebApi.Controllers
             query.SetInvoiceId(id);
 
             return await Mediator.Send(query, cancellationToken);
+        }
+
+        [HttpPost("{id}/Copy")]
+        [ProducesResponseType(typeof(CopyInvoiceResponse), (int)HttpStatusCode.Created)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
+        public async Task<ActionResult> Copy([FromRoute] Guid id, CopyInvoiceCommand command, CancellationToken cancellationToken)
+        {
+            command.SetInvoiceId(id);
+
+            var result = await Mediator.Send(command, cancellationToken);
+
+            return CreatedAtRoute(routeName: nameof(GetInvoiceById), routeValues: new { id = result.Id }, result);
         }
 
         // SCAFFOLD-MARKER: ENDPOINT

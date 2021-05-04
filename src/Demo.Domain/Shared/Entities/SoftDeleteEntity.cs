@@ -15,5 +15,12 @@ namespace Demo.Domain.Shared.Entities
             DeletedBy = deletedBy;
             DeletedOn = deletedOn;
         }
+
+        void ISoftDeleteEntity.UndoMarkAsDeleted()
+        {
+            Deleted = false;
+            DeletedBy = default;
+            DeletedOn = default;
+        }
     }
 }

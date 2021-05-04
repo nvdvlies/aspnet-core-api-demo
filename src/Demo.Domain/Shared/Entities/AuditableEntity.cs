@@ -18,7 +18,7 @@ namespace Demo.Domain.Shared.Entities
             LastModifiedOn = createdOn;
         }
 
-        void IAuditableEntity.SetLastModifiedByAndLastModifiedOn(Guid lastModifiedBy, DateTime lastModifiedOn)
+        void IAuditableEntity.SetLastModifiedByAndLastModifiedOn(Guid? lastModifiedBy, DateTime? lastModifiedOn)
         {
             LastModifiedBy = lastModifiedBy;
             LastModifiedOn = lastModifiedOn;

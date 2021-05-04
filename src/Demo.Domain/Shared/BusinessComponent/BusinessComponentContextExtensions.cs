@@ -16,7 +16,7 @@ namespace Demo.Domain.Shared.BusinessComponent
 
             var comparer = EqualityComparer<TProperty>.Default;
 
-            return comparer.Equals(currentValue, previousValue);
+            return !comparer.Equals(currentValue, previousValue);
         }
     }
 }

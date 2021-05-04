@@ -9,6 +9,8 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Demo.Domain.Invoice.BusinessComponent
 {
@@ -37,6 +39,43 @@ namespace Demo.Domain.Invoice.BusinessComponent
 
         internal override Func<IQueryable<Invoice>, IIncludableQueryable<Invoice, object>> Includes => _ => _
             .Include(invoice => invoice.InvoiceLines);
+
+        public async Task GetCopyAsync(Guid id, CancellationToken cancellationToken)
+        {
+            var stopwatch = Context.PerformanceMeasurements.Start(nameof(GetCopyAsync));
+
+            var initialAsNoTrackingSetting = Options.AsNoTracking;
+
+            WithOptions(x => x.AsNoTracking = true);
+
+            await GetAsync(id, cancellationToken);
+
+            With(i =>
+            {
+                i.Id = default;
+                i.Status = InvoiceStatus.Draft;
+                i.PdfIsSynced = false;
+                i.PdfHashcode = default;
+                i.InvoiceLines.ForEach(l => l.Id = default);
+            });
+
+            if (Context.Entity is IAuditableEntity auditableEntity)
+            {
+                auditableEntity.SetCreatedByAndCreatedOn(default, default);
+                auditableEntity.SetLastModifiedByAndLastModifiedOn(default, default);
+            }
+
+            if (Context.Entity is ISoftDeleteEntity softDeleteEntity)
+            {
+                softDeleteEntity.UndoMarkAsDeleted();
+            }
+
+            Context.Entity = Context.Entity; // reset pristine object
+
+            WithOptions(x => x.AsNoTracking = initialAsNoTrackingSetting); // restore AsNoTracking setting
+
+            stopwatch.Stop();
+        }
 
         public void SetStatus(InvoiceStatus newStatus)
         {

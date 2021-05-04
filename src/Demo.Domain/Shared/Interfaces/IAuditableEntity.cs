@@ -13,6 +13,6 @@ namespace Demo.Domain.Shared.Interfaces
         public DateTime? LastModifiedOn { get; }
 
         internal void SetCreatedByAndCreatedOn(Guid createdBy, DateTime createdOn);
-        internal void SetLastModifiedByAndLastModifiedOn(Guid lastModifiedBy, DateTime lastModifiedOn);
+        internal void SetLastModifiedByAndLastModifiedOn(Guid? lastModifiedBy, DateTime? lastModifiedOn);
     }
 }
