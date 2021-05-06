@@ -12,15 +12,16 @@ PUT {{baseUrl}}/api/applicationsettings
 Content-Type: application/json
 
 {
-  "timestamp": "AAAAAAABAdM=",
   "settings": {
     "setting1": true,
-    "setting2": "test",
-    "setting3": "2021-01-01T00:00:00",
-    "setting4": "986CE6EE-90C9-406D-9161-A329D3F65D91",
-    "setting5": 10.4
-  }
+    "setting2": "test3",
+    "setting3": "2021-01-01T00:00:00Z",
+    "setting4": "986ce6ee-90c9-406d-9161-a329d3f65d91",
+    "setting5": 10.5
+  },
+  "timestamp": "AAAAAAABAeI="
 }
+
 ###
 
 # @name auditlog
