@@ -1,9 +1,7 @@
 ﻿using Demo.Scaffold.Tool.Changes;
-using Demo.Scaffold.Tool.Models;
-using Demo.Scaffold.Tool.Scaffolders.OutputCollectors.BusinessComponent;
-using Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint;
-using Demo.Scaffold.Tool.Scaffolders.InputCollectors;
 using Demo.Scaffold.Tool.Interfaces;
+using Demo.Scaffold.Tool.Models;
+using Demo.Scaffold.Tool.Scaffolders.InputCollectors;
 using Demo.Scaffold.Tool.Scaffolders.OutputCollectors;
 using McMaster.Extensions.CommandLineUtils;
 using System;
