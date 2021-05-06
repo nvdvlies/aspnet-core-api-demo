@@ -1,31 +1,34 @@
 ﻿using Demo.Domain.Shared.Interfaces;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Demo.Infrastructure.Services
 {
     public class JsonService<T> : IJsonService<T>
     {
-        private JsonSerializerSettings _settings;
+        private JsonSerializerOptions _options;
 
         public JsonService()
         {
-            _settings = new JsonSerializerSettings
+            _options = new JsonSerializerOptions
             {
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-                DateTimeZoneHandling = DateTimeZoneHandling.Utc
+                IncludeFields = true,
+                ReferenceHandler = ReferenceHandler.Preserve,
+                Converters =
+                {
+                    new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)
+                }
             };
-            _settings.Converters.Add(new StringEnumConverter());
         }
 
         public string ToJson(T entity)
         {
-            return JsonConvert.SerializeObject(entity, _settings);
+            return JsonSerializer.Serialize(entity, _options);
         }
 
         public T FromJson(string json)
         {
-            return JsonConvert.DeserializeObject<T>(json, _settings);
+            return JsonSerializer.Deserialize<T>(json, _options);
         }
     }
 }

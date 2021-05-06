@@ -1,13 +1,18 @@
 ﻿using Demo.Domain.Shared.Interfaces;
 using System;
+using System.Text.Json.Serialization;
 
 namespace Demo.Domain.Shared.Entities
 {
     public abstract class AuditableEntity : Entity, IAuditableEntity, IEntity
     {
+        [JsonInclude]
         public Guid CreatedBy { get; private set; }
+        [JsonInclude]
         public DateTime CreatedOn { get; private set; }
+        [JsonInclude]
         public Guid? LastModifiedBy { get; private set; }
+        [JsonInclude]
         public DateTime? LastModifiedOn { get; private set; }
 
         void IAuditableEntity.SetCreatedByAndCreatedOn(Guid createdBy, DateTime createdOn)

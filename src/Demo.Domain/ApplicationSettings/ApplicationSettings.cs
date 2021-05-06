@@ -1,4 +1,5 @@
 ﻿using Demo.Domain.Shared.Entities;
+using System.Text.Json.Serialization;
 
 namespace Demo.Domain.ApplicationSettings
 {
@@ -12,6 +13,7 @@ namespace Demo.Domain.ApplicationSettings
             };
         }
 
+        [JsonInclude]
         public ApplicationSettingsSettings Settings { get; internal set; }
     }
 }

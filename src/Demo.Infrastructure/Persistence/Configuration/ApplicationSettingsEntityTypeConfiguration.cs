@@ -1,7 +1,7 @@
 ﻿using Demo.Domain.ApplicationSettings;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace Demo.Infrastructure.Persistence.Configurations
 {
@@ -14,14 +14,13 @@ namespace Demo.Infrastructure.Persistence.Configurations
 
             builder.Property(x => x.Settings)
                 .HasConversion(
-                    x => JsonConvert.SerializeObject(x, new JsonSerializerSettings { 
-                        NullValueHandling = NullValueHandling.Ignore,
-                        DateTimeZoneHandling = DateTimeZoneHandling.Utc
+                    x => JsonSerializer.Serialize(x, new JsonSerializerOptions
+                    { 
+                        WriteIndented = true
                     }),
-                    x => JsonConvert.DeserializeObject<ApplicationSettingsSettings>(x, new JsonSerializerSettings { 
-                        NullValueHandling = NullValueHandling.Ignore,
-                        MissingMemberHandling = MissingMemberHandling.Ignore,
-                        DateTimeZoneHandling = DateTimeZoneHandling.Utc
+                    x => JsonSerializer.Deserialize<ApplicationSettingsSettings>(x, new JsonSerializerOptions
+                    { 
+                        
                     })
                 );
 
