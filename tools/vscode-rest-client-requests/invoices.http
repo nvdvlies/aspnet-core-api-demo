@@ -1,5 +1,6 @@
 @baseUrl = https://localhost:44309
 @createdInvoiceLocation = {{create.response.headers.location}}
+@copyInvoiceLocation = {{copy.response.headers.location}}
 #@createdInvoiceId = {{create.response.body.$.id}}
 
 # @name search
@@ -18,7 +19,7 @@ Content-Type: application/json
 
 {
   "customerId": "2d9d9aae-6c8c-447f-9861-08d9042c6bca",
-  "invoiceDate": "2021-04-22T14:03:20.377Z",
+  "invoiceDate": "2021-04-24T00:00:00",
   "paymentTerm": 30,
   "orderReference": "test",
   "invoiceLines": [
@@ -42,27 +43,43 @@ Accept: application/json
 PUT {{createdInvoiceLocation}}
 Content-Type: application/json
 
+ {
+    "customerId": "2d9d9aae-6c8c-447f-9861-08d9042c6bca",
+    "invoiceDate": "2021-04-24T00:00:00",
+    "paymentTerm": 31,
+    "orderReference": "test 6",
+    "invoiceLines": [
+      {
+        "quantity": 1,
+        "description": "Test updated2",
+        "sellingPrice": 10.00,
+        "id": "8a45a01e-dcff-45ce-545e-08d90f8b7256"
+      },
+      {
+        "quantity": 2,
+        "description": "Line 2",
+        "sellingPrice": 10.00,
+        "id": "7d9e398d-5046-46fd-545f-08d90f8b7256"
+      }
+    ],
+    "id": "c2e085af-7218-4b4f-7caa-08d90f2dd32a",
+    "timestamp": "AAAAAAABX5I="
+  }
+
+###
+
+# @name copy
+POST {{createdInvoiceLocation}}/copy
+Content-Type: application/json
+
 {
-  "timestamp": "AAAAAAAA4pQ=",
-  "customerId": "2d9d9aae-6c8c-447f-9861-08d9042c6bca",
-  "invoiceDate": "2021-04-22T14:03:20.377Z",
-  "paymentTerm": 30,
-  "orderReference": "test 2",
-  "invoiceLines": [
-    {
-      "id": "598ce007-7789-4417-01ac-08d90598c564",
-      "quantity": 1,
-      "description": "Test updated2",
-      "sellingPrice": 10
-    },
-    {
-      "id": "66c8ca6c-d1e6-4b02-01ad-08d90598c564",
-      "quantity": 1,
-      "description": "Line 2",
-      "sellingPrice": 10
-    }
-  ]
 }
+
+###
+
+# @name getCopyById
+GET {{copyInvoiceLocation}}
+Accept: application/json
 
 ###
 
