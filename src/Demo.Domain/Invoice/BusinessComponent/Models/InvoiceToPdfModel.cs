@@ -11,11 +11,6 @@ namespace Demo.Domain.Invoice.BusinessComponent.Models
         public string CustomerName { get; set; }
         public string ContactName { get; set; }
         public List<InvoiceToPdfInvoiceLineModel> InvoiceLines { get; set; }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(TemplateVersion, InvoiceNumber, InvoiceDate, CustomerName, ContactName, InvoiceLines);
-        }
     }
 
     public class InvoiceToPdfInvoiceLineModel
@@ -23,10 +18,5 @@ namespace Demo.Domain.Invoice.BusinessComponent.Models
         public int Quantity { get; set; }
         public string Description { get; set; }
         public string ItemDescription { get; set; }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Quantity, Description, ItemDescription);
-        }
     }
 }

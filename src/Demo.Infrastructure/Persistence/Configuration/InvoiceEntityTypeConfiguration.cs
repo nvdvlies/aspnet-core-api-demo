@@ -33,7 +33,8 @@ namespace Demo.Infrastructure.Persistence.Configurations
 
             builder.Property(t => t.PdfIsSynced);
 
-            builder.Property(t => t.PdfHashcode);
+            builder.Property(t => t.PdfChecksum)
+                .HasColumnType("nvarchar(max)");
 
             builder.HasOne(x => x.Customer)
                 .WithMany(x => x.Invoices)

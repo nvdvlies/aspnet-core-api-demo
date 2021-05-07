@@ -16,7 +16,7 @@ namespace Demo.Infrastructure.Persistence.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.3")
+                .HasAnnotation("ProductVersion", "5.0.5")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.HasSequence<int>("CustomerCode")
@@ -236,8 +236,8 @@ namespace Demo.Infrastructure.Persistence.Migrations
                     b.Property<int>("PaymentTerm")
                         .HasColumnType("int");
 
-                    b.Property<int>("PdfHashcode")
-                        .HasColumnType("int");
+                    b.Property<string>("PdfChecksum")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("PdfIsSynced")
                         .HasColumnType("bit");

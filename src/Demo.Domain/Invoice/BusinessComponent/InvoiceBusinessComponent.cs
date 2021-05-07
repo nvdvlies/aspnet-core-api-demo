@@ -55,7 +55,7 @@ namespace Demo.Domain.Invoice.BusinessComponent
                 i.Id = default;
                 i.Status = InvoiceStatus.Draft;
                 i.PdfIsSynced = false;
-                i.PdfHashcode = default;
+                i.PdfChecksum = default;
                 i.InvoiceLines.ForEach(l => l.Id = default);
             });
 

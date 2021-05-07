@@ -13,7 +13,7 @@ namespace Demo.Application.Invoices.Queries.GetInvoiceById.Dtos
         public string OrderReference { get; set; }
         public InvoiceStatusEnum Status { get; set; }
         public bool PdfIsSynced { get; set; }
-        public int PdfHashcode { get; set; }
+        public string PdfDataChecksum { get; set; }
         public List<InvoiceLineDto> InvoiceLines { get; set; }
     }
 }

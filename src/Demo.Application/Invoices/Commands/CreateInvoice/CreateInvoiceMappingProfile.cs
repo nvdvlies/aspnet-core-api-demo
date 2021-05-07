@@ -19,7 +19,7 @@ namespace Demo.Application.Invoices.Commands.CreateInvoice
                 .ForMember(x => x.Status, opt => opt.Ignore())
                 .ForMember(x => x.Customer, opt => opt.Ignore())
                 .ForMember(x => x.PdfIsSynced, opt => opt.Ignore())
-                .ForMember(x => x.PdfHashcode, opt => opt.Ignore())
+                .ForMember(x => x.PdfChecksum, opt => opt.Ignore())
                 .ForMember(x => x.Deleted, opt => opt.Ignore())
                 .ForMember(x => x.DeletedBy, opt => opt.Ignore())
                 .ForMember(x => x.DeletedOn, opt => opt.Ignore())

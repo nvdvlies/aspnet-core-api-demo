@@ -117,7 +117,7 @@ namespace Demo.Infrastructure.Persistence.Migrations
                     OrderReference = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     Status = table.Column<int>(type: "int", nullable: false),
                     PdfIsSynced = table.Column<bool>(type: "bit", nullable: false),
-                    PdfHashcode = table.Column<int>(type: "int", nullable: false),
+                    PdfChecksum = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Timestamp = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: true),
                     CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),

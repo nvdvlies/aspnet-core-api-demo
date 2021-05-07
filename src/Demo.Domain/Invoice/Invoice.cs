@@ -18,7 +18,7 @@ namespace Demo.Domain.Invoice
         public InvoiceStatus Status { get; internal set; }
         [JsonInclude]
         public bool PdfIsSynced { get; internal set; }
-        public int PdfHashcode { get; set; }
+        public string PdfChecksum { get; set; }
         public Customer.Customer Customer { get; set; }
         public List<InvoiceLine> InvoiceLines { get; set; }
     }
