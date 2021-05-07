@@ -34,7 +34,7 @@ namespace Demo.Domain.Invoice.BusinessComponent.Hooks
                 var checksum = invoiceToPdfModel.GetChecksum();
 
                 // Compare calculated checksum against checksum when PDF was last generated
-                if (checksum != context.Entity.PdfChecksum)
+                if (!string.Equals(checksum, context.Entity.PdfChecksum))
                 {
                     context.State.TryGet(InvoiceStateKeys.ThrowIfPdfIsNotSynced, out bool throwIfPdfIsNotSynced);
 
