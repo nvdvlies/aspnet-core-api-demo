@@ -35,7 +35,7 @@ namespace Demo.Domain.Customer.BusinessComponent.Validators
 
             if (hasInvoices)
             {
-                return "De klant kan niet worden verwijderd, omdat er facturen aan zijn gekoppeld.".AsEnumerableOfValidationMessages();
+                return "Cannot delete customer, because one or more invoices are linked to this customer".AsEnumerableOfValidationMessages();
             }
 
             return null;

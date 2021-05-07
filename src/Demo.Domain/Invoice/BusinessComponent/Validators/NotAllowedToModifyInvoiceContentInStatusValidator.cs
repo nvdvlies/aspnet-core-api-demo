@@ -42,8 +42,8 @@ namespace Demo.Domain.Invoice.BusinessComponent.Validators
                 }
                 catch (System.Exception ex)
                 {
-                    _logger.LogWarning(ex, "De factuur inhoud wijzigen is niet toegestaan in de huidige status.");
-                    return Task.FromResult("De factuur inhoud wijzigen is niet toegestaan in de huidige status.".AsEnumerableOfValidationMessages());
+                    _logger.LogWarning(ex, "Not allowed to change invoice content in current status.");
+                    return Task.FromResult("Not allowed to change invoice content in current status".AsEnumerableOfValidationMessages());
                 }
             }
 
