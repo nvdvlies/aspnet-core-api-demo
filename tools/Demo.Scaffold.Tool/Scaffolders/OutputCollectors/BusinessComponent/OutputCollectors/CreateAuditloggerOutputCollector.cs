@@ -54,6 +54,7 @@ namespace Demo.Infrastructure.Auditlogging.Configuration
 
         protected override List<AuditlogItem> AuditlogItems(%ENTITY% current, %ENTITY% previous) => 
             new AuditlogBuilder<%ENTITY%>()
+                // TODO : .WithProperty(x => x.PropertyName)
                 .Build(current, previous);
     }
 }

@@ -28,6 +28,7 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.BusinessComponent.Outp
         {
             var code = @"
 using Demo.Domain.Shared.Entities;
+using Demo.Domain.Shared.Interfaces;
 using System;
 
 namespace Demo.Domain.%ENTITY%

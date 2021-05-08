@@ -26,9 +26,8 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.BusinessComponent.Outp
 
         private static string GetTemplate(string entityName, string collectionName)
         {
-            var code = @"
-        public DbSet<%ENTITY%> %COLLECTIONNAME% { get; set; }
-";
+            var code = @"       public DbSet<%ENTITY%> %COLLECTIONNAME% { get; set; }";
+
             code = code.Replace("%ENTITY%", entityName);
             code = code.Replace("%COLLECTIONNAME%", collectionName);
             return code;

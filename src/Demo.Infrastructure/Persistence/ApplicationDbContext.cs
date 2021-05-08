@@ -20,7 +20,6 @@ namespace Demo.Infrastructure.Persistence
         public DbSet<Auditlog> Auditlogs { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Invoice> Invoices { get; set; }
-
 		// SCAFFOLD-MARKER: DBSET
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
