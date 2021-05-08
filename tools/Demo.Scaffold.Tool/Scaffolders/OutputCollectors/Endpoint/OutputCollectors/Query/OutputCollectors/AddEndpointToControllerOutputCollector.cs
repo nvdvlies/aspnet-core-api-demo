@@ -89,7 +89,7 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint.OutputCollect
         private static string GetSubEndpointTemplate(string queryName, string entityName)
         {
             var code = @"
-        [HttpGet(""{id}/%QUERYNAME%"")]
+        [HttpGet(""{id}/%ROUTE%"")]
         [ProducesResponseType(typeof(%QUERYNAME%QueryResult), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
         public async Task<ActionResult<%QUERYNAME%QueryResult>> %QUERYNAME%([FromRoute] Guid id, [FromQuery] %QUERYNAME%Query query, CancellationToken cancellationToken)
@@ -100,6 +100,9 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint.OutputCollect
         }
 ";
 
+            var route = queryName.Replace($"Get{entityName}", string.Empty);
+
+            code = code.Replace("%ROUTE%", route);
             code = code.Replace("%ENTITY%", entityName);
             code = code.Replace("%QUERYNAME%", queryName);
             return code;
