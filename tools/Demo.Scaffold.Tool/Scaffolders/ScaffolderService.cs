@@ -27,13 +27,17 @@ namespace Demo.Scaffold.Tool.Scaffolders
             new ScaffolderTypeOutputCollector(),
         };
 
+        private readonly AppSettings _appSettings;
+
         public ScaffolderService(AppSettings appSettings)
         {
-            _context = new ScaffolderContext(appSettings);
+            _appSettings = appSettings;
         }
 
         public void Run()
         {
+            _context = new ScaffolderContext(_appSettings);
+
             foreach (var inputCollector in _inputCollectors)
             {
                 inputCollector.CollectInput(_context);
@@ -49,6 +53,11 @@ namespace Demo.Scaffold.Tool.Scaffolders
             {
                 ApplyChanges(changes);
                 Console.WriteLine("Done.");
+
+                if (AnsiConsole.Confirm("Do you want to scaffold more?", false))
+                {
+                    Run();
+                }
             }
 
             SaveUserAppSettings();
@@ -61,7 +70,7 @@ namespace Demo.Scaffold.Tool.Scaffolders
             Console.WriteLine();
             foreach (var description in changes.Select(x => x.Description).Distinct().OrderBy(x => x))
             {
-                Console.WriteLine($" - {description.Replace(_context.AppSettings.PathToSolutionRootDirectory, string.Empty)}");
+                Console.WriteLine($" - {description.Replace(_appSettings.PathToSolutionRootDirectory, string.Empty)}");
             }
             Console.WriteLine();
             return AnsiConsole.Confirm("Apply pending changes?"); 
