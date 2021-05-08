@@ -1,5 +1,5 @@
 ﻿using Demo.Scaffold.Tool.Interfaces;
-using McMaster.Extensions.CommandLineUtils;
+using Spectre.Console;
 
 namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.BusinessComponent.InputCollectors
 {
@@ -7,7 +7,7 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.BusinessComponent.Inpu
     {
         public void CollectInput(ScaffolderContext context)
         {
-            var entityName = Prompt.GetString("What is the name of the entity?");
+            var entityName = AnsiConsole.Ask<string>("What is the name of the entity?");
 
             context.Variables.Set(Constants.EntityName, entityName);
         }

@@ -1,5 +1,5 @@
 ﻿using Demo.Scaffold.Tool.Interfaces;
-using McMaster.Extensions.CommandLineUtils;
+using Spectre.Console;
 
 namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.BusinessComponent.InputCollectors
 {
@@ -7,7 +7,7 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.BusinessComponent.Inpu
     {
         public void CollectInput(ScaffolderContext context)
         {
-            var collectionName = Prompt.GetString("What is the name of the DbContext collection?");
+            var collectionName = AnsiConsole.Ask<string>("What is the name of the DbContext collection?");
 
             context.Variables.Set(Constants.CollectionName, collectionName);
         }

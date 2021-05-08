@@ -12,7 +12,7 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.BusinessComponent.Outp
         {
             var changes = new List<IChange>();
 
-            var enableAuditlogging = context.Variables.Get<bool>(Constants.EnableAuditlogging);
+            context.Variables.TryGet<bool>(Constants.EnableAuditlogging, out var enableAuditlogging);
             if (!enableAuditlogging)
             {
                 return changes;

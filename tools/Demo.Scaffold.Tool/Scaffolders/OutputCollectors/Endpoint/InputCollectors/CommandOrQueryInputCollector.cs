@@ -1,21 +1,30 @@
 ﻿using Demo.Scaffold.Tool.Interfaces;
-using McMaster.Extensions.CommandLineUtils;
+using Spectre.Console;
 using System;
 
 namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint.InputCollectors
 {
     internal class CommandOrQueryInputCollector : IInputCollector
     {
+        private const string Command = "Command";
+        private const string Query = "Query";
+
         public void CollectInput(ScaffolderContext context)
         {
-            var option = Prompt.GetInt("Endpoint type (1 = Command, 2 = Query):");
+            var option = AnsiConsole.Prompt(
+                new SelectionPrompt<string>()
+                    .Title("Command or query?")
+                    .AddChoices(new[] {
+                        Command,
+                        Query,
+                    }));
 
             switch (option)
             {
-                case 1:
+                case Command:
                     context.Variables.Set(Constants.EndpointType, EndpointTypes.Command);
                     break;
-                case 2:
+                case Query:
                     context.Variables.Set(Constants.EndpointType, EndpointTypes.Query);
                     break;
                 default:

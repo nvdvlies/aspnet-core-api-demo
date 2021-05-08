@@ -9,7 +9,7 @@ namespace Demo.Scaffold.Tool.Changes
         {
         }
 
-        public string Description => $"Create: {RelativePathFromSolutionDirectory}";
+        public string Description => $"Create: {DirectoryAndFileName}";
 
         public void Apply()
         {

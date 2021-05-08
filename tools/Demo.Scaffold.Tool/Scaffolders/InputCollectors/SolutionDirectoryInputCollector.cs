@@ -1,5 +1,5 @@
 ﻿using Demo.Scaffold.Tool.Interfaces;
-using McMaster.Extensions.CommandLineUtils;
+using Spectre.Console;
 using System.IO;
 
 namespace Demo.Scaffold.Tool.Scaffolders.InputCollectors
@@ -10,7 +10,7 @@ namespace Demo.Scaffold.Tool.Scaffolders.InputCollectors
         {
             while (!HasValidPathToSolutionRootDirectory(context))
             {
-                var path = Prompt.GetString($"In which directory is '{Constants.SolutionName}' is located?");
+                var path = AnsiConsole.Ask<string>($"In which directory is '{Constants.SolutionName}' is located?");
                 context.AppSettings.PathToSolutionRootDirectory = path;
             }
         }

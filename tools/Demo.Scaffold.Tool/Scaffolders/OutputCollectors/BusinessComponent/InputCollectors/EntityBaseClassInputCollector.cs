@@ -1,5 +1,5 @@
 ﻿using Demo.Scaffold.Tool.Interfaces;
-using McMaster.Extensions.CommandLineUtils;
+using Spectre.Console;
 
 namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.BusinessComponent.InputCollectors
 {
@@ -7,14 +7,14 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.BusinessComponent.Inpu
     {
         public void CollectInput(ScaffolderContext context)
         {
-            var enableSoftDelete = Prompt.GetYesNo("Enable soft delete?", true);
-            if (!enableSoftDelete)
+            var enableSoftDelete = AnsiConsole.Confirm("Enable soft delete");
+            context.Variables.Set(Constants.EnableSoftDelete, enableSoftDelete);
+
+            if (!enableSoftDelete) // soft delete has audit logging
             {
-                var enableAuditlogging = Prompt.GetYesNo("Enable audit logging?", true);
+                var enableAuditlogging = AnsiConsole.Confirm("Enable audit logging?");
                 context.Variables.Set(Constants.EnableAuditlogging, enableAuditlogging);
             }
-
-            context.Variables.Set(Constants.EnableSoftDelete, enableSoftDelete);
         }
     }
 }

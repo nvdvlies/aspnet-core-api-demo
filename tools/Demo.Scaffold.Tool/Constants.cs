@@ -2,7 +2,6 @@
 {
     internal static class Constants
     {
-        public const string SolutionDirectoryName = "demo";
         public const string SolutionName = "Demo.sln";
         public const string UserSettingsFileName = "appsettings.user.json";
 

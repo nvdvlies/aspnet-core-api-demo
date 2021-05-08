@@ -11,7 +11,6 @@ namespace Demo.Scaffold.Tool.Scaffolders
         }
 
         public AppSettings AppSettings { get; set; }
-        public string PathToSolutionRootDirectory { get; set; }
         public ScaffolderTypes ScaffolderType { get; set; }
         public ScaffolderVariables Variables { get; set; }
     }

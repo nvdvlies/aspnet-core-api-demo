@@ -5,15 +5,14 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System.IO;
-using System.Threading.Tasks;
 
 namespace Demo.Scaffold.Tool
 {
     class Program
     {
-        public static async Task<int> Main(string[] args)
+        public static void Main(string[] args)
         {
-            return await new HostBuilder()
+            using var host = new HostBuilder()
                 .ConfigureLogging((context, builder) =>
                 {
                     builder.AddConsole();
@@ -31,7 +30,13 @@ namespace Demo.Scaffold.Tool
 
                     services.AddSingleton<ScaffolderService>();
                 })
-                .RunCommandLineApplicationAsync<App>(args);
+                .Build();
+
+            using var scope = host.Services.CreateScope();
+            var serviceProvider = scope.ServiceProvider;
+
+            var scaffolderService = serviceProvider.GetRequiredService<ScaffolderService>();
+            scaffolderService.Run();
         }
     }
 }

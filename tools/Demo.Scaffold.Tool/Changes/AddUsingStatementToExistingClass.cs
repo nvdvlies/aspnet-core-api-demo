@@ -10,7 +10,7 @@ namespace Demo.Scaffold.Tool.Changes
         {
         }
 
-        public string Description => $"Modify: {RelativePathFromSolutionDirectory}";
+        public string Description => $"Modify: {DirectoryAndFileName}";
 
         public void Apply()
         {

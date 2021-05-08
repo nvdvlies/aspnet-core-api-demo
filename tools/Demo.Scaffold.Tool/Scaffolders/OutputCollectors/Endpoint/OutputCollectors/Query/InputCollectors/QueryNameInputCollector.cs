@@ -1,5 +1,5 @@
 ﻿using Demo.Scaffold.Tool.Interfaces;
-using McMaster.Extensions.CommandLineUtils;
+using Spectre.Console;
 using System;
 
 namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint.OutputCollectors.Query.InputCollectors
@@ -8,7 +8,7 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint.OutputCollect
     {
         public void CollectInput(ScaffolderContext context)
         {
-            var queryName = Prompt.GetString("What is the name of the query?");
+            var queryName = AnsiConsole.Ask<string>("What is the name of the query?");
             queryName = queryName.Replace("Query", string.Empty, StringComparison.CurrentCultureIgnoreCase);
             context.Variables.Set(Constants.QueryName, queryName);
         }

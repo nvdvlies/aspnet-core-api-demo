@@ -13,7 +13,7 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.BusinessComponent.Outp
 
             var entityName = context.Variables.Get<string>(Constants.EntityName);
             var enableSoftDelete = context.Variables.Get<bool>(Constants.EnableSoftDelete);
-            var enableAuditlogging = context.Variables.Get<bool>(Constants.EnableAuditlogging);
+            context.Variables.TryGet<bool>(Constants.EnableAuditlogging, out var enableAuditlogging);
 
             changes.Add(new CreateNewClass(
                 directory: context.GetEntityDirectory(entityName),

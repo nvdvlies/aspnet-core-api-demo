@@ -1,5 +1,5 @@
 ﻿using Demo.Scaffold.Tool.Interfaces;
-using McMaster.Extensions.CommandLineUtils;
+using Spectre.Console;
 using System;
 
 namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint.OutputCollectors.Command.InputCollectors
@@ -8,7 +8,7 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint.OutputCollect
     {
         public void CollectInput(ScaffolderContext context)
         {
-            var commandName = Prompt.GetString("What is the name of the command?");
+            var commandName = AnsiConsole.Ask<string>("What is the name of the command?");
             commandName = commandName.Replace("Command", string.Empty, StringComparison.CurrentCultureIgnoreCase);
             context.Variables.Set(Constants.CommandName, commandName);
         }

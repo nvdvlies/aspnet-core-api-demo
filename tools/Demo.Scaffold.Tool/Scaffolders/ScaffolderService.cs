@@ -3,7 +3,7 @@ using Demo.Scaffold.Tool.Interfaces;
 using Demo.Scaffold.Tool.Models;
 using Demo.Scaffold.Tool.Scaffolders.InputCollectors;
 using Demo.Scaffold.Tool.Scaffolders.OutputCollectors;
-using McMaster.Extensions.CommandLineUtils;
+using Spectre.Console;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -61,10 +61,10 @@ namespace Demo.Scaffold.Tool.Scaffolders
             Console.WriteLine();
             foreach (var description in changes.Select(x => x.Description).Distinct().OrderBy(x => x))
             {
-                Console.WriteLine($" - {description}");
+                Console.WriteLine($" - {description.Replace(_context.AppSettings.PathToSolutionRootDirectory, string.Empty)}");
             }
             Console.WriteLine();
-            return Prompt.GetYesNo("Apply pending changes?", true);
+            return AnsiConsole.Confirm("Apply pending changes?"); 
         }
 
         private void ApplyChanges(IEnumerable<IChange> changes)

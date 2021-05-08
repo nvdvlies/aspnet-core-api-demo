@@ -16,6 +16,5 @@ namespace Demo.Scaffold.Tool.Changes
         }
 
         protected string DirectoryAndFileName => Path.Combine(Directory, FileName);
-        protected string RelativePathFromSolutionDirectory => DirectoryAndFileName.Substring(DirectoryAndFileName.LastIndexOf(Constants.SolutionDirectoryName) + Constants.SolutionDirectoryName.Length);
     }
 }

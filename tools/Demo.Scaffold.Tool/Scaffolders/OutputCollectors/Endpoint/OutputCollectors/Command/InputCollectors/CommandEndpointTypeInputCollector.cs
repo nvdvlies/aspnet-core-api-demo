@@ -1,13 +1,43 @@
 ﻿using Demo.Scaffold.Tool.Interfaces;
-using McMaster.Extensions.CommandLineUtils;
+using Spectre.Console;
+using System;
 
 namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint.OutputCollectors.Command.InputCollectors
 {
     internal class CommandEndpointTypeInputCollector : IInputCollector
     {
+        private const string Create = "Create (POST /controller/)";
+        private const string Update = "Update (PUT /controller/)";
+        private const string Delete = "Delete (DELETE /controller/)";
+        private const string CreateSubEndpoint = "Create SubEndpoint (POST /controller/{id}/name)";
+        private const string UpdateSubEndpoint = "Update SubEndpoint (PUT /controller/{id}/name)";
+        private const string DeleteSubEndpoint = "Delete SubEndpoint (DELETE /controller/{id}/name)";
+
         public void CollectInput(ScaffolderContext context)
         {
-            var commandEndpointTypes = (CommandEndpointTypes)Prompt.GetInt("Which type of endpoint do you want to use (1 = create, 2 = update, 3 = delete, 4 = create subendpoint, 5 = update subendpoint, 6 = delete subendpoint)?");
+            var option = AnsiConsole.Prompt(
+                new SelectionPrompt<string>()
+                    .Title("Which type of endpoint would you like to add?")
+                    .AddChoices(new[] {
+                        Create,
+                        Update,
+                        Delete,
+                        CreateSubEndpoint,
+                        UpdateSubEndpoint,
+                        DeleteSubEndpoint
+                    }));
+
+            var commandEndpointTypes = option switch
+            {
+                Create => CommandEndpointTypes.Create,
+                Update => CommandEndpointTypes.Update,
+                Delete => CommandEndpointTypes.Delete,
+                CreateSubEndpoint => CommandEndpointTypes.CreateSubEndpoint,
+                UpdateSubEndpoint => CommandEndpointTypes.UpdateSubEndpoint,
+                DeleteSubEndpoint => CommandEndpointTypes.DeleteSubEndpoint,
+                _ => throw new Exception($"Invalid option {option}"),
+            };
+
             context.Variables.Set(Constants.CommandEndpointType, commandEndpointTypes);
         }
     }
