@@ -96,7 +96,7 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint.OutputCollect
         private static string GetDeleteTemplate(string entityName, string commandName, string endpointName)
         {
             var code = @"
-        [HttpDelete""{id}"")]
+        [HttpDelete(""{id}"")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
