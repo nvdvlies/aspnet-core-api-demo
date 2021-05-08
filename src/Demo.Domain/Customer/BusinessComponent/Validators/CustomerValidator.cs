@@ -22,7 +22,7 @@ namespace Demo.Domain.Customer.BusinessComponent.Validators
             //});
 
             var validationResult = await ValidateAsync(context.Entity, cancellationToken);
-            return validationResult.AsEnumerableOfValidationMessages();
+            return validationResult.ToValidationMessage();
         }
     }
 }

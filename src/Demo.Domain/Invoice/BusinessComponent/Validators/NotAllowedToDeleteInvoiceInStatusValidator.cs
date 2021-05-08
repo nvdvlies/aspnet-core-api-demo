@@ -20,7 +20,7 @@ namespace Demo.Domain.Invoice.BusinessComponent.Validators
             var statussesAllowedToDelete = new[] { InvoiceStatus.Draft, InvoiceStatus.Cancelled };
             if (!statussesAllowedToDelete.Contains(context.Pristine.Status))
             {
-                return Task.FromResult("Not allowed to delete invoice in current status.".AsEnumerableOfValidationMessages());
+                return Task.FromResult("Not allowed to delete invoice in current status.".ToValidationMessage());
             }
 
             return Task.FromResult<IEnumerable<ValidationMessage>>(null);

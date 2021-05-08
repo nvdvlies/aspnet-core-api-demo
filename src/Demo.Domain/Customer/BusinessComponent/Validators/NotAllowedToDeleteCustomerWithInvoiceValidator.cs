@@ -35,7 +35,7 @@ namespace Demo.Domain.Customer.BusinessComponent.Validators
 
             if (hasInvoices)
             {
-                return "Cannot delete customer, because one or more invoices are linked to this customer".AsEnumerableOfValidationMessages();
+                return "Cannot delete customer, because one or more invoices are linked to this customer".ToValidationMessage();
             }
 
             return null;

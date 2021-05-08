@@ -7,7 +7,7 @@ namespace Demo.Domain.Shared.Extensions
 {
     internal static class ValidationResultExtensions
     {
-        internal static IEnumerable<ValidationMessage> AsEnumerableOfValidationMessages(this ValidationResult result)
+        internal static IEnumerable<ValidationMessage> ToValidationMessage(this ValidationResult result)
         {
             var validationMessages = new List<ValidationMessage>();
             if (!result.IsValid)
