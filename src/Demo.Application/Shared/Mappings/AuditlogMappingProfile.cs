@@ -78,9 +78,9 @@ namespace Demo.Application.Shared.Mappings
                         switch (source.Type)
                         {
                             case AuditlogType.OnOff:
-                                return sourceValueAsBoolean ? "aan" : "uit";
+                                return sourceValueAsBoolean ? "on" : "off";
                             case AuditlogType.YesNo:
-                                return sourceValueAsBoolean ? "ja" : "nee";
+                                return sourceValueAsBoolean ? "yes" : "no";
                         }
                         return null;
                 };
