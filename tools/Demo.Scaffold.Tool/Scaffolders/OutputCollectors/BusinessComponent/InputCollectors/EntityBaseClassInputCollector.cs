@@ -10,11 +10,8 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.BusinessComponent.Inpu
             var enableSoftDelete = AnsiConsole.Confirm("Enable soft delete");
             context.Variables.Set(Constants.EnableSoftDelete, enableSoftDelete);
 
-            if (!enableSoftDelete) // soft delete has audit logging
-            {
-                var enableAuditlogging = AnsiConsole.Confirm("Enable audit logging?");
-                context.Variables.Set(Constants.EnableAuditlogging, enableAuditlogging);
-            }
+            var enableAuditlogging = AnsiConsole.Confirm("Enable audit logging?");
+            context.Variables.Set(Constants.EnableAuditlogging, enableAuditlogging);
         }
     }
 }
