@@ -6,9 +6,9 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint.OutputCollect
 {
     internal class QueryEndpointTypeInputCollector : IInputCollector
     {
-        private const string Search = "Search (GET api/[controller]/)";
-        private const string GetById = "GetById (GET api/[controller]/{id})";
-        private const string SubEndpoint = "SubEndpoint (GET api/[controller]/{id}/[name])";
+        private const string Search = "Search (GET api/[[controller]]/)";
+        private const string GetById = "GetById (GET api/[[controller]]/{id})";
+        private const string SubEndpoint = "SubEndpoint (GET api/[[controller]]/{id}/[[name]])";
 
         public void CollectInput(ScaffolderContext context)
         {

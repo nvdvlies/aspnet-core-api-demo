@@ -14,7 +14,7 @@ namespace Demo.Scaffold.Tool.Changes
             _marker = marker;
         }
 
-        public string Description => $"Modify: {DirectoryAndFileName}";
+        public ModificationTypes ModificationType => ModificationTypes.Update;
 
         public void Apply()
         {

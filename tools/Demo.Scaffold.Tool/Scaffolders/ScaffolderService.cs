@@ -53,11 +53,11 @@ namespace Demo.Scaffold.Tool.Scaffolders
             {
                 ApplyChanges(changes);
                 Console.WriteLine("Done.");
+            }
 
-                if (AnsiConsole.Confirm("Do you want to scaffold more?", false))
-                {
-                    Run();
-                }
+            if (AnsiConsole.Confirm("Do you want to scaffold something else?", false))
+            {
+                Run();
             }
 
             SaveUserAppSettings();
@@ -68,9 +68,12 @@ namespace Demo.Scaffold.Tool.Scaffolders
             Console.WriteLine();
             Console.WriteLine("Pending changes:");
             Console.WriteLine();
-            foreach (var description in changes.Select(x => x.Description).Distinct().OrderBy(x => x))
+            foreach (var change in changes
+                .GroupBy(x => x.DirectoryAndFileName)
+                .Select(x => x.First())
+                .OrderBy(x => x.DirectoryAndFileName))
             {
-                Console.WriteLine($" - {description.Replace(_appSettings.PathToSolutionRootDirectory, string.Empty)}");
+                Console.WriteLine($" - {change.ModificationType}: {Path.GetRelativePath(_appSettings.PathToSolutionRootDirectory, change.DirectoryAndFileName)}");
             }
             Console.WriteLine();
             return AnsiConsole.Confirm("Apply pending changes?"); 

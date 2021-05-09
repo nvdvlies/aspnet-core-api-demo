@@ -9,7 +9,7 @@ namespace Demo.Scaffold.Tool.Changes
         {
         }
 
-        public string Description => $"Create: {DirectoryAndFileName}";
+        public ModificationTypes ModificationType => ModificationTypes.Create;
 
         public void Apply()
         {

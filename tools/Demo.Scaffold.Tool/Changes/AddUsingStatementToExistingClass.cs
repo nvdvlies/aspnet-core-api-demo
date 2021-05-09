@@ -10,7 +10,7 @@ namespace Demo.Scaffold.Tool.Changes
         {
         }
 
-        public string Description => $"Modify: {DirectoryAndFileName}";
+        public ModificationTypes ModificationType => ModificationTypes.Update;
 
         public void Apply()
         {

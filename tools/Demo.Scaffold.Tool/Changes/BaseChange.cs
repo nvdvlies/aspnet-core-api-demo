@@ -15,6 +15,6 @@ namespace Demo.Scaffold.Tool.Changes
             Content = content;
         }
 
-        protected string DirectoryAndFileName => Path.Combine(Directory, FileName);
+        public string DirectoryAndFileName => Path.Combine(Directory, FileName);
     }
 }

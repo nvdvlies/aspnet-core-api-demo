@@ -2,7 +2,9 @@
 {
     internal interface IChange
     {
-        string Description { get; }
+        ModificationTypes ModificationType { get; }
+        string DirectoryAndFileName { get; }
+
         void Apply();
     }
 }

@@ -6,12 +6,12 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint.OutputCollect
 {
     internal class CommandEndpointTypeInputCollector : IInputCollector
     {
-        private const string Create = "Create (POST api/[controller]/)";
-        private const string Update = "Update (PUT api/[controller]/)";
-        private const string Delete = "Delete (DELETE api/[controller]/)";
-        private const string CreateSubEndpoint = "Create SubEndpoint (POST api/[controller]/{id}/[name])";
-        private const string UpdateSubEndpoint = "Update SubEndpoint (PUT api/[controller]/{id}/[name])";
-        private const string DeleteSubEndpoint = "Delete SubEndpoint (DELETE api/[controller]/{id}/[name])";
+        private const string Create = "Create (POST api/[[controller]]/)";
+        private const string Update = "Update (PUT api/[[controller]]/)";
+        private const string Delete = "Delete (DELETE api/[[controller]]/)";
+        private const string CreateSubEndpoint = "Create SubEndpoint (POST api/[[controller]]/{id}/[[name]])";
+        private const string UpdateSubEndpoint = "Update SubEndpoint (PUT api/[[controller]]/{id}/[[name]])";
+        private const string DeleteSubEndpoint = "Delete SubEndpoint (DELETE api/[[controller]]/{id}/[[name]])";
 
         public void CollectInput(ScaffolderContext context)
         {
