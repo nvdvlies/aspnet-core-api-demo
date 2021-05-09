@@ -36,6 +36,8 @@ namespace Demo.Scaffold.Tool.Scaffolders
 
         public void Run()
         {
+            Console.Clear();
+
             _context = new ScaffolderContext(_appSettings);
 
             foreach (var inputCollector in _inputCollectors)
