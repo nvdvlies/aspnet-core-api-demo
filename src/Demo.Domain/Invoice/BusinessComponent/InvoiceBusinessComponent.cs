@@ -44,35 +44,37 @@ namespace Demo.Domain.Invoice.BusinessComponent
         {
             var stopwatch = Context.PerformanceMeasurements.Start(nameof(GetCopyAsync));
 
-            var initialAsNoTrackingSetting = Options.AsNoTracking;
+            var asNoTrackingSettingToRestore = Options.AsNoTracking;
 
             WithOptions(x => x.AsNoTracking = true);
 
-            await GetAsync(id, cancellationToken);
+            var entity = await DbCommand.GetAsync(id, Includes, cancellationToken);
 
-            With(i =>
+            if (entity == null)
             {
-                i.Id = default;
-                i.Status = InvoiceStatus.Draft;
-                i.PdfIsSynced = false;
-                i.PdfChecksum = default;
-                i.InvoiceLines.ForEach(l => l.Id = default);
-            });
-
-            if (Context.Entity is IAuditableEntity auditableEntity)
-            {
-                auditableEntity.SetCreatedByAndCreatedOn(default, default);
-                auditableEntity.SetLastModifiedByAndLastModifiedOn(default, default);
+                throw new DomainEntityNotFoundException($"Entity with id '{id}' not found");
             }
 
-            if (Context.Entity is ISoftDeleteEntity softDeleteEntity)
+            entity.Id = default;
+            entity.InvoiceNumber = default;
+            entity.Status = InvoiceStatus.Draft;
+            entity.PdfIsSynced = false;
+            entity.PdfChecksum = default;
+            entity.InvoiceLines.ForEach(l => l.Id = default);
+ 
+            if (entity is IAuditableEntity auditableEntity)
+            {
+                auditableEntity.ClearCreatedAndLastModified();
+            }
+
+            if (entity is ISoftDeleteEntity softDeleteEntity)
             {
                 softDeleteEntity.UndoMarkAsDeleted();
             }
 
-            Context.Entity = Context.Entity; // reset pristine object
+            Context.Entity = entity;
 
-            WithOptions(x => x.AsNoTracking = initialAsNoTrackingSetting); // restore AsNoTracking setting
+            WithOptions(x => x.AsNoTracking = asNoTrackingSettingToRestore);
 
             stopwatch.Stop();
         }

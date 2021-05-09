@@ -17,9 +17,9 @@ namespace Demo.Domain.Shared.BusinessComponent
         protected BusinessComponentOptions Options { get; private set; }
         protected readonly ICurrentUser CurrentUser;
         protected readonly IDateTime DateTime;
+        protected readonly IDbCommand<T> DbCommand;
+        protected readonly ILogger Logger;
 
-        private readonly ILogger _logger;
-        private readonly IDbCommand<T> _dbCommand;
         private readonly IEnumerable<IDefaultValuesSetter<T>> _defaultValuesSetters;
         private readonly IEnumerable<IValidator<T>> _validators;
         private readonly IEnumerable<IBeforeCreate<T>> _beforeCreateHooks;
@@ -50,11 +50,11 @@ namespace Demo.Domain.Shared.BusinessComponent
         {
             Context = new BusinessComponentContext<T>(logger, publishDomainEventAfterCommitQueue, jsonService);
             Options = new BusinessComponentOptions();
-            _logger = logger;
+            Logger = logger;
             CurrentUser = currentUser;
             DateTime = dateTime;
+            DbCommand = dbCommand;
 
-            _dbCommand = dbCommand;
             _defaultValuesSetters = defaultValuesSetters;
             _validators = validators;
             _beforeCreateHooks = beforeCreateHooks.OrderBy(x => x.Order);
@@ -91,7 +91,7 @@ namespace Demo.Domain.Shared.BusinessComponent
         public virtual IBusinessComponent<T> WithOptions(Action<BusinessComponentOptions> action)
         {
             action(Options);
-            _dbCommand.WithOptions(x => {
+            DbCommand.WithOptions(x => {
                 x.AsNoTracking = Options.AsNoTracking;
             });
             return this;
@@ -101,7 +101,7 @@ namespace Demo.Domain.Shared.BusinessComponent
         {
             var stopwatch = Context.PerformanceMeasurements.Start(nameof(GetAsync));
 
-            Context.Entity = await _dbCommand.GetAsync(id, Includes, cancellationToken);
+            Context.Entity = await DbCommand.GetAsync(id, Includes, cancellationToken);
 
             if (Context.Entity == null
                 || (Context.Entity is ISoftDeleteEntity softDeleteEntity && !Options.IncludeDeleted && ((ISoftDeleteEntity)Context.Entity).Deleted))
@@ -156,7 +156,7 @@ namespace Demo.Domain.Shared.BusinessComponent
                 auditableEntity.SetCreatedByAndCreatedOn(CurrentUser.Id, DateTime.UtcNow);
             }
 
-            await _dbCommand.InsertAsync(Context.Entity, cancellationToken);
+            await DbCommand.InsertAsync(Context.Entity, cancellationToken);
 
             await ExecuteAfterCreateHooks(cancellationToken);
 
@@ -203,7 +203,7 @@ namespace Demo.Domain.Shared.BusinessComponent
                 auditableEntity.SetLastModifiedByAndLastModifiedOn(CurrentUser.Id, DateTime.UtcNow);
             }
 
-            await _dbCommand.UpdateAsync(Context.Entity, cancellationToken);
+            await DbCommand.UpdateAsync(Context.Entity, cancellationToken);
 
             await ExecuteAfterUpdateHooks(cancellationToken);
 
@@ -265,11 +265,11 @@ namespace Demo.Domain.Shared.BusinessComponent
             {
                 softDeleteEntity.MarkAsDeleted(CurrentUser.Id, DateTime.UtcNow);
 
-                await _dbCommand.UpdateAsync(Context.Entity, cancellationToken);
+                await DbCommand.UpdateAsync(Context.Entity, cancellationToken);
             }
             else
             {
-                await _dbCommand.DeleteAsync(Context.Entity, cancellationToken);
+                await DbCommand.DeleteAsync(Context.Entity, cancellationToken);
             }
 
             await ExecuteAfterDeleteHooks(cancellationToken);
