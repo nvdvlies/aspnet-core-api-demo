@@ -23,7 +23,8 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint.OutputCollect
             new CreateCommandOutputCollector(),
             new CreateResponseOutputCollector(),
             new CreateCommandHandlerOutputCollector(),
-            new CreateCommandValidatorOutputCollector()
+            new CreateCommandValidatorOutputCollector(),
+            new CreateMappingProfileOutputCollector()
         };
 
         public IEnumerable<IChange> CollectChanges(ScaffolderContext context)
