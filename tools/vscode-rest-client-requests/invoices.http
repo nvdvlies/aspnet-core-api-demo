@@ -1,6 +1,7 @@
 @baseUrl = https://localhost:44309
 @createdInvoiceLocation = {{create.response.headers.location}}
 @copyInvoiceLocation = {{copy.response.headers.location}}
+@creditInvoiceLocation = {{credit.response.headers.location}}
 #@createdInvoiceId = {{create.response.body.$.id}}
 
 # @name search
@@ -18,7 +19,7 @@ POST {{baseUrl}}/api/invoices
 Content-Type: application/json
 
 {
-  "customerId": "2d9d9aae-6c8c-447f-9861-08d9042c6bca",
+  "customerId": "b65ec4d7-91a3-4cfc-eb61-08d9188a4ca6",
   "invoiceDate": "2021-04-24T00:00:00",
   "paymentTerm": 30,
   "orderReference": "test",
@@ -44,22 +45,21 @@ PUT {{createdInvoiceLocation}}
 Content-Type: application/json
 
  {
-    "customerId": "2d9d9aae-6c8c-447f-9861-08d9042c6bca",
+    "customerId": "b65ec4d7-91a3-4cfc-eb61-08d9188a4ca6",
     "invoiceDate": "2021-04-24T00:00:00",
     "paymentTerm": 31,
     "orderReference": "test 6",
     "invoiceLines": [
       {
-        "quantity": 1,
+        "quantity": 2,
         "description": "Test updated2",
         "sellingPrice": 10.00,
-        "id": "8a45a01e-dcff-45ce-545e-08d90f8b7256"
+        "id": "70733454-f890-4a55-85cb-08d9188a3541"
       },
       {
         "quantity": 2,
         "description": "Line 2",
-        "sellingPrice": 10.00,
-        "id": "7d9e398d-5046-46fd-545f-08d90f8b7256"
+        "sellingPrice": 10.00
       }
     ],
     "id": "c2e085af-7218-4b4f-7caa-08d90f2dd32a",
@@ -79,6 +79,21 @@ Content-Type: application/json
 
 # @name getCopyById
 GET {{copyInvoiceLocation}}
+Accept: application/json
+
+###
+
+# @name credit
+POST {{createdInvoiceLocation}}/credit
+Content-Type: application/json
+
+{
+}
+
+###
+
+# @name getCreditById
+GET {{creditInvoiceLocation}}
 Accept: application/json
 
 ###
