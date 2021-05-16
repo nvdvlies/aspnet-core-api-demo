@@ -9,5 +9,6 @@ namespace Demo.Domain.Invoice.BusinessComponent.Interfaces
     {
         void SetStatus(InvoiceStatus newStatus);
         Task GetCopyAsync(Guid id, CancellationToken cancellationToken);
+        Task GetAsCreditAsync(Guid id, CancellationToken cancellationToken);
     }
 }

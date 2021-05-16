@@ -1,3 +1,4 @@
+using Demo.Application.Invoices.Commands.CreditInvoice;
 using Demo.Application.Invoices.Commands.CopyInvoice;
 using Demo.Application.Invoices.Queries.GetInvoiceAuditlog;
 using Demo.Application.Invoices.Commands.MarkInvoiceAsCancelled;
@@ -139,6 +140,19 @@ namespace Demo.WebApi.Controllers
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
         public async Task<ActionResult> Copy([FromRoute] Guid id, CopyInvoiceCommand command, CancellationToken cancellationToken)
+        {
+            command.SetInvoiceId(id);
+
+            var result = await Mediator.Send(command, cancellationToken);
+
+            return CreatedAtRoute(routeName: nameof(GetInvoiceById), routeValues: new { id = result.Id }, result);
+        }
+
+        [HttpPost("{id}/Credit")]
+        [ProducesResponseType(typeof(CreditInvoiceResponse), (int)HttpStatusCode.Created)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
+        public async Task<ActionResult> Credit([FromRoute] Guid id, CreditInvoiceCommand command, CancellationToken cancellationToken)
         {
             command.SetInvoiceId(id);
 

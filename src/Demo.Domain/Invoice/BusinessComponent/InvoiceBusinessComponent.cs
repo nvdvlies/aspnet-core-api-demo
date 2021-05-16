@@ -43,40 +43,70 @@ namespace Demo.Domain.Invoice.BusinessComponent
         public async Task GetCopyAsync(Guid id, CancellationToken cancellationToken)
         {
             var stopwatch = Context.PerformanceMeasurements.Start(nameof(GetCopyAsync));
-
             var asNoTrackingSettingToRestore = Options.AsNoTracking;
-
-            WithOptions(x => x.AsNoTracking = true);
-
-            var entity = await DbCommand.GetAsync(id, Includes, cancellationToken);
-
-            if (entity == null)
+            try
             {
-                throw new DomainEntityNotFoundException($"Entity with id '{id}' not found");
-            }
+                WithOptions(x => x.AsNoTracking = true);
 
-            entity.Id = default;
-            entity.InvoiceNumber = default;
-            entity.Status = InvoiceStatus.Draft;
-            entity.PdfIsSynced = false;
-            entity.PdfChecksum = default;
-            entity.InvoiceLines.ForEach(l => l.Id = default);
- 
-            if (entity is IAuditableEntity auditableEntity)
+                var entity = await DbCommand.GetAsync(id, Includes, cancellationToken);
+                if (entity == null)
+                {
+                    throw new DomainEntityNotFoundException($"Entity with id '{id}' not found");
+                }
+
+                entity.Id = default;
+                entity.InvoiceNumber = default;
+                entity.Status = InvoiceStatus.Draft;
+                entity.InvoiceDate = DateTime.UtcNow.Date;
+                entity.PdfIsSynced = false;
+                entity.PdfChecksum = default;
+                entity.InvoiceLines.ForEach(l => l.Id = default);
+                (entity as IAuditableEntity).ClearCreatedAndLastModified();
+                (entity as ISoftDeleteEntity).UndoMarkAsDeleted();
+
+                Context.Entity = entity;
+            }
+            finally
             {
-                auditableEntity.ClearCreatedAndLastModified();
+                WithOptions(x => x.AsNoTracking = asNoTrackingSettingToRestore);
+                stopwatch.Stop();
             }
+        }
 
-            if (entity is ISoftDeleteEntity softDeleteEntity)
+        public async Task GetAsCreditAsync(Guid id, CancellationToken cancellationToken)
+        {
+            var stopwatch = Context.PerformanceMeasurements.Start(nameof(GetAsCreditAsync));
+            var asNoTrackingSettingToRestore = Options.AsNoTracking;
+            try
             {
-                softDeleteEntity.UndoMarkAsDeleted();
+                WithOptions(x => x.AsNoTracking = true);
+
+                var entity = await DbCommand.GetAsync(id, Includes, cancellationToken);
+                if (entity == null)
+                {
+                    throw new DomainEntityNotFoundException($"Entity with id '{id}' not found");
+                }
+
+                entity.Id = default;
+                entity.InvoiceNumber = default;
+                entity.Status = InvoiceStatus.Draft;
+                entity.InvoiceDate = DateTime.UtcNow.Date;
+                entity.PdfIsSynced = false;
+                entity.PdfChecksum = default;
+                entity.InvoiceLines.ForEach(l => { 
+                    l.Id = default;
+                    l.Quantity *= -1;
+                });
+                (entity as IAuditableEntity).ClearCreatedAndLastModified();
+                (entity as ISoftDeleteEntity).UndoMarkAsDeleted();
+
+                Context.Entity = entity;
             }
-
-            Context.Entity = entity;
-
-            WithOptions(x => x.AsNoTracking = asNoTrackingSettingToRestore);
-
-            stopwatch.Stop();
+            finally
+            {
+                WithOptions(x => x.AsNoTracking = asNoTrackingSettingToRestore);
+                stopwatch.Stop();
+            }
         }
 
         public void SetStatus(InvoiceStatus newStatus)
