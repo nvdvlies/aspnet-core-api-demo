@@ -1,4 +1,5 @@
 ﻿using Demo.Domain.Shared.BusinessComponent;
+using Demo.Domain.Shared.Extensions;
 using System;
 using System.Collections.Generic;
 
@@ -12,13 +13,13 @@ namespace Demo.Domain.Shared.Exceptions
         { }
 
         public DomainValidationException(IEnumerable<ValidationMessage> validationMessages)
-            : base(validationMessages.ToString())
+            : base(validationMessages.AsString())
         {
             ValidationMessages = validationMessages;
         }
 
         public DomainValidationException(IEnumerable<ValidationMessage> validationMessages, Exception innerException)
-            : base(validationMessages.ToString(), innerException)
+            : base(validationMessages.AsString(), innerException)
         {
             ValidationMessages = validationMessages;
         }
