@@ -77,15 +77,19 @@ namespace Demo.Domain.Shared.BusinessComponent
         public async virtual Task NewAsync(CancellationToken cancellationToken = default)
         {
             var stopwatch = Context.PerformanceMeasurements.Start(nameof(NewAsync));
-
-            var entity = Activator.CreateInstance<T>();
-            foreach (var defaultValuesSetter in _defaultValuesSetters)
+            try
             {
-                await defaultValuesSetter.SetDefaultValuesAsync(entity, Context.State, cancellationToken);
+                var entity = Activator.CreateInstance<T>();
+                foreach (var defaultValuesSetter in _defaultValuesSetters)
+                {
+                    await defaultValuesSetter.SetDefaultValuesAsync(entity, Context.State, cancellationToken);
+                }
+                Context.Entity = entity;
             }
-            Context.Entity = entity;
-
-            stopwatch.Stop();
+            finally
+            {
+                stopwatch.Stop();
+            }
         }
 
         public virtual IBusinessComponent<T> WithOptions(Action<BusinessComponentOptions> action)
@@ -100,16 +104,20 @@ namespace Demo.Domain.Shared.BusinessComponent
         public async virtual Task GetAsync(Guid id, CancellationToken cancellationToken = default)
         {
             var stopwatch = Context.PerformanceMeasurements.Start(nameof(GetAsync));
+            try
+            { 
+                Context.Entity = await DbCommand.GetAsync(id, Includes, cancellationToken);
 
-            Context.Entity = await DbCommand.GetAsync(id, Includes, cancellationToken);
-
-            if (Context.Entity == null
-                || (Context.Entity is ISoftDeleteEntity softDeleteEntity && !Options.IncludeDeleted && ((ISoftDeleteEntity)Context.Entity).Deleted))
-            {
-                throw new DomainEntityNotFoundException($"Entity with id '{id}' not found");
+                if (Context.Entity == null
+                    || (Context.Entity is ISoftDeleteEntity softDeleteEntity && !Options.IncludeDeleted && ((ISoftDeleteEntity)Context.Entity).Deleted))
+                {
+                    throw new DomainEntityNotFoundException($"Entity with id '{id}' not found");
+                }
             }
-
-            stopwatch.Stop();
+            finally
+            {
+                stopwatch.Stop();
+            }
         }
 
         public virtual void With(Action<T> action)
@@ -122,20 +130,24 @@ namespace Demo.Domain.Shared.BusinessComponent
         private async Task ValidateAsync(EditMode editMode, CancellationToken cancellationToken = default)
         {
             var stopwatch = Context.PerformanceMeasurements.Start(nameof(ValidateAsync));
-
-            var validationTasks = _validators
+            try
+            {
+                var validationTasks = _validators
                 .Select(async v => await v.ValidateAsync(Context, cancellationToken));
 
-            var validationMessages = (await Task.WhenAll(validationTasks))
-                .Where(x => x != null)
-                .SelectMany(x => x)
-                .ToList();
+                var validationMessages = (await Task.WhenAll(validationTasks))
+                    .Where(x => x != null)
+                    .SelectMany(x => x)
+                    .ToList();
 
-            stopwatch.Stop();
-
-            if (validationMessages.Count != 0)
+                if (validationMessages.Count != 0)
+                {
+                    throw new DomainValidationException(validationMessages);
+                }
+            }
+            finally
             {
-                throw new DomainValidationException(validationMessages);
+                stopwatch.Stop();
             }
         }
 
@@ -144,45 +156,60 @@ namespace Demo.Domain.Shared.BusinessComponent
             Guard.NotNull(Context.Entity, nameof(Context.Entity), "Call NewAsync first to instantiate entity");
 
             var stopwatch = Context.PerformanceMeasurements.Start(nameof(CreateAsync));
-
-            Context.EditMode = EditMode.Create;
-
-            await ExecuteBeforeCreateHooks(cancellationToken);
-
-            await ValidateAsync(Context.EditMode, cancellationToken);
-
-            if (Context.Entity is IAuditableEntity auditableEntity)
+            try
             {
-                auditableEntity.SetCreatedByAndCreatedOn(CurrentUser.Id, DateTime.UtcNow);
+                Context.EditMode = EditMode.Create;
+
+                await ExecuteBeforeCreateHooks(cancellationToken);
+
+                await ValidateAsync(Context.EditMode, cancellationToken);
+
+                if (Context.Entity is IAuditableEntity auditableEntity)
+                {
+                    auditableEntity.SetCreatedByAndCreatedOn(CurrentUser.Id, DateTime.UtcNow);
+                }
+
+                await DbCommand.InsertAsync(Context.Entity, cancellationToken);
+
+                await ExecuteAfterCreateHooks(cancellationToken);
             }
-
-            await DbCommand.InsertAsync(Context.Entity, cancellationToken);
-
-            await ExecuteAfterCreateHooks(cancellationToken);
-
-            stopwatch.Stop();
-
-            Context.PerformanceMeasurements.Flush();
+            finally
+            {
+                stopwatch.Stop();
+                Context.PerformanceMeasurements.Flush();
+            }
         }
 
         private async Task ExecuteBeforeCreateHooks(CancellationToken cancellationToken)
         {
             var stopwatch = Context.PerformanceMeasurements.Start(nameof(ExecuteBeforeCreateHooks));
-            foreach (var beforeCreateHook in _beforeCreateHooks)
+            try
             {
-                await beforeCreateHook.ExecuteAsync(HookType.BeforeCreate, Context, cancellationToken);
+                foreach (var beforeCreateHook in _beforeCreateHooks)
+                {
+                    await beforeCreateHook.ExecuteAsync(HookType.BeforeCreate, Context, cancellationToken);
+                }
             }
-            stopwatch.Stop();
+            finally
+            {
+                stopwatch.Stop();
+            }
         }
 
         private async Task ExecuteAfterCreateHooks(CancellationToken cancellationToken)
         {
             var stopwatch = Context.PerformanceMeasurements.Start(nameof(ExecuteAfterCreateHooks));
-            foreach (var afterCreateHook in _afterCreateHooks)
+            try
             {
-                await afterCreateHook.ExecuteAsync(HookType.AfterCreate, Context, cancellationToken);
+                foreach (var afterCreateHook in _afterCreateHooks)
+                {
+                    await afterCreateHook.ExecuteAsync(HookType.AfterCreate, Context, cancellationToken);
+                }
             }
-            stopwatch.Stop();
+            finally
+            {
+                stopwatch.Stop();
+            }
         }
 
         public async virtual Task UpdateAsync(CancellationToken cancellationToken = default)
@@ -191,47 +218,62 @@ namespace Demo.Domain.Shared.BusinessComponent
             Guard.NotTrue(Options.AsNoTracking, nameof(Options.AsNoTracking), "Cannot update entity with option 'AsNoTracking' set to 'true'");
 
             var stopwatch = Context.PerformanceMeasurements.Start(nameof(UpdateAsync));
-
-            Context.EditMode = EditMode.Update;
-
-            await ExecuteBeforeUpdateHooks(cancellationToken);
-
-            await ValidateAsync(Context.EditMode, cancellationToken);
-
-            if (Context.Entity is IAuditableEntity auditableEntity)
+            try
             {
-                auditableEntity.SetLastModifiedByAndLastModifiedOn(CurrentUser.Id, DateTime.UtcNow);
+                Context.EditMode = EditMode.Update;
+
+                await ExecuteBeforeUpdateHooks(cancellationToken);
+
+                await ValidateAsync(Context.EditMode, cancellationToken);
+
+                if (Context.Entity is IAuditableEntity auditableEntity)
+                {
+                    auditableEntity.SetLastModifiedByAndLastModifiedOn(CurrentUser.Id, DateTime.UtcNow);
+                }
+
+                await DbCommand.UpdateAsync(Context.Entity, cancellationToken);
+
+                await ExecuteAfterUpdateHooks(cancellationToken);
+
+                await CreateAuditLogAsync(cancellationToken);
             }
-
-            await DbCommand.UpdateAsync(Context.Entity, cancellationToken);
-
-            await ExecuteAfterUpdateHooks(cancellationToken);
-
-            await CreateAuditLogAsync(cancellationToken);
-
-            stopwatch.Stop();
-
-            Context.PerformanceMeasurements.Flush();
+            finally
+            {
+                stopwatch.Stop();
+                Context.PerformanceMeasurements.Flush();
+            }
         }
 
         private async Task ExecuteBeforeUpdateHooks(CancellationToken cancellationToken)
         {
             var stopwatch = Context.PerformanceMeasurements.Start(nameof(ExecuteBeforeUpdateHooks));
-            foreach (var beforeUpdateHook in _beforeUpdateHooks)
+            try
             {
-                await beforeUpdateHook.ExecuteAsync(HookType.BeforeUpdate, Context, cancellationToken);
+                foreach (var beforeUpdateHook in _beforeUpdateHooks)
+                {
+                    await beforeUpdateHook.ExecuteAsync(HookType.BeforeUpdate, Context, cancellationToken);
+                }
             }
-            stopwatch.Stop();
+            finally
+            {
+                stopwatch.Stop();
+            }
         }
 
         private async Task ExecuteAfterUpdateHooks(CancellationToken cancellationToken)
         {
             var stopwatch = Context.PerformanceMeasurements.Start(nameof(ExecuteAfterUpdateHooks));
-            foreach (var afterUpdateHook in _afterUpdateHooks)
+            try
             {
-                await afterUpdateHook.ExecuteAsync(HookType.AfterUpdate, Context, cancellationToken);
+                foreach (var afterUpdateHook in _afterUpdateHooks)
+                {
+                    await afterUpdateHook.ExecuteAsync(HookType.AfterUpdate, Context, cancellationToken);
+                }
             }
-            stopwatch.Stop();
+            finally
+            {
+                stopwatch.Stop();
+            }
         }
 
         public async virtual Task UpsertAsync(CancellationToken cancellationToken = default)
@@ -254,49 +296,64 @@ namespace Demo.Domain.Shared.BusinessComponent
             Guard.NotTrue(Options.AsNoTracking, nameof(Options.AsNoTracking), "Cannot delete entity with option 'AsNoTracking' set to 'true'");
 
             var stopwatch = Context.PerformanceMeasurements.Start(nameof(DeleteAsync));
-
-            Context.EditMode = EditMode.Delete;
-
-            await ExecuteBeforeDeleteHooks(cancellationToken);
-
-            await ValidateAsync(Context.EditMode, cancellationToken);
-
-            if (Context.Entity is ISoftDeleteEntity softDeleteEntity && !Options.DisableSoftDelete)
+            try
             {
-                softDeleteEntity.MarkAsDeleted(CurrentUser.Id, DateTime.UtcNow);
+                Context.EditMode = EditMode.Delete;
 
-                await DbCommand.UpdateAsync(Context.Entity, cancellationToken);
+                await ExecuteBeforeDeleteHooks(cancellationToken);
+
+                await ValidateAsync(Context.EditMode, cancellationToken);
+
+                if (Context.Entity is ISoftDeleteEntity softDeleteEntity && !Options.DisableSoftDelete)
+                {
+                    softDeleteEntity.MarkAsDeleted(CurrentUser.Id, DateTime.UtcNow);
+
+                    await DbCommand.UpdateAsync(Context.Entity, cancellationToken);
+                }
+                else
+                {
+                    await DbCommand.DeleteAsync(Context.Entity, cancellationToken);
+                }
+
+                await ExecuteAfterDeleteHooks(cancellationToken);
             }
-            else
+            finally
             {
-                await DbCommand.DeleteAsync(Context.Entity, cancellationToken);
+                stopwatch.Stop();
+                Context.PerformanceMeasurements.Flush();
             }
-
-            await ExecuteAfterDeleteHooks(cancellationToken);
-
-            stopwatch.Stop();
-
-            Context.PerformanceMeasurements.Flush();
         }
 
         private async Task ExecuteBeforeDeleteHooks(CancellationToken cancellationToken)
         {
             var stopwatch = Context.PerformanceMeasurements.Start(nameof(ExecuteBeforeDeleteHooks));
-            foreach (var beforeDeleteHook in _beforeDeleteHooks)
+            try
             {
-                await beforeDeleteHook.ExecuteAsync(HookType.BeforeDelete, Context, cancellationToken);
+                foreach (var beforeDeleteHook in _beforeDeleteHooks)
+                {
+                    await beforeDeleteHook.ExecuteAsync(HookType.BeforeDelete, Context, cancellationToken);
+                }
             }
-            stopwatch.Stop();
+            finally
+            {
+                stopwatch.Stop();
+            }
         }
 
         private async Task ExecuteAfterDeleteHooks(CancellationToken cancellationToken)
         {
             var stopwatch = Context.PerformanceMeasurements.Start(nameof(ExecuteAfterDeleteHooks));
-            foreach (var afterDeleteHook in _afterDeleteHooks)
+            try
             {
-                await afterDeleteHook.ExecuteAsync(HookType.AfterDelete, Context, cancellationToken);
+                foreach (var afterDeleteHook in _afterDeleteHooks)
+                {
+                    await afterDeleteHook.ExecuteAsync(HookType.AfterDelete, Context, cancellationToken);
+                }
             }
-            stopwatch.Stop();
+            finally
+            {
+                stopwatch.Stop();
+            }
         }
 
         public virtual void PublishDomainEventAfterCommit(IDomainEvent domainEvent)
@@ -312,8 +369,14 @@ namespace Demo.Domain.Shared.BusinessComponent
             }
 
             var stopwatch = Context.PerformanceMeasurements.Start(nameof(CreateAuditLogAsync));
-            await _auditlog.CreateAuditLogAsync(Context.Entity, Context.Pristine, cancellationToken);
-            stopwatch.Stop();
+            try
+            {
+                await _auditlog.CreateAuditLogAsync(Context.Entity, Context.Pristine, cancellationToken);
+            }
+            finally
+            {
+                stopwatch.Stop();
+            } 
         }
     }
 }
