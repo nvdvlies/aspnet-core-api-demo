@@ -19,6 +19,7 @@ namespace Demo.Domain.Invoice.BusinessComponent.Validators
             RuleFor(invoice => invoice.InvoiceLines).NotEmpty();
             RuleForEach(invoice => invoice.InvoiceLines).ChildRules(invoiceLine => {
                 invoiceLine.RuleFor(x => x.Quantity).NotEmpty();
+                invoiceLine.RuleFor(x => x.Description).NotEmpty();
             });
 
             var validationResult = await ValidateAsync(context.Entity, cancellationToken);
