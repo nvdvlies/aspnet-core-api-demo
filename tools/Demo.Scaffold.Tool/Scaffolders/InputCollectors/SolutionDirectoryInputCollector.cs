@@ -1,5 +1,6 @@
 ﻿using Demo.Scaffold.Tool.Interfaces;
 using Spectre.Console;
+using System;
 using System.IO;
 
 namespace Demo.Scaffold.Tool.Scaffolders.InputCollectors
@@ -10,8 +11,13 @@ namespace Demo.Scaffold.Tool.Scaffolders.InputCollectors
         {
             while (!HasValidPathToSolutionRootDirectory(context))
             {
-                var path = AnsiConsole.Ask<string>($"In which directory is '{Constants.SolutionName}' is located?");
+                var path = AnsiConsole.Ask<string>($"In which directory is '{Constants.SolutionName}' located?");
                 context.AppSettings.PathToSolutionRootDirectory = path;
+
+                if (!HasValidPathToSolutionRootDirectory(context))
+                {
+                    Console.WriteLine($"{Constants.SolutionName} not found in directory '{path}'.");
+                }
             }
         }
 
