@@ -1,5 +1,4 @@
 ﻿using Demo.Domain.Shared.BusinessComponent;
-using System.Threading.Tasks;
 
 namespace Demo.Domain.Shared.Interfaces
 {

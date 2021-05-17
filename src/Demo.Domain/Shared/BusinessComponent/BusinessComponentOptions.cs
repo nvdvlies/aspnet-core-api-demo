@@ -1,6 +1,8 @@
-﻿namespace Demo.Domain.Shared.BusinessComponent
+﻿using Demo.Domain.Shared.Interfaces;
+
+namespace Demo.Domain.Shared.BusinessComponent
 {
-    public class BusinessComponentOptions
+    internal class BusinessComponentOptions : IBusinessComponentOptions, IReadonlyBusinessComponentOptions
     {
         public bool IncludeDeleted { get; set; } = false;
         public bool AsNoTracking { get; set; } = false;

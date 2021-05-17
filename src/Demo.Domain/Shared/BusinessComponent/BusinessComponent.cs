@@ -14,7 +14,7 @@ namespace Demo.Domain.Shared.BusinessComponent
     internal abstract class BusinessComponent<T> : IBusinessComponent<T> where T : IEntity
     {
         protected readonly IBusinessComponentContext<T> Context;
-        protected BusinessComponentOptions Options { get; private set; }
+        protected IReadonlyBusinessComponentOptions Options => _options;
         protected readonly ICurrentUser CurrentUser;
         protected readonly IDateTime DateTime;
         protected readonly IDbCommand<T> DbCommand;
@@ -29,6 +29,8 @@ namespace Demo.Domain.Shared.BusinessComponent
         private readonly IEnumerable<IBeforeDelete<T>> _beforeDeleteHooks;
         private readonly IEnumerable<IAfterDelete<T>> _afterDeleteHooks;
         private readonly IAuditlog<T> _auditlog;
+
+        private BusinessComponentOptions _options { get; set; }
 
         public BusinessComponent(
             ILogger logger,
@@ -49,7 +51,6 @@ namespace Demo.Domain.Shared.BusinessComponent
         )
         {
             Context = new BusinessComponentContext<T>(logger, publishDomainEventAfterCommitQueue, jsonService);
-            Options = new BusinessComponentOptions();
             Logger = logger;
             CurrentUser = currentUser;
             DateTime = dateTime;
@@ -64,6 +65,8 @@ namespace Demo.Domain.Shared.BusinessComponent
             _beforeDeleteHooks = beforeDeleteHooks.OrderBy(x => x.Order);
             _afterDeleteHooks = afterDeleteHooks.OrderBy(x => x.Order);
             _auditlog = auditlog;
+
+            _options = new BusinessComponentOptions();
         }
 
         public T Entity => Context.Entity;
@@ -92,9 +95,9 @@ namespace Demo.Domain.Shared.BusinessComponent
             }
         }
 
-        public virtual IBusinessComponent<T> WithOptions(Action<BusinessComponentOptions> action)
+        public virtual IBusinessComponent<T> WithOptions(Action<IBusinessComponentOptions> action)
         {
-            action(Options);
+            action(_options);
             DbCommand.WithOptions(x => {
                 x.AsNoTracking = Options.AsNoTracking;
             });

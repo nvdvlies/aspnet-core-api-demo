@@ -10,7 +10,7 @@ namespace Demo.Domain.Shared.Interfaces
         T Entity { get; }
         Guid EntityId { get; }
         IBusinessComponentState State { get; }
-        IBusinessComponent<T> WithOptions(Action<BusinessComponentOptions> action);
+        IBusinessComponent<T> WithOptions(Action<IBusinessComponentOptions> action);
         Task NewAsync(CancellationToken cancellationToken);
         Task GetAsync(Guid id, CancellationToken cancellationToken);
         void With(Action<T> action);
