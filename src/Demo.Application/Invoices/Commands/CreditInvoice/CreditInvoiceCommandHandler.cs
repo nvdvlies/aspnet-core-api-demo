@@ -18,7 +18,7 @@ namespace Demo.Application.Invoices.Commands.CreditInvoice
 
         public async Task<CreditInvoiceResponse> Handle(CreditInvoiceCommand request, CancellationToken cancellationToken)
         {
-            await _bc.GetAsCreditAsync(request.Id, cancellationToken);
+            await _bc.GetAsNewCreditAsync(request.Id, cancellationToken);
 
             await _bc.CreateAsync(cancellationToken);
 

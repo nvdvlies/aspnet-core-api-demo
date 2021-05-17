@@ -18,7 +18,7 @@ namespace Demo.Application.Invoices.Commands.CopyInvoice
 
         public async Task<CopyInvoiceResponse> Handle(CopyInvoiceCommand request, CancellationToken cancellationToken)
         {
-            await _bc.GetCopyAsync(request.Id, cancellationToken);
+            await _bc.GetAsNewCopyAsync(request.Id, cancellationToken);
 
             await _bc.CreateAsync(cancellationToken);
 

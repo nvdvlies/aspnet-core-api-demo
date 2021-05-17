@@ -8,7 +8,7 @@ namespace Demo.Domain.Invoice.BusinessComponent.Interfaces
     public interface IInvoiceBusinessComponent : IBusinessComponent<Invoice>
     {
         void SetStatus(InvoiceStatus newStatus);
-        Task GetCopyAsync(Guid id, CancellationToken cancellationToken);
-        Task GetAsCreditAsync(Guid id, CancellationToken cancellationToken);
+        Task GetAsNewCopyAsync(Guid id, CancellationToken cancellationToken);
+        Task GetAsNewCreditAsync(Guid id, CancellationToken cancellationToken);
     }
 }
