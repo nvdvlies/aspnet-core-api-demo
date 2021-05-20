@@ -32,9 +32,9 @@ namespace Demo.Application.Customers.Queries.SearchCustomers
         {
             var query = _query.AsQueryable();
 
-            if (!string.IsNullOrEmpty(request.Name))
+            if (!string.IsNullOrWhiteSpace(request.Name))
             {
-                query = query.Where(x => x.Name.ToLower().Contains(request.Name.ToLower()));
+                query = query.Where(x => EF.Functions.Like(x.Name, $"%{request.Name}%"));
             }
 
             var totalItems = await query.CountAsync(cancellationToken);
@@ -52,6 +52,7 @@ namespace Demo.Application.Customers.Queries.SearchCustomers
                 .Skip(request.PageSize * request.PageIndex)
                 .Take(request.PageSize)
                 .ProjectTo<SearchCustomerDto>(_mapper.ConfigurationProvider)
+                //.WriteQueryStringToOutputWindowIfInDebugMode()
                 .ToListAsync(cancellationToken);
 
             return new SearchCustomersQueryResult

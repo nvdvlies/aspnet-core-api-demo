@@ -32,9 +32,9 @@ namespace Demo.Application.Invoices.Queries.SearchInvoices
         {
             var query = _query.AsQueryable();
 
-            if (!string.IsNullOrEmpty(request.InvoiceNumber))
+            if (!string.IsNullOrWhiteSpace(request.InvoiceNumber))
             {
-                query = query.Where(x => x.InvoiceNumber != null && x.InvoiceNumber.ToLower().Contains(request.InvoiceNumber.ToLower()));
+                query = query.Where(x => EF.Functions.Like(x.InvoiceNumber, $"%{request.InvoiceNumber}%"));
             }
 
             var totalItems = await query.CountAsync(cancellationToken);
@@ -52,6 +52,7 @@ namespace Demo.Application.Invoices.Queries.SearchInvoices
                 .Skip(request.PageSize * request.PageIndex)
                 .Take(request.PageSize)
                 .ProjectTo<SearchInvoiceDto>(_mapper.ConfigurationProvider)
+                //.WriteQueryStringToOutputWindowIfInDebugMode()
                 .ToListAsync(cancellationToken);
 
             return new SearchInvoicesQueryResult
