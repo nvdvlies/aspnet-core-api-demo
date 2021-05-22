@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace Demo.Domain.Invoice.BusinessComponent.Hooks
 {
-    internal class CreateUpdateDeleteInvoiceDomainEventHook : IAfterCreate<Invoice>, IAfterUpdate<Invoice>, IAfterDelete<Invoice>
+    internal class InvoiceCreatedUpdatedDeletedDomainEventHook : IAfterCreate<Invoice>, IAfterUpdate<Invoice>, IAfterDelete<Invoice>
     {
         private readonly ICurrentUser _currentUser;
 
-        public CreateUpdateDeleteInvoiceDomainEventHook(ICurrentUser currentUser)
+        public InvoiceCreatedUpdatedDeletedDomainEventHook(ICurrentUser currentUser)
         {
             _currentUser = currentUser;
         }

@@ -1,15 +1,16 @@
 using Demo.Application;
+using Demo.Application.Shared.Interfaces;
 using Demo.Common.Interfaces;
 using Demo.Domain;
 using Demo.Infrastructure;
 using Demo.WebApi.Middleware;
 using Demo.WebApi.Services;
+using Demo.WebApi.SignalR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
 
 namespace Demo.WebApi
 {
@@ -25,10 +26,7 @@ namespace Demo.WebApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Demo.WebApi", Version = "v1" });
-            });
+            services.AddSwaggerDocument();
 
             services.AddCors(o => o.AddPolicy("AllowAnyCorsPolicy", builder =>
             {
@@ -38,12 +36,15 @@ namespace Demo.WebApi
             }));
 
             services.AddScoped<ICurrentUser, CurrentUserService>();
+            services.AddScoped<IEventHubContext, SignalrHubContext>();
 
             services.AddLogging();
 
             services.AddApplication();
             services.AddDomain();
             services.AddInfrastructure(Configuration);
+
+            services.AddSignalR();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -51,8 +52,9 @@ namespace Demo.WebApi
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Demo.WebApi v1"));
+
+                app.UseOpenApi();
+                app.UseSwaggerUi3();
             }
 
             app.UseHttpsRedirection();
@@ -67,6 +69,7 @@ namespace Demo.WebApi
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<SignalrHub>("/hub");
             });
         }
     }

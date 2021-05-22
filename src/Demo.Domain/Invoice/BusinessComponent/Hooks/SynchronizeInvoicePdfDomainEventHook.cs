@@ -11,8 +11,10 @@ using System.Threading.Tasks;
 
 namespace Demo.Domain.Invoice.BusinessComponent.Hooks
 {
-    internal class SynchronizeInvoicePdfDomainEventHook : IAfterCreate<Invoice>, IAfterUpdate<Invoice>
+    internal class SynchronizeInvoicePdfDomainEventHook : IBeforeCreate<Invoice>, IBeforeUpdate<Invoice>
     {
+        public int Order => 99;
+
         private readonly IInvoiceToPdfModelMapper _invoiceToPdfModelMapper;
 
         public SynchronizeInvoicePdfDomainEventHook(IInvoiceToPdfModelMapper invoiceToPdfModelMapper)
@@ -22,13 +24,13 @@ namespace Demo.Domain.Invoice.BusinessComponent.Hooks
 
         public async Task ExecuteAsync(HookType type, IBusinessComponentContext<Invoice> context, CancellationToken cancellationToken)
         {
-            if (type == HookType.AfterCreate)
+            if (type == HookType.BeforeCreate)
             {
                 // An invoice always has an accompanying PDF document. We can create this by requesting synchronization via a domain event.
                 context.Entity.PdfIsSynced = false;
                 context.PublishDomainEventAfterCommit(new SynchronizeInvoicePdfDomainEvent(context.Entity.Id));
             } 
-            else if (type == HookType.AfterUpdate && context.Pristine.Status == InvoiceStatus.Draft)
+            else if (type == HookType.BeforeUpdate && context.Pristine.Status == InvoiceStatus.Draft)
             {
                 var invoiceToPdfModel = await _invoiceToPdfModelMapper.MapAsync(context.Entity, cancellationToken);
                 var checksum = invoiceToPdfModel.GetChecksum();
