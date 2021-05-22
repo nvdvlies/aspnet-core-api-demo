@@ -25,7 +25,10 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.BusinessComponent
             new CreateEntityTypeConfigurationOutputCollector(),
             new AddDbSetToDbContextOutputCollector(),
             new AddUsingStatementToDbContextOutputCollector(),
-            new EntityCreatedDomainEventOutputCollector()
+            new EntityCreatedDomainEventOutputCollector(),
+            new EntityUpdatedDomainEventOutputCollector(),
+            new EntityDeletedDomainEventOutputCollector(),
+            new DomainEventHookOutputCollector()
         };
 
         public IEnumerable<IChange> CollectChanges(ScaffolderContext context)
