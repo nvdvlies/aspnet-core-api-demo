@@ -1,4 +1,4 @@
-# clean-architecture-with-business-components-demo
+# aspnet-core-api-demo
 
 An example architecture for an ASP.NET CORE API inspired by Jason Taylor's [CleanArchitecture](https://github.com/jasontaylordev/CleanArchitecture) template. 
 Notable difference is an encapsulation of domain layer entities with a thing I called a 'BusinessComponent'. 
