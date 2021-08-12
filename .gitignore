@@ -351,4 +351,5 @@ MigrationBackup/
 
 # Custom
 /tools/Demo.Scaffold.Tool/appsettings.user.json
+/tools/Demo.SignalrTypescript.Generator/appsettings.user.json
 /tools/nswag/*.ts
