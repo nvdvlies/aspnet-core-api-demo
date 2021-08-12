@@ -136,7 +136,7 @@ namespace Demo.Domain.Shared.BusinessComponent
             try
             {
                 var validationTasks = _validators
-                .Select(async v => await v.ValidateAsync(Context, cancellationToken));
+                    .Select(v => v.ValidateAsync(Context, cancellationToken));
 
                 var validationMessages = (await Task.WhenAll(validationTasks))
                     .Where(x => x != null)
