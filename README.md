@@ -1,7 +1,7 @@
-# clean-architecture-with-business-components-demo
+# aspnet-core-api-demo
 
 An example architecture for an ASP.NET CORE API inspired by Jason Taylor's [CleanArchitecture](https://github.com/jasontaylordev/CleanArchitecture) template. 
-Notable difference is an encapsulation of domain layer entities with a thing I called a 'BusinessComponent'. 
+Notable difference is an encapsulation of domain entities with a thing I called a 'BusinessComponent'. 
 A BusinessComponent encapsulates an aggregate root entity and offers:
 
  - Validation. [View example](https://github.com/nvdvlies/clean-architecture-with-business-components-demo/blob/main/src/Demo.Domain/Invoice/BusinessComponent/Validators/NotAllowedToDeleteInvoiceInStatusValidator.cs).
