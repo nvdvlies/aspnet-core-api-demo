@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Demo.Domain.Shared.Entities;
 using Demo.Domain.Shared.Interfaces;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace Demo.Application.Shared.Mappings
 {
@@ -16,6 +17,14 @@ namespace Demo.Application.Shared.Mappings
             var to = new To();
             bc.With(entity => mapper.Map(entity, to));
             return to;
+        }
+
+        public static void PatchFrom<From, To>(this IBusinessComponent<To> bc, JsonPatchDocument<From> from, IMapper mapper) 
+            where To : Entity
+            where From : class
+        {
+            var entityJsonPatchDocument = mapper.Map(from, new JsonPatchDocument<To>());
+            bc.With(entity => entityJsonPatchDocument.ApplyTo(entity));
         }
     }
 }

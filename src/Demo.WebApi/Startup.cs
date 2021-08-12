@@ -8,9 +8,12 @@ using Demo.WebApi.Services;
 using Demo.WebApi.SignalR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
+using System.Linq;
 
 namespace Demo.WebApi
 {
@@ -25,7 +28,10 @@ namespace Demo.WebApi
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers(options =>
+            {
+                options.InputFormatters.Insert(0, GetNewtonsoftJsonPatchInputFormatter());
+            });
             services.AddSwaggerDocument();
 
             services.AddCors(o => o.AddPolicy("AllowAnyCorsPolicy", builder =>
@@ -71,6 +77,31 @@ namespace Demo.WebApi
                 endpoints.MapControllers();
                 endpoints.MapHub<SignalrHub>("/hub");
             });
+        }
+
+
+        /// <summary>
+        /// AddNewtonsoftJson() replaces the System.Text.Json-based input and output formatters used for formatting all JSON content. 
+        /// To leave the other formatters unchanged we need to build a dummy ServiceProvider with AddNewtonsoftJson() and grab the 
+        /// NewtonsoftJsonPatchInputFormatter input formatter.
+        /// </summary>
+        /// <returns></returns>
+        private static NewtonsoftJsonPatchInputFormatter GetNewtonsoftJsonPatchInputFormatter()
+        {
+            var builder = new ServiceCollection()
+                .AddLogging()
+                .AddControllers()
+                .AddNewtonsoftJson()
+                .Services.BuildServiceProvider();
+
+            var inputFormatter = builder
+                .GetRequiredService<IOptions<MvcOptions>>()
+                .Value
+                .InputFormatters
+                .OfType<NewtonsoftJsonPatchInputFormatter>()
+                .First();
+
+            return inputFormatter;
         }
     }
 }

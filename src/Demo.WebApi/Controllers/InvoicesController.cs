@@ -1,3 +1,4 @@
+using Demo.Application.Invoices.Commands.PatchInvoice;
 using Demo.Application.Invoices.Commands.CreditInvoice;
 using Demo.Application.Invoices.Commands.CopyInvoice;
 using Demo.Application.Invoices.Queries.GetInvoiceAuditlog;
@@ -14,6 +15,8 @@ using System;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.JsonPatch;
+using Demo.Application.Invoices.Commands.PatchInvoice.Dtos;
 
 namespace Demo.WebApi.Controllers
 {
@@ -62,6 +65,23 @@ namespace Demo.WebApi.Controllers
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
         public async Task<ActionResult> Update([FromRoute] Guid id, UpdateInvoiceCommand command, CancellationToken cancellationToken)
         {
+            command.SetInvoiceId(id);
+
+            await Mediator.Send(command, cancellationToken);
+
+            return NoContent();
+        }
+
+        [HttpPatch("{id}")]
+        [ProducesResponseType((int)HttpStatusCode.NoContent)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
+        public async Task<ActionResult> Patch([FromRoute] Guid id, JsonPatchDocument<PatchInvoiceCommandInvoice> patchDocument, CancellationToken cancellationToken)
+        {
+            var command = new PatchInvoiceCommand
+            {
+                PatchDocument = patchDocument
+            };
             command.SetInvoiceId(id);
 
             await Mediator.Send(command, cancellationToken);
