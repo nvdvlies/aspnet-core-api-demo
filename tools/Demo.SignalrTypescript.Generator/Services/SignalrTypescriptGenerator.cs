@@ -17,8 +17,8 @@ namespace Demo.SignalrTypescript.Generator.Services
         {
             var eventHubInterface = typeof(IEventHub);
             var eventHubInfo = new EventHubInfo(eventHubInterface);
-            // convert to template
-            // save to file
+            // todo: convert to template
+            // todo: save to file
 
             foreach (var eventHub in eventHubInfo.EventHubs)
             {
