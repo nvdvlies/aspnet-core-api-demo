@@ -2,7 +2,7 @@
 @createdInvoiceLocation = {{create.response.headers.location}}
 @copyInvoiceLocation = {{copy.response.headers.location}}
 @creditInvoiceLocation = {{credit.response.headers.location}}
-#@createdInvoiceId = {{create.response.body.$.id}}
+@createdInvoiceId = {{create.response.body.$.id}}
 
 # @name search
 GET {{baseUrl}}/api/invoices
@@ -44,27 +44,49 @@ Accept: application/json
 PUT {{createdInvoiceLocation}}
 Content-Type: application/json
 
- {
-    "customerId": "b65ec4d7-91a3-4cfc-eb61-08d9188a4ca6",
-    "invoiceDate": "2021-04-24T00:00:00",
-    "paymentTerm": 31,
-    "orderReference": "test 6",
-    "invoiceLines": [
-      {
-        "quantity": 2,
-        "description": "Test updated2",
-        "sellingPrice": 10.00,
-        "id": "70733454-f890-4a55-85cb-08d9188a3541"
-      },
-      {
-        "quantity": 2,
-        "description": "Line 2",
-        "sellingPrice": 10.00
-      }
-    ],
-    "id": "c2e085af-7218-4b4f-7caa-08d90f2dd32a",
-    "timestamp": "AAAAAAABX5I="
+{
+  "customerId": "b65ec4d7-91a3-4cfc-eb61-08d9188a4ca6",
+  "invoiceDate": "2021-04-24T00:00:00",
+  "paymentTerm": 31,
+  "orderReference": "test 6",
+  "invoiceLines": [
+    {
+      "quantity": 2,
+      "description": "Test updated2",
+      "sellingPrice": 10.00,
+      "id": "70733454-f890-4a55-85cb-08d9188a3541"
+    },
+    {
+      "quantity": 2,
+      "description": "Line 2",
+      "sellingPrice": 10.00
+    }
+  ],
+  "timestamp": "AAAAAAABX5I="
+}
+
+###
+
+# @name patch
+PATCH {{createdInvoiceLocation}}
+Content-Type: application/json-patch+json
+
+[
+  {
+    "op": "replace",
+    "path": "/paymentTerm",
+    "value": "40"
+  },
+  {
+    "op": "add",
+    "path": "/invoiceLines/-",
+    "value": {
+      "quantity": 1,
+      "description": "Line 3",
+      "sellingPrice": 12.00
+    }
   }
+]
 
 ###
 
