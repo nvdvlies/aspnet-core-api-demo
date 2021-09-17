@@ -15,6 +15,7 @@ namespace Demo.Infrastructure.Persistence.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
+                .HasDefaultSchema("demo")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.5")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -143,7 +144,7 @@ namespace Demo.Infrastructure.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasMaxLength(10)
                         .HasColumnType("int")
-                        .HasDefaultValueSql("NEXT VALUE FOR CustomerCode");
+                        .HasDefaultValueSql("NEXT VALUE FOR demo.CustomerCode");
 
                     b.Property<Guid>("CreatedBy")
                         .HasColumnType("uniqueidentifier");
@@ -221,7 +222,7 @@ namespace Demo.Infrastructure.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)")
-                        .HasDefaultValueSql("CONCAT(YEAR(GETUTCDATE()), NEXT VALUE FOR InvoiceNumber)");
+                        .HasDefaultValueSql("CONCAT(YEAR(GETUTCDATE()), NEXT VALUE FOR demo.InvoiceNumber)");
 
                     b.Property<Guid?>("LastModifiedBy")
                         .HasColumnType("uniqueidentifier");

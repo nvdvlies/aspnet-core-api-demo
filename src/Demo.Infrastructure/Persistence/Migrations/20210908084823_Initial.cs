@@ -7,13 +7,18 @@ namespace Demo.Infrastructure.Persistence.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.EnsureSchema(
+                name: "demo");
+
             migrationBuilder.CreateSequence<int>(
                 name: "CustomerCode",
+                schema: "demo",
                 minValue: 1L,
                 maxValue: 9999999L);
 
             migrationBuilder.CreateSequence<int>(
                 name: "InvoiceNumber",
+                schema: "demo",
                 startValue: 100000L,
                 minValue: 100000L,
                 maxValue: 999999L,
@@ -21,6 +26,7 @@ namespace Demo.Infrastructure.Persistence.Migrations
 
             migrationBuilder.CreateTable(
                 name: "ApplicationSettings",
+                schema: "demo",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -38,6 +44,7 @@ namespace Demo.Infrastructure.Persistence.Migrations
 
             migrationBuilder.CreateTable(
                 name: "Auditlog",
+                schema: "demo",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -54,10 +61,11 @@ namespace Demo.Infrastructure.Persistence.Migrations
 
             migrationBuilder.CreateTable(
                 name: "Customer",
+                schema: "demo",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Code = table.Column<int>(type: "int", maxLength: 10, nullable: false, defaultValueSql: "NEXT VALUE FOR CustomerCode"),
+                    Code = table.Column<int>(type: "int", maxLength: 10, nullable: false, defaultValueSql: "NEXT VALUE FOR demo.CustomerCode"),
                     Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     InvoiceEmailAddress = table.Column<string>(type: "nvarchar(320)", maxLength: 320, nullable: true),
                     Timestamp = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: true),
@@ -76,6 +84,7 @@ namespace Demo.Infrastructure.Persistence.Migrations
 
             migrationBuilder.CreateTable(
                 name: "AuditlogItem",
+                schema: "demo",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -94,12 +103,14 @@ namespace Demo.Infrastructure.Persistence.Migrations
                     table.ForeignKey(
                         name: "FK_AuditlogItem_Auditlog_AuditlogId",
                         column: x => x.AuditlogId,
+                        principalSchema: "demo",
                         principalTable: "Auditlog",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_AuditlogItem_AuditlogItem_ParentAuditlogItemId",
                         column: x => x.ParentAuditlogItemId,
+                        principalSchema: "demo",
                         principalTable: "AuditlogItem",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -107,10 +118,11 @@ namespace Demo.Infrastructure.Persistence.Migrations
 
             migrationBuilder.CreateTable(
                 name: "Invoice",
+                schema: "demo",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    InvoiceNumber = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false, defaultValueSql: "CONCAT(YEAR(GETUTCDATE()), NEXT VALUE FOR InvoiceNumber)"),
+                    InvoiceNumber = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false, defaultValueSql: "CONCAT(YEAR(GETUTCDATE()), NEXT VALUE FOR demo.InvoiceNumber)"),
                     CustomerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     InvoiceDate = table.Column<DateTime>(type: "date", nullable: false),
                     PaymentTerm = table.Column<int>(type: "int", nullable: false),
@@ -133,6 +145,7 @@ namespace Demo.Infrastructure.Persistence.Migrations
                     table.ForeignKey(
                         name: "FK_Invoice_Customer_CustomerId",
                         column: x => x.CustomerId,
+                        principalSchema: "demo",
                         principalTable: "Customer",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -140,6 +153,7 @@ namespace Demo.Infrastructure.Persistence.Migrations
 
             migrationBuilder.CreateTable(
                 name: "InvoiceLine",
+                schema: "demo",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -155,6 +169,7 @@ namespace Demo.Infrastructure.Persistence.Migrations
                     table.ForeignKey(
                         name: "FK_InvoiceLine_Invoice_InvoiceId",
                         column: x => x.InvoiceId,
+                        principalSchema: "demo",
                         principalTable: "Invoice",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -162,21 +177,25 @@ namespace Demo.Infrastructure.Persistence.Migrations
 
             migrationBuilder.CreateIndex(
                 name: "IX_AuditlogItem_AuditlogId",
+                schema: "demo",
                 table: "AuditlogItem",
                 column: "AuditlogId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AuditlogItem_ParentAuditlogItemId",
+                schema: "demo",
                 table: "AuditlogItem",
                 column: "ParentAuditlogItemId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Invoice_CustomerId",
+                schema: "demo",
                 table: "Invoice",
                 column: "CustomerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_InvoiceLine_InvoiceId",
+                schema: "demo",
                 table: "InvoiceLine",
                 column: "InvoiceId");
         }
@@ -184,28 +203,36 @@ namespace Demo.Infrastructure.Persistence.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "ApplicationSettings");
+                name: "ApplicationSettings",
+                schema: "demo");
 
             migrationBuilder.DropTable(
-                name: "AuditlogItem");
+                name: "AuditlogItem",
+                schema: "demo");
 
             migrationBuilder.DropTable(
-                name: "InvoiceLine");
+                name: "InvoiceLine",
+                schema: "demo");
 
             migrationBuilder.DropTable(
-                name: "Auditlog");
+                name: "Auditlog",
+                schema: "demo");
 
             migrationBuilder.DropTable(
-                name: "Invoice");
+                name: "Invoice",
+                schema: "demo");
 
             migrationBuilder.DropTable(
-                name: "Customer");
+                name: "Customer",
+                schema: "demo");
 
             migrationBuilder.DropSequence(
-                name: "CustomerCode");
+                name: "CustomerCode",
+                schema: "demo");
 
             migrationBuilder.DropSequence(
-                name: "InvoiceNumber");
+                name: "InvoiceNumber",
+                schema: "demo");
         }
     }
 }

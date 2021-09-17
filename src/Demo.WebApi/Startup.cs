@@ -3,6 +3,7 @@ using Demo.Application.Shared.Interfaces;
 using Demo.Common.Interfaces;
 using Demo.Domain;
 using Demo.Infrastructure;
+using Demo.Infrastructure.Settings;
 using Demo.WebApi.Middleware;
 using Demo.WebApi.Services;
 using Demo.WebApi.SignalR;
@@ -25,6 +26,10 @@ namespace Demo.WebApi
 
         public void ConfigureServices(IServiceCollection services)
         {
+            var environmentSettings = new EnvironmentSettings();
+            Configuration.Bind(environmentSettings);
+            services.AddSingleton(environmentSettings);
+
             services.AddControllers();
             services.AddSwaggerDocument();
 
@@ -52,7 +57,10 @@ namespace Demo.WebApi
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+            }
 
+            if (!env.IsProduction())
+            {
                 app.UseOpenApi();
                 app.UseSwaggerUi3();
             }

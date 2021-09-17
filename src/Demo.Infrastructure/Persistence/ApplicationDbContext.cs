@@ -29,6 +29,8 @@ namespace Demo.Infrastructure.Persistence
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            builder.HasDefaultSchema(Constants.SchemaName);
+
             builder.ConfigureSequences();
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 

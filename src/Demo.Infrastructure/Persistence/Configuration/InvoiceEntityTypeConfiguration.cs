@@ -13,7 +13,7 @@ namespace Demo.Infrastructure.Persistence.Configurations
 
             builder.Property(x => x.InvoiceNumber)
                 .HasMaxLength(10)
-                .HasDefaultValueSql($"CONCAT(YEAR(GETUTCDATE()), NEXT VALUE FOR {Sequences.InvoiceNumber})")
+                .HasDefaultValueSql($"CONCAT(YEAR(GETUTCDATE()), NEXT VALUE FOR {Constants.SchemaName}.{Sequences.InvoiceNumber})")
                 .IsRequired();
 
             builder.Property(x => x.CustomerId)

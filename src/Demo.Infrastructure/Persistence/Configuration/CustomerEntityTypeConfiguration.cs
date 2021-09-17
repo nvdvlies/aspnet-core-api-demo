@@ -13,7 +13,7 @@ namespace Demo.Infrastructure.Persistence.Configurations
 
             builder.Property(x => x.Code)
                 .HasMaxLength(10)
-                .HasDefaultValueSql($"NEXT VALUE FOR {Sequences.CustomerCode}")
+                .HasDefaultValueSql($"NEXT VALUE FOR {Constants.SchemaName}.{Sequences.CustomerCode}")
                 .IsRequired();
 
             builder.Property(x => x.Name)
