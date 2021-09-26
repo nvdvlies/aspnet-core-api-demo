@@ -5,9 +5,13 @@ using FluentAssertions.Extensions;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Xunit;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace Demo.WebApi.Tests.Helpers
 {
@@ -30,24 +34,48 @@ namespace Demo.WebApi.Tests.Helpers
             ResetDatabaseAsync().Wait();
         }
 
-        public async Task ResetDatabaseAsync()
+        protected async Task ResetDatabaseAsync()
         {
             using var scope = _fixture.Factory.Services.CreateScope();
             var environmentSettings = scope.ServiceProvider.GetRequiredService<EnvironmentSettings>();
             await _fixture.Checkpoint.Reset(environmentSettings.ConnectionStrings.SqlDatabase);
         }
 
-        public async Task AddAsExistingEntityAsync<TEntity>(TEntity entity) where TEntity : class
+        protected async Task AddAsExistingEntityAsync<TEntity>(TEntity entity) where TEntity : class
         {
             using var scope = _fixture.Factory.Services.CreateScope();
-            var applicationDbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+            using var applicationDbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
             applicationDbContext.Set<TEntity>().Add(entity);
             await applicationDbContext.SaveChangesAsync();
         }
 
-        protected void WithRetry(Action act, TimeSpan timeout, TimeSpan pollInterval, string because = "", params object[] becauseArgs)
+        protected async Task AddAsExistingEntitiesAsync<TEntity>(IEnumerable<TEntity> entities) where TEntity : class
         {
-            act.Should().NotThrowAfter(timeout, pollInterval, because, becauseArgs);
+            using var scope = _fixture.Factory.Services.CreateScope();
+            using var applicationDbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+            applicationDbContext.Set<TEntity>().AddRange(entities);
+            await applicationDbContext.SaveChangesAsync();
+        }
+
+        protected async Task<TEntity> FindExistingEntityAsync<TEntity>(Expression<Func<TEntity, bool>> predicate) where TEntity : class
+        {
+            return (await FindExistingEntitiesAsync(predicate)).SingleOrDefault();
+        }
+
+        protected async Task<IEnumerable<TEntity>> FindExistingEntitiesAsync<TEntity>(Expression<Func<TEntity, bool>> predicate) where TEntity : class
+        {
+            using var scope = _fixture.Factory.Services.CreateScope();
+            using var applicationDbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+            return await applicationDbContext
+                .Set<TEntity>()
+                .AsQueryable()
+                .Where(predicate)
+                .ToListAsync();
+        }
+
+        protected void WithRetry(Action assertion, TimeSpan timeout, TimeSpan pollInterval, string because = "", params object[] becauseArgs)
+        {
+            assertion.Should().NotThrowAfter(timeout, pollInterval, because, becauseArgs);
         }
     }
 }

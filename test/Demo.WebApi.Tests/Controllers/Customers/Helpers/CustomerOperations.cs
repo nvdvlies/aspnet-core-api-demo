@@ -1,5 +1,8 @@
 ﻿using Demo.Application.Customers.Commands.CreateCustomer;
+using Demo.Application.Customers.Queries.SearchCustomers;
+using Microsoft.AspNetCore.WebUtilities;
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
@@ -15,14 +18,19 @@ namespace Demo.WebApi.Tests.Controllers.Customers.Helpers
             _httpClient = httpClient;
         }
 
-        public async Task<HttpResponseMessage> CreateAsync(CreateCustomerCommand command)
+        public async Task<HttpResponseMessage> SearchAsync(SearchCustomersQuery query)
         {
-            return await _httpClient.PostAsJsonAsync("/api/customers", command);
+            return await _httpClient.GetAsync($"/api/customers{query.ToQueryString()}");
         }
 
         public async Task<HttpResponseMessage> GetById(Guid id)
         {
             return await _httpClient.GetAsync($"/api/customers/{id}");
+        }
+
+        public async Task<HttpResponseMessage> CreateAsync(CreateCustomerCommand command)
+        {
+            return await _httpClient.PostAsJsonAsync("/api/customers", command);
         }
     }
 }
