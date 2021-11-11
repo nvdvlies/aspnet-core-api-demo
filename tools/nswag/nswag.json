@@ -58,7 +58,7 @@
   },
   "codeGenerators": {
     "openApiToTypeScriptClient": {
-      "className": "{controller}Client",
+      "className": "Api{controller}Client",
       "moduleName": "",
       "namespace": "",
       "typeScriptVersion": 2.7,
@@ -89,7 +89,7 @@
       "generateDtoTypes": true,
       "operationGenerationMode": "MultipleClientsFromOperationId",
       "markOptionalProperties": true,
-      "generateCloneMethod": false,
+      "generateCloneMethod": true,
       "typeStyle": "Class",
       "enumStyle": "Enum",
       "useLeafType": false,
@@ -116,7 +116,7 @@
       "checksumCacheEnabled": false,
       "serviceHost": null,
       "serviceSchemes": null,
-      "output": "api.service.ts",
+      "output": "api.generated.clients.ts",
       "newLineBehavior": "Auto"
     }
   }
