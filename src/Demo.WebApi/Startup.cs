@@ -35,9 +35,10 @@ namespace Demo.WebApi
 
             services.AddCors(o => o.AddPolicy("AllowAnyCorsPolicy", builder =>
             {
-                builder.AllowAnyOrigin()
+                builder.WithOrigins("http://localhost:4201")
                        .AllowAnyMethod()
-                       .AllowAnyHeader();
+                       .AllowAnyHeader()
+                       .AllowCredentials();
             }));
 
             services.AddScoped<ICurrentUser, CurrentUserService>();
