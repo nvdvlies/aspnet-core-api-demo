@@ -11,7 +11,7 @@ namespace Demo.WebApi.Tests.Controllers.Customers.Helpers
 {
     internal class CustomerOperations
     {
-        private HttpClient _httpClient;
+        private readonly HttpClient _httpClient;
 
         public CustomerOperations(HttpClient httpClient)
         {
@@ -20,7 +20,7 @@ namespace Demo.WebApi.Tests.Controllers.Customers.Helpers
 
         public async Task<HttpResponseMessage> SearchAsync(SearchCustomersQuery query)
         {
-            return await _httpClient.GetAsync($"/api/customers{query.ToQueryString()}");
+            return await _httpClient.GetAsync($"/api/customers?{query.ToQueryString()}");
         }
 
         public async Task<HttpResponseMessage> GetById(Guid id)

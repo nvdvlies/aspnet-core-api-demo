@@ -41,7 +41,7 @@ namespace Demo.WebApi.Tests.Controllers.Customers
             content.PageIndex.Should().Be(query.PageIndex);
             content.PageSize.Should().Be(query.PageSize);
             content.TotalItems.Should().Be(0);
-            content.TotalPages.Should().Be(1);
+            content.TotalPages.Should().Be(0);
             content.HasNextPage.Should().Be(false);
             content.HasPreviousPage.Should().Be(false);
         }
@@ -126,9 +126,8 @@ namespace Demo.WebApi.Tests.Controllers.Customers
             // Arrange
             await ResetDatabaseAsync();
 
-            var numberOfCustomers = 18;
-            var autoFixture = new Fixture { RepeatCount = numberOfCustomers };
-            var existingCustomers = autoFixture.CreateMany<Customer>();
+            var numberOfExistingCustomers = 18;
+            var existingCustomers = _autoFixture.CreateMany<Customer>(numberOfExistingCustomers);
             await AddAsExistingEntitiesAsync(existingCustomers);
 
             var query = new SearchCustomersQuery
@@ -148,7 +147,7 @@ namespace Demo.WebApi.Tests.Controllers.Customers
 
             content.PageIndex.Should().Be(query.PageIndex);
             content.PageSize.Should().Be(query.PageSize);
-            content.TotalItems.Should().Be(numberOfCustomers);
+            content.TotalItems.Should().Be(numberOfExistingCustomers);
             content.TotalPages.Should().Be(2);
             content.HasNextPage.Should().Be(true);
             content.HasPreviousPage.Should().Be(false);
@@ -160,9 +159,9 @@ namespace Demo.WebApi.Tests.Controllers.Customers
             // Arrange
             await ResetDatabaseAsync();
 
-            var numberOfCustomers = 18;
-            var autoFixture = new Fixture { RepeatCount = numberOfCustomers };
-            var existingCustomers = autoFixture.CreateMany<Customer>();
+            var numberOfExistingCustomers = 18;
+            
+            var existingCustomers = _autoFixture.CreateMany<Customer>(numberOfExistingCustomers);
             await AddAsExistingEntitiesAsync(existingCustomers);
 
             var query = new SearchCustomersQuery
@@ -183,7 +182,7 @@ namespace Demo.WebApi.Tests.Controllers.Customers
 
             content.PageIndex.Should().Be(query.PageIndex);
             content.PageSize.Should().Be(query.PageSize);
-            content.TotalItems.Should().Be(numberOfCustomers);
+            content.TotalItems.Should().Be(numberOfExistingCustomers);
             content.TotalPages.Should().Be(2);
             content.HasNextPage.Should().Be(false);
             content.HasPreviousPage.Should().Be(true);
@@ -195,9 +194,8 @@ namespace Demo.WebApi.Tests.Controllers.Customers
             // Arrange
             await ResetDatabaseAsync();
 
-            var numberOfCustomers = 28;
-            var autoFixture = new Fixture { RepeatCount = numberOfCustomers };
-            var existingCustomers = autoFixture.CreateMany<Customer>();
+            var numberOfExistingCustomers = 28;
+            var existingCustomers = _autoFixture.CreateMany<Customer>(numberOfExistingCustomers);
             await AddAsExistingEntitiesAsync(existingCustomers);
 
             var query = new SearchCustomersQuery
@@ -218,7 +216,7 @@ namespace Demo.WebApi.Tests.Controllers.Customers
 
             content.PageIndex.Should().Be(query.PageIndex);
             content.PageSize.Should().Be(query.PageSize);
-            content.TotalItems.Should().Be(numberOfCustomers);
+            content.TotalItems.Should().Be(numberOfExistingCustomers);
             content.TotalPages.Should().Be(3);
             content.HasNextPage.Should().Be(true);
             content.HasPreviousPage.Should().Be(true);

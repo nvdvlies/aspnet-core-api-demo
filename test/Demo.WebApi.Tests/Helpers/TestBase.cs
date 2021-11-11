@@ -1,17 +1,17 @@
-﻿using Demo.Infrastructure.Persistence;
+﻿using AutoFixture;
+using Demo.Infrastructure.Persistence;
 using Demo.Infrastructure.Settings;
 using FluentAssertions;
-using FluentAssertions.Extensions;
 using Microsoft.AspNetCore.SignalR.Client;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Xunit;
-using System.Linq;
-using Microsoft.EntityFrameworkCore;
 
 namespace Demo.WebApi.Tests.Helpers
 {
@@ -22,6 +22,7 @@ namespace Demo.WebApi.Tests.Helpers
         protected readonly CustomWebApplicationFactory _factory;
         protected readonly HttpClient _client;
         protected readonly HubConnection _hubConnection;
+        protected readonly Fixture _autoFixture;
 
         public TestBase(SharedFixture fixture)
         {
@@ -30,6 +31,7 @@ namespace Demo.WebApi.Tests.Helpers
             _factory = _fixture.Factory;
             _client = _fixture.Client;
             _hubConnection = _fixture.HubConnection;
+            _autoFixture = AutoFixtureFactory.CreateAutofixtureWithDefaultConfiguration();
 
             ResetDatabaseAsync().Wait();
         }
@@ -73,7 +75,7 @@ namespace Demo.WebApi.Tests.Helpers
                 .ToListAsync();
         }
 
-        protected void WithRetry(Action assertion, TimeSpan timeout, TimeSpan pollInterval, string because = "", params object[] becauseArgs)
+        protected static void WithRetry(Action assertion, TimeSpan timeout, TimeSpan pollInterval, string because = "", params object[] becauseArgs)
         {
             assertion.Should().NotThrowAfter(timeout, pollInterval, because, becauseArgs);
         }
