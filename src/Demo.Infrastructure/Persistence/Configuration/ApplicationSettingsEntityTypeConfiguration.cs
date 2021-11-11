@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System.Text.Json;
 
-namespace Demo.Infrastructure.Persistence.Configurations
+namespace Demo.Infrastructure.Persistence.Configuration
 {
     public class ApplicationSettingsEntityTypeConfiguration : IEntityTypeConfiguration<ApplicationSettings>
     {
@@ -15,12 +15,12 @@ namespace Demo.Infrastructure.Persistence.Configurations
             builder.Property(x => x.Settings)
                 .HasConversion(
                     x => JsonSerializer.Serialize(x, new JsonSerializerOptions
-                    { 
+                    {
                         WriteIndented = true
                     }),
                     x => JsonSerializer.Deserialize<ApplicationSettingsSettings>(x, new JsonSerializerOptions
-                    { 
-                        
+                    {
+
                     })
                 );
 

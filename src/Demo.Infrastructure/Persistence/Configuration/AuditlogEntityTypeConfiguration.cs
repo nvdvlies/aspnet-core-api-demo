@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Demo.Infrastructure.Persistence.Configurations
+namespace Demo.Infrastructure.Persistence.Configuration
 {
     public class AuditlogEntityTypeConfiguration : IEntityTypeConfiguration<Auditlog>
     {

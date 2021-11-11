@@ -2,7 +2,7 @@ using Demo.Domain.ApplicationSettings;
 using Demo.Domain.Auditlog;
 using Demo.Domain.Customer;
 using Demo.Domain.Invoice;
-using Demo.Infrastructure.Persistence.Configurations;
+using Demo.Infrastructure.Persistence.Configuration;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 using System.Threading;

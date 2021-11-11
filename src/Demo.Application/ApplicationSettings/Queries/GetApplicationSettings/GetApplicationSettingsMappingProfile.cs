@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Demo.Application.ApplicationSettings.Queries.GetApplicationSettings.Dtos;
 
-namespace Demo.Application.Shared.Mappings
+namespace Demo.Application.ApplicationSettings.Queries.GetApplicationSettings
 {
     public class GetApplicationSettingsMappingProfile : Profile
     {

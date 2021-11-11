@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace Demo.Infrastructure.Persistence.Configurations
+namespace Demo.Infrastructure.Persistence.Configuration
 {
     public static class SequenceConfiguration
     {

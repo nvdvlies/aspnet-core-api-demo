@@ -2,7 +2,7 @@
 using Demo.Application.Invoices.Queries.GetInvoiceById.Dtos;
 using Demo.Domain.Invoice;
 
-namespace Demo.Application.Shared.Mappings
+namespace Demo.Application.Invoices.Queries.GetInvoiceById
 {
     public partial class GetInvoiceByIdMappingProfile : Profile
     {

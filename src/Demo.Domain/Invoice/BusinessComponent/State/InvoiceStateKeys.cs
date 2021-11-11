@@ -1,4 +1,4 @@
-﻿namespace Demo.Domain.Quotation.BusinessComponent.State
+﻿namespace Demo.Domain.Invoice.BusinessComponent.State
 {
     public static class InvoiceStateKeys
     {

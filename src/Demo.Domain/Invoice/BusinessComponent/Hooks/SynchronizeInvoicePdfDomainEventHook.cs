@@ -1,7 +1,7 @@
 ﻿using Demo.Domain.Invoice.BusinessComponent.Events;
 using Demo.Domain.Invoice.BusinessComponent.Interfaces;
 using Demo.Domain.Invoice.BusinessComponent.Models;
-using Demo.Domain.Quotation.BusinessComponent.State;
+using Demo.Domain.Invoice.BusinessComponent.State;
 using Demo.Domain.Shared.BusinessComponent;
 using Demo.Domain.Shared.Exceptions;
 using Demo.Domain.Shared.Interfaces;
