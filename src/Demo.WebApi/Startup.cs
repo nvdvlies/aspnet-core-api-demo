@@ -36,7 +36,7 @@ namespace Demo.WebApi
             services.AddControllers();
             services.AddSwaggerDocument();
 
-            services.AddCors(o => o.AddPolicy("AllowAnyCorsPolicy", builder =>
+            services.AddCors(o => o.AddDefaultPolicy(builder =>
             {
                 builder.WithOrigins("http://localhost:4201")
                        .AllowAnyMethod()
@@ -89,7 +89,7 @@ namespace Demo.WebApi
             app.UseHttpsRedirection();
 
             app.UseRouting();
-            app.UseCors("AllowAnyCorsPolicy");
+            app.UseCors();
 
             app.UseAuthentication();
             app.UseAuthorization();
