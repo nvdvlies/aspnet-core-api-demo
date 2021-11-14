@@ -1,8 +1,21 @@
 @baseUrl = https://localhost:44309
+@access_token = {{ auth.response.body.$.access_token}}
 @createdInvoiceLocation = {{create.response.headers.location}}
 @copyInvoiceLocation = {{copy.response.headers.location}}
 @creditInvoiceLocation = {{credit.response.headers.location}}
-#@createdInvoiceId = {{create.response.body.$.id}}
+
+# @name auth
+POST https://dev-spke9m2i.us.auth0.com/oauth/token
+Content-Type: application/json
+
+{ 
+  "client_id": "{{client_id}}",
+  "client_secret": "{{client_secret}}",
+  "audience": "{{audience}}",
+  "grant_type":"client_credentials"
+}
+
+###
 
 # @name search
 GET {{baseUrl}}/api/invoices
@@ -11,15 +24,17 @@ GET {{baseUrl}}/api/invoices
   &pageIndex=0
   &pageSize=10
 Accept: application/json
+Authorization: Bearer {{access_token}}
 
 ###
 
 # @name create
 POST {{baseUrl}}/api/invoices
 Content-Type: application/json
+Authorization: Bearer {{access_token}}
 
 {
-  "customerId": "b65ec4d7-91a3-4cfc-eb61-08d9188a4ca6",
+  "customerId": "200b4c4c-eecd-4e44-8533-08d997bb99df",
   "invoiceDate": "2021-04-24T00:00:00",
   "paymentTerm": 30,
   "orderReference": "test",
@@ -37,40 +52,43 @@ Content-Type: application/json
 # @name getById
 GET {{createdInvoiceLocation}}
 Accept: application/json
+Authorization: Bearer {{access_token}}
 
 ###
 
 # @name update
 PUT {{createdInvoiceLocation}}
 Content-Type: application/json
+Authorization: Bearer {{access_token}}
 
- {
-    "customerId": "b65ec4d7-91a3-4cfc-eb61-08d9188a4ca6",
-    "invoiceDate": "2021-04-24T00:00:00",
-    "paymentTerm": 31,
-    "orderReference": "test 6",
-    "invoiceLines": [
-      {
-        "quantity": 2,
-        "description": "Test updated2",
-        "sellingPrice": 10.00,
-        "id": "70733454-f890-4a55-85cb-08d9188a3541"
-      },
-      {
-        "quantity": 2,
-        "description": "Line 2",
-        "sellingPrice": 10.00
-      }
-    ],
-    "id": "c2e085af-7218-4b4f-7caa-08d90f2dd32a",
-    "timestamp": "AAAAAAABX5I="
+{
+  "customerId": "200b4c4c-eecd-4e44-8533-08d997bb99df",
+  "invoiceDate": "2021-04-24T00:00:00",
+  "paymentTerm": 31,
+  "orderReference": "test 6",
+  "invoiceLines": [
+  {
+    "quantity": 2,
+    "description": "Test updated2",
+    "sellingPrice": 10.00,
+    "id": "70733454-f890-4a55-85cb-08d9188a3541"
+  },
+  {
+    "quantity": 2,
+    "description": "Line 2",
+    "sellingPrice": 10.00
   }
+  ],
+  "id": "c2e085af-7218-4b4f-7caa-08d90f2dd32a",
+  "timestamp": "AAAAAAABX5I="
+}
 
 ###
 
 # @name copy
 POST {{createdInvoiceLocation}}/copy
 Content-Type: application/json
+Authorization: Bearer {{access_token}}
 
 {
 }
@@ -80,12 +98,14 @@ Content-Type: application/json
 # @name getCopyById
 GET {{copyInvoiceLocation}}
 Accept: application/json
+Authorization: Bearer {{access_token}}
 
 ###
 
 # @name credit
 POST {{createdInvoiceLocation}}/credit
 Content-Type: application/json
+Authorization: Bearer {{access_token}}
 
 {
 }
@@ -95,6 +115,7 @@ Content-Type: application/json
 # @name getCreditById
 GET {{creditInvoiceLocation}}
 Accept: application/json
+Authorization: Bearer {{access_token}}
 
 ###
 
@@ -103,12 +124,14 @@ GET {{createdInvoiceLocation}}/auditlog
   ?pageIndex=0
   &pageSize=10
 Accept: application/json
+Authorization: Bearer {{access_token}}
 
 ###
 
 # @name delete
 DELETE {{createdInvoiceLocation}}
 Content-Type: application/json
+Authorization: Bearer {{access_token}}
 
 {
 }

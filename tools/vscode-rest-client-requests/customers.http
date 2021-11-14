@@ -1,6 +1,19 @@
 @baseUrl = https://localhost:44309
+@access_token = {{ auth.response.body.$.access_token}}
 @createdCustomerLocation = {{create.response.headers.location}}
-#@createdCustomerId = {{create.response.body.$.id}}
+
+# @name auth
+POST https://dev-spke9m2i.us.auth0.com/oauth/token
+Content-Type: application/json
+
+{ 
+  "client_id": "{{client_id}}",
+  "client_secret": "{{client_secret}}",
+  "audience": "{{audience}}",
+  "grant_type":"client_credentials"
+}
+
+###
 
 # @name search
 GET {{baseUrl}}/api/customers
@@ -9,12 +22,14 @@ GET {{baseUrl}}/api/customers
   &pageIndex=0
   &pageSize=10
 Accept: application/json
+Authorization: Bearer {{access_token}}
 
 ###
 
 # @name create
 POST {{baseUrl}}/api/customers
 Content-Type: application/json
+Authorization: Bearer {{access_token}}
 
 {
   "name": "Test"
@@ -25,12 +40,14 @@ Content-Type: application/json
 # @name getById
 GET {{createdCustomerLocation}}
 Accept: application/json
+Authorization: Bearer {{access_token}}
 
 ###
 
 # @name update
 PUT {{createdCustomerLocation}}
 Content-Type: application/json
+Authorization: Bearer {{access_token}}
 
 {
   "timestamp": "AAAAAAAAhNY=",
@@ -44,12 +61,14 @@ GET {{createdCustomerLocation}}/auditlog
   ?pageIndex=0
   &pageSize=10
 Accept: application/json
+Authorization: Bearer {{access_token}}
 
 ###
 
 # @name delete
 DELETE {{createdCustomerLocation}}
 Content-Type: application/json
+Authorization: Bearer {{access_token}}
 
 {
 }

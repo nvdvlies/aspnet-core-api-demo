@@ -4,9 +4,12 @@ using Demo.Common.Interfaces;
 using Demo.Domain;
 using Demo.Infrastructure;
 using Demo.Infrastructure.Settings;
+using Demo.WebApi.Auth0;
 using Demo.WebApi.Middleware;
 using Demo.WebApi.Services;
 using Demo.WebApi.SignalR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -41,6 +44,23 @@ namespace Demo.WebApi
                        .AllowCredentials();
             }));
 
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                options.Authority = environmentSettings.Auth0.Domain;
+                options.Audience = environmentSettings.Auth0.Audience;
+            });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy(nameof(Auth0Scopes.User), policy => policy.Requirements.Add(new HasScopeRequirement(Auth0Scopes.User, environmentSettings.Auth0.Domain)));
+            });
+
+            services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
+
             services.AddScoped<ICurrentUser, CurrentUserService>();
             services.AddScoped<IEventHubContext, SignalrHubContext>();
 
@@ -71,6 +91,7 @@ namespace Demo.WebApi
             app.UseRouting();
             app.UseCors("AllowAnyCorsPolicy");
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseExceptionHandler(x => x.Run(GlobalExceptionHandler.Handle(env)));

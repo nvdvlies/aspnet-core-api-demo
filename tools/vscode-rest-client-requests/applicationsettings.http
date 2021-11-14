@@ -1,15 +1,30 @@
 @baseUrl = https://localhost:44309
+@access_token = {{ auth.response.body.$.access_token}}
 
+# @name auth
+POST https://dev-spke9m2i.us.auth0.com/oauth/token
+Content-Type: application/json
+
+{ 
+  "client_id": "{{client_id}}",
+  "client_secret": "{{client_secret}}",
+  "audience": "{{audience}}",
+  "grant_type":"client_credentials"
+}
+
+###
 
 # @name get
 GET {{baseUrl}}/api/applicationsettings
 Accept: application/json
+Authorization: Bearer {{access_token}}
 
 ###
 
 # @name update
 PUT {{baseUrl}}/api/applicationsettings
 Content-Type: application/json
+Authorization: Bearer {{access_token}}
 
 {
   "settings": {
@@ -29,5 +44,6 @@ GET {{baseUrl}}/api/applicationsettings/auditlog
   ?pageIndex=0
   &pageSize=10
 Accept: application/json
+Authorization: Bearer {{access_token}}
 
 ###
