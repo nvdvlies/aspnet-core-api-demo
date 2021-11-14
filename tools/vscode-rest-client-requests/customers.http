@@ -10,7 +10,7 @@ Content-Type: application/json
   "client_id": "{{client_id}}",
   "client_secret": "{{client_secret}}",
   "audience": "{{audience}}",
-  "grant_type":"client_credentials"
+  "grant_type": "client_credentials"
 }
 
 ###
