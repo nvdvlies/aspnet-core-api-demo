@@ -8,13 +8,13 @@ using System.Threading.Tasks;
 
 namespace Demo.Domain.Invoice.DomainEntity.Validators
 {
-    internal class NotAllowedToDeleteInvoiceInStatusValidator : IValidator<Invoice>
+    internal class NotAllowedToDeleteInvoiceInStatusValidator : BaseValidator, IValidator<Invoice>
     {
         public Task<IEnumerable<ValidationMessage>> ValidateAsync(IDomainEntityContext<Invoice> context, CancellationToken cancellationToken = default)
         {
             if (context.EditMode != EditMode.Delete)
             {
-                return Task.FromResult<IEnumerable<ValidationMessage>>(null);
+                return CompletedTask;
             }
 
             var statussesAllowedToDelete = new[] { InvoiceStatus.Draft, InvoiceStatus.Cancelled };
@@ -23,7 +23,7 @@ namespace Demo.Domain.Invoice.DomainEntity.Validators
                 return Task.FromResult("Not allowed to delete invoice in current status.".ToValidationMessage());
             }
 
-            return Task.FromResult<IEnumerable<ValidationMessage>>(null);
+            return CompletedTask;
         }
     }
 }

@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Demo.Domain.Customer.DomainEntity.Validators
 {
-    internal class NotAllowedToDeleteCustomerWithInvoiceValidator : IValidator<Customer>
+    internal class NotAllowedToDeleteCustomerWithInvoiceValidator : BaseValidator, IValidator<Customer>
     {
         private readonly IDbQuery<Invoice.Invoice> _invoiceQuery;
 

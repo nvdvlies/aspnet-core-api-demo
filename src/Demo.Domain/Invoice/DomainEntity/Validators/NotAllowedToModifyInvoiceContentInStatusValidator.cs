@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Demo.Domain.Invoice.DomainEntity.Validators
 {
-    internal class NotAllowedToModifyInvoiceContentInStatusValidator : IValidator<Invoice>
+    internal class NotAllowedToModifyInvoiceContentInStatusValidator : BaseValidator, IValidator<Invoice>
     {
         private readonly ILogger<NotAllowedToModifyInvoiceContentInStatusValidator> _logger;
 
@@ -23,7 +23,7 @@ namespace Demo.Domain.Invoice.DomainEntity.Validators
         {
             if (context.EditMode != EditMode.Update)
             {
-                return Task.FromResult<IEnumerable<ValidationMessage>>(null);
+                return CompletedTask;
             }
 
             var statussesAllowedToModifyInvoiceContent = new[] { InvoiceStatus.Draft };
@@ -47,7 +47,7 @@ namespace Demo.Domain.Invoice.DomainEntity.Validators
                 }
             }
 
-            return Task.FromResult<IEnumerable<ValidationMessage>>(null);
+            return CompletedTask;
         }
     }
 }
