@@ -66,7 +66,7 @@ namespace Demo.WebApi.Middleware
                         problemDetails = validationException.ToValidationProblemDetails(statusCode, includeDetailsInResponse);
                         break;
                     case DbUpdateConcurrencyException dbUpdateConcurrencyException:
-                        logger.LogInformation(exception, "A database update concurrency exception ocurred.");
+                        logger.LogWarning(exception, "A database update concurrency exception ocurred.");
 
                         statusCode = HttpStatusCode.BadRequest;
                         problemDetails = dbUpdateConcurrencyException.ToProblemDetails(statusCode, includeDetailsInResponse);
