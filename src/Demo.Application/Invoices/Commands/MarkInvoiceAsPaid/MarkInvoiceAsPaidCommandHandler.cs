@@ -1,5 +1,5 @@
 using Demo.Domain.Invoice;
-using Demo.Domain.Invoice.BusinessComponent.Interfaces;
+using Demo.Domain.Invoice.DomainEntity.Interfaces;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
@@ -8,22 +8,22 @@ namespace Demo.Application.Invoices.Commands.MarkInvoiceAsPaid
 {
     public class MarkInvoiceAsPaidCommandHandler : IRequestHandler<MarkInvoiceAsPaidCommand, Unit>
     {
-        private readonly IInvoiceBusinessComponent _bc;
+        private readonly IInvoiceDomainEntity _domainEntity;
 
         public MarkInvoiceAsPaidCommandHandler(
-            IInvoiceBusinessComponent bc
+            IInvoiceDomainEntity domainEntity
         )
         {
-            _bc = bc;
+            _domainEntity = domainEntity;
         }
 
         public async Task<Unit> Handle(MarkInvoiceAsPaidCommand request, CancellationToken cancellationToken)
         {
-            await _bc.GetAsync(request.Id, cancellationToken);
+            await _domainEntity.GetAsync(request.Id, cancellationToken);
 
-            _bc.SetStatus(InvoiceStatus.Paid);
+            _domainEntity.SetStatus(InvoiceStatus.Paid);
 
-            await _bc.UpdateAsync(cancellationToken);
+            await _domainEntity.UpdateAsync(cancellationToken);
 
             return Unit.Value;
         }

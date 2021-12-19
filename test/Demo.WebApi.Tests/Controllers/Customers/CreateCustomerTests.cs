@@ -1,8 +1,8 @@
 ﻿using Demo.Application.Customers.Commands.CreateCustomer;
 using Demo.Application.Customers.Events;
 using Demo.Domain.Customer;
-using Demo.Domain.Customer.BusinessComponent.Interfaces;
-using Demo.Domain.Shared.BusinessComponent;
+using Demo.Domain.Customer.DomainEntity.Interfaces;
+using Demo.Domain.Shared.DomainEntity;
 using Demo.Domain.Shared.Exceptions;
 using Demo.Domain.Shared.Interfaces;
 using Demo.WebApi.Tests.Controllers.Customers.Helpers;
@@ -133,7 +133,7 @@ namespace Demo.WebApi.Tests.Controllers.Customers
         }
 
         [Fact]
-        public async Task CreateCustomer_When_a_businesscomponent_validator_throws_a_DomainValidationException_It_should_return_statuscode_BadRequest()
+        public async Task CreateCustomer_When_a_domainentity_validator_throws_a_DomainValidationException_It_should_return_statuscode_BadRequest()
         {
             var client = _factory
                 .WithWebHostBuilder(builder =>
@@ -141,7 +141,7 @@ namespace Demo.WebApi.Tests.Controllers.Customers
                     builder.ConfigureTestServices(services =>
                     {
                         var mock = new Mock<Domain.Shared.Interfaces.IValidator<Customer>>();
-                        mock.Setup(x => x.ValidateAsync(It.IsAny<IBusinessComponentContext<Customer>>(), It.IsAny<CancellationToken>()))
+                        mock.Setup(x => x.ValidateAsync(It.IsAny<IDomainEntityContext<Customer>>(), It.IsAny<CancellationToken>()))
                             .Throws(new DomainValidationException(new[] { new ValidationMessage("TestProperty", "TestMessage") }));
 
                         services.AddSingleton(mock.Object);
@@ -166,7 +166,7 @@ namespace Demo.WebApi.Tests.Controllers.Customers
         }
 
         [Fact]
-        public async Task CreateCustomer_When_a_businesscomponent_hook_throws_a_DomainException_It_should_return_statuscode_BadRequest()
+        public async Task CreateCustomer_When_a_domainentity_hook_throws_a_DomainException_It_should_return_statuscode_BadRequest()
         {
             var client = _factory
                 .WithWebHostBuilder(builder =>
@@ -174,7 +174,7 @@ namespace Demo.WebApi.Tests.Controllers.Customers
                     builder.ConfigureTestServices(services =>
                     {
                         var mock = new Mock<IAfterCreate<Customer>>();
-                        mock.Setup(x => x.ExecuteAsync(It.IsAny<HookType>(), It.IsAny<IBusinessComponentContext<Customer>>(), It.IsAny<CancellationToken>()))
+                        mock.Setup(x => x.ExecuteAsync(It.IsAny<HookType>(), It.IsAny<IDomainEntityContext<Customer>>(), It.IsAny<CancellationToken>()))
                             .Throws(new DomainException("TestMessage"));
 
                         services.AddSingleton(mock.Object);
@@ -207,7 +207,7 @@ namespace Demo.WebApi.Tests.Controllers.Customers
                 {
                     builder.ConfigureTestServices(services =>
                     {
-                        var mock = new Mock<ICustomerBusinessComponent>();
+                        var mock = new Mock<ICustomerDomainEntity>();
                         mock.Setup(x => x.CreateAsync(It.IsAny<CancellationToken>()))
                             .Throws(new ArgumentException("TestException"));
 

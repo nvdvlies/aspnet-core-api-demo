@@ -1,4 +1,4 @@
-﻿using Demo.Domain.Shared.BusinessComponent;
+﻿using Demo.Domain.Shared.DomainEntity;
 using FluentValidation.Results;
 using System.Collections.Generic;
 using System.Linq;

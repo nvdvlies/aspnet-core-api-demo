@@ -1,5 +1,5 @@
 using Demo.Domain.Invoice;
-using Demo.Domain.Invoice.BusinessComponent.Interfaces;
+using Demo.Domain.Invoice.DomainEntity.Interfaces;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
@@ -8,22 +8,22 @@ namespace Demo.Application.Invoices.Commands.MarkInvoiceAsCancelled
 {
     public class MarkInvoiceAsCancelledCommandHandler : IRequestHandler<MarkInvoiceAsCancelledCommand, Unit>
     {
-        private readonly IInvoiceBusinessComponent _bc;
+        private readonly IInvoiceDomainEntity _domainEntity;
 
         public MarkInvoiceAsCancelledCommandHandler(
-            IInvoiceBusinessComponent bc
+            IInvoiceDomainEntity domainEntity
         )
         {
-            _bc = bc;
+            _domainEntity = domainEntity;
         }
 
         public async Task<Unit> Handle(MarkInvoiceAsCancelledCommand request, CancellationToken cancellationToken)
         {
-            await _bc.GetAsync(request.Id, cancellationToken);
+            await _domainEntity.GetAsync(request.Id, cancellationToken);
 
-            _bc.SetStatus(InvoiceStatus.Cancelled);
+            _domainEntity.SetStatus(InvoiceStatus.Cancelled);
 
-            await _bc.UpdateAsync(cancellationToken);
+            await _domainEntity.UpdateAsync(cancellationToken);
 
             return Unit.Value;
         }

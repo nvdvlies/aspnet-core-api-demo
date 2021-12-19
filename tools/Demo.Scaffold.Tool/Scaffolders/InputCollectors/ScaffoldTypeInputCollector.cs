@@ -6,7 +6,7 @@ namespace Demo.Scaffold.Tool.Scaffolders.InputCollectors
 {
     internal class ScaffoldTypeInputCollector : IInputCollector
     {
-        private const string BusinessComponent = "BusinessComponent";
+        private const string DomainEntity = "DomainEntity";
         private const string Endpoint = "Endpoint";
 
         public void CollectInput(ScaffolderContext context)
@@ -15,13 +15,13 @@ namespace Demo.Scaffold.Tool.Scaffolders.InputCollectors
                 new SelectionPrompt<string>()
                     .Title("What would you like to scaffold?")
                     .AddChoices(new[] {
-                        BusinessComponent,
+                        DomainEntity,
                         Endpoint,
                     }));
 
             context.ScaffolderType = option switch
             {
-                BusinessComponent => ScaffolderTypes.BusinessComponent,
+                DomainEntity => ScaffolderTypes.DomainEntity,
                 Endpoint => ScaffolderTypes.Endpoint,
                 _ => throw new Exception($"Invalid option {option}"),
             };

@@ -1,12 +1,10 @@
-# aspnet-core-api-demo
+# dotnet-api-demo
 
-An example architecture for an ASP.NET CORE API inspired by Jason Taylor's [CleanArchitecture](https://github.com/jasontaylordev/CleanArchitecture) template. 
-Notable difference is an encapsulation of domain entities with a thing I called a 'BusinessComponent'. 
-A BusinessComponent encapsulates an aggregate root entity and offers:
+Demo architecture for a .NET Web API. Similar to Jason Taylor's [CleanArchitecture](https://github.com/jasontaylordev/CleanArchitecture) template. Notable difference is an encapsulation of aggregate root entities with a thing I called a 'DomainEntity'.
+A DomainEntity offers:
 
- - Validation. [View example](https://github.com/nvdvlies/clean-architecture-with-business-components-demo/blob/main/src/Demo.Domain/Invoice/BusinessComponent/Validators/NotAllowedToDeleteInvoiceInStatusValidator.cs).
- - Hooks (BeforeCreate, BeforeUpdate, BeforeDelete, AfterCreate, AfterUpdate, AfterDelete). [View example](https://github.com/nvdvlies/clean-architecture-with-business-components-demo/blob/main/src/Demo.Domain/Invoice/BusinessComponent/Hooks/SynchronizeInvoicePdfDomainEventHook.cs#).
- - Publishing of domain events. [View example](https://github.com/nvdvlies/clean-architecture-with-business-components-demo/blob/main/src/Demo.Domain/Invoice/BusinessComponent/Hooks/InvoiceStatusDomainEventHook.cs).
- - Access to pristine property values in validators and hooks. [View example](https://github.com/nvdvlies/clean-architecture-with-business-components-demo/blob/main/src/Demo.Domain/Invoice/BusinessComponent/Validators/NotAllowedToModifyInvoiceContentInStatusValidator.cs).
- - Auditlogging. [View example](https://github.com/nvdvlies/clean-architecture-with-business-components-demo/blob/main/src/Demo.Infrastructure/Auditlogging/InvoiceAuditlogger.cs).
- 
+ - Validation. [View example](https://github.com/nvdvlies/dotnet-api-demo/blob/main/src/Demo.Domain/Invoice/DomainEntity/Validators/NotAllowedToDeleteInvoiceInStatusValidator.cs).
+ - Hooks (BeforeCreate, BeforeUpdate, BeforeDelete, AfterCreate, AfterUpdate, AfterDelete). [View example](https://github.com/nvdvlies/dotnet-api-demo/blob/main/src/Demo.Domain/Invoice/DomainEntity/Hooks/SynchronizeInvoicePdfDomainEventHook.cs).
+ - Event publishing. [View example](https://github.com/nvdvlies/dotnet-api-demo/blob/main/src/Demo.Domain/Invoice/DomainEntity/Hooks/InvoiceStatusDomainEventHook.cs).
+ - Access to pristine property values in validators and hooks. [View example](https://github.com/nvdvlies/dotnet-api-demo/blob/main/src/Demo.Domain/Invoice/DomainEntity/Validators/NotAllowedToModifyInvoiceContentInStatusValidator.cs).
+ - Auditlogging. [View example](https://github.com/nvdvlies/dotnet-api-demo/blob/main/src/Demo.Infrastructure/Auditlogging/InvoiceAuditlogger.cs).

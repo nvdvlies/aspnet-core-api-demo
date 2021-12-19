@@ -1,4 +1,4 @@
-﻿using Demo.Domain.Shared.BusinessComponent;
+﻿using Demo.Domain.Shared.DomainEntity;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -7,6 +7,6 @@ namespace Demo.Domain.Shared.Interfaces
     internal interface IAfterUpdate<T> where T : IEntity
     {
         int Order => 0;
-        Task ExecuteAsync(HookType type, IBusinessComponentContext<T> context, CancellationToken cancellationToken = default);
+        Task ExecuteAsync(HookType type, IDomainEntityContext<T> context, CancellationToken cancellationToken = default);
     }
 }

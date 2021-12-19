@@ -1,6 +1,6 @@
 using AutoMapper;
 using Demo.Application.Shared.Mappings;
-using Demo.Domain.Invoice.BusinessComponent.Interfaces;
+using Demo.Domain.Invoice.DomainEntity.Interfaces;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,25 +9,25 @@ namespace Demo.Application.Invoices.Commands.UpdateInvoice
 {
     public class UpdateInvoiceCommandHandler : IRequestHandler<UpdateInvoiceCommand, Unit>
     {
-        private readonly IInvoiceBusinessComponent _bc;
+        private readonly IInvoiceDomainEntity _domainEntity;
         private readonly IMapper _mapper;
 
         public UpdateInvoiceCommandHandler(
-            IInvoiceBusinessComponent bc,
+            IInvoiceDomainEntity domainEntity,
             IMapper mapper
         )
         {
-            _bc = bc;
+            _domainEntity = domainEntity;
             _mapper = mapper;
         }
 
         public async Task<Unit> Handle(UpdateInvoiceCommand request, CancellationToken cancellationToken)
         {
-            await _bc.GetAsync(request.Id, cancellationToken);
+            await _domainEntity.GetAsync(request.Id, cancellationToken);
 
-            _bc.MapFrom(request, _mapper);
+            _domainEntity.MapFrom(request, _mapper);
 
-            await _bc.UpdateAsync(cancellationToken);
+            await _domainEntity.UpdateAsync(cancellationToken);
 
             return Unit.Value;
         }

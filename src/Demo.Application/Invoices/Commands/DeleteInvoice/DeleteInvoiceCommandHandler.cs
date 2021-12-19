@@ -1,4 +1,4 @@
-using Demo.Domain.Invoice.BusinessComponent.Interfaces;
+using Demo.Domain.Invoice.DomainEntity.Interfaces;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
@@ -7,20 +7,20 @@ namespace Demo.Application.Invoices.Commands.DeleteInvoice
 {
     public class DeleteInvoiceCommandHandler : IRequestHandler<DeleteInvoiceCommand, Unit>
     {
-        private readonly IInvoiceBusinessComponent _bc;
+        private readonly IInvoiceDomainEntity _domainEntity;
 
         public DeleteInvoiceCommandHandler(
-            IInvoiceBusinessComponent bc
+            IInvoiceDomainEntity domainEntity
         )
         {
-            _bc = bc;
+            _domainEntity = domainEntity;
         }
 
         public async Task<Unit> Handle(DeleteInvoiceCommand request, CancellationToken cancellationToken)
         {
-            await _bc.GetAsync(request.Id, cancellationToken);
+            await _domainEntity.GetAsync(request.Id, cancellationToken);
 
-            await _bc.DeleteAsync(cancellationToken);
+            await _domainEntity.DeleteAsync(cancellationToken);
 
             return Unit.Value;
         }

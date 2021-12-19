@@ -1,4 +1,4 @@
-﻿using Demo.Domain.Shared.BusinessComponent;
+﻿using Demo.Domain.Shared.DomainEntity;
 using Demo.Domain.Shared.Extensions;
 using System;
 using System.Collections.Generic;

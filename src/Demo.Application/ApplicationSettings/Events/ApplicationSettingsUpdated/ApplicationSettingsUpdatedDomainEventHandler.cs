@@ -1,6 +1,6 @@
 ﻿using Demo.Application.Shared.Interfaces;
-using Demo.Domain.ApplicationSettings.BusinessComponent.Events;
-using Demo.Domain.ApplicationSettings.BusinessComponent.Interfaces;
+using Demo.Domain.ApplicationSettings.DomainEntity.Events;
+using Demo.Domain.ApplicationSettings.DomainEntity.Interfaces;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;

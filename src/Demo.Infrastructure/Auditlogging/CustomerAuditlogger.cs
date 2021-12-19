@@ -1,6 +1,6 @@
 ﻿using Demo.Common.Interfaces;
 using Demo.Domain.Auditlog;
-using Demo.Domain.Auditlog.BusinessComponent.Interfaces;
+using Demo.Domain.Auditlog.DomainEntity.Interfaces;
 using Demo.Domain.Customer;
 using Demo.Domain.Shared.Interfaces;
 using Demo.Infrastructure.Auditlogging.Shared;
@@ -13,8 +13,8 @@ namespace Demo.Infrastructure.Auditlogging
         public CustomerAuditlogger(
             ICurrentUser currentUser, 
             IDateTime dateTime,
-            IAuditlogBusinessComponent auditlogBusinessComponent
-        ) : base(currentUser, dateTime, auditlogBusinessComponent)
+            IAuditlogDomainEntity auditlogDomainEntity
+        ) : base(currentUser, dateTime, auditlogDomainEntity)
         {
         }
 

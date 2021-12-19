@@ -1,4 +1,4 @@
-﻿using Demo.Domain.Invoice.BusinessComponent.Events;
+﻿using Demo.Domain.Invoice.DomainEntity.Events;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;

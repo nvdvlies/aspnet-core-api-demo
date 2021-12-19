@@ -10,28 +10,28 @@ namespace Demo.Domain
     {
         public static IServiceCollection AddDomain(this IServiceCollection services)
         {
-            services.RegisterBusinessComponents();
-            services.RegisterBusinessComponentHooks();
+            services.RegisterDomainEntities();
+            services.RegisterDomainEntityHooks();
 
             return services;
         }
 
-        private static void RegisterBusinessComponents(this IServiceCollection services)
+        private static void RegisterDomainEntities(this IServiceCollection services)
         {
             ClassFinder
                 .SearchInAssembly(Assembly.GetExecutingAssembly())
-                .ClassesThatImplementInterface(typeof(IBusinessComponent<>))
+                .ClassesThatImplementInterface(typeof(IDomainEntity<>))
                 .ForEach(type =>
                 {
                     var nonGenericInterfaceType = type.GetInterfaces()
                         .Where(i => !i.GetTypeInfo().IsGenericType)
-                        .Where(i => i.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IBusinessComponent<>)))
+                        .Where(i => i.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IDomainEntity<>)))
                         .FirstOrDefault();
                     services.AddTransient(nonGenericInterfaceType, type);
                 });
         }
 
-        private static void RegisterBusinessComponentHooks(this IServiceCollection services)
+        private static void RegisterDomainEntityHooks(this IServiceCollection services)
         {
             var interfaces = new[]
             {

@@ -1,4 +1,4 @@
-using Demo.Domain.Invoice.BusinessComponent.Interfaces;
+using Demo.Domain.Invoice.DomainEntity.Interfaces;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
@@ -7,24 +7,24 @@ namespace Demo.Application.Invoices.Commands.CreditInvoice
 {
     public class CreditInvoiceCommandHandler : IRequestHandler<CreditInvoiceCommand, CreditInvoiceResponse>
     {
-        private readonly IInvoiceBusinessComponent _bc;
+        private readonly IInvoiceDomainEntity _domainEntity;
 
         public CreditInvoiceCommandHandler(
-            IInvoiceBusinessComponent bc
+            IInvoiceDomainEntity domainEntity
         )
         {
-            _bc = bc;
+            _domainEntity = domainEntity;
         }
 
         public async Task<CreditInvoiceResponse> Handle(CreditInvoiceCommand request, CancellationToken cancellationToken)
         {
-            await _bc.GetAsNewCreditAsync(request.Id, cancellationToken);
+            await _domainEntity.GetAsNewCreditAsync(request.Id, cancellationToken);
 
-            await _bc.CreateAsync(cancellationToken);
+            await _domainEntity.CreateAsync(cancellationToken);
 
             return new CreditInvoiceResponse
             {
-                Id = _bc.EntityId
+                Id = _domainEntity.EntityId
             };
         }
     }

@@ -3,7 +3,7 @@
     internal enum ScaffolderTypes
     {
         Unknown,
-        BusinessComponent,
+        DomainEntity,
         Endpoint
     }
 }

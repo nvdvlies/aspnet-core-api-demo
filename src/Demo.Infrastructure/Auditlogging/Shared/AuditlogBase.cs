@@ -1,6 +1,6 @@
 ﻿using Demo.Common.Interfaces;
 using Demo.Domain.Auditlog;
-using Demo.Domain.Auditlog.BusinessComponent.Interfaces;
+using Demo.Domain.Auditlog.DomainEntity.Interfaces;
 using Demo.Domain.Shared.Interfaces;
 using System.Collections.Generic;
 using System.Threading;
@@ -12,17 +12,17 @@ namespace Demo.Infrastructure.Auditlogging.Shared
     {
         private readonly ICurrentUser _currentUser;
         private readonly IDateTime _dateTime;
-        private readonly IAuditlogBusinessComponent _auditlogBusinessComponent;
+        private readonly IAuditlogDomainEntity _auditlogDomainEntity;
 
         public AuditlogBase(
             ICurrentUser currentUser, 
             IDateTime dateTime,
-            IAuditlogBusinessComponent auditlogBusinessComponent
+            IAuditlogDomainEntity auditlogDomainEntity
         )
         {
             _currentUser = currentUser;
             _dateTime = dateTime;
-            _auditlogBusinessComponent = auditlogBusinessComponent;
+            _auditlogDomainEntity = auditlogDomainEntity;
         }
 
         protected abstract List<AuditlogItem> AuditlogItems(T current, T previous);
@@ -36,8 +36,8 @@ namespace Demo.Infrastructure.Auditlogging.Shared
                 return;
             }
 
-            await _auditlogBusinessComponent.NewAsync(cancellationToken);
-            _auditlogBusinessComponent.With(x =>
+            await _auditlogDomainEntity.NewAsync(cancellationToken);
+            _auditlogDomainEntity.With(x =>
             {
                 x.EntityName = current.GetType().Name;
                 x.EntityId = current.Id;
@@ -45,7 +45,7 @@ namespace Demo.Infrastructure.Auditlogging.Shared
                 x.ModifiedOn = _dateTime.UtcNow;
                 x.AuditlogItems = auditLogItems;
             });
-            await _auditlogBusinessComponent.CreateAsync(cancellationToken);
+            await _auditlogDomainEntity.CreateAsync(cancellationToken);
         }
     }
 }
