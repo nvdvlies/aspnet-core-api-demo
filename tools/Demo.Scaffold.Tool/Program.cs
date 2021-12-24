@@ -17,7 +17,8 @@ namespace Demo.Scaffold.Tool
                 {
                     builder.AddConsole();
                 })
-                .ConfigureServices((context, services) => {
+                .ConfigureServices((context, services) =>
+                {
                     var configuration = new ConfigurationBuilder()
                         .SetBasePath(Directory.GetCurrentDirectory())
                         .AddJsonFile("appsettings.json", optional: false)

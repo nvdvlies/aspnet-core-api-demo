@@ -5,7 +5,6 @@ using Demo.Domain.Invoice.State;
 using Demo.Domain.Shared.DomainEntity;
 using Demo.Domain.Shared.Exceptions;
 using Demo.Domain.Shared.Interfaces;
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 

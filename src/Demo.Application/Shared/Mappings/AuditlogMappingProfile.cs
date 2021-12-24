@@ -14,14 +14,14 @@ namespace Demo.Application.Shared.Mappings
             CreateMap<AuditlogType, AuditlogTypeEnum>();
             CreateMap<Auditlog, AuditlogDto>();
             CreateMap<AuditlogItem, AuditlogItemDto>()
-                .ForMember(dest => dest.CurrentValueAsString, 
+                .ForMember(dest => dest.CurrentValueAsString,
                     opt => opt.MapFrom<AuditlogValueResolver, string>(src => src.CurrentValueAsString)
                 )
-                .ForMember(dest => dest.PreviousValueAsString, 
+                .ForMember(dest => dest.PreviousValueAsString,
                     opt => opt.MapFrom<AuditlogValueResolver, string>(src => src.PreviousValueAsString)
                 );
-                //.ForMember(dest => dest.Status, opt => opt.MapFrom(src => (AuditlogStatusEnum)src.Status))
-                //.ForMember(dest => dest.Type, opt => opt.MapFrom(src => (AuditlogTypeEnum)src.Type));
+            //.ForMember(dest => dest.Status, opt => opt.MapFrom(src => (AuditlogStatusEnum)src.Status))
+            //.ForMember(dest => dest.Type, opt => opt.MapFrom(src => (AuditlogTypeEnum)src.Type));
         }
 
         private class AuditlogValueResolver : IMemberValueResolver<AuditlogItem, AuditlogItemDto, string, string>

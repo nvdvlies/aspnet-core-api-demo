@@ -1,7 +1,7 @@
 ﻿using Demo.Scaffold.Tool.Changes;
+using Demo.Scaffold.Tool.Interfaces;
 using Demo.Scaffold.Tool.Scaffolders.OutputCollectors.DomainEntity;
 using Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint;
-using Demo.Scaffold.Tool.Interfaces;
 using System;
 using System.Collections.Generic;
 

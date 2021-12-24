@@ -45,7 +45,7 @@ namespace Demo.WebApi.Tests.Controllers.Customers
             content.HasNextPage.Should().Be(false);
             content.HasPreviousPage.Should().Be(false);
         }
-        
+
         [Fact]
         public async Task SearchCustomers_When_1_customer_exists_It_should_return_1_customer()
         {
@@ -160,7 +160,7 @@ namespace Demo.WebApi.Tests.Controllers.Customers
             await ResetDatabaseAsync();
 
             var numberOfExistingCustomers = 18;
-            
+
             var existingCustomers = _autoFixture.CreateMany<Customer>(numberOfExistingCustomers);
             await AddAsExistingEntitiesAsync(existingCustomers);
 

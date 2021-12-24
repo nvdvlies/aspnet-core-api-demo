@@ -1,5 +1,4 @@
 ﻿using Demo.Infrastructure.Persistence;
-using Demo.Infrastructure.Settings;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;

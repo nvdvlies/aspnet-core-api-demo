@@ -27,15 +27,16 @@ namespace Demo.WebApi.Tests.Controllers.Customers
     [Collection(nameof(SharedFixture))]
     public class CreateCustomerTests : TestBase
     {
-        public CreateCustomerTests(SharedFixture fixture) : base(fixture) 
-        { 
+        public CreateCustomerTests(SharedFixture fixture) : base(fixture)
+        {
         }
 
         [Fact]
         public async Task CreateCustomer_When_a_customer_can_be_created_It_should_return_statuscode_Created()
         {
             // Arrange
-            var command = new CreateCustomerCommand { 
+            var command = new CreateCustomerCommand
+            {
                 Name = "Test"
             };
 
@@ -118,7 +119,7 @@ namespace Demo.WebApi.Tests.Controllers.Customers
 
             var command = new CreateCustomerCommand
             {
-                Name = string.Empty 
+                Name = string.Empty
             };
 
             // Act

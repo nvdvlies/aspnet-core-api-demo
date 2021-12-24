@@ -29,7 +29,7 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint.OutputCollect
         private static string GetTemplate(CommandEndpointTypes commandEndpointType, string controllerName, string commandName, string entityName)
         {
             var code = commandEndpointType == CommandEndpointTypes.CreateSubEndpoint
-                    || commandEndpointType == CommandEndpointTypes.UpdateSubEndpoint 
+                    || commandEndpointType == CommandEndpointTypes.UpdateSubEndpoint
                     || commandEndpointType == CommandEndpointTypes.DeleteSubEndpoint
                     || commandEndpointType == CommandEndpointTypes.Update
                     || commandEndpointType == CommandEndpointTypes.Delete ? @"

@@ -54,7 +54,8 @@ namespace Demo.Infrastructure
                 .SearchInAssembly(domainAssembly)
                 .ClassesThatImplementInterface(typeof(IQueryableEntity))
                 .ClassesThatImplementInterface(typeof(ISoftDeleteEntity))
-                .ForEach(type => {
+                .ForEach(type =>
+                {
                     var interfaceType = typeof(IDbQuery<>).MakeGenericType(new[] { type });
                     var implementationType = typeof(SoftDeleteDbQuery<>).MakeGenericType(new[] { type });
                     services.AddTransient(interfaceType, implementationType);
@@ -65,7 +66,8 @@ namespace Demo.Infrastructure
                 .SearchInAssembly(domainAssembly)
                 .ClassesThatImplementInterface(typeof(IQueryableEntity))
                 .ClassesThatDoNotImplementInterface(typeof(ISoftDeleteEntity))
-                .ForEach(type => {
+                .ForEach(type =>
+                {
                     var interfaceType = typeof(IDbQuery<>).MakeGenericType(new[] { type });
                     var implementationType = typeof(Persistence.DbQuery<>).MakeGenericType(new[] { type });
                     services.AddTransient(interfaceType, implementationType);

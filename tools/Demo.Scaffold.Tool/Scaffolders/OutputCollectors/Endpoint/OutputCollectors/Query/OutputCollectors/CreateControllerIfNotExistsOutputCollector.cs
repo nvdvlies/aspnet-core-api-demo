@@ -2,7 +2,6 @@
 using Demo.Scaffold.Tool.Helpers;
 using Demo.Scaffold.Tool.Interfaces;
 using System.Collections.Generic;
-using System.IO;
 
 namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint.OutputCollectors.Query.OutputCollectors
 {

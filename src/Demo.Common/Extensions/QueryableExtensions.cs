@@ -1,6 +1,6 @@
-﻿using System.Diagnostics;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
 
 namespace Demo.Common.Extensions
 {

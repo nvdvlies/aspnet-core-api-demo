@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Demo.Infrastructure.Persistence
 {
-    internal class DbQuery<T>: IDbQuery<T> where T : class, IEntity
+    internal class DbQuery<T> : IDbQuery<T> where T : class, IEntity
     {
         protected readonly IApplicationDbContext DbContext;
         protected readonly IDbQueryOptions Options;

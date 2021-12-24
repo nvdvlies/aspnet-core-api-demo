@@ -1,8 +1,7 @@
-using Demo.Application.ApplicationSettings.Queries.GetApplicationSettingsAuditlog;
 using Demo.Application.ApplicationSettings.Commands.SaveApplicationSettings;
 using Demo.Application.ApplicationSettings.Queries.GetApplicationSettings;
+using Demo.Application.ApplicationSettings.Queries.GetApplicationSettingsAuditlog;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;

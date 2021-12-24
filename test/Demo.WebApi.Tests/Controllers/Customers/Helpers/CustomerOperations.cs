@@ -1,8 +1,6 @@
 ﻿using Demo.Application.Customers.Commands.CreateCustomer;
 using Demo.Application.Customers.Queries.SearchCustomers;
-using Microsoft.AspNetCore.WebUtilities;
 using System;
-using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;

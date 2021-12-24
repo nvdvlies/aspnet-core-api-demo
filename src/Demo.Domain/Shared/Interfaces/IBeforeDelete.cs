@@ -1,5 +1,4 @@
 ﻿using Demo.Domain.Shared.DomainEntity;
-using Demo.Domain.Shared.Entities;
 using System.Threading;
 using System.Threading.Tasks;
 

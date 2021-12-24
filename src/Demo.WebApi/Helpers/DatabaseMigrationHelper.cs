@@ -46,7 +46,7 @@ namespace Demo.WebApi.Helpers
                 logger.LogCritical(ex, "Database migration failed with error: {message}.", ex.Message);
                 throw;
             }
-            
+
             return host;
         }
     }

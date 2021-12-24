@@ -4,9 +4,7 @@ using Demo.Domain.Invoice.Interfaces;
 using Demo.Domain.Invoice.Models;
 using Demo.Domain.Shared.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -20,8 +18,8 @@ namespace Demo.Application.Invoices.Services
 
         public InvoiceToPdfModelMapper(
             IDbQuery<Customer> customerQuery//,
-            //IDbQuery<Contact> contactQuery,
-            //IDbQuery<Item> itemQuery
+                                            //IDbQuery<Contact> contactQuery,
+                                            //IDbQuery<Item> itemQuery
         )
         {
             _customerQuery = customerQuery;

@@ -4,7 +4,6 @@ using Demo.Domain.Shared.DomainEntity;
 using Demo.Domain.Shared.Exceptions;
 using Demo.Domain.Shared.Interfaces;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;

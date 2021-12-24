@@ -13,7 +13,7 @@ namespace Demo.Application.Customers.Commands.UpdateCustomer
         private readonly IMapper _mapper;
 
         public UpdateCustomerCommandHandler(
-            ICustomerDomainEntity customerDomainEntity, 
+            ICustomerDomainEntity customerDomainEntity,
             IMapper mapper
         )
         {

@@ -1,6 +1,4 @@
-﻿using Demo.Domain.Shared.Entities;
-
-namespace Demo.Domain.Shared.Interfaces
+﻿namespace Demo.Domain.Shared.Interfaces
 {
     public interface IJsonService<T>
     {

@@ -1,8 +1,8 @@
 ﻿using Demo.Domain.Shared.Interfaces;
+using MediatR;
 using Microsoft.Extensions.Logging;
 using System.Threading;
 using System.Threading.Tasks;
-using MediatR;
 
 namespace Demo.Application.Shared.PipelineBehaviors
 {

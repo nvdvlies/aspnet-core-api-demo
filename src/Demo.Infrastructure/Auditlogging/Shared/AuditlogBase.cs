@@ -15,7 +15,7 @@ namespace Demo.Infrastructure.Auditlogging.Shared
         private readonly IAuditlogDomainEntity _auditlogDomainEntity;
 
         public AuditlogBase(
-            ICurrentUser currentUser, 
+            ICurrentUser currentUser,
             IDateTime dateTime,
             IAuditlogDomainEntity auditlogDomainEntity
         )

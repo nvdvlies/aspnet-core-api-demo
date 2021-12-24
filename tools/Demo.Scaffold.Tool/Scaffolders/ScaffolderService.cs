@@ -78,7 +78,7 @@ namespace Demo.Scaffold.Tool.Scaffolders
                 Console.WriteLine($" - {change.ModificationType}: {Path.GetRelativePath(_appSettings.PathToSolutionRootDirectory, change.DirectoryAndFileName)}");
             }
             Console.WriteLine();
-            return AnsiConsole.Confirm("Apply pending changes?"); 
+            return AnsiConsole.Confirm("Apply pending changes?");
         }
 
         private void ApplyChanges(IEnumerable<IChange> changes)

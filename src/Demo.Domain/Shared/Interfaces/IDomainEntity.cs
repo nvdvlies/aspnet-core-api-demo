@@ -1,5 +1,4 @@
-﻿using Demo.Domain.Shared.DomainEntity;
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
 

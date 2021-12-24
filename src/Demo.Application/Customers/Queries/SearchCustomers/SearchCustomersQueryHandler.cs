@@ -20,7 +20,7 @@ namespace Demo.Application.Customers.Queries.SearchCustomers
         private readonly IMapper _mapper;
 
         public SearchCustomersQueryHandler(
-            IDbQuery<Customer> query, 
+            IDbQuery<Customer> query,
             IMapper mapper
         )
         {

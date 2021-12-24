@@ -9,12 +9,12 @@ namespace Demo.Application.Shared.PipelineBehaviors
     {
         private readonly ILogger<LoggingPipelineBehavior<TRequest, TResponse>> _logger;
 
-        public LoggingPipelineBehavior(ILogger<LoggingPipelineBehavior<TRequest, TResponse>> logger) 
+        public LoggingPipelineBehavior(ILogger<LoggingPipelineBehavior<TRequest, TResponse>> logger)
         {
             _logger = logger;
         }
-                                                                      
-        public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken,  RequestHandlerDelegate<TResponse> next)
+
+        public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
         {
             _logger.LogInformation($"Handling {typeof(TRequest).Name}");
             var response = await next();

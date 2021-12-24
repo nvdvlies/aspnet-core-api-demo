@@ -13,7 +13,8 @@ namespace Demo.Application
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
             AssemblyScanner.FindValidatorsInAssemblies(new[] { Assembly.GetExecutingAssembly() })
-                .ForEach(pair => {
+                .ForEach(pair =>
+                {
                     services.Add(ServiceDescriptor.Transient(pair.InterfaceType, pair.ValidatorType));
                     services.Add(ServiceDescriptor.Transient(pair.ValidatorType, pair.ValidatorType));
                 });

@@ -1,7 +1,6 @@
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Demo.Application.Invoices.Queries.GetInvoiceById.Dtos;
-using Demo.Application.Shared.Dtos;
 using Demo.Domain.Invoice;
 using Demo.Domain.Shared.Interfaces;
 using MediatR;
@@ -17,7 +16,7 @@ namespace Demo.Application.Invoices.Queries.GetInvoiceById
         private readonly IMapper _mapper;
 
         public GetInvoiceByIdQueryHandler(
-            IDbQuery<Invoice> query, 
+            IDbQuery<Invoice> query,
             IMapper mapper
         )
         {

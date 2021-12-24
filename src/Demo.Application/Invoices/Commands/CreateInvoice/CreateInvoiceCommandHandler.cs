@@ -13,7 +13,7 @@ namespace Demo.Application.Invoices.Commands.CreateInvoice
         private readonly IMapper _mapper;
 
         public CreateInvoiceCommandHandler(
-            IInvoiceDomainEntity invoiceDomainEntity, 
+            IInvoiceDomainEntity invoiceDomainEntity,
             IMapper mapper
         )
         {

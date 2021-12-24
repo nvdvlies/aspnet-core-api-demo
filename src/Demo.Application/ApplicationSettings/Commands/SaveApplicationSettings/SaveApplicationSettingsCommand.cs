@@ -1,6 +1,5 @@
 using Demo.Application.ApplicationSettings.Commands.SaveApplicationSettings.Dtos;
 using MediatR;
-using System;
 
 namespace Demo.Application.ApplicationSettings.Commands.SaveApplicationSettings
 {

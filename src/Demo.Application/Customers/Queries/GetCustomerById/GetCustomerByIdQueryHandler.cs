@@ -1,9 +1,7 @@
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Demo.Application.Customers.Queries.GetCustomerById.Dtos;
-using Demo.Application.Shared.Mappings;
 using Demo.Domain.Customer;
-using Demo.Domain.Customer.Interfaces;
 using Demo.Domain.Shared.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -18,7 +16,7 @@ namespace Demo.Application.Customers.Queries.GetCustomerById
         private readonly IMapper _mapper;
 
         public GetCustomerByIdQueryHandler(
-            IDbQuery<Customer> query, 
+            IDbQuery<Customer> query,
             IMapper mapper
         )
         {

@@ -2,7 +2,7 @@
 
 namespace Demo.Infrastructure.Persistence
 {
-    public class DbQueryOptions: IDbQueryOptions
+    public class DbQueryOptions : IDbQueryOptions
     {
         public bool IncludeDeleted { get; set; } = false;
     }

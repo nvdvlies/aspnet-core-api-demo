@@ -20,7 +20,7 @@ namespace Demo.Application.Invoices.Queries.SearchInvoices
         private readonly IMapper _mapper;
 
         public SearchInvoicesQueryHandler(
-            IDbQuery<Invoice> query, 
+            IDbQuery<Invoice> query,
             IMapper mapper
         )
         {

@@ -1,6 +1,5 @@
 ﻿using Demo.Scaffold.Tool.Changes;
 using Demo.Scaffold.Tool.Interfaces;
-using Demo.Scaffold.Tool.Models;
 using Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint.InputCollectors;
 using Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint.OutputCollectors;
 using System.Collections.Generic;

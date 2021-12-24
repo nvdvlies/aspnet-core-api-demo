@@ -1,5 +1,4 @@
-﻿using Demo.Domain.Shared.Entities;
-using Demo.Domain.Shared.Interfaces;
+﻿using Demo.Domain.Shared.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using System;

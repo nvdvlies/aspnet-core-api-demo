@@ -213,8 +213,8 @@ namespace Demo.Infrastructure.Auditlogging.Shared
 
                     var item2 = new AuditlogItem
                     {
-                        PropertyName = collectionItemPropertyname != null 
-                            ? collectionItemPropertyname.Compile()(auditlogPair.CurrentValue ?? auditlogPair.PreviousValue).ToString() 
+                        PropertyName = collectionItemPropertyname != null
+                            ? collectionItemPropertyname.Compile()(auditlogPair.CurrentValue ?? auditlogPair.PreviousValue).ToString()
                             : i.ToString(),
                         Status = auditlogPairStatus,
                         Type = AuditlogType.None,

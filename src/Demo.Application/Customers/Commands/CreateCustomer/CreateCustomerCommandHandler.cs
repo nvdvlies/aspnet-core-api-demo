@@ -13,7 +13,7 @@ namespace Demo.Application.Customers.Commands.CreateCustomer
         private readonly IMapper _mapper;
 
         public CreateCustomerCommandHandler(
-            ICustomerDomainEntity customerDomainEntity, 
+            ICustomerDomainEntity customerDomainEntity,
             IMapper mapper
         )
         {

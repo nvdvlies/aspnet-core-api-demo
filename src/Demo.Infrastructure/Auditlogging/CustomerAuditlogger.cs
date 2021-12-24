@@ -11,7 +11,7 @@ namespace Demo.Infrastructure.Auditlogging
     internal class CustomerAuditlogger : AuditlogBase<Customer>, IAuditlog<Customer>
     {
         public CustomerAuditlogger(
-            ICurrentUser currentUser, 
+            ICurrentUser currentUser,
             IDateTime dateTime,
             IAuditlogDomainEntity auditlogDomainEntity
         ) : base(currentUser, dateTime, auditlogDomainEntity)

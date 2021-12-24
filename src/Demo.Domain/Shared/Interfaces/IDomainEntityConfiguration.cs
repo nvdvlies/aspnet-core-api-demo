@@ -1,5 +1,4 @@
-﻿using Demo.Domain.Shared.Entities;
-using Microsoft.EntityFrameworkCore.Query;
+﻿using Microsoft.EntityFrameworkCore.Query;
 using System;
 using System.Linq;
 

@@ -4,8 +4,8 @@ using Demo.Application.Invoices.Events;
 
 namespace Demo.Application.Shared.Interfaces
 {
-    public interface IEventHub : 
-        ICustomerEventHub, 
+    public interface IEventHub :
+        ICustomerEventHub,
         IInvoiceEventHub,
         IApplicationSettingsEventHub
     {

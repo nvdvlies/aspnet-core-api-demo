@@ -98,7 +98,8 @@ namespace Demo.Domain.Shared.DomainEntity
         public virtual IDomainEntity<T> WithOptions(Action<IDomainEntityOptions> action)
         {
             action(_options);
-            DbCommand.WithOptions(x => {
+            DbCommand.WithOptions(x =>
+            {
                 x.AsNoTracking = Options.AsNoTracking;
             });
             return this;
@@ -108,7 +109,7 @@ namespace Demo.Domain.Shared.DomainEntity
         {
             var stopwatch = Context.PerformanceMeasurements.Start(nameof(GetAsync));
             try
-            { 
+            {
                 Context.Entity = await DbCommand.GetAsync(id, Includes, cancellationToken);
 
                 if (Context.Entity == null
@@ -286,7 +287,7 @@ namespace Demo.Domain.Shared.DomainEntity
             if (EntityId == default)
             {
                 await CreateAsync(cancellationToken);
-            } 
+            }
             else
             {
                 await UpdateAsync(cancellationToken);
@@ -379,7 +380,7 @@ namespace Demo.Domain.Shared.DomainEntity
             finally
             {
                 stopwatch.Stop();
-            } 
+            }
         }
     }
 }

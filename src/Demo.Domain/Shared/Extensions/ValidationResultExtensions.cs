@@ -14,9 +14,10 @@ namespace Demo.Domain.Shared.Extensions
             {
                 foreach (var error in result.Errors)
                 {
-                    validationMessages.Add(new ValidationMessage { 
+                    validationMessages.Add(new ValidationMessage
+                    {
                         PropertyName = error.PropertyName,
-                        Message = error.ErrorMessage 
+                        Message = error.ErrorMessage
                     });
                 }
             }

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text.Json;
-using System.Threading.Tasks;
-using Demo.Common.Interfaces;
+﻿using Demo.Common.Interfaces;
 using Demo.Domain.Shared.Exceptions;
 using Demo.WebApi.Extensions;
 using FluentValidation;
@@ -16,6 +10,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using System.Net;
+using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace Demo.WebApi.Middleware
 {

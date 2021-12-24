@@ -11,7 +11,7 @@ namespace Demo.Infrastructure.Auditlogging
     internal class ApplicationSettingsAuditlogger : AuditlogBase<ApplicationSettings>, IAuditlog<ApplicationSettings>
     {
         public ApplicationSettingsAuditlogger(
-            ICurrentUser currentUser, 
+            ICurrentUser currentUser,
             IDateTime dateTime,
             IAuditlogDomainEntity auditlogDomainEntity
         ) : base(currentUser, dateTime, auditlogDomainEntity)
