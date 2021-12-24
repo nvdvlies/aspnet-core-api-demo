@@ -1,6 +1,5 @@
 ﻿using Demo.Domain.Invoice;
 using Demo.Domain.Shared.DomainEntity;
-using Demo.Domain.Shared.Extensions;
 using Demo.Domain.Shared.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;

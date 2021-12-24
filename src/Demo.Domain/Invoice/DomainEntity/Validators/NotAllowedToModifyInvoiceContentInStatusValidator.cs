@@ -1,5 +1,4 @@
 ﻿using Demo.Domain.Shared.DomainEntity;
-using Demo.Domain.Shared.Extensions;
 using Demo.Domain.Shared.Interfaces;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
