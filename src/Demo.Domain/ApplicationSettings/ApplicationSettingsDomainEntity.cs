@@ -29,9 +29,9 @@ namespace Demo.Domain.ApplicationSettings
             IEnumerable<IAfterDelete<ApplicationSettings>> afterDeleteHooks,
             IPublishDomainEventAfterCommitQueue publishDomainEventAfterCommitQueue,
             IJsonService<ApplicationSettings> jsonService,
-            IAuditlog<ApplicationSettings> auditlog
+            IAuditlogger<ApplicationSettings> auditlogger
         )
-            : base(logger, currentUser, dateTime, dbCommand, defaultValuesSetters, validators, beforeCreateHooks, afterCreateHooks, beforeUpdateHooks, afterUpdateHooks, beforeDeleteHooks, afterDeleteHooks, publishDomainEventAfterCommitQueue, jsonService, auditlog)
+            : base(logger, currentUser, dateTime, dbCommand, defaultValuesSetters, validators, beforeCreateHooks, afterCreateHooks, beforeUpdateHooks, afterUpdateHooks, beforeDeleteHooks, afterDeleteHooks, publishDomainEventAfterCommitQueue, jsonService, auditlogger)
         {
             _dbCommand = dbCommand;
         }

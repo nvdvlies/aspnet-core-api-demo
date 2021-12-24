@@ -9,7 +9,7 @@ using System.Collections.Generic;
 
 namespace Demo.Infrastructure.Auditlogging
 {
-    internal class InvoiceAuditlogger : AuditlogBase<Invoice>, IAuditlog<Invoice>
+    internal class InvoiceAuditlogger : AuditlogBase<Invoice>, IAuditlogger<Invoice>
     {
         public InvoiceAuditlogger(
             ICurrentUser currentUser,

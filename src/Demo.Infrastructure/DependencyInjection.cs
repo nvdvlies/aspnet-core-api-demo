@@ -81,12 +81,12 @@ namespace Demo.Infrastructure
 
             ClassFinder
                 .SearchInAssemblies(assembliesToScan)
-                .ClassesThatImplementInterface(typeof(IAuditlog<>))
+                .ClassesThatImplementInterface(typeof(IAuditlogger<>))
                 .ForEach(type =>
                 {
                     var interfaceType = type.GetInterfaces()
                         .Where(i => i.GetTypeInfo().IsGenericType)
-                        .Where(i => i.GetGenericTypeDefinition() == typeof(IAuditlog<>))
+                        .Where(i => i.GetGenericTypeDefinition() == typeof(IAuditlogger<>))
                         .FirstOrDefault();
                     services.AddTransient(interfaceType, type);
                 });

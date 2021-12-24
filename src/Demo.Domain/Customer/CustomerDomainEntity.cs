@@ -24,9 +24,9 @@ namespace Demo.Domain.Customer
             IEnumerable<IAfterDelete<Customer>> afterDeleteHooks,
             IPublishDomainEventAfterCommitQueue publishDomainEventAfterCommitQueue,
             IJsonService<Customer> jsonService,
-            IAuditlog<Customer> auditlog
+            IAuditlogger<Customer> auditlogger
         )
-            : base(logger, currentUser, dateTime, dbCommand, defaultValuesSetters, validators, beforeCreateHooks, afterCreateHooks, beforeUpdateHooks, afterUpdateHooks, beforeDeleteHooks, afterDeleteHooks, publishDomainEventAfterCommitQueue, jsonService, auditlog)
+            : base(logger, currentUser, dateTime, dbCommand, defaultValuesSetters, validators, beforeCreateHooks, afterCreateHooks, beforeUpdateHooks, afterUpdateHooks, beforeDeleteHooks, afterDeleteHooks, publishDomainEventAfterCommitQueue, jsonService, auditlogger)
         {
         }
     }

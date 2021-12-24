@@ -28,7 +28,7 @@ namespace Demo.Domain.Shared.DomainEntity
         private readonly IEnumerable<IAfterUpdate<T>> _afterUpdateHooks;
         private readonly IEnumerable<IBeforeDelete<T>> _beforeDeleteHooks;
         private readonly IEnumerable<IAfterDelete<T>> _afterDeleteHooks;
-        private readonly IAuditlog<T> _auditlog;
+        private readonly IAuditlogger<T> _auditlogger;
 
         private DomainEntityOptions _options { get; set; }
 
@@ -47,7 +47,7 @@ namespace Demo.Domain.Shared.DomainEntity
             IEnumerable<IAfterDelete<T>> afterDeleteHooks,
             IPublishDomainEventAfterCommitQueue publishDomainEventAfterCommitQueue,
             IJsonService<T> jsonService,
-            IAuditlog<T> auditlog
+            IAuditlogger<T> auditlogger
         )
         {
             Context = new DomainEntityContext<T>(logger, publishDomainEventAfterCommitQueue, jsonService);
@@ -64,7 +64,7 @@ namespace Demo.Domain.Shared.DomainEntity
             _afterUpdateHooks = afterUpdateHooks.OrderBy(x => x.Order);
             _beforeDeleteHooks = beforeDeleteHooks.OrderBy(x => x.Order);
             _afterDeleteHooks = afterDeleteHooks.OrderBy(x => x.Order);
-            _auditlog = auditlog;
+            _auditlogger = auditlogger;
 
             _options = new DomainEntityOptions();
         }
@@ -367,7 +367,7 @@ namespace Demo.Domain.Shared.DomainEntity
 
         private async Task CreateAuditLogAsync(CancellationToken cancellationToken)
         {
-            if (_auditlog == null)
+            if (_auditlogger == null)
             {
                 return;
             }
@@ -375,7 +375,7 @@ namespace Demo.Domain.Shared.DomainEntity
             var stopwatch = Context.PerformanceMeasurements.Start(nameof(CreateAuditLogAsync));
             try
             {
-                await _auditlog.CreateAuditLogAsync(Context.Entity, Context.Pristine, cancellationToken);
+                await _auditlogger.CreateAuditLogAsync(Context.Entity, Context.Pristine, cancellationToken);
             }
             finally
             {

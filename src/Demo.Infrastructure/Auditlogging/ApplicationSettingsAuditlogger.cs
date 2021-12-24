@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 namespace Demo.Infrastructure.Auditlogging
 {
-    internal class ApplicationSettingsAuditlogger : AuditlogBase<ApplicationSettings>, IAuditlog<ApplicationSettings>
+    internal class ApplicationSettingsAuditlogger : AuditlogBase<ApplicationSettings>, IAuditlogger<ApplicationSettings>
     {
         public ApplicationSettingsAuditlogger(
             ICurrentUser currentUser,
