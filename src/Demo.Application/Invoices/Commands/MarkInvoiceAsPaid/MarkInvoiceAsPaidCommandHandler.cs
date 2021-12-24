@@ -1,5 +1,5 @@
 using Demo.Domain.Invoice;
-using Demo.Domain.Invoice.DomainEntity.Interfaces;
+using Demo.Domain.Invoice.Interfaces;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;

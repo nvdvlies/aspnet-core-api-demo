@@ -3,7 +3,7 @@ using AutoMapper.QueryableExtensions;
 using Demo.Application.Customers.Queries.GetCustomerById.Dtos;
 using Demo.Application.Shared.Mappings;
 using Demo.Domain.Customer;
-using Demo.Domain.Customer.DomainEntity.Interfaces;
+using Demo.Domain.Customer.Interfaces;
 using Demo.Domain.Shared.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;

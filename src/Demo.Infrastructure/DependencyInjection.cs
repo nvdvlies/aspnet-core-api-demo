@@ -1,7 +1,7 @@
 ﻿using Demo.Application.Shared.Interfaces;
 using Demo.Common.Helpers;
 using Demo.Common.Interfaces;
-using Demo.Domain.ApplicationSettings.DomainEntity.Interfaces;
+using Demo.Domain.ApplicationSettings.Interfaces;
 using Demo.Domain.Shared.Entities;
 using Demo.Domain.Shared.Interfaces;
 using Demo.Infrastructure.Auditlogging;

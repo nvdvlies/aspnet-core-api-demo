@@ -1,7 +1,7 @@
 ﻿using Demo.Application.Customers.Commands.CreateCustomer;
 using Demo.Application.Customers.Events;
 using Demo.Domain.Customer;
-using Demo.Domain.Customer.DomainEntity.Interfaces;
+using Demo.Domain.Customer.Interfaces;
 using Demo.Domain.Shared.DomainEntity;
 using Demo.Domain.Shared.Exceptions;
 using Demo.Domain.Shared.Interfaces;

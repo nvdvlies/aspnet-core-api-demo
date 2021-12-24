@@ -1,4 +1,4 @@
-using Demo.Domain.Customer.DomainEntity.Interfaces;
+using Demo.Domain.Customer.Interfaces;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;

@@ -1,6 +1,6 @@
 ﻿using Demo.Application.Invoices.Services;
 using Demo.Application.Shared.PipelineBehaviors;
-using Demo.Domain.Invoice.DomainEntity.Interfaces;
+using Demo.Domain.Invoice.Interfaces;
 using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;

@@ -1,7 +1,7 @@
 ﻿using Demo.Common.Interfaces;
 using Demo.Domain.ApplicationSettings;
 using Demo.Domain.Auditlog;
-using Demo.Domain.Auditlog.DomainEntity.Interfaces;
+using Demo.Domain.Auditlog.Interfaces;
 using Demo.Domain.Shared.Interfaces;
 using Demo.Infrastructure.Auditlogging.Shared;
 using System.Collections.Generic;

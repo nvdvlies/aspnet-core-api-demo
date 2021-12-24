@@ -1,6 +1,6 @@
 ﻿using Demo.Common.Interfaces;
 using Demo.Domain.Auditlog;
-using Demo.Domain.Auditlog.DomainEntity.Interfaces;
+using Demo.Domain.Auditlog.Interfaces;
 using Demo.Domain.Shared.Interfaces;
 using System.Collections.Generic;
 using System.Threading;

@@ -1,6 +1,6 @@
 using AutoMapper;
 using Demo.Application.ApplicationSettings.Queries.GetApplicationSettings.Dtos;
-using Demo.Domain.ApplicationSettings.DomainEntity.Interfaces;
+using Demo.Domain.ApplicationSettings.Interfaces;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;

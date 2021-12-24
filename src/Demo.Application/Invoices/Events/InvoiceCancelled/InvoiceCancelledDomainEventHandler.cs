@@ -1,5 +1,5 @@
 ﻿using Demo.Application.Shared.Interfaces;
-using Demo.Domain.Invoice.DomainEntity.Events;
+using Demo.Domain.Invoice.Events;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;

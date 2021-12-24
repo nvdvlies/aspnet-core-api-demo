@@ -1,7 +1,7 @@
 ﻿using Demo.Domain.Customer;
 using Demo.Domain.Invoice;
-using Demo.Domain.Invoice.DomainEntity.Interfaces;
-using Demo.Domain.Invoice.DomainEntity.Models;
+using Demo.Domain.Invoice.Interfaces;
+using Demo.Domain.Invoice.Models;
 using Demo.Domain.Shared.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;

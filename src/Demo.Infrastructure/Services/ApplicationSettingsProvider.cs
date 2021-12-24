@@ -1,5 +1,5 @@
 ﻿using Demo.Domain.ApplicationSettings;
-using Demo.Domain.ApplicationSettings.DomainEntity.Interfaces;
+using Demo.Domain.ApplicationSettings.Interfaces;
 using Microsoft.Extensions.Caching.Memory;
 using System;
 using System.Threading;
