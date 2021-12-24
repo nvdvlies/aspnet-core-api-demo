@@ -26,11 +26,11 @@ namespace Demo.Domain.Customer.DomainEntity.Validators
                 return await Validations.Ok();
             }
 
-            var invoiceStatussesWhichDisallowDeletionOfCustomer = new[] { InvoiceStatus.Draft, InvoiceStatus.Sent, InvoiceStatus.Paid };
+            var invoiceStatussesWhichAllowDeletionOfCustomer = new[] { InvoiceStatus.Cancelled };
 
             var hasInvoices = await _invoiceQuery.AsQueryable()
                 .Where(x => x.CustomerId == context.Entity.Id)
-                .Where(x => invoiceStatussesWhichDisallowDeletionOfCustomer.Contains(x.Status))
+                .Where(x => !invoiceStatussesWhichAllowDeletionOfCustomer.Contains(x.Status))
                 .AnyAsync();
 
             if (hasInvoices)
