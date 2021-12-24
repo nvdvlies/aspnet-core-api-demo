@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Demo.Domain.Customer.DomainEntity.Validators
 {
-    internal class NotAllowedToDeleteCustomerWithInvoiceValidator : BaseValidator, IValidator<Customer>
+    internal class NotAllowedToDeleteCustomerWithInvoiceValidator : IValidator<Customer>
     {
         private readonly IDbQuery<Invoice.Invoice> _invoiceQuery;
 
@@ -23,7 +23,7 @@ namespace Demo.Domain.Customer.DomainEntity.Validators
         {
             if (context.EditMode != EditMode.Delete)
             {
-                return null;
+                return await Validations.Ok();
             }
 
             var invoiceStatussesWhichDisallowDeletionOfCustomer = new[] { InvoiceStatus.Draft, InvoiceStatus.Sent, InvoiceStatus.Paid };
@@ -35,10 +35,10 @@ namespace Demo.Domain.Customer.DomainEntity.Validators
 
             if (hasInvoices)
             {
-                return "Cannot delete customer, because one or more invoices are linked to this customer".ToValidationMessage();
+                return await Validations.Invalid("Cannot delete customer, because one or more invoices are linked to this customer.");
             }
 
-            return null;
+            return await Validations.Ok();
         }
     }
 }
