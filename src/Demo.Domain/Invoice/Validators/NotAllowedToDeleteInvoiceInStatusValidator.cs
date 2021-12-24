@@ -13,16 +13,16 @@ namespace Demo.Domain.Invoice.Validators
         {
             if (context.EditMode != EditMode.Delete)
             {
-                return Validations.Ok();
+                return ValidationResult.Ok();
             }
 
             var statussesAllowedToDelete = new[] { InvoiceStatus.Draft, InvoiceStatus.Cancelled };
             if (!statussesAllowedToDelete.Contains(context.Pristine.Status))
             {
-                return Validations.Invalid("Not allowed to delete invoice in current status.");
+                return ValidationResult.Invalid("Not allowed to delete invoice in current status.");
             }
 
-            return Validations.Ok();
+            return ValidationResult.Ok();
         }
     }
 }

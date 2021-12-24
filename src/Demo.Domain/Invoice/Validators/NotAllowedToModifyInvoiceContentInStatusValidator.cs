@@ -22,7 +22,7 @@ namespace Demo.Domain.Invoice.Validators
         {
             if (context.EditMode != EditMode.Update)
             {
-                return Validations.Ok();
+                return ValidationResult.Ok();
             }
 
             var statussesAllowedToModifyInvoiceContent = new[] { InvoiceStatus.Draft };
@@ -42,11 +42,11 @@ namespace Demo.Domain.Invoice.Validators
                 catch (System.Exception ex)
                 {
                     _logger.LogWarning(ex, "Not allowed to change invoice content in current status.");
-                    return Validations.Invalid("Not allowed to change invoice content in current status.");
+                    return ValidationResult.Invalid("Not allowed to change invoice content in current status.");
                 }
             }
 
-            return Validations.Ok();
+            return ValidationResult.Ok();
         }
     }
 }

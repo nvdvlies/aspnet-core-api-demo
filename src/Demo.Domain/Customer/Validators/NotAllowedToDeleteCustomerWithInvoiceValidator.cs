@@ -22,7 +22,7 @@ namespace Demo.Domain.Customer.Validators
         {
             if (context.EditMode != EditMode.Delete)
             {
-                return await Validations.Ok();
+                return await ValidationResult.Ok();
             }
 
             var invoiceStatussesWhichAllowDeletionOfCustomer = new[] { InvoiceStatus.Cancelled };
@@ -34,10 +34,10 @@ namespace Demo.Domain.Customer.Validators
 
             if (hasInvoices)
             {
-                return await Validations.Invalid("Cannot delete customer, because one or more invoices are linked to this customer.");
+                return await ValidationResult.Invalid("Cannot delete customer, because one or more invoices are linked to this customer.");
             }
 
-            return await Validations.Ok();
+            return await ValidationResult.Ok();
         }
     }
 }
