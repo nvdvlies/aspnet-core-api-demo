@@ -7,20 +7,20 @@ namespace Demo.Application.Customers.Commands.DeleteCustomer
 {
     public class DeleteCustomerCommandHandler : IRequestHandler<DeleteCustomerCommand, Unit>
     {
-        private readonly ICustomerDomainEntity _domainEntity;
+        private readonly ICustomerDomainEntity _customerDomainEntity;
 
         public DeleteCustomerCommandHandler(
-            ICustomerDomainEntity domainEntity
+            ICustomerDomainEntity customerDomainEntity
         )
         {
-            _domainEntity = domainEntity;
+            _customerDomainEntity = customerDomainEntity;
         }
 
         public async Task<Unit> Handle(DeleteCustomerCommand request, CancellationToken cancellationToken)
         {
-            await _domainEntity.GetAsync(request.Id, cancellationToken);
+            await _customerDomainEntity.GetAsync(request.Id, cancellationToken);
 
-            await _domainEntity.DeleteAsync(cancellationToken);
+            await _customerDomainEntity.DeleteAsync(cancellationToken);
 
             return Unit.Value;
         }

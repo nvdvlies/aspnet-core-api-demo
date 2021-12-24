@@ -9,25 +9,25 @@ namespace Demo.Application.ApplicationSettings.Commands.SaveApplicationSettings
 {
     public class SaveApplicationSettingsCommandHandler : IRequestHandler<SaveApplicationSettingsCommand, Unit>
     {
-        private readonly IApplicationSettingsDomainEntity _domainEntity;
+        private readonly IApplicationSettingsDomainEntity _applicationSettingsDomainEntity;
         private readonly IMapper _mapper;
 
         public SaveApplicationSettingsCommandHandler(
-            IApplicationSettingsDomainEntity domainEntity,
+            IApplicationSettingsDomainEntity applicationSettingsDomainEntity,
             IMapper mapper
         )
         {
-            _domainEntity = domainEntity;
+            _applicationSettingsDomainEntity = applicationSettingsDomainEntity;
             _mapper = mapper;
         }
 
         public async Task<Unit> Handle(SaveApplicationSettingsCommand request, CancellationToken cancellationToken)
         {
-            await _domainEntity.GetAsync(cancellationToken);
+            await _applicationSettingsDomainEntity.GetAsync(cancellationToken);
 
-            _domainEntity.MapFrom(request, _mapper);
+            _applicationSettingsDomainEntity.MapFrom(request, _mapper);
 
-            await _domainEntity.UpsertAsync(cancellationToken);
+            await _applicationSettingsDomainEntity.UpsertAsync(cancellationToken);
 
             return Unit.Value;
         }

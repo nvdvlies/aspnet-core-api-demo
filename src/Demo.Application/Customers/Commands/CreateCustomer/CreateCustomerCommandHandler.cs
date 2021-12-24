@@ -9,29 +9,29 @@ namespace Demo.Application.Customers.Commands.CreateCustomer
 {
     public class CreateCustomerCommandHandler : IRequestHandler<CreateCustomerCommand, CreateCustomerResponse>
     {
-        private readonly ICustomerDomainEntity _domainEntity;
+        private readonly ICustomerDomainEntity _customerDomainEntity;
         private readonly IMapper _mapper;
 
         public CreateCustomerCommandHandler(
-            ICustomerDomainEntity domainEntity, 
+            ICustomerDomainEntity customerDomainEntity, 
             IMapper mapper
         )
         {
-            _domainEntity = domainEntity;
+            _customerDomainEntity = customerDomainEntity;
             _mapper = mapper;
         }
 
         public async Task<CreateCustomerResponse> Handle(CreateCustomerCommand request, CancellationToken cancellationToken)
         {
-            await _domainEntity.NewAsync(cancellationToken);
+            await _customerDomainEntity.NewAsync(cancellationToken);
 
-            _domainEntity.MapFrom(request, _mapper);
+            _customerDomainEntity.MapFrom(request, _mapper);
 
-            await _domainEntity.CreateAsync(cancellationToken);
+            await _customerDomainEntity.CreateAsync(cancellationToken);
 
             return new CreateCustomerResponse
             {
-                Id = _domainEntity.EntityId
+                Id = _customerDomainEntity.EntityId
             };
         }
     }

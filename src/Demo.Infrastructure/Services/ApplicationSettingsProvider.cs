@@ -12,15 +12,15 @@ namespace Demo.Infrastructure.Services
         private const string CacheKey = "ApplicationSettings";
 
         private readonly IMemoryCache _memoryCache;
-        private readonly IApplicationSettingsDomainEntity _domainEntity;
+        private readonly IApplicationSettingsDomainEntity _applicationSettingsDomainEntity;
 
         public ApplicationSettingsProvider(
             IMemoryCache memoryCache,
-            IApplicationSettingsDomainEntity domainEntity
+            IApplicationSettingsDomainEntity applicationSettingsDomainEntity
         )
         {
             _memoryCache = memoryCache;
-            _domainEntity = domainEntity;
+            _applicationSettingsDomainEntity = applicationSettingsDomainEntity;
         }
 
         public async Task<ApplicationSettings> GetAsync(CancellationToken cancellationToken = default)
@@ -32,9 +32,9 @@ namespace Demo.Infrastructure.Services
         {
             if (refreshCache || !_memoryCache.TryGetValue(CacheKey, out ApplicationSettings applicationSettings))
             {
-                _domainEntity.WithOptions(x => x.AsNoTracking = true);
-                await _domainEntity.GetAsync(cancellationToken);
-                applicationSettings = _domainEntity.Entity;
+                _applicationSettingsDomainEntity.WithOptions(x => x.AsNoTracking = true);
+                await _applicationSettingsDomainEntity.GetAsync(cancellationToken);
+                applicationSettings = _applicationSettingsDomainEntity.Entity;
 
                 var cacheEntryOptions = new MemoryCacheEntryOptions()
                     .SetSlidingExpiration(TimeSpan.FromMinutes(5));

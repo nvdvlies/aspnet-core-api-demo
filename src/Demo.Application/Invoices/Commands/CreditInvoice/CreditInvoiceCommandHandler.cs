@@ -7,24 +7,24 @@ namespace Demo.Application.Invoices.Commands.CreditInvoice
 {
     public class CreditInvoiceCommandHandler : IRequestHandler<CreditInvoiceCommand, CreditInvoiceResponse>
     {
-        private readonly IInvoiceDomainEntity _domainEntity;
+        private readonly IInvoiceDomainEntity _invoiceDomainEntity;
 
         public CreditInvoiceCommandHandler(
-            IInvoiceDomainEntity domainEntity
+            IInvoiceDomainEntity invoiceDomainEntity
         )
         {
-            _domainEntity = domainEntity;
+            _invoiceDomainEntity = invoiceDomainEntity;
         }
 
         public async Task<CreditInvoiceResponse> Handle(CreditInvoiceCommand request, CancellationToken cancellationToken)
         {
-            await _domainEntity.GetAsNewCreditAsync(request.Id, cancellationToken);
+            await _invoiceDomainEntity.GetAsNewCreditAsync(request.Id, cancellationToken);
 
-            await _domainEntity.CreateAsync(cancellationToken);
+            await _invoiceDomainEntity.CreateAsync(cancellationToken);
 
             return new CreditInvoiceResponse
             {
-                Id = _domainEntity.EntityId
+                Id = _invoiceDomainEntity.EntityId
             };
         }
     }

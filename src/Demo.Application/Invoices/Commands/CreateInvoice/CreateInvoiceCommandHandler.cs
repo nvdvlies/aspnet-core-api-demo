@@ -9,29 +9,29 @@ namespace Demo.Application.Invoices.Commands.CreateInvoice
 {
     public class CreateInvoiceCommandHandler : IRequestHandler<CreateInvoiceCommand, CreateInvoiceResponse>
     {
-        private readonly IInvoiceDomainEntity _domainEntity;
+        private readonly IInvoiceDomainEntity _invoiceDomainEntity;
         private readonly IMapper _mapper;
 
         public CreateInvoiceCommandHandler(
-            IInvoiceDomainEntity domainEntity, 
+            IInvoiceDomainEntity invoiceDomainEntity, 
             IMapper mapper
         )
         {
-            _domainEntity = domainEntity;
+            _invoiceDomainEntity = invoiceDomainEntity;
             _mapper = mapper;
         }
 
         public async Task<CreateInvoiceResponse> Handle(CreateInvoiceCommand request, CancellationToken cancellationToken)
         {
-            await _domainEntity.NewAsync(cancellationToken);
+            await _invoiceDomainEntity.NewAsync(cancellationToken);
 
-            _domainEntity.MapFrom(request, _mapper);
+            _invoiceDomainEntity.MapFrom(request, _mapper);
 
-            await _domainEntity.CreateAsync(cancellationToken);
+            await _invoiceDomainEntity.CreateAsync(cancellationToken);
 
             return new CreateInvoiceResponse
             {
-                Id = _domainEntity.EntityId
+                Id = _invoiceDomainEntity.EntityId
             };
         }
     }

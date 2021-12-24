@@ -7,20 +7,20 @@ namespace Demo.Application.Invoices.Commands.DeleteInvoice
 {
     public class DeleteInvoiceCommandHandler : IRequestHandler<DeleteInvoiceCommand, Unit>
     {
-        private readonly IInvoiceDomainEntity _domainEntity;
+        private readonly IInvoiceDomainEntity _invoiceDomainEntity;
 
         public DeleteInvoiceCommandHandler(
-            IInvoiceDomainEntity domainEntity
+            IInvoiceDomainEntity invoiceDomainEntity
         )
         {
-            _domainEntity = domainEntity;
+            _invoiceDomainEntity = invoiceDomainEntity;
         }
 
         public async Task<Unit> Handle(DeleteInvoiceCommand request, CancellationToken cancellationToken)
         {
-            await _domainEntity.GetAsync(request.Id, cancellationToken);
+            await _invoiceDomainEntity.GetAsync(request.Id, cancellationToken);
 
-            await _domainEntity.DeleteAsync(cancellationToken);
+            await _invoiceDomainEntity.DeleteAsync(cancellationToken);
 
             return Unit.Value;
         }

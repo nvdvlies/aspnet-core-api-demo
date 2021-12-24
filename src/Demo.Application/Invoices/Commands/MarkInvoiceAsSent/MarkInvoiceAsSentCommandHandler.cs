@@ -8,22 +8,22 @@ namespace Demo.Application.Invoices.Commands.MarkInvoiceAsSent
 {
     public class MarkInvoiceAsSentCommandHandler : IRequestHandler<MarkInvoiceAsSentCommand, Unit>
     {
-        private readonly IInvoiceDomainEntity _domainEntity;
+        private readonly IInvoiceDomainEntity _invoiceDomainEntity;
 
         public MarkInvoiceAsSentCommandHandler(
-            IInvoiceDomainEntity domainEntity
+            IInvoiceDomainEntity invoiceDomainEntity
         )
         {
-            _domainEntity = domainEntity;
+            _invoiceDomainEntity = invoiceDomainEntity;
         }
 
         public async Task<Unit> Handle(MarkInvoiceAsSentCommand request, CancellationToken cancellationToken)
         {
-            await _domainEntity.GetAsync(request.Id, cancellationToken);
+            await _invoiceDomainEntity.GetAsync(request.Id, cancellationToken);
 
-            _domainEntity.SetStatus(InvoiceStatus.Sent);
+            _invoiceDomainEntity.SetStatus(InvoiceStatus.Sent);
 
-            await _domainEntity.UpdateAsync(cancellationToken);
+            await _invoiceDomainEntity.UpdateAsync(cancellationToken);
 
             return Unit.Value;
         }

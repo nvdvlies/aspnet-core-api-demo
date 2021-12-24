@@ -7,24 +7,24 @@ namespace Demo.Application.Invoices.Commands.CopyInvoice
 {
     public class CopyInvoiceCommandHandler : IRequestHandler<CopyInvoiceCommand, CopyInvoiceResponse>
     {
-        private readonly IInvoiceDomainEntity _domainEntity;
+        private readonly IInvoiceDomainEntity _invoiceDomainEntity;
 
         public CopyInvoiceCommandHandler(
-            IInvoiceDomainEntity domainEntity
+            IInvoiceDomainEntity invoiceDomainEntity
         )
         {
-            _domainEntity = domainEntity;
+            _invoiceDomainEntity = invoiceDomainEntity;
         }
 
         public async Task<CopyInvoiceResponse> Handle(CopyInvoiceCommand request, CancellationToken cancellationToken)
         {
-            await _domainEntity.GetAsNewCopyAsync(request.Id, cancellationToken);
+            await _invoiceDomainEntity.GetAsNewCopyAsync(request.Id, cancellationToken);
 
-            await _domainEntity.CreateAsync(cancellationToken);
+            await _invoiceDomainEntity.CreateAsync(cancellationToken);
 
             return new CopyInvoiceResponse
             {
-                Id = _domainEntity.EntityId
+                Id = _invoiceDomainEntity.EntityId
             };
         }
     }

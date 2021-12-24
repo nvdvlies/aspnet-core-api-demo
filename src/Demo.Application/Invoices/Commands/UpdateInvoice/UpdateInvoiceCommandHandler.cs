@@ -9,25 +9,25 @@ namespace Demo.Application.Invoices.Commands.UpdateInvoice
 {
     public class UpdateInvoiceCommandHandler : IRequestHandler<UpdateInvoiceCommand, Unit>
     {
-        private readonly IInvoiceDomainEntity _domainEntity;
+        private readonly IInvoiceDomainEntity _invoiceDomainEntity;
         private readonly IMapper _mapper;
 
         public UpdateInvoiceCommandHandler(
-            IInvoiceDomainEntity domainEntity,
+            IInvoiceDomainEntity invoiceDomainEntity,
             IMapper mapper
         )
         {
-            _domainEntity = domainEntity;
+            _invoiceDomainEntity = invoiceDomainEntity;
             _mapper = mapper;
         }
 
         public async Task<Unit> Handle(UpdateInvoiceCommand request, CancellationToken cancellationToken)
         {
-            await _domainEntity.GetAsync(request.Id, cancellationToken);
+            await _invoiceDomainEntity.GetAsync(request.Id, cancellationToken);
 
-            _domainEntity.MapFrom(request, _mapper);
+            _invoiceDomainEntity.MapFrom(request, _mapper);
 
-            await _domainEntity.UpdateAsync(cancellationToken);
+            await _invoiceDomainEntity.UpdateAsync(cancellationToken);
 
             return Unit.Value;
         }

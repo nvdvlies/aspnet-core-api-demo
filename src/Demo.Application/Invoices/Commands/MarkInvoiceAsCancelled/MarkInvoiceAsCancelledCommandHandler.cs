@@ -8,22 +8,22 @@ namespace Demo.Application.Invoices.Commands.MarkInvoiceAsCancelled
 {
     public class MarkInvoiceAsCancelledCommandHandler : IRequestHandler<MarkInvoiceAsCancelledCommand, Unit>
     {
-        private readonly IInvoiceDomainEntity _domainEntity;
+        private readonly IInvoiceDomainEntity _invoiceDomainEntity;
 
         public MarkInvoiceAsCancelledCommandHandler(
-            IInvoiceDomainEntity domainEntity
+            IInvoiceDomainEntity invoiceDomainEntity
         )
         {
-            _domainEntity = domainEntity;
+            _invoiceDomainEntity = invoiceDomainEntity;
         }
 
         public async Task<Unit> Handle(MarkInvoiceAsCancelledCommand request, CancellationToken cancellationToken)
         {
-            await _domainEntity.GetAsync(request.Id, cancellationToken);
+            await _invoiceDomainEntity.GetAsync(request.Id, cancellationToken);
 
-            _domainEntity.SetStatus(InvoiceStatus.Cancelled);
+            _invoiceDomainEntity.SetStatus(InvoiceStatus.Cancelled);
 
-            await _domainEntity.UpdateAsync(cancellationToken);
+            await _invoiceDomainEntity.UpdateAsync(cancellationToken);
 
             return Unit.Value;
         }
