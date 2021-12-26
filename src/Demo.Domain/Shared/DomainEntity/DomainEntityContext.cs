@@ -1,4 +1,6 @@
 ﻿using Demo.Domain.Shared.Interfaces;
+using Demo.Events;
+using Demo.Messages;
 using Microsoft.Extensions.Logging;
 using System;
 
@@ -7,7 +9,7 @@ namespace Demo.Domain.Shared.DomainEntity
     internal class DomainEntityContext<T> : IDomainEntityContext<T> where T : IEntity
     {
         private readonly ILogger _logger;
-        private readonly IPublishDomainEventAfterCommitQueue _publishDomainEventAfterCommitQueue;
+        private readonly IPublishEventAfterCommitQueue _publishDomainEventAfterCommitQueue;
         private readonly IJsonService<T> _jsonService;
         private T _entity;
         private readonly object _entityLock = new object();
@@ -16,7 +18,7 @@ namespace Demo.Domain.Shared.DomainEntity
 
         public DomainEntityContext(
             ILogger logger,
-            IPublishDomainEventAfterCommitQueue publishDomainEventAfterCommitQueue,
+            IPublishEventAfterCommitQueue publishDomainEventAfterCommitQueue,
             IJsonService<T> jsonService)
         {
             _logger = logger;
@@ -44,9 +46,16 @@ namespace Demo.Domain.Shared.DomainEntity
         public IDomainEntityState State { get; }
         public bool IsNewEntity => Entity?.Id == Guid.Empty;
 
-        public void PublishDomainEventAfterCommit(IDomainEvent notification)
+        public void PublishIntegrationEvent<E>(IEvent<E> @event)
         {
-            _publishDomainEventAfterCommitQueue.Enqueue(notification);
+            // TODO 
+            throw new NotImplementedException();
+        }
+
+        public void SendMessageToQueue<M>(IMessage<M> message)
+        {
+            // TODO 
+            throw new NotImplementedException();
         }
 
         private T DeepCopy(T entity)

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
@@ -22,6 +22,8 @@
     <ProjectReference Include="..\Demo.Application\Demo.Application.csproj" />
     <ProjectReference Include="..\Demo.Common\Demo.Common.csproj" />
     <ProjectReference Include="..\Demo.Domain\Demo.Domain.csproj" />
+    <ProjectReference Include="..\Demo.Events\Demo.Events.csproj" />
+    <ProjectReference Include="..\Demo.Messages\Demo.Messages.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -34,6 +36,10 @@
     <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
       <_Parameter1>Demo.WebApi.Tests</_Parameter1>
     </AssemblyAttribute>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="IntegrationEventOutbox\" />
   </ItemGroup>
   
 </Project>

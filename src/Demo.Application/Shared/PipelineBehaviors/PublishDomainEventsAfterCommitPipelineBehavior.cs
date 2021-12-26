@@ -9,12 +9,12 @@ namespace Demo.Application.Shared.PipelineBehaviors
     public class PublishDomainEventsAfterCommitPipelineBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     {
         private readonly IMediator _mediator;
-        private readonly IPublishDomainEventAfterCommitQueue _publishDomainEventAfterCommitQueue;
+        private readonly IPublishEventAfterCommitQueue _publishDomainEventAfterCommitQueue;
         private readonly ILogger<PublishDomainEventsAfterCommitPipelineBehavior<TRequest, TResponse>> _logger;
 
         public PublishDomainEventsAfterCommitPipelineBehavior(
             IMediator mediator,
-            IPublishDomainEventAfterCommitQueue publishDomainEventAfterCommitQueue,
+            IPublishEventAfterCommitQueue publishDomainEventAfterCommitQueue,
             ILogger<PublishDomainEventsAfterCommitPipelineBehavior<TRequest, TResponse>> logger
         )
         {

@@ -1,4 +1,6 @@
 ﻿using Demo.Domain.Shared.DomainEntity;
+using Demo.Events;
+using Demo.Messages;
 
 namespace Demo.Domain.Shared.Interfaces
 {
@@ -10,6 +12,7 @@ namespace Demo.Domain.Shared.Interfaces
         T Pristine { get; }
         IDomainEntityState State { get; }
         PerformanceMeasurements PerformanceMeasurements { get; }
-        void PublishDomainEventAfterCommit(IDomainEvent notification);
+        void PublishIntegrationEvent<E>(IEvent<E> @event);
+        void SendMessageToQueue<M>(IMessage<M> message);
     }
 }

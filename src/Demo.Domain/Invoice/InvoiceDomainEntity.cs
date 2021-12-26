@@ -29,7 +29,7 @@ namespace Demo.Domain.Invoice
             IEnumerable<IAfterUpdate<Invoice>> afterUpdateHooks,
             IEnumerable<IBeforeDelete<Invoice>> beforeDeleteHooks,
             IEnumerable<IAfterDelete<Invoice>> afterDeleteHooks,
-            IPublishDomainEventAfterCommitQueue publishDomainEventAfterCommitQueue,
+            IPublishEventAfterCommitQueue publishDomainEventAfterCommitQueue,
             IJsonService<Invoice> jsonService,
             IAuditlogger<Invoice> auditlogger
         )

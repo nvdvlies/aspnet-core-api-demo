@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Demo.Events;
+using Demo.Messages;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -17,6 +19,7 @@ namespace Demo.Domain.Shared.Interfaces
         Task UpdateAsync(CancellationToken cancellationToken);
         Task UpsertAsync(CancellationToken cancellationToken);
         Task DeleteAsync(CancellationToken cancellationToken);
-        void PublishDomainEventAfterCommit(IDomainEvent domainEvent);
+        void PublishIntegrationEvent<E>(IEvent<E> @event);
+        void SendMessageToQueue<M>(IMessage<M> message);
     }
 }

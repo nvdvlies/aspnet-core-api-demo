@@ -7,6 +7,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Demo.Common\Demo.Common.csproj" />
+    <ProjectReference Include="..\Demo.Events\Demo.Events.csproj" />
+    <ProjectReference Include="..\Demo.Messages\Demo.Messages.csproj" />
   </ItemGroup>
 
   <ItemGroup>

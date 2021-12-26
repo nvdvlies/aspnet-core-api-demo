@@ -27,7 +27,7 @@ namespace Demo.Domain.ApplicationSettings
             IEnumerable<IAfterUpdate<ApplicationSettings>> afterUpdateHooks,
             IEnumerable<IBeforeDelete<ApplicationSettings>> beforeDeleteHooks,
             IEnumerable<IAfterDelete<ApplicationSettings>> afterDeleteHooks,
-            IPublishDomainEventAfterCommitQueue publishDomainEventAfterCommitQueue,
+            IPublishEventAfterCommitQueue publishDomainEventAfterCommitQueue,
             IJsonService<ApplicationSettings> jsonService,
             IAuditlogger<ApplicationSettings> auditlogger
         )

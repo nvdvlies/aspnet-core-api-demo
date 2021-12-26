@@ -6,7 +6,7 @@ using Demo.Domain.Shared.Entities;
 using Demo.Domain.Shared.Interfaces;
 using Demo.Infrastructure.Auditlogging;
 using Demo.Infrastructure.Persistence;
-using Demo.Infrastructure.Queues;
+using Demo.Infrastructure.QueueOutbox;
 using Demo.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -24,7 +24,7 @@ namespace Demo.Infrastructure
             services.AddScoped<ICorrelationIdProvider, CorrelationIdProvider>();
             services.AddScoped(typeof(IJsonService<>), typeof(JsonService<>));
             services.AddScoped<IApplicationSettingsProvider, ApplicationSettingsProvider>();
-            services.AddScoped<IPublishDomainEventAfterCommitQueue, PublishDomainEventAfterCommitQueue>();
+            services.AddScoped<IPublishEventAfterCommitQueue, PublishEventAfterCommitQueue>();
 
             services.AddDbContext<ApplicationDbContext>(options =>
                     options.UseSqlServer(configuration.GetConnectionString("SqlDatabase"))

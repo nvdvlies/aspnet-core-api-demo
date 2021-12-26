@@ -22,7 +22,7 @@ namespace Demo.Domain.Customer
             IEnumerable<IAfterUpdate<Customer>> afterUpdateHooks,
             IEnumerable<IBeforeDelete<Customer>> beforeDeleteHooks,
             IEnumerable<IAfterDelete<Customer>> afterDeleteHooks,
-            IPublishDomainEventAfterCommitQueue publishDomainEventAfterCommitQueue,
+            IPublishEventAfterCommitQueue publishDomainEventAfterCommitQueue,
             IJsonService<Customer> jsonService,
             IAuditlogger<Customer> auditlogger
         )

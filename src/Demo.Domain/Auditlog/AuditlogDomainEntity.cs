@@ -25,7 +25,7 @@ namespace Demo.Domain.Auditlog
             IEnumerable<IAfterUpdate<Auditlog>> afterUpdateHooks,
             IEnumerable<IBeforeDelete<Auditlog>> beforeDeleteHooks,
             IEnumerable<IAfterDelete<Auditlog>> afterDeleteHooks,
-            IPublishDomainEventAfterCommitQueue publishDomainEventAfterCommitQueue,
+            IPublishEventAfterCommitQueue publishDomainEventAfterCommitQueue,
             IJsonService<Auditlog> jsonService
         )
             : base(logger, currentUser, dateTime, dbCommand, defaultValuesSetters, validators, beforeCreateHooks, afterCreateHooks, beforeUpdateHooks, afterUpdateHooks, beforeDeleteHooks, afterDeleteHooks, publishDomainEventAfterCommitQueue, jsonService, null)

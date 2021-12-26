@@ -28,7 +28,7 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.DomainEntity
             new EntityCreatedDomainEventOutputCollector(),
             new EntityUpdatedDomainEventOutputCollector(),
             new EntityDeletedDomainEventOutputCollector(),
-            new DomainEventHookOutputCollector(),
+            new EventHookOutputCollector(),
             new EventHubOutputCollector()
         };
 

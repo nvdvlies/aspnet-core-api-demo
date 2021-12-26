@@ -1,6 +1,8 @@
 ﻿using Demo.Common.Interfaces;
 using Demo.Domain.Shared.Exceptions;
 using Demo.Domain.Shared.Interfaces;
+using Demo.Events;
+using Demo.Messages;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.Extensions.Logging;
 using System;
@@ -45,7 +47,7 @@ namespace Demo.Domain.Shared.DomainEntity
             IEnumerable<IAfterUpdate<T>> afterUpdateHooks,
             IEnumerable<IBeforeDelete<T>> beforeDeleteHooks,
             IEnumerable<IAfterDelete<T>> afterDeleteHooks,
-            IPublishDomainEventAfterCommitQueue publishDomainEventAfterCommitQueue,
+            IPublishEventAfterCommitQueue publishDomainEventAfterCommitQueue,
             IJsonService<T> jsonService,
             IAuditlogger<T> auditlogger
         )
@@ -360,9 +362,14 @@ namespace Demo.Domain.Shared.DomainEntity
             }
         }
 
-        public virtual void PublishDomainEventAfterCommit(IDomainEvent domainEvent)
+        public void PublishIntegrationEvent<E>(IEvent<E> @event)
         {
-            Context.PublishDomainEventAfterCommit(domainEvent);
+            Context.PublishIntegrationEvent(@event);
+        }
+
+        public void SendMessageToQueue<M>(IMessage<M> message)
+        {
+            Context.SendMessageToQueue(message);
         }
 
         private async Task CreateAuditLogAsync(CancellationToken cancellationToken)
