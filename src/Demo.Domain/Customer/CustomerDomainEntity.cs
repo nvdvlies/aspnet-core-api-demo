@@ -22,11 +22,12 @@ namespace Demo.Domain.Customer
             IEnumerable<IAfterUpdate<Customer>> afterUpdateHooks,
             IEnumerable<IBeforeDelete<Customer>> beforeDeleteHooks,
             IEnumerable<IAfterDelete<Customer>> afterDeleteHooks,
-            IPublishEventAfterCommitQueue publishDomainEventAfterCommitQueue,
+            IEventOutboxProcessor eventOutboxProcessor,
+            IMessageOutboxProcessor messageOutboxProcessor,
             IJsonService<Customer> jsonService,
             IAuditlogger<Customer> auditlogger
         )
-            : base(logger, currentUser, dateTime, dbCommand, defaultValuesSetters, validators, beforeCreateHooks, afterCreateHooks, beforeUpdateHooks, afterUpdateHooks, beforeDeleteHooks, afterDeleteHooks, publishDomainEventAfterCommitQueue, jsonService, auditlogger)
+            : base(logger, currentUser, dateTime, dbCommand, defaultValuesSetters, validators, beforeCreateHooks, afterCreateHooks, beforeUpdateHooks, afterUpdateHooks, beforeDeleteHooks, afterDeleteHooks, eventOutboxProcessor, messageOutboxProcessor, jsonService, auditlogger)
         {
         }
     }

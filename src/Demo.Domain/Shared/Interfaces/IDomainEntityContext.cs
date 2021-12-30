@@ -1,6 +1,8 @@
 ﻿using Demo.Domain.Shared.DomainEntity;
 using Demo.Events;
 using Demo.Messages;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Demo.Domain.Shared.Interfaces
 {
@@ -12,7 +14,7 @@ namespace Demo.Domain.Shared.Interfaces
         T Pristine { get; }
         IDomainEntityState State { get; }
         PerformanceMeasurements PerformanceMeasurements { get; }
-        void PublishIntegrationEvent<E>(IEvent<E> @event);
-        void SendMessageToQueue<M>(IMessage<M> message);
+        Task PublishIntegrationEventAsync<E>(Event<E> @event, CancellationToken cancellationToken) where E : IEventData;
+        Task SendMessageToQueueAsync<M>(Message<M> message, CancellationToken cancellationToken) where M : IMessageData;
     }
 }

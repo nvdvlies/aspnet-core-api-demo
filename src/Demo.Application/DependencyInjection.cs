@@ -38,15 +38,16 @@ namespace Demo.Application
 
             // Current configuration:
 
-            // | direction | logging | validation | publish domain events | uow | handler |
-            // |-----------|---------|------------|-----------------------|-----|---------|
-            // |   -->     |   1     |     2      |                       |     |    3    |
-            // |   <--     |   6     |            |          5            |  4  |         |
-            // |-----------|---------|------------|-----------------------|-----|---------|
+            // | direction | logging | validation | send messages | publish events | uow | handler |
+            // |-----------|---------|------------|---------------|----------------|-----|---------|
+            // |   -->     |   1     |     2      |               |                |     |    3    |
+            // |   <--     |   7     |            |       6       |       5        |  4  |         |
+            // |-----------|---------|------------|---------------|----------------|-----|---------|
 
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingPipelineBehavior<,>));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationPipelineBehavior<,>));
-            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(PublishDomainEventsAfterCommitPipelineBehavior<,>));
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(SendMessagesAfterCommitPipelineBehavior<,>));
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(PublishEventsAfterCommitPipelineBehavior<,>));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(UnitOfWorkPipelineBehavior<,>));
         }
 

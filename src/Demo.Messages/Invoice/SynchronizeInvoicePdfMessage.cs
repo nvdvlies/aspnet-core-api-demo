@@ -2,14 +2,10 @@
 
 namespace Demo.Messages.Invoice
 {
-    public class SynchronizeInvoicePdfMessage : BaseMessage<SynchronizeInvoicePdfMessageData>
+    public class SynchronizeInvoicePdfMessage : Message<SynchronizeInvoicePdfMessageData>
     {
-        public SynchronizeInvoicePdfMessage()
-        {
-        }
-
         public SynchronizeInvoicePdfMessage(SynchronizeInvoicePdfMessageData data) : base(
-            Topics.SynchronizeInvoicePdf,
+            Queues.SynchronizeInvoicePdf,
             data,
             $"Invoice/{data.Id}",
             data.MessageDataVersion,

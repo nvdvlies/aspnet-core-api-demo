@@ -2,7 +2,7 @@
 
 namespace Demo.Events.Invoice
 {
-    public class InvoicePdfSynchronizedEvent : BaseEvent<InvoicePdfSynchronizedEventData>
+    public class InvoicePdfSynchronizedEvent : Event<InvoicePdfSynchronizedEventData>
     {
         internal InvoicePdfSynchronizedEvent(InvoicePdfSynchronizedEventData data) : base(
             Topics.Invoice,

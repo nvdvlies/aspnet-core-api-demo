@@ -19,7 +19,7 @@ namespace Demo.Domain.Shared.Interfaces
         Task UpdateAsync(CancellationToken cancellationToken);
         Task UpsertAsync(CancellationToken cancellationToken);
         Task DeleteAsync(CancellationToken cancellationToken);
-        void PublishIntegrationEvent<E>(IEvent<E> @event);
-        void SendMessageToQueue<M>(IMessage<M> message);
+        Task PublishIntegrationEventAsync<E>(Event<E> @event, CancellationToken cancellationToken) where E : IEventData;
+        Task SendMessageToQueueAsync<M>(Message<M> message, CancellationToken cancellationToken) where M : IMessageData;
     }
 }

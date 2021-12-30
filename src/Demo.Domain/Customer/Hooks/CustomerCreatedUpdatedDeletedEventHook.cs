@@ -21,21 +21,20 @@ namespace Demo.Domain.Customer.Hooks
             _correlationIdProvider = correlationIdProvider;
         }
 
-        public Task ExecuteAsync(HookType type, IDomainEntityContext<Customer> context, CancellationToken cancellationToken)
+        public async Task ExecuteAsync(HookType type, IDomainEntityContext<Customer> context, CancellationToken cancellationToken)
         {
             switch (context.EditMode)
             {
                 case EditMode.Create:
-                    context.PublishIntegrationEvent(CustomerCreatedEvent.Create(_correlationIdProvider.Id, context.Entity.Id, _currentUser.Id));
+                    await context.PublishIntegrationEventAsync(CustomerCreatedEvent.Create(_correlationIdProvider.Id, context.Entity.Id, _currentUser.Id), cancellationToken);
                     break;
                 case EditMode.Update:
-                    context.PublishIntegrationEvent(CustomerUpdatedEvent.Create(_correlationIdProvider.Id, context.Entity.Id, _currentUser.Id));
+                    await context.PublishIntegrationEventAsync(CustomerUpdatedEvent.Create(_correlationIdProvider.Id, context.Entity.Id, _currentUser.Id), cancellationToken);
                     break;
                 case EditMode.Delete:
-                    context.PublishIntegrationEvent(CustomerDeletedEvent.Create(_correlationIdProvider.Id, context.Entity.Id, _currentUser.Id));
+                    await context.PublishIntegrationEventAsync(CustomerDeletedEvent.Create(_correlationIdProvider.Id, context.Entity.Id, _currentUser.Id), cancellationToken);
                     break;
             }
-            return Task.CompletedTask;
         }
     }
 }

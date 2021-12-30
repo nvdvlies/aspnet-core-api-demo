@@ -21,10 +21,9 @@ namespace Demo.Domain.ApplicationSettings.Hooks
             _correlationIdProvider = correlationIdProvider;
         }
 
-        public Task ExecuteAsync(HookType type, IDomainEntityContext<ApplicationSettings> context, CancellationToken cancellationToken)
+        public async Task ExecuteAsync(HookType type, IDomainEntityContext<ApplicationSettings> context, CancellationToken cancellationToken)
         {
-            context.PublishIntegrationEvent(ApplicationSettingsUpdatedEvent.Create(_correlationIdProvider.Id, context.Entity.Id, _currentUser.Id));
-            return Task.CompletedTask;
+            await context.PublishIntegrationEventAsync(ApplicationSettingsUpdatedEvent.Create(_correlationIdProvider.Id, context.Entity.Id, _currentUser.Id), cancellationToken);
         }
     }
 }

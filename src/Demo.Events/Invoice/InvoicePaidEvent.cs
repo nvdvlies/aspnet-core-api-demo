@@ -2,7 +2,7 @@
 
 namespace Demo.Events.Invoice
 {
-    public class InvoicePaidEvent : BaseEvent<InvoicePaidEventData>
+    public class InvoicePaidEvent : Event<InvoicePaidEventData>
     {
         internal InvoicePaidEvent(InvoicePaidEventData data) : base(
             Topics.Invoice,

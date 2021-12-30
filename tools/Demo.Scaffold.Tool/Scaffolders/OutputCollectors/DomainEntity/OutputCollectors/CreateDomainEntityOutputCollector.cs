@@ -50,11 +50,12 @@ namespace Demo.Domain.%ENTITY%.DomainEntity
             IEnumerable<IAfterUpdate<%ENTITY%>> afterUpdateHooks,
             IEnumerable<IBeforeDelete<%ENTITY%>> beforeDeleteHooks,
             IEnumerable<IAfterDelete<%ENTITY%>> afterDeleteHooks,
-            IPublishDomainEventAfterCommitQueue publishDomainEventAfterCommitQueue,
+            IEventOutboxProcessor eventOutboxProcessor,
+            IMessageOutboxProcessor messageOutboxProcessor,
             IJsonService<%ENTITY%> jsonService,
-            IAuditlog<%ENTITY%> auditlog
+            IAuditlogger<%ENTITY%> auditlogger
         ) 
-            : base(logger, currentUser, dateTime, dbCommand, defaultValuesSetters, validators, beforeCreateHooks, afterCreateHooks, beforeUpdateHooks, afterUpdateHooks, beforeDeleteHooks, afterDeleteHooks, publishDomainEventAfterCommitQueue, jsonService, auditlog)
+            : base(logger, currentUser, dateTime, dbCommand, defaultValuesSetters, validators, beforeCreateHooks, afterCreateHooks, beforeUpdateHooks, afterUpdateHooks, beforeDeleteHooks, afterDeleteHooks, eventOutboxProcessor, messageOutboxProcessor, jsonService, auditlogger)
         {
         }
     }

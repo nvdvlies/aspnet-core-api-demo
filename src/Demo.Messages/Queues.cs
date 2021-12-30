@@ -1,6 +1,6 @@
 ﻿namespace Demo.Messages
 {
-    public enum Topics
+    public enum Queues
     {
         SynchronizeInvoicePdf
     }

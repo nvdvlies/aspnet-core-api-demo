@@ -2,7 +2,7 @@
 
 namespace Demo.Events.Customer
 {
-    public class CustomerDeletedEvent : BaseEvent<CustomerDeletedEventData>
+    public class CustomerDeletedEvent : Event<CustomerDeletedEventData>
     {
         internal CustomerDeletedEvent(CustomerDeletedEventData data) : base(
             Topics.Customer,

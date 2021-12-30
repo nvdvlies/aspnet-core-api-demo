@@ -47,12 +47,13 @@ namespace Demo.Domain.Shared.DomainEntity
             IEnumerable<IAfterUpdate<T>> afterUpdateHooks,
             IEnumerable<IBeforeDelete<T>> beforeDeleteHooks,
             IEnumerable<IAfterDelete<T>> afterDeleteHooks,
-            IPublishEventAfterCommitQueue publishDomainEventAfterCommitQueue,
+            IEventOutboxProcessor eventOutboxProcessor,
+            IMessageOutboxProcessor messageOutboxProcessor,
             IJsonService<T> jsonService,
             IAuditlogger<T> auditlogger
         )
         {
-            Context = new DomainEntityContext<T>(logger, publishDomainEventAfterCommitQueue, jsonService);
+            Context = new DomainEntityContext<T>(logger, eventOutboxProcessor, messageOutboxProcessor, jsonService);
             Logger = logger;
             CurrentUser = currentUser;
             DateTime = dateTime;
@@ -362,14 +363,14 @@ namespace Demo.Domain.Shared.DomainEntity
             }
         }
 
-        public void PublishIntegrationEvent<E>(IEvent<E> @event)
+        public async Task PublishIntegrationEventAsync<E>(Event<E> @event, CancellationToken cancellationToken) where E : IEventData
         {
-            Context.PublishIntegrationEvent(@event);
+            await Context.PublishIntegrationEventAsync(@event, cancellationToken);
         }
 
-        public void SendMessageToQueue<M>(IMessage<M> message)
+        public async Task SendMessageToQueueAsync<M>(Message<M> message, CancellationToken cancellationToken) where M : IMessageData
         {
-            Context.SendMessageToQueue(message);
+            await Context.SendMessageToQueueAsync(message, cancellationToken);
         }
 
         private async Task CreateAuditLogAsync(CancellationToken cancellationToken)

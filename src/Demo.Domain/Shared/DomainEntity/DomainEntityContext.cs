@@ -3,13 +3,16 @@ using Demo.Events;
 using Demo.Messages;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Demo.Domain.Shared.DomainEntity
 {
     internal class DomainEntityContext<T> : IDomainEntityContext<T> where T : IEntity
     {
         private readonly ILogger _logger;
-        private readonly IPublishEventAfterCommitQueue _publishDomainEventAfterCommitQueue;
+        private readonly IEventOutboxProcessor _eventOutboxProcessor;
+        private readonly IMessageOutboxProcessor _messageOutboxProcessor;
         private readonly IJsonService<T> _jsonService;
         private T _entity;
         private readonly object _entityLock = new object();
@@ -18,11 +21,13 @@ namespace Demo.Domain.Shared.DomainEntity
 
         public DomainEntityContext(
             ILogger logger,
-            IPublishEventAfterCommitQueue publishDomainEventAfterCommitQueue,
+            IEventOutboxProcessor eventOutboxProcessor,
+            IMessageOutboxProcessor messageOutboxProcessor,
             IJsonService<T> jsonService)
         {
             _logger = logger;
-            _publishDomainEventAfterCommitQueue = publishDomainEventAfterCommitQueue;
+            _eventOutboxProcessor = eventOutboxProcessor;
+            _messageOutboxProcessor = messageOutboxProcessor;
             _jsonService = jsonService;
 
             PerformanceMeasurements = new PerformanceMeasurements(logger);
@@ -46,16 +51,14 @@ namespace Demo.Domain.Shared.DomainEntity
         public IDomainEntityState State { get; }
         public bool IsNewEntity => Entity?.Id == Guid.Empty;
 
-        public void PublishIntegrationEvent<E>(IEvent<E> @event)
+        public async Task PublishIntegrationEventAsync<E>(Event<E> @event, CancellationToken cancellationToken) where E : IEventData
         {
-            // TODO 
-            throw new NotImplementedException();
+            await _eventOutboxProcessor.AddToOutboxAsync(@event, cancellationToken);
         }
 
-        public void SendMessageToQueue<M>(IMessage<M> message)
+        public async Task SendMessageToQueueAsync<M>(Message<M> message, CancellationToken cancellationToken) where M : IMessageData
         {
-            // TODO 
-            throw new NotImplementedException();
+            await _messageOutboxProcessor.AddToOutboxAsync(message, cancellationToken);
         }
 
         private T DeepCopy(T entity)

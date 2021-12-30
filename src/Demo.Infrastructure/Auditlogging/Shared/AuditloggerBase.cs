@@ -8,13 +8,13 @@ using System.Threading.Tasks;
 
 namespace Demo.Infrastructure.Auditlogging.Shared
 {
-    internal abstract class AuditlogBase<T> where T : IEntity
+    internal abstract class AuditloggerBase<T> where T : IEntity
     {
         private readonly ICurrentUser _currentUser;
         private readonly IDateTime _dateTime;
         private readonly IAuditlogDomainEntity _auditlogDomainEntity;
 
-        public AuditlogBase(
+        public AuditloggerBase(
             ICurrentUser currentUser,
             IDateTime dateTime,
             IAuditlogDomainEntity auditlogDomainEntity

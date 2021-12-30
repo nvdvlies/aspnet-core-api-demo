@@ -2,6 +2,8 @@ using Demo.Domain.ApplicationSettings;
 using Demo.Domain.Auditlog;
 using Demo.Domain.Customer;
 using Demo.Domain.Invoice;
+using Demo.Infrastructure.Events;
+using Demo.Infrastructure.Messages;
 using Demo.Infrastructure.Persistence.Configuration;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
@@ -16,8 +18,10 @@ namespace Demo.Infrastructure.Persistence
         {
         }
 
-        public DbSet<ApplicationSettings> ApplicationSettings { get; set; }
+        public DbSet<EventOutbox> EventOutbox { get; set; }
+        public DbSet<MessageOutbox> MessageOutbox { get; set; }
         public DbSet<Auditlog> Auditlogs { get; set; }
+        public DbSet<ApplicationSettings> ApplicationSettings { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Invoice> Invoices { get; set; }
         // SCAFFOLD-MARKER: DBSET

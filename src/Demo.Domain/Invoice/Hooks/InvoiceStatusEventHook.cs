@@ -16,7 +16,7 @@ namespace Demo.Domain.Invoice.Hooks
             _correlationIdProvider = correlationIdProvider;
         }
 
-        public Task ExecuteAsync(HookType type, IDomainEntityContext<Invoice> context, CancellationToken cancellationToken)
+        public async Task ExecuteAsync(HookType type, IDomainEntityContext<Invoice> context, CancellationToken cancellationToken)
         {
             var isStatusPropertyDirty = context.EditMode == EditMode.Create
                 || context.EditMode == EditMode.Update && context.IsPropertyDirty(x => x.Status);
@@ -26,18 +26,16 @@ namespace Demo.Domain.Invoice.Hooks
                 switch (context.Entity.Status)
                 {
                     case InvoiceStatus.Sent:
-                        context.PublishIntegrationEvent(InvoiceSentEvent.Create(_correlationIdProvider.Id, context.Entity.Id));
+                        await context.PublishIntegrationEventAsync(InvoiceSentEvent.Create(_correlationIdProvider.Id, context.Entity.Id), cancellationToken);
                         break;
                     case InvoiceStatus.Paid:
-                        context.PublishIntegrationEvent(InvoicePaidEvent.Create(_correlationIdProvider.Id, context.Entity.Id));
+                        await context.PublishIntegrationEventAsync(InvoicePaidEvent.Create(_correlationIdProvider.Id, context.Entity.Id), cancellationToken);
                         break;
                     case InvoiceStatus.Cancelled:
-                        context.PublishIntegrationEvent(InvoiceCancelledEvent.Create(_correlationIdProvider.Id, context.Entity.Id));
+                        await context.PublishIntegrationEventAsync(InvoiceCancelledEvent.Create(_correlationIdProvider.Id, context.Entity.Id), cancellationToken);
                         break;
                 }
             }
-
-            return Task.CompletedTask;
         }
     }
 }
