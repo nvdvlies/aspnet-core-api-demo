@@ -50,36 +50,39 @@ namespace Demo.Infrastructure.Messages
             while (_queue.Count > 0)
             {
                 var messageOutbox = _queue.Dequeue();
-                string lockToken = null;
+
+                _logger.LogInformation("Sending message of type '{type}'", messageOutbox.Type);
+
+                bool isSent = false;
                 try
                 {
-                    _logger.LogInformation($"Sending '{messageOutbox.Type}' message");
-
-                    lockToken = await LockAsync(messageOutbox, cancellationToken);
                     await _messageOutboxProcessor.SendAsync(messageOutbox.Message, cancellationToken);
-                    await MarkAsSent(messageOutbox, cancellationToken);
-
-                    _logger.LogInformation($"Sent '{messageOutbox.Type}' message");
+                    
+                    _logger.LogInformation("Sent message of type '{type}'", messageOutbox.Type);
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "Failed to send message");
-                    await UnLockAsync(messageOutbox, lockToken, cancellationToken);
+                    _logger.LogError(ex, "Failed to send message ({type})", messageOutbox.Type);
+                    await UnLockAsync(messageOutbox, cancellationToken);
+                }
+
+                if (isSent)
+                {
+                    try
+                    {
+                        await MarkAsSent(messageOutbox, cancellationToken);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogCritical(ex, "Failed to mark sent message as sent (Type: {type}, ID: {id})", messageOutbox.Type, messageOutbox.Id);
+                    }
                 }
             }
         }
 
-        private async Task<string> LockAsync(MessageOutbox messageOutbox, CancellationToken cancellationToken)
+        private async Task UnLockAsync(MessageOutbox messageOutbox, CancellationToken cancellationToken)
         {
-            var lockToken = messageOutbox.Lock();
-            await _dbCommand.UpdateAsync(messageOutbox, cancellationToken);
-            await _unitOfWork.CommitAsync(cancellationToken);
-            return lockToken;
-        }
-
-        private async Task UnLockAsync(MessageOutbox messageOutbox, string lockToken, CancellationToken cancellationToken)
-        {
-            messageOutbox.Unlock(lockToken);
+            messageOutbox.Unlock();
             await _dbCommand.UpdateAsync(messageOutbox, cancellationToken);
             await _unitOfWork.CommitAsync(cancellationToken);
         }

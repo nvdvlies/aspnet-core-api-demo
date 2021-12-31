@@ -17,31 +17,21 @@ namespace Demo.Infrastructure.Messages
         [JsonInclude]
         public bool IsSent { get; private set; }
 
-        public string Lock(int lockDurationInMinutes = 3)
+        public void Lock(int lockDurationInMinutes = 3)
         {
-            if (LockedUntil > DateTime.UtcNow)
+            if (LockedUntil.HasValue && LockedUntil > DateTime.UtcNow)
             {
                 throw new InvalidOperationException("Entity is already locked.");
             }
 
-            var lockToken = Guid.NewGuid().ToString();
-            Lock(lockToken, lockDurationInMinutes);
-            return lockToken;
-        }
-
-        public void Lock(string lockToken, int lockDurationInMinutes = 3)
-        {
-            LockToken = lockToken;
+            LockToken = Guid.NewGuid().ToString();
             LockedUntil = DateTime.UtcNow.AddMinutes(lockDurationInMinutes);
         }
 
-        public void Unlock(string lockToken)
+        public void Unlock()
         {
-            if (string.Equals(lockToken, LockToken, StringComparison.InvariantCulture))
-            {
-                LockToken = null;
-                LockedUntil = null;
-            }
+            LockToken = null;
+            LockedUntil = null;
         }
 
         public void MarkAsSent()

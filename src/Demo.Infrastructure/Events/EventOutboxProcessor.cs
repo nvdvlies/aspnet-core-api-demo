@@ -47,36 +47,39 @@ namespace Demo.Infrastructure.Events
             while (_queue.Count > 0)
             {
                 var eventOutbox = _queue.Dequeue();
-                string lockToken = null;
+
+                _logger.LogInformation("Publishing event of type '{type}'", eventOutbox.Type);
+
+                bool isPublished = false;
                 try
                 {
-                    _logger.LogInformation($"Publishing '{eventOutbox.Type}' event");
-
-                    lockToken = await LockAsync(eventOutbox, cancellationToken);
                     await _eventGridPublisher.PublishAsync(eventOutbox.Event, cancellationToken);
-                    await MarkAsPublished(eventOutbox, cancellationToken);
-
-                    _logger.LogInformation($"Published '{eventOutbox.Type}' event");
+                    _logger.LogInformation("Published event of type '{type}'", eventOutbox.Type);
+                    isPublished = true;
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "Failed to publish event");
-                    await UnLockAsync(eventOutbox, lockToken, cancellationToken);
+                    _logger.LogError(ex, "Failed to publish event ({type})", eventOutbox.Type);
+                    await UnLockAsync(eventOutbox, cancellationToken);
+                }
+
+                if (isPublished)
+                {
+                    try
+                    {
+                        await MarkAsPublished(eventOutbox, cancellationToken);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogCritical(ex, "Failed to mark published event as published (Type: {type}, ID: {id})", eventOutbox.Type, eventOutbox.Id);
+                    }
                 }
             }
         }
 
-        private async Task<string> LockAsync(EventOutbox eventOutbox, CancellationToken cancellationToken)
+        private async Task UnLockAsync(EventOutbox eventOutbox, CancellationToken cancellationToken)
         {
-            var lockToken = eventOutbox.Lock();
-            await _dbCommand.UpdateAsync(eventOutbox, cancellationToken);
-            await _unitOfWork.CommitAsync(cancellationToken);
-            return lockToken;
-        }
-
-        private async Task UnLockAsync(EventOutbox eventOutbox, string lockToken, CancellationToken cancellationToken)
-        {
-            eventOutbox.Unlock(lockToken);
+            eventOutbox.Unlock();
             await _dbCommand.UpdateAsync(eventOutbox, cancellationToken);
             await _unitOfWork.CommitAsync(cancellationToken);
         }
