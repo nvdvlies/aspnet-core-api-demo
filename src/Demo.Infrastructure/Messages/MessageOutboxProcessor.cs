@@ -57,7 +57,9 @@ namespace Demo.Infrastructure.Messages
                 try
                 {
                     await _messageOutboxProcessor.SendAsync(messageOutbox.Message, cancellationToken);
-                    
+
+                    isSent = true;
+
                     _logger.LogInformation("Sent message of type '{type}'", messageOutbox.Type);
                 }
                 catch (Exception ex)
