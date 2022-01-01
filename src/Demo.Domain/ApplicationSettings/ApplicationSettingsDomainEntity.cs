@@ -4,6 +4,7 @@ using Demo.Domain.Shared.DomainEntity;
 using Demo.Domain.Shared.Exceptions;
 using Demo.Domain.Shared.Interfaces;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -19,18 +20,18 @@ namespace Demo.Domain.ApplicationSettings
             ICurrentUser currentUser,
             IDateTime dateTime,
             IDbCommandForTableWithSingleRecord<ApplicationSettings> dbCommand,
-            IEnumerable<IDefaultValuesSetter<ApplicationSettings>> defaultValuesSetters,
-            IEnumerable<IValidator<ApplicationSettings>> validators,
-            IEnumerable<IBeforeCreate<ApplicationSettings>> beforeCreateHooks,
-            IEnumerable<IAfterCreate<ApplicationSettings>> afterCreateHooks,
-            IEnumerable<IBeforeUpdate<ApplicationSettings>> beforeUpdateHooks,
-            IEnumerable<IAfterUpdate<ApplicationSettings>> afterUpdateHooks,
-            IEnumerable<IBeforeDelete<ApplicationSettings>> beforeDeleteHooks,
-            IEnumerable<IAfterDelete<ApplicationSettings>> afterDeleteHooks,
-            IEventOutboxProcessor eventOutboxProcessor,
-            IMessageOutboxProcessor messageOutboxProcessor,
-            IJsonService<ApplicationSettings> jsonService,
-            IAuditlogger<ApplicationSettings> auditlogger
+            Lazy<IEnumerable<IDefaultValuesSetter<ApplicationSettings>>> defaultValuesSetters,
+            Lazy<IEnumerable<IValidator<ApplicationSettings>>> validators,
+            Lazy<IEnumerable<IBeforeCreate<ApplicationSettings>>> beforeCreateHooks,
+            Lazy<IEnumerable<IAfterCreate<ApplicationSettings>>> afterCreateHooks,
+            Lazy<IEnumerable<IBeforeUpdate<ApplicationSettings>>> beforeUpdateHooks,
+            Lazy<IEnumerable<IAfterUpdate<ApplicationSettings>>> afterUpdateHooks,
+            Lazy<IEnumerable<IBeforeDelete<ApplicationSettings>>> beforeDeleteHooks,
+            Lazy<IEnumerable<IAfterDelete<ApplicationSettings>>> afterDeleteHooks,
+            Lazy<IEventOutboxProcessor> eventOutboxProcessor,
+            Lazy<IMessageOutboxProcessor> messageOutboxProcessor,
+            Lazy<IJsonService<ApplicationSettings>> jsonService,
+            Lazy<IAuditlogger<ApplicationSettings>> auditlogger
         )
             : base(logger, currentUser, dateTime, dbCommand, defaultValuesSetters, validators, beforeCreateHooks, afterCreateHooks, beforeUpdateHooks, afterUpdateHooks, beforeDeleteHooks, afterDeleteHooks, eventOutboxProcessor, messageOutboxProcessor, jsonService, auditlogger)
         {

@@ -11,9 +11,9 @@ namespace Demo.Domain.Shared.DomainEntity
     internal class DomainEntityContext<T> : IDomainEntityContext<T> where T : IEntity
     {
         private readonly ILogger _logger;
-        private readonly IEventOutboxProcessor _eventOutboxProcessor;
-        private readonly IMessageOutboxProcessor _messageOutboxProcessor;
-        private readonly IJsonService<T> _jsonService;
+        private readonly Lazy<IEventOutboxProcessor> _eventOutboxProcessor;
+        private readonly Lazy<IMessageOutboxProcessor> _messageOutboxProcessor;
+        private readonly Lazy<IJsonService<T>> _jsonService;
         private T _entity;
         private readonly object _entityLock = new object();
 
@@ -21,9 +21,9 @@ namespace Demo.Domain.Shared.DomainEntity
 
         public DomainEntityContext(
             ILogger logger,
-            IEventOutboxProcessor eventOutboxProcessor,
-            IMessageOutboxProcessor messageOutboxProcessor,
-            IJsonService<T> jsonService)
+            Lazy<IEventOutboxProcessor> eventOutboxProcessor,
+            Lazy<IMessageOutboxProcessor> messageOutboxProcessor,
+            Lazy<IJsonService<T>> jsonService)
         {
             _logger = logger;
             _eventOutboxProcessor = eventOutboxProcessor;
@@ -53,17 +53,17 @@ namespace Demo.Domain.Shared.DomainEntity
 
         public async Task PublishIntegrationEventAsync<E>(Event<E> @event, CancellationToken cancellationToken) where E : IEventData
         {
-            await _eventOutboxProcessor.AddToOutboxAsync(@event, cancellationToken);
+            await _eventOutboxProcessor.Value.AddToOutboxAsync(@event, cancellationToken);
         }
 
         public async Task SendMessageToQueueAsync<M>(Message<M> message, CancellationToken cancellationToken) where M : IMessageData
         {
-            await _messageOutboxProcessor.AddToOutboxAsync(message, cancellationToken);
+            await _messageOutboxProcessor.Value.AddToOutboxAsync(message, cancellationToken);
         }
 
         private T DeepCopy(T entity)
         {
-            return _jsonService.FromJson(_jsonService.ToJson(entity));
+            return _jsonService.Value.FromJson(_jsonService.Value.ToJson(entity));
         }
     }
 }

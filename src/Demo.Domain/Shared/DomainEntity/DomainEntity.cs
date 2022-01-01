@@ -22,15 +22,15 @@ namespace Demo.Domain.Shared.DomainEntity
         protected readonly IDbCommand<T> DbCommand;
         protected readonly ILogger Logger;
 
-        private readonly IEnumerable<IDefaultValuesSetter<T>> _defaultValuesSetters;
-        private readonly IEnumerable<IValidator<T>> _validators;
-        private readonly IEnumerable<IBeforeCreate<T>> _beforeCreateHooks;
-        private readonly IEnumerable<IAfterCreate<T>> _afterCreateHooks;
-        private readonly IEnumerable<IBeforeUpdate<T>> _beforeUpdateHooks;
-        private readonly IEnumerable<IAfterUpdate<T>> _afterUpdateHooks;
-        private readonly IEnumerable<IBeforeDelete<T>> _beforeDeleteHooks;
-        private readonly IEnumerable<IAfterDelete<T>> _afterDeleteHooks;
-        private readonly IAuditlogger<T> _auditlogger;
+        private readonly Lazy<IEnumerable<IDefaultValuesSetter<T>>> _defaultValuesSetters;
+        private readonly Lazy<IEnumerable<IValidator<T>>> _validators;
+        private readonly Lazy<IEnumerable<IBeforeCreate<T>>> _beforeCreateHooks;
+        private readonly Lazy<IEnumerable<IAfterCreate<T>>> _afterCreateHooks;
+        private readonly Lazy<IEnumerable<IBeforeUpdate<T>>> _beforeUpdateHooks;
+        private readonly Lazy<IEnumerable<IAfterUpdate<T>>> _afterUpdateHooks;
+        private readonly Lazy<IEnumerable<IBeforeDelete<T>>> _beforeDeleteHooks;
+        private readonly Lazy<IEnumerable<IAfterDelete<T>>> _afterDeleteHooks;
+        private readonly Lazy<IAuditlogger<T>> _auditlogger;
 
         private DomainEntityOptions _options { get; set; }
 
@@ -39,18 +39,18 @@ namespace Demo.Domain.Shared.DomainEntity
             ICurrentUser currentUser,
             IDateTime dateTime,
             IDbCommand<T> dbCommand,
-            IEnumerable<IDefaultValuesSetter<T>> defaultValuesSetters,
-            IEnumerable<IValidator<T>> validators,
-            IEnumerable<IBeforeCreate<T>> beforeCreateHooks,
-            IEnumerable<IAfterCreate<T>> afterCreateHooks,
-            IEnumerable<IBeforeUpdate<T>> beforeUpdateHooks,
-            IEnumerable<IAfterUpdate<T>> afterUpdateHooks,
-            IEnumerable<IBeforeDelete<T>> beforeDeleteHooks,
-            IEnumerable<IAfterDelete<T>> afterDeleteHooks,
-            IEventOutboxProcessor eventOutboxProcessor,
-            IMessageOutboxProcessor messageOutboxProcessor,
-            IJsonService<T> jsonService,
-            IAuditlogger<T> auditlogger
+            Lazy<IEnumerable<IDefaultValuesSetter<T>>> defaultValuesSetters,
+            Lazy<IEnumerable<IValidator<T>>> validators,
+            Lazy<IEnumerable<IBeforeCreate<T>>> beforeCreateHooks,
+            Lazy<IEnumerable<IAfterCreate<T>>> afterCreateHooks,
+            Lazy<IEnumerable<IBeforeUpdate<T>>> beforeUpdateHooks,
+            Lazy<IEnumerable<IAfterUpdate<T>>> afterUpdateHooks,
+            Lazy<IEnumerable<IBeforeDelete<T>>> beforeDeleteHooks,
+            Lazy<IEnumerable<IAfterDelete<T>>> afterDeleteHooks,
+            Lazy<IEventOutboxProcessor> eventOutboxProcessor,
+            Lazy<IMessageOutboxProcessor> messageOutboxProcessor,
+            Lazy<IJsonService<T>> jsonService,
+            Lazy<IAuditlogger<T>> auditlogger
         )
         {
             Context = new DomainEntityContext<T>(logger, eventOutboxProcessor, messageOutboxProcessor, jsonService);
@@ -61,12 +61,12 @@ namespace Demo.Domain.Shared.DomainEntity
 
             _defaultValuesSetters = defaultValuesSetters;
             _validators = validators;
-            _beforeCreateHooks = beforeCreateHooks.OrderBy(x => x.Order);
-            _afterCreateHooks = afterCreateHooks.OrderBy(x => x.Order);
-            _beforeUpdateHooks = beforeUpdateHooks.OrderBy(x => x.Order);
-            _afterUpdateHooks = afterUpdateHooks.OrderBy(x => x.Order);
-            _beforeDeleteHooks = beforeDeleteHooks.OrderBy(x => x.Order);
-            _afterDeleteHooks = afterDeleteHooks.OrderBy(x => x.Order);
+            _beforeCreateHooks = beforeCreateHooks;
+            _afterCreateHooks = afterCreateHooks;
+            _beforeUpdateHooks = beforeUpdateHooks;
+            _afterUpdateHooks = afterUpdateHooks;
+            _beforeDeleteHooks = beforeDeleteHooks;
+            _afterDeleteHooks = afterDeleteHooks;
             _auditlogger = auditlogger;
 
             _options = new DomainEntityOptions();
@@ -86,7 +86,7 @@ namespace Demo.Domain.Shared.DomainEntity
             try
             {
                 var entity = Activator.CreateInstance<T>();
-                foreach (var defaultValuesSetter in _defaultValuesSetters)
+                foreach (var defaultValuesSetter in _defaultValuesSetters.Value.OrderBy(x => x.Order))
                 {
                     await defaultValuesSetter.SetDefaultValuesAsync(entity, Context.State, cancellationToken);
                 }
@@ -139,7 +139,7 @@ namespace Demo.Domain.Shared.DomainEntity
             var stopwatch = Context.PerformanceMeasurements.Start(nameof(ValidateAsync));
             try
             {
-                var validationTasks = _validators
+                var validationTasks = _validators.Value
                     .Select(v => v.ValidateAsync(Context, cancellationToken));
 
                 var validationMessages = (await Task.WhenAll(validationTasks))
@@ -192,7 +192,7 @@ namespace Demo.Domain.Shared.DomainEntity
             var stopwatch = Context.PerformanceMeasurements.Start(nameof(ExecuteBeforeCreateHooks));
             try
             {
-                foreach (var beforeCreateHook in _beforeCreateHooks)
+                foreach (var beforeCreateHook in _beforeCreateHooks.Value.OrderBy(x => x.Order))
                 {
                     await beforeCreateHook.ExecuteAsync(HookType.BeforeCreate, Context, cancellationToken);
                 }
@@ -208,7 +208,7 @@ namespace Demo.Domain.Shared.DomainEntity
             var stopwatch = Context.PerformanceMeasurements.Start(nameof(ExecuteAfterCreateHooks));
             try
             {
-                foreach (var afterCreateHook in _afterCreateHooks)
+                foreach (var afterCreateHook in _afterCreateHooks.Value.OrderBy(x => x.Order))
                 {
                     await afterCreateHook.ExecuteAsync(HookType.AfterCreate, Context, cancellationToken);
                 }
@@ -256,7 +256,7 @@ namespace Demo.Domain.Shared.DomainEntity
             var stopwatch = Context.PerformanceMeasurements.Start(nameof(ExecuteBeforeUpdateHooks));
             try
             {
-                foreach (var beforeUpdateHook in _beforeUpdateHooks)
+                foreach (var beforeUpdateHook in _beforeUpdateHooks.Value.OrderBy(x => x.Order))
                 {
                     await beforeUpdateHook.ExecuteAsync(HookType.BeforeUpdate, Context, cancellationToken);
                 }
@@ -272,7 +272,7 @@ namespace Demo.Domain.Shared.DomainEntity
             var stopwatch = Context.PerformanceMeasurements.Start(nameof(ExecuteAfterUpdateHooks));
             try
             {
-                foreach (var afterUpdateHook in _afterUpdateHooks)
+                foreach (var afterUpdateHook in _afterUpdateHooks.Value.OrderBy(x => x.Order))
                 {
                     await afterUpdateHook.ExecuteAsync(HookType.AfterUpdate, Context, cancellationToken);
                 }
@@ -336,7 +336,7 @@ namespace Demo.Domain.Shared.DomainEntity
             var stopwatch = Context.PerformanceMeasurements.Start(nameof(ExecuteBeforeDeleteHooks));
             try
             {
-                foreach (var beforeDeleteHook in _beforeDeleteHooks)
+                foreach (var beforeDeleteHook in _beforeDeleteHooks.Value.OrderBy(x => x.Order))
                 {
                     await beforeDeleteHook.ExecuteAsync(HookType.BeforeDelete, Context, cancellationToken);
                 }
@@ -352,7 +352,7 @@ namespace Demo.Domain.Shared.DomainEntity
             var stopwatch = Context.PerformanceMeasurements.Start(nameof(ExecuteAfterDeleteHooks));
             try
             {
-                foreach (var afterDeleteHook in _afterDeleteHooks)
+                foreach (var afterDeleteHook in _afterDeleteHooks.Value.OrderBy(x => x.Order))
                 {
                     await afterDeleteHook.ExecuteAsync(HookType.AfterDelete, Context, cancellationToken);
                 }
@@ -375,7 +375,7 @@ namespace Demo.Domain.Shared.DomainEntity
 
         private async Task CreateAuditLogAsync(CancellationToken cancellationToken)
         {
-            if (_auditlogger == null)
+            if (_auditlogger == null || _auditlogger.Value == null)
             {
                 return;
             }
@@ -383,7 +383,7 @@ namespace Demo.Domain.Shared.DomainEntity
             var stopwatch = Context.PerformanceMeasurements.Start(nameof(CreateAuditLogAsync));
             try
             {
-                await _auditlogger.CreateAuditLogAsync(Context.Entity, Context.Pristine, cancellationToken);
+                await _auditlogger.Value.CreateAuditLogAsync(Context.Entity, Context.Pristine, cancellationToken);
             }
             finally
             {

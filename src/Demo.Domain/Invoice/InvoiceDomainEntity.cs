@@ -21,18 +21,18 @@ namespace Demo.Domain.Invoice
             ICurrentUser currentUser,
             IDateTime dateTime,
             IDbCommand<Invoice> dbCommand,
-            IEnumerable<IDefaultValuesSetter<Invoice>> defaultValuesSetters,
-            IEnumerable<IValidator<Invoice>> validators,
-            IEnumerable<IBeforeCreate<Invoice>> beforeCreateHooks,
-            IEnumerable<IAfterCreate<Invoice>> afterCreateHooks,
-            IEnumerable<IBeforeUpdate<Invoice>> beforeUpdateHooks,
-            IEnumerable<IAfterUpdate<Invoice>> afterUpdateHooks,
-            IEnumerable<IBeforeDelete<Invoice>> beforeDeleteHooks,
-            IEnumerable<IAfterDelete<Invoice>> afterDeleteHooks,
-            IEventOutboxProcessor eventOutboxProcessor,
-            IMessageOutboxProcessor messageOutboxProcessor,
-            IJsonService<Invoice> jsonService,
-            IAuditlogger<Invoice> auditlogger
+            Lazy<IEnumerable<IDefaultValuesSetter<Invoice>>> defaultValuesSetters,
+            Lazy<IEnumerable<IValidator<Invoice>>> validators,
+            Lazy<IEnumerable<IBeforeCreate<Invoice>>> beforeCreateHooks,
+            Lazy<IEnumerable<IAfterCreate<Invoice>>> afterCreateHooks,
+            Lazy<IEnumerable<IBeforeUpdate<Invoice>>> beforeUpdateHooks,
+            Lazy<IEnumerable<IAfterUpdate<Invoice>>> afterUpdateHooks,
+            Lazy<IEnumerable<IBeforeDelete<Invoice>>> beforeDeleteHooks,
+            Lazy<IEnumerable<IAfterDelete<Invoice>>> afterDeleteHooks,
+            Lazy<IEventOutboxProcessor> eventOutboxProcessor,
+            Lazy<IMessageOutboxProcessor> messageOutboxProcessor,
+            Lazy<IJsonService<Invoice>> jsonService,
+            Lazy<IAuditlogger<Invoice>> auditlogger
         )
             : base(logger, currentUser, dateTime, dbCommand, defaultValuesSetters, validators, beforeCreateHooks, afterCreateHooks, beforeUpdateHooks, afterUpdateHooks, beforeDeleteHooks, afterDeleteHooks, eventOutboxProcessor, messageOutboxProcessor, jsonService, auditlogger)
         {

@@ -6,7 +6,7 @@ namespace Demo.Common.Helpers
     public class LazyInstance<T> : Lazy<T>
     {
         public LazyInstance(IServiceProvider serviceProvider)
-            : base(() => serviceProvider.GetRequiredService<T>())
+            : base(() => serviceProvider.GetService<T>())
         {
 
         }

@@ -16,17 +16,17 @@ namespace Demo.Domain.MessageOutbox
             ICurrentUser currentUser,
             IDateTime dateTime,
             IDbCommand<MessageOutbox> dbCommand,
-            IEnumerable<IDefaultValuesSetter<MessageOutbox>> defaultValuesSetters,
-            IEnumerable<IValidator<MessageOutbox>> validators,
-            IEnumerable<IBeforeCreate<MessageOutbox>> beforeCreateHooks,
-            IEnumerable<IAfterCreate<MessageOutbox>> afterCreateHooks,
-            IEnumerable<IBeforeUpdate<MessageOutbox>> beforeUpdateHooks,
-            IEnumerable<IAfterUpdate<MessageOutbox>> afterUpdateHooks,
-            IEnumerable<IBeforeDelete<MessageOutbox>> beforeDeleteHooks,
-            IEnumerable<IAfterDelete<MessageOutbox>> afterDeleteHooks,
-            IEventOutboxProcessor eventOutboxProcessor,
-            IMessageOutboxProcessor messageOutboxProcessor,
-            IJsonService<MessageOutbox> jsonService
+            Lazy<IEnumerable<IDefaultValuesSetter<MessageOutbox>>> defaultValuesSetters,
+            Lazy<IEnumerable<IValidator<MessageOutbox>>> validators,
+            Lazy<IEnumerable<IBeforeCreate<MessageOutbox>>> beforeCreateHooks,
+            Lazy<IEnumerable<IAfterCreate<MessageOutbox>>> afterCreateHooks,
+            Lazy<IEnumerable<IBeforeUpdate<MessageOutbox>>> beforeUpdateHooks,
+            Lazy<IEnumerable<IAfterUpdate<MessageOutbox>>> afterUpdateHooks,
+            Lazy<IEnumerable<IBeforeDelete<MessageOutbox>>> beforeDeleteHooks,
+            Lazy<IEnumerable<IAfterDelete<MessageOutbox>>> afterDeleteHooks,
+            Lazy<IEventOutboxProcessor> eventOutboxProcessor,
+            Lazy<IMessageOutboxProcessor> messageOutboxProcessor,
+            Lazy<IJsonService<MessageOutbox>> jsonService
         )
             : base(logger, currentUser, dateTime, dbCommand, defaultValuesSetters, validators, beforeCreateHooks, afterCreateHooks, beforeUpdateHooks, afterUpdateHooks, beforeDeleteHooks, afterDeleteHooks, eventOutboxProcessor, messageOutboxProcessor, jsonService, null)
         {

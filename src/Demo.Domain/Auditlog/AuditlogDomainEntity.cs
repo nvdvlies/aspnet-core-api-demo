@@ -4,6 +4,7 @@ using Demo.Domain.Shared.DomainEntity;
 using Demo.Domain.Shared.Exceptions;
 using Demo.Domain.Shared.Interfaces;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,17 +18,17 @@ namespace Demo.Domain.Auditlog
             ICurrentUser currentUser,
             IDateTime dateTime,
             IDbCommand<Auditlog> dbCommand,
-            IEnumerable<IDefaultValuesSetter<Auditlog>> defaultValuesSetters,
-            IEnumerable<IValidator<Auditlog>> validators,
-            IEnumerable<IBeforeCreate<Auditlog>> beforeCreateHooks,
-            IEnumerable<IAfterCreate<Auditlog>> afterCreateHooks,
-            IEnumerable<IBeforeUpdate<Auditlog>> beforeUpdateHooks,
-            IEnumerable<IAfterUpdate<Auditlog>> afterUpdateHooks,
-            IEnumerable<IBeforeDelete<Auditlog>> beforeDeleteHooks,
-            IEnumerable<IAfterDelete<Auditlog>> afterDeleteHooks,
-            IEventOutboxProcessor eventOutboxProcessor,
-            IMessageOutboxProcessor messageOutboxProcessor,
-            IJsonService<Auditlog> jsonService
+            Lazy<IEnumerable<IDefaultValuesSetter<Auditlog>>> defaultValuesSetters,
+            Lazy<IEnumerable<IValidator<Auditlog>>> validators,
+            Lazy<IEnumerable<IBeforeCreate<Auditlog>>> beforeCreateHooks,
+            Lazy<IEnumerable<IAfterCreate<Auditlog>>> afterCreateHooks,
+            Lazy<IEnumerable<IBeforeUpdate<Auditlog>>> beforeUpdateHooks,
+            Lazy<IEnumerable<IAfterUpdate<Auditlog>>> afterUpdateHooks,
+            Lazy<IEnumerable<IBeforeDelete<Auditlog>>> beforeDeleteHooks,
+            Lazy<IEnumerable<IAfterDelete<Auditlog>>> afterDeleteHooks,
+            Lazy<IEventOutboxProcessor> eventOutboxProcessor,
+            Lazy<IMessageOutboxProcessor> messageOutboxProcessor,
+            Lazy<IJsonService<Auditlog>> jsonService
         )
             : base(logger, currentUser, dateTime, dbCommand, defaultValuesSetters, validators, beforeCreateHooks, afterCreateHooks, beforeUpdateHooks, afterUpdateHooks, beforeDeleteHooks, afterDeleteHooks, eventOutboxProcessor, messageOutboxProcessor, jsonService, null)
         {

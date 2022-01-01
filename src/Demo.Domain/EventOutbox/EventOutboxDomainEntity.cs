@@ -16,17 +16,17 @@ namespace Demo.Domain.EventOutbox
             ICurrentUser currentUser,
             IDateTime dateTime,
             IDbCommand<EventOutbox> dbCommand,
-            IEnumerable<IDefaultValuesSetter<EventOutbox>> defaultValuesSetters,
-            IEnumerable<IValidator<EventOutbox>> validators,
-            IEnumerable<IBeforeCreate<EventOutbox>> beforeCreateHooks,
-            IEnumerable<IAfterCreate<EventOutbox>> afterCreateHooks,
-            IEnumerable<IBeforeUpdate<EventOutbox>> beforeUpdateHooks,
-            IEnumerable<IAfterUpdate<EventOutbox>> afterUpdateHooks,
-            IEnumerable<IBeforeDelete<EventOutbox>> beforeDeleteHooks,
-            IEnumerable<IAfterDelete<EventOutbox>> afterDeleteHooks,
-            IEventOutboxProcessor eventOutboxProcessor,
-            IMessageOutboxProcessor messageOutboxProcessor,
-            IJsonService<EventOutbox> jsonService
+            Lazy<IEnumerable<IDefaultValuesSetter<EventOutbox>>> defaultValuesSetters,
+            Lazy<IEnumerable<IValidator<EventOutbox>>> validators,
+            Lazy<IEnumerable<IBeforeCreate<EventOutbox>>> beforeCreateHooks,
+            Lazy<IEnumerable<IAfterCreate<EventOutbox>>> afterCreateHooks,
+            Lazy<IEnumerable<IBeforeUpdate<EventOutbox>>> beforeUpdateHooks,
+            Lazy<IEnumerable<IAfterUpdate<EventOutbox>>> afterUpdateHooks,
+            Lazy<IEnumerable<IBeforeDelete<EventOutbox>>> beforeDeleteHooks,
+            Lazy<IEnumerable<IAfterDelete<EventOutbox>>> afterDeleteHooks,
+            Lazy<IEventOutboxProcessor> eventOutboxProcessor,
+            Lazy<IMessageOutboxProcessor> messageOutboxProcessor,
+            Lazy<IJsonService<EventOutbox>> jsonService
         )
             : base(logger, currentUser, dateTime, dbCommand, defaultValuesSetters, validators, beforeCreateHooks, afterCreateHooks, beforeUpdateHooks, afterUpdateHooks, beforeDeleteHooks, afterDeleteHooks, eventOutboxProcessor, messageOutboxProcessor, jsonService, null)
         {
