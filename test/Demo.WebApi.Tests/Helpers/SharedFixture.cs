@@ -1,12 +1,9 @@
 ﻿using Demo.Infrastructure.Persistence;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Respawn;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -28,11 +25,7 @@ namespace Demo.WebApi.Tests.Helpers
         public SharedFixture()
         {
             Factory = new CustomWebApplicationFactory();
-            Client = Factory.CreateClient(new WebApplicationFactoryClientOptions
-            {
-                AllowAutoRedirect = false,
-            });
-            //Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(JwtBearerDefaults.AuthenticationScheme);
+            Client = Factory.CreateClient();
 
             HubConnection = new HubConnectionBuilder()
                 .WithAutomaticReconnect()

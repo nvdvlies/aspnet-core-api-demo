@@ -1,5 +1,4 @@
 ﻿using AutoFixture;
-using Demo.Domain.Customer;
 using System.Linq;
 
 namespace Demo.WebApi.Tests.Helpers

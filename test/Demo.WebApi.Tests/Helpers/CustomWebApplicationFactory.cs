@@ -1,12 +1,11 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Demo.Infrastructure.Events;
+using Demo.Infrastructure.Messages;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System.Linq;
 
 namespace Demo.WebApi.Tests.Helpers
 {
@@ -29,6 +28,9 @@ namespace Demo.WebApi.Tests.Helpers
             builder.ConfigureTestServices(services =>
             {
                 services.AddSingleton<IAuthorizationHandler, AcceptAllHasScopeRequirementAuthorizationHandler>();
+
+                services.AddSingleton<IEventPublisher, FakeEventPublisher>();
+                services.AddSingleton<IMessageSender, FakeMessageSender>();
             });
         }
     }
