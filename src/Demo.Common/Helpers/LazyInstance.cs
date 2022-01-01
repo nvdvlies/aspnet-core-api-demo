@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System;
 
-namespace Demo.Common
+namespace Demo.Common.Helpers
 {
     public class LazyInstance<T> : Lazy<T>
     {

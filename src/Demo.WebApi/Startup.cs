@@ -1,5 +1,6 @@
 using Demo.Application;
 using Demo.Application.Shared.Interfaces;
+using Demo.Common;
 using Demo.Common.Interfaces;
 using Demo.Domain;
 using Demo.Infrastructure;
@@ -69,6 +70,7 @@ namespace Demo.WebApi
             services.AddApplication();
             services.AddDomain();
             services.AddInfrastructure(Configuration);
+            services.AddCommon();
 
             services.AddSignalR();
         }
