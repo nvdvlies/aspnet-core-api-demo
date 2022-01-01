@@ -24,7 +24,18 @@ namespace Demo.Infrastructure.Events
                 Topic = @event.Topic.ToString(),
                 EventTime = @event.CreatedOn
             };
-            await _client.SendEventAsync(eventGridEvent, cancellationToken);
+
+            var response = await _client.SendEventAsync(eventGridEvent, cancellationToken);
+
+            if (!IsSuccessStatusCode(response.Status))
+            {
+                throw new Exception($"SendEventAsync failed. Status: {response.Status}, Reason: {response.ReasonPhrase}");
+            }
+        }
+
+        private static bool IsSuccessStatusCode(int statusCode)
+        {
+            return (statusCode >= 200) && (statusCode <= 299);
         }
     }
 }
