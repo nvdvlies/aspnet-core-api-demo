@@ -1,6 +1,6 @@
 ﻿using Demo.Application.Shared.Interfaces;
+using Demo.Domain.MessageOutbox.Interfaces;
 using Demo.Domain.Shared.Interfaces;
-using Demo.Events;
 using Demo.Messages;
 using Microsoft.Extensions.Logging;
 using System;
@@ -14,85 +14,84 @@ namespace Demo.Infrastructure.Messages
     {
         private readonly ILogger<MessageOutboxProcessor> _logger;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IDomainEntityFactory _domainEntityFactory;
         private readonly IMessageSender _messageOutboxProcessor;
-        private readonly IDbCommand<MessageOutbox> _dbCommand;
-        private Queue<MessageOutbox> _queue;
+        private Queue<IMessageOutboxDomainEntity> _queue;
 
         public MessageOutboxProcessor(
             ILogger<MessageOutboxProcessor> logger,
             IUnitOfWork unitOfWork,
-            IMessageSender messageOutboxProcessor,
-            IDbCommand<MessageOutbox> dbCommand)
+            IDomainEntityFactory domainEntityFactory,
+            IMessageSender messageOutboxProcessor)
         {
-            _queue = new Queue<MessageOutbox>();
+            _queue = new Queue<IMessageOutboxDomainEntity>();
             _logger = logger;
             _unitOfWork = unitOfWork;
+            _domainEntityFactory = domainEntityFactory;
             _messageOutboxProcessor = messageOutboxProcessor;
-            _dbCommand = dbCommand;
         }
-
-        public int Count => _queue.Count;
 
         public async Task AddToOutboxAsync(Message message, CancellationToken cancellationToken = default)
         {
-            var messageOutbox = new MessageOutbox
+            var messageOutboxDomainEntity = _domainEntityFactory.CreateInstance<IMessageOutboxDomainEntity>();
+            await messageOutboxDomainEntity.NewAsync(cancellationToken);
+            messageOutboxDomainEntity.With(x =>
             {
-                Type = message.Type,
-                Message = message
-            };
-            messageOutbox.Lock();
-            await _dbCommand.InsertAsync(messageOutbox, cancellationToken);
-            _queue.Enqueue(messageOutbox);
+                x.Type = message.Type;
+                x.Message = message;
+            });
+            messageOutboxDomainEntity.Lock();
+            await messageOutboxDomainEntity.CreateAsync(cancellationToken);
+            _queue.Enqueue(messageOutboxDomainEntity);
         }
 
         public async Task SendAllAsync(CancellationToken cancellationToken = default)
         {
             while (_queue.Count > 0)
             {
-                var messageOutbox = _queue.Dequeue();
+                var messageOutboxDomainEntity = _queue.Dequeue();
 
-                _logger.LogInformation("Sending message of type '{type}'", messageOutbox.Type);
+                _logger.LogInformation("Sending message of type '{type}'", messageOutboxDomainEntity.Type);
 
                 bool isSent = false;
                 try
                 {
-                    await _messageOutboxProcessor.SendAsync(messageOutbox.Message, cancellationToken);
-
+                    await _messageOutboxProcessor.SendAsync(messageOutboxDomainEntity.Message, cancellationToken);
+                    _logger.LogInformation("Sent message of type '{type}'", messageOutboxDomainEntity.Type);
                     isSent = true;
-
-                    _logger.LogInformation("Sent message of type '{type}'", messageOutbox.Type);
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "Failed to send message ({type})", messageOutbox.Type);
-                    await UnLockAsync(messageOutbox, cancellationToken);
+                    _logger.LogError(ex, "Failed to send message of type '{type}'  (ID: {id})", messageOutboxDomainEntity.Type, messageOutboxDomainEntity.EntityId);
+                    await UnLockAsync(messageOutboxDomainEntity, cancellationToken);
                 }
 
                 if (isSent)
                 {
                     try
                     {
-                        await MarkAsSent(messageOutbox, cancellationToken);
+                        await UnlockAndMarkAsSentAsync(messageOutboxDomainEntity, cancellationToken);
                     }
                     catch (Exception ex)
                     {
-                        _logger.LogCritical(ex, "Failed to mark sent message as sent (Type: {type}, ID: {id})", messageOutbox.Type, messageOutbox.Id);
+                        _logger.LogCritical(ex, "Failed to mark sent message of type '{type}' as sent (ID: {id})", messageOutboxDomainEntity.Type, messageOutboxDomainEntity.EntityId);
                     }
                 }
             }
         }
 
-        private async Task UnLockAsync(MessageOutbox messageOutbox, CancellationToken cancellationToken)
+        private async Task UnLockAsync(IMessageOutboxDomainEntity messageOutboxDomainEntity, CancellationToken cancellationToken)
         {
-            messageOutbox.Unlock();
-            await _dbCommand.UpdateAsync(messageOutbox, cancellationToken);
+            messageOutboxDomainEntity.Unlock();
+            await messageOutboxDomainEntity.UpdateAsync(cancellationToken);
             await _unitOfWork.CommitAsync(cancellationToken);
         }
 
-        private async Task MarkAsSent(MessageOutbox messageOutbox, CancellationToken cancellationToken)
+        private async Task UnlockAndMarkAsSentAsync(IMessageOutboxDomainEntity messageOutboxDomainEntity, CancellationToken cancellationToken)
         {
-            messageOutbox.MarkAsSent();
-            await _dbCommand.UpdateAsync(messageOutbox, cancellationToken);
+            messageOutboxDomainEntity.Unlock();
+            messageOutboxDomainEntity.MarkAsSent();
+            await messageOutboxDomainEntity.UpdateAsync(cancellationToken);
             await _unitOfWork.CommitAsync(cancellationToken);
         }
     }

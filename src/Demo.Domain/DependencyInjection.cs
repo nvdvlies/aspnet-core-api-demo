@@ -1,4 +1,5 @@
 ﻿using Demo.Common.Helpers;
+using Demo.Domain.Shared.DomainEntity;
 using Demo.Domain.Shared.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
@@ -12,6 +13,8 @@ namespace Demo.Domain
         {
             services.RegisterDomainEntities();
             services.RegisterDomainEntityHooks();
+
+            services.AddScoped<IDomainEntityFactory, DomainEntityFactory>();
 
             return services;
         }

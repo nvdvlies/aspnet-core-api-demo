@@ -1,9 +1,9 @@
 using Demo.Domain.ApplicationSettings;
 using Demo.Domain.Auditlog;
 using Demo.Domain.Customer;
+using Demo.Domain.EventOutbox;
 using Demo.Domain.Invoice;
-using Demo.Infrastructure.Events;
-using Demo.Infrastructure.Messages;
+using Demo.Domain.MessageOutbox;
 using Demo.Infrastructure.Persistence.Configuration;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;

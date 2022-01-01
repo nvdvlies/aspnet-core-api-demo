@@ -16,7 +16,7 @@ namespace Demo.Application.Shared.PipelineBehaviors
             ILogger<PublishEventsAfterCommitPipelineBehavior<TRequest, TResponse>> logger
         )
         {
-            _eventOutboxProcessor = eventOutboxProcessor;;
+            _eventOutboxProcessor = eventOutboxProcessor;
             _logger = logger;
         }
 

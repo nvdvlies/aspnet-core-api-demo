@@ -1,5 +1,5 @@
-﻿using Demo.Events;
-using Demo.Infrastructure.Events;
+﻿using Demo.Domain.EventOutbox;
+using Demo.Events;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System.Text.Json;

@@ -1,4 +1,4 @@
-﻿using Demo.Infrastructure.Messages;
+﻿using Demo.Domain.MessageOutbox;
 using Demo.Messages;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
