@@ -4,7 +4,7 @@ using Demo.Common.Interfaces;
 using Demo.Domain;
 using Demo.Infrastructure;
 using Demo.Infrastructure.Settings;
-using Demo.WebApi.Auth0;
+using Demo.WebApi.Auth;
 using Demo.WebApi.Middleware;
 using Demo.WebApi.Services;
 using Demo.WebApi.SignalR;
@@ -56,10 +56,10 @@ namespace Demo.WebApi
 
             services.AddAuthorization(options =>
             {
-                options.AddPolicy(nameof(Auth0Scopes.User), policy => policy.Requirements.Add(new HasScopeRequirement(Auth0Scopes.User, environmentSettings.Auth0.Domain)));
+                options.AddPolicy(nameof(Policies.User), policy => policy.Requirements.Add(new HasScopeRequirement(Auth0Scopes.User, environmentSettings.Auth0.Domain)));
             });
 
-            services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
+            services.AddSingleton<IAuthorizationHandler, HasScopeRequirementAuthorizationHandler>();
 
             services.AddScoped<ICurrentUser, CurrentUserService>();
             services.AddScoped<IEventHubContext, SignalrHubContext>();

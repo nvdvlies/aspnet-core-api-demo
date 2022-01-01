@@ -2,9 +2,9 @@
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Demo.WebApi.Auth0
+namespace Demo.WebApi.Auth
 {
-    public class HasScopeHandler : AuthorizationHandler<HasScopeRequirement>
+    public class HasScopeRequirementAuthorizationHandler : AuthorizationHandler<HasScopeRequirement>
     {
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, HasScopeRequirement requirement)
         {

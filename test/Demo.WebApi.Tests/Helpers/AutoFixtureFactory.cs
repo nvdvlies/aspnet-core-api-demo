@@ -1,5 +1,6 @@
 ﻿using AutoFixture;
 using Demo.Domain.Customer;
+using System.Linq;
 
 namespace Demo.WebApi.Tests.Helpers
 {
@@ -8,11 +9,8 @@ namespace Demo.WebApi.Tests.Helpers
         public static Fixture CreateAutofixtureWithDefaultConfiguration()
         {
             var autoFixture = new Fixture();
-            autoFixture.Customize<Customer>(composer =>
-            {
-                composer.Without(p => p.Invoices);
-                return composer;
-            });
+            autoFixture.Behaviors.OfType<ThrowingRecursionBehavior>().ToList().ForEach(b => autoFixture.Behaviors.Remove(b));
+            autoFixture.Behaviors.Add(new OmitOnRecursionBehavior());
             return autoFixture;
         }
     }

@@ -1,4 +1,4 @@
-﻿using Demo.WebApi.Auth0;
+﻿using Demo.WebApi.Auth;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
@@ -9,7 +9,7 @@ namespace Demo.WebApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize(nameof(Auth0Scopes.User))]
+    [Authorize(nameof(Policies.User))]
     [EnableCors()]
     public abstract class ApiControllerBase : ControllerBase
     {

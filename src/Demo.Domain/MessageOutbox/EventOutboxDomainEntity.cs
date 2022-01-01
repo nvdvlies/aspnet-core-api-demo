@@ -26,10 +26,9 @@ namespace Demo.Domain.MessageOutbox
             IEnumerable<IAfterDelete<MessageOutbox>> afterDeleteHooks,
             IEventOutboxProcessor eventOutboxProcessor,
             IMessageOutboxProcessor messageOutboxProcessor,
-            IJsonService<MessageOutbox> jsonService,
-            IAuditlogger<MessageOutbox> auditlogger
+            IJsonService<MessageOutbox> jsonService
         )
-            : base(logger, currentUser, dateTime, dbCommand, defaultValuesSetters, validators, beforeCreateHooks, afterCreateHooks, beforeUpdateHooks, afterUpdateHooks, beforeDeleteHooks, afterDeleteHooks, eventOutboxProcessor, messageOutboxProcessor, jsonService, auditlogger)
+            : base(logger, currentUser, dateTime, dbCommand, defaultValuesSetters, validators, beforeCreateHooks, afterCreateHooks, beforeUpdateHooks, afterUpdateHooks, beforeDeleteHooks, afterDeleteHooks, eventOutboxProcessor, messageOutboxProcessor, jsonService, null)
         {
         }
 

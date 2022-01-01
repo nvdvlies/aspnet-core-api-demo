@@ -1,4 +1,4 @@
-﻿namespace Demo.WebApi.Auth0
+﻿namespace Demo.WebApi.Auth
 {
     public static class Auth0Scopes
     {
