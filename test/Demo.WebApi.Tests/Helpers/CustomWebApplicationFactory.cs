@@ -29,8 +29,8 @@ namespace Demo.WebApi.Tests.Helpers
             {
                 services.AddSingleton<IAuthorizationHandler, AcceptAllHasScopeRequirementAuthorizationHandler>();
 
-                services.AddSingleton<IEventPublisher, FakeEventPublisher>();
-                services.AddSingleton<IMessageSender, FakeMessageSender>();
+                services.AddTransient<IEventPublisher, FakeEventPublisher>();
+                services.AddTransient<IMessageSender, FakeMessageSender>();
             });
         }
     }

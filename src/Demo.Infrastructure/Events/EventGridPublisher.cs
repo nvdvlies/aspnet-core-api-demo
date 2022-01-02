@@ -19,12 +19,7 @@ namespace Demo.Infrastructure.Events
 
         public async Task PublishAsync(Event @event, CancellationToken cancellationToken)
         {
-            var eventGridEvent = new EventGridEvent(@event.Subject, @event.Type, @event.DataVersion, @event.Data)
-            {
-                Topic = @event.Topic.ToString(),
-                EventTime = @event.CreatedOn
-            };
-
+            var eventGridEvent = @event.ToEventGridEvent();
             var response = await _client.SendEventAsync(eventGridEvent, cancellationToken);
 
             if (!IsSuccessStatusCode(response.Status))

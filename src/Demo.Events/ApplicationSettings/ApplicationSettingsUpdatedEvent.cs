@@ -2,7 +2,7 @@
 
 namespace Demo.Events.ApplicationSettings
 {
-    public class ApplicationSettingsUpdatedEvent : Event<ApplicationSettingsUpdatedEventData>
+    public class ApplicationSettingsUpdatedEvent : Event<ApplicationSettingsUpdatedEvent, ApplicationSettingsUpdatedEventData>
     {
         public ApplicationSettingsUpdatedEvent(ApplicationSettingsUpdatedEventData data) : base(
             Topics.ApplicationSettings,

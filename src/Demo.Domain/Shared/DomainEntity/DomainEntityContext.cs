@@ -51,7 +51,7 @@ namespace Demo.Domain.Shared.DomainEntity
         public IDomainEntityState State { get; }
         public bool IsNewEntity => Entity?.Id == Guid.Empty;
 
-        public async Task PublishIntegrationEventAsync<E>(Event<E> @event, CancellationToken cancellationToken) where E : IEventData
+        public async Task PublishIntegrationEventAsync<E, D>(Event<E, D> @event, CancellationToken cancellationToken) where D : IEventData
         {
             await _eventOutboxProcessor.Value.AddToOutboxAsync(@event, cancellationToken);
         }

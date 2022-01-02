@@ -2,7 +2,7 @@
 
 namespace Demo.Events.Invoice
 {
-    public class InvoiceCancelledEvent : Event<InvoiceCancelledEventData>
+    public class InvoiceCancelledEvent : Event<InvoiceCancelledEvent, InvoiceCancelledEventData>
     {
         internal InvoiceCancelledEvent(InvoiceCancelledEventData data) : base(
             Topics.Invoice,

@@ -4,17 +4,22 @@ using System.Text.Json.Serialization;
 
 namespace Demo.Events
 {
-    public class Event<T> : Event, INotification where T : IEventData
+    public class Event<E, D> : Event where D : IEventData
     {
-        public new T Data => (T)base.Data;
+        public new D Data => (D)base.Data;
 
         [JsonConstructor]
-        public Event(Topics topic, T data, string subject, string dataVersion, string correlationId) : base(topic, data, subject, dataVersion, correlationId)
+        public Event(Topics topic, D data, string subject, string dataVersion, string correlationId) : base(topic, data, subject, dataVersion, correlationId)
         {
+        }
+
+        public static E ToObjectFromJson(BinaryData binaryData)
+        {
+            return binaryData.ToObjectFromJson<E>();
         }
     }
 
-    public class Event
+    public class Event : INotification
     {
         [JsonInclude]
         public string Type { get; private set; }

@@ -363,7 +363,7 @@ namespace Demo.Domain.Shared.DomainEntity
             }
         }
 
-        public async Task PublishIntegrationEventAsync<E>(Event<E> @event, CancellationToken cancellationToken) where E : IEventData
+        public async Task PublishIntegrationEventAsync<E, D>(Event<E, D> @event, CancellationToken cancellationToken) where D : IEventData
         {
             await Context.PublishIntegrationEventAsync(@event, cancellationToken);
         }
