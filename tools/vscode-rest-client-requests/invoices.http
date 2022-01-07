@@ -32,6 +32,7 @@ Authorization: Bearer {{access_token}}
 POST {{baseUrl}}/api/invoices
 Content-Type: application/json
 Authorization: Bearer {{access_token}}
+Request-Id: 654321
 
 {
   "customerId": "200b4c4c-eecd-4e44-8533-08d997bb99df",

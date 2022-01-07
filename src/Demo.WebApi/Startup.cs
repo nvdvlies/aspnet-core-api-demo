@@ -60,8 +60,11 @@ namespace Demo.WebApi
                 options.AddPolicy(nameof(Policies.User), policy => policy.Requirements.Add(new HasScopeRequirement(Auth0Scopes.User, environmentSettings.Auth0.Domain)));
             });
 
+            services.AddApplicationInsightsTelemetry();
+
             services.AddSingleton<IAuthorizationHandler, HasScopeRequirementAuthorizationHandler>();
 
+            services.AddScoped<ICorrelationIdProvider, CorrelationIdProvider>();
             services.AddScoped<ICurrentUser, CurrentUserService>();
             services.AddScoped<IEventHubContext, SignalrHubContext>();
 
