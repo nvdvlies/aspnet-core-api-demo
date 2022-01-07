@@ -23,7 +23,7 @@ namespace Demo.Domain.ApplicationSettings.Hooks
 
         public async Task ExecuteAsync(HookType type, IDomainEntityContext<ApplicationSettings> context, CancellationToken cancellationToken)
         {
-            await context.PublishIntegrationEventAsync(ApplicationSettingsUpdatedEvent.Create(_correlationIdProvider.Id, context.Entity.Id, _currentUser.Id), cancellationToken);
+            await context.AddEventAsync(ApplicationSettingsUpdatedEvent.Create(_correlationIdProvider.Id, context.Entity.Id, _currentUser.Id), cancellationToken);
         }
     }
 }

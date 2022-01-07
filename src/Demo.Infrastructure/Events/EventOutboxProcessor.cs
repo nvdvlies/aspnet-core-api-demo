@@ -31,17 +31,14 @@ namespace Demo.Infrastructure.Events
             _eventGridPublisher = eventGridPublisher;
         }
 
-        public async Task AddToOutboxAsync(Event @event, CancellationToken cancellationToken = default)
+        public async Task AddToOutboxAsync(IEvent @event, CancellationToken cancellationToken = default)
         {
             var eventOutboxDomainEntity = _domainEntityFactory.CreateInstance<IEventOutboxDomainEntity>();
             await eventOutboxDomainEntity.NewAsync(cancellationToken);
-            eventOutboxDomainEntity.With(x =>
-            {
-                x.Type = @event.Type;
-                x.Event = @event;
-            });
+            eventOutboxDomainEntity.SetEvent(@event);
             eventOutboxDomainEntity.Lock();
             await eventOutboxDomainEntity.CreateAsync(cancellationToken);
+
             _queue.Enqueue(eventOutboxDomainEntity);
         }
 
@@ -56,7 +53,8 @@ namespace Demo.Infrastructure.Events
                 bool isPublished = false;
                 try
                 {
-                    await _eventGridPublisher.PublishAsync(eventOutboxDomainEntity.Event, cancellationToken);
+                    var @event = eventOutboxDomainEntity.GetEvent();
+                    await _eventGridPublisher.PublishAsync(@event, cancellationToken);
                     _logger.LogInformation("Published event of type '{type}'", eventOutboxDomainEntity.Type);
                     isPublished = true;
                 }

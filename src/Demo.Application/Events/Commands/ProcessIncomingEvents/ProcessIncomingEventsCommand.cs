@@ -1,10 +1,11 @@
-using Azure.Messaging.EventGrid;
+using Demo.Events;
 using MediatR;
+using System.Collections.Generic;
 
 namespace Demo.Application.Events.Commands.ProcessIncomingEvents
 {
     public class ProcessIncomingEventsCommand : IRequest<Unit>
     {
-        public EventGridEvent[] EventGridEvents { get; set; }
+        public IEnumerable<IEvent> Events { get; set; }
     }
 }

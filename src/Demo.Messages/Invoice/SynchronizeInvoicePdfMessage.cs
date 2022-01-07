@@ -2,18 +2,8 @@
 
 namespace Demo.Messages.Invoice
 {
-    public class SynchronizeInvoicePdfMessage : Message<SynchronizeInvoicePdfMessageData>
+    public class SynchronizeInvoicePdfMessage : Message<SynchronizeInvoicePdfMessage, SynchronizeInvoicePdfMessageData>
     {
-        public SynchronizeInvoicePdfMessage(SynchronizeInvoicePdfMessageData data) : base(
-            Queues.SynchronizeInvoicePdf,
-            data,
-            $"Invoice/{data.Id}",
-            data.MessageDataVersion,
-            data.CorrelationId
-            )
-        {
-        }
-
         public static SynchronizeInvoicePdfMessage Create(string correlationId, Guid id)
         {
             var data = new SynchronizeInvoicePdfMessageData
@@ -21,7 +11,14 @@ namespace Demo.Messages.Invoice
                 CorrelationId = correlationId,
                 Id = id
             };
-            return new SynchronizeInvoicePdfMessage(data);
+            return new SynchronizeInvoicePdfMessage
+            {
+                Queue = Queues.SynchronizeInvoicePdf,
+                Data = data,
+                Subject = $"Invoice/{data.Id}",
+                DataVersion = data.MessageDataVersion,
+                CorrelationId = data.CorrelationId
+            };
         }
     }
 

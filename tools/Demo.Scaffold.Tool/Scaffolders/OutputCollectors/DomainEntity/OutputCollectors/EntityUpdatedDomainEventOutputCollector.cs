@@ -15,7 +15,7 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.DomainEntity.OutputCol
             var entityName = context.Variables.Get<string>(Constants.EntityName);
 
             changes.Add(new CreateNewClass(
-                directory: Path.Combine(context.GetEntityDirectory(entityName), "DomainEntity", "Events"),
+                directory: Path.Combine(context.GetEventsDirectory(), entityName),
                 fileName: $"{entityName}UpdatedDomainEvent.cs",
                 content: GetTemplate(entityName)
             ));
@@ -26,21 +26,38 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.DomainEntity.OutputCol
         private static string GetTemplate(string entityName)
         {
             var code = @"
-using Demo.Domain.Shared.Interfaces;
 using System;
 
-namespace Demo.Domain.%ENTITY%.DomainEntity.Events
+namespace Demo.Events.%ENTITY%
 {
-    public class %ENTITY%UpdatedDomainEvent : IDomainEvent
+    public class %ENTITY%UpdatedEvent : Event<%ENTITY%UpdatedEvent, %ENTITY%UpdatedEventData>
     {
+        public static %ENTITY%UpdatedEvent Create(string correlationId, Guid id, Guid updatedBy)
+        {
+            var data = new %ENTITY%UpdatedEventData
+            {
+                CorrelationId = correlationId,
+                Id = id,
+                UpdatedBy = updatedBy
+            };
+            return new %ENTITY%UpdatedEvent
+            {
+                Topic = Topics.%ENTITY%,
+                Subject = $""%ENTITY%/{data.Id}"",
+                Data = data,
+                DataVersion = data.EventDataVersion,
+                CorrelationId = correlationId
+            };
+        }
+    }
+
+    public class %ENTITY%UpdatedEventData : IEventData
+    {
+        public string EventDataVersion => ""1.0"";
+        public string CorrelationId { get; set; }
+
         public Guid Id { get; set; }
         public Guid UpdatedBy { get; set; }
-
-        public %ENTITY%UpdatedDomainEvent(Guid id, Guid updatedBy)
-        {
-            Id = id;
-            UpdatedBy = updatedBy;
-        }
     }
 }";
             code = code.Replace("%ENTITY%", entityName);

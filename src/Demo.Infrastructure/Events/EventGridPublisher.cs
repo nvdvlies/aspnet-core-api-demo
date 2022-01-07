@@ -17,7 +17,7 @@ namespace Demo.Infrastructure.Events
             _client = new EventGridPublisherClient(new Uri(environmentSettings.EventGrid.Endpoint), new DefaultAzureCredential());
         }
 
-        public async Task PublishAsync(Event @event, CancellationToken cancellationToken)
+        public async Task PublishAsync(IEvent @event, CancellationToken cancellationToken)
         {
             var eventGridEvent = @event.ToEventGridEvent();
             var response = await _client.SendEventAsync(eventGridEvent, cancellationToken);

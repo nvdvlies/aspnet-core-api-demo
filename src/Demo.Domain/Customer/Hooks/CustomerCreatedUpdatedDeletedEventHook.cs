@@ -26,13 +26,13 @@ namespace Demo.Domain.Customer.Hooks
             switch (context.EditMode)
             {
                 case EditMode.Create:
-                    await context.PublishIntegrationEventAsync(CustomerCreatedEvent.Create(_correlationIdProvider.Id, context.Entity.Id, _currentUser.Id), cancellationToken);
+                    await context.AddEventAsync(CustomerCreatedEvent.Create(_correlationIdProvider.Id, context.Entity.Id, _currentUser.Id), cancellationToken);
                     break;
                 case EditMode.Update:
-                    await context.PublishIntegrationEventAsync(CustomerUpdatedEvent.Create(_correlationIdProvider.Id, context.Entity.Id, _currentUser.Id), cancellationToken);
+                    await context.AddEventAsync(CustomerUpdatedEvent.Create(_correlationIdProvider.Id, context.Entity.Id, _currentUser.Id), cancellationToken);
                     break;
                 case EditMode.Delete:
-                    await context.PublishIntegrationEventAsync(CustomerDeletedEvent.Create(_correlationIdProvider.Id, context.Entity.Id, _currentUser.Id), cancellationToken);
+                    await context.AddEventAsync(CustomerDeletedEvent.Create(_correlationIdProvider.Id, context.Entity.Id, _currentUser.Id), cancellationToken);
                     break;
             }
         }

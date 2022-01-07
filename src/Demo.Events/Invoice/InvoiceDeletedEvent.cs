@@ -4,16 +4,6 @@ namespace Demo.Events.Invoice
 {
     public class InvoiceDeletedEvent : Event<InvoiceDeletedEvent, InvoiceDeletedEventData>
     {
-        internal InvoiceDeletedEvent(InvoiceDeletedEventData data) : base(
-            Topics.Invoice,
-            data,
-            $"Invoice/{data.Id}",
-            data.EventDataVersion,
-            data.CorrelationId
-            )
-        {
-        }
-
         public static InvoiceDeletedEvent Create(string correlationId, Guid id, Guid deletedBy)
         {
             var data = new InvoiceDeletedEventData
@@ -22,7 +12,14 @@ namespace Demo.Events.Invoice
                 Id = id,
                 DeletedBy = deletedBy
             };
-            return new InvoiceDeletedEvent(data);
+            return new InvoiceDeletedEvent
+            {
+                Topic = Topics.Invoice,
+                Data = data,
+                Subject = $"Invoice/{data.Id}",
+                DataVersion = data.EventDataVersion,
+                CorrelationId = data.CorrelationId
+            };
         }
     }
 

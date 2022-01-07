@@ -33,15 +33,15 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.DomainEntity.OutputCol
             var code = @"
 using Demo.Common.Interfaces;
 using Demo.Domain.Auditlog;
-using Demo.Domain.Auditlog.DomainEntity.Interfaces;
+using Demo.Domain.Auditlog.Interfaces;
 using Demo.Domain.%ENTITY%;
 using Demo.Domain.Shared.Interfaces;
 using Demo.Infrastructure.Auditlogging.Shared;
 using System.Collections.Generic;
 
-namespace Demo.Infrastructure.Auditlogging.Configuration
+namespace Demo.Infrastructure.Auditlogging
 {
-    internal class %ENTITY%Auditlogger : AuditlogBase<%ENTITY%>, IAuditlog<%ENTITY%>
+    internal class %ENTITY%Auditlogger : AuditloggerBase<%ENTITY%>, IAuditlogger<%ENTITY%>
     {
         public %ENTITY%Auditlogger(            
             ICurrentUser currentUser, 

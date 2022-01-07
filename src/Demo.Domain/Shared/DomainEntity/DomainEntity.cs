@@ -129,7 +129,7 @@ namespace Demo.Domain.Shared.DomainEntity
 
         public virtual void With(Action<T> action)
         {
-            Guard.NotNull(Context.Entity, nameof(Context.Entity), "Call NewAsync or GetAsync first to instantiate entity");
+            Guard.NotNull(Context.Entity, nameof(Context.Entity), $"Call {nameof(NewAsync)} or {nameof(GetAsync)} first to instantiate entity");
 
             action(Context.Entity);
         }
@@ -160,7 +160,7 @@ namespace Demo.Domain.Shared.DomainEntity
 
         public async virtual Task CreateAsync(CancellationToken cancellationToken = default)
         {
-            Guard.NotNull(Context.Entity, nameof(Context.Entity), "Call NewAsync first to instantiate entity");
+            Guard.NotNull(Context.Entity, nameof(Context.Entity), $"Call {nameof(NewAsync)} first to instantiate entity");
 
             var stopwatch = Context.PerformanceMeasurements.Start(nameof(CreateAsync));
             try
@@ -221,8 +221,8 @@ namespace Demo.Domain.Shared.DomainEntity
 
         public async virtual Task UpdateAsync(CancellationToken cancellationToken = default)
         {
-            Guard.NotNull(Context.Entity, nameof(Context.Entity), "Call GetAsync first to instantiate entity");
-            Guard.NotTrue(Options.AsNoTracking, nameof(Options.AsNoTracking), "Cannot update entity with option 'AsNoTracking' set to 'true'");
+            Guard.NotNull(Context.Entity, nameof(Context.Entity), $"Call {nameof(GetAsync)} first to instantiate entity");
+            Guard.NotTrue(Options.AsNoTracking, nameof(Options.AsNoTracking), $"Cannot update entity with option '{nameof(Options.AsNoTracking)}' set to 'true'");
 
             var stopwatch = Context.PerformanceMeasurements.Start(nameof(UpdateAsync));
             try
@@ -285,7 +285,7 @@ namespace Demo.Domain.Shared.DomainEntity
 
         public async virtual Task UpsertAsync(CancellationToken cancellationToken = default)
         {
-            Guard.NotNull(Context.Entity, nameof(Context.Entity), "Call NewAsync or GetAsync first to instantiate entity");
+            Guard.NotNull(Context.Entity, nameof(Context.Entity), $"Call {nameof(NewAsync)} or {nameof(GetAsync)} first to instantiate entity");
 
             if (EntityId == default)
             {
@@ -299,8 +299,8 @@ namespace Demo.Domain.Shared.DomainEntity
 
         public async virtual Task DeleteAsync(CancellationToken cancellationToken = default)
         {
-            Guard.NotNull(Context.Entity, nameof(Context.Entity), "Call GetAsync first to instantiate entity");
-            Guard.NotTrue(Options.AsNoTracking, nameof(Options.AsNoTracking), "Cannot delete entity with option 'AsNoTracking' set to 'true'");
+            Guard.NotNull(Context.Entity, nameof(Context.Entity), $"Call {nameof(GetAsync)} first to instantiate entity");
+            Guard.NotTrue(Options.AsNoTracking, nameof(Options.AsNoTracking), $"Cannot delete entity with option '{nameof(Options.AsNoTracking)}' set to 'true'");
 
             var stopwatch = Context.PerformanceMeasurements.Start(nameof(DeleteAsync));
             try
@@ -363,14 +363,14 @@ namespace Demo.Domain.Shared.DomainEntity
             }
         }
 
-        public async Task PublishIntegrationEventAsync<E, D>(Event<E, D> @event, CancellationToken cancellationToken) where D : IEventData
+        public async Task AddEventAsync(IEvent @event, CancellationToken cancellationToken)
         {
-            await Context.PublishIntegrationEventAsync(@event, cancellationToken);
+            await Context.AddEventAsync(@event, cancellationToken);
         }
 
-        public async Task SendMessageToQueueAsync<M>(Message<M> message, CancellationToken cancellationToken) where M : IMessageData
+        public async Task AddMessageAsync(IMessage message, CancellationToken cancellationToken)
         {
-            await Context.SendMessageToQueueAsync(message, cancellationToken);
+            await Context.AddMessageAsync(message, cancellationToken);
         }
 
         private async Task CreateAuditLogAsync(CancellationToken cancellationToken)

@@ -27,7 +27,7 @@ namespace Demo.WebApi.Tests.Helpers
 
             builder.ConfigureTestServices(services =>
             {
-                services.AddSingleton<IAuthorizationHandler, AcceptAllHasScopeRequirementAuthorizationHandler>();
+                services.AddSingleton<IAuthorizationHandler, AllowUnauthorizedAuthorizationHandler>();
 
                 services.AddTransient<IEventPublisher, FakeEventPublisher>();
                 services.AddTransient<IMessageSender, FakeMessageSender>();

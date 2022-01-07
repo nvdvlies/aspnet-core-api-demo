@@ -27,21 +27,26 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.DomainEntity.OutputCol
         {
             var code = @"
 using Demo.Common.Interfaces;
-using Demo.Domain.%ENTITY%.DomainEntity.Events;
 using Demo.Domain.Shared.DomainEntity;
 using Demo.Domain.Shared.Interfaces;
+using Demo.Events.%ENTITY%;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Demo.Domain.%ENTITY%.DomainEntity.Hooks
+namespace Demo.Domain.%ENTITY%.Hooks
 {
     internal class %ENTITY%CreatedUpdatedDeletedEventHook : IAfterCreate<%ENTITY%>, IAfterUpdate<%ENTITY%>, IAfterDelete<%ENTITY%>
     {
         private readonly ICurrentUser _currentUser;
+        private readonly ICorrelationIdProvider _correlationIdProvider;
 
-        public %ENTITY%CreatedUpdatedDeletedEventHook(ICurrentUser currentUser)
+        public %ENTITY%CreatedUpdatedDeletedEventHook(
+            ICurrentUser currentUser,
+            ICorrelationIdProvider correlationIdProvider
+        )
         {
             _currentUser = currentUser;
+            _correlationIdProvider = correlationIdProvider;
         }
 
         public Task ExecuteAsync(HookType type, IDomainEntityContext<%ENTITY%> context, CancellationToken cancellationToken)
@@ -49,13 +54,13 @@ namespace Demo.Domain.%ENTITY%.DomainEntity.Hooks
             switch (context.EditMode)
             {
                 case EditMode.Create:
-                    context.PublishDomainEventAfterCommit(new %ENTITY%CreatedDomainEvent(context.Entity.Id, _currentUser.Id));
+                    context.AddEventAsync(%ENTITY%CreatedEvent.Create(_correlationIdProvider.Id, context.Entity.Id, _currentUser.Id), cancellationToken);
                     break;
                 case EditMode.Update:
-                    context.PublishDomainEventAfterCommit(new %ENTITY%UpdatedDomainEvent(context.Entity.Id, _currentUser.Id));
+                    context.AddEventAsync(%ENTITY%UpdatedEvent.Create(_correlationIdProvider.Id, context.Entity.Id, _currentUser.Id), cancellationToken);
                     break;
                 case EditMode.Delete:
-                    context.PublishDomainEventAfterCommit(new %ENTITY%DeletedDomainEvent(context.Entity.Id, _currentUser.Id));
+                    context.AddEventAsync(%ENTITY%DeletedEvent.Create(_correlationIdProvider.Id, context.Entity.Id, _currentUser.Id), cancellationToken);
                     break;
             }
             return Task.CompletedTask;

@@ -51,12 +51,12 @@ namespace Demo.Domain.Shared.DomainEntity
         public IDomainEntityState State { get; }
         public bool IsNewEntity => Entity?.Id == Guid.Empty;
 
-        public async Task PublishIntegrationEventAsync<E, D>(Event<E, D> @event, CancellationToken cancellationToken) where D : IEventData
+        public async Task AddEventAsync(IEvent @event, CancellationToken cancellationToken)
         {
             await _eventOutboxProcessor.Value.AddToOutboxAsync(@event, cancellationToken);
         }
 
-        public async Task SendMessageToQueueAsync<M>(Message<M> message, CancellationToken cancellationToken) where M : IMessageData
+        public async Task AddMessageAsync(IMessage message, CancellationToken cancellationToken)
         {
             await _messageOutboxProcessor.Value.AddToOutboxAsync(message, cancellationToken);
         }

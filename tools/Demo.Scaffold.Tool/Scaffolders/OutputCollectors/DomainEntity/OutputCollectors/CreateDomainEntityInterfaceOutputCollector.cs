@@ -15,7 +15,7 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.DomainEntity.OutputCol
             var entityName = context.Variables.Get<string>(Constants.EntityName);
 
             changes.Add(new CreateNewClass(
-                directory: Path.Combine(context.GetEntityDirectory(entityName), "DomainEntity", "Interfaces"),
+                directory: Path.Combine(context.GetEntityDirectory(entityName), "Interfaces"),
                 fileName: $"I{entityName}DomainEntity.cs",
                 content: GetTemplate(entityName)
             ));
@@ -28,7 +28,7 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.DomainEntity.OutputCol
             var code = @"
 using Demo.Domain.Shared.Interfaces;
 
-namespace Demo.Domain.%ENTITY%.DomainEntity.Interfaces
+namespace Demo.Domain.%ENTITY%.Interfaces
 {
     public interface I%ENTITY%DomainEntity : IDomainEntity<%ENTITY%>
     {

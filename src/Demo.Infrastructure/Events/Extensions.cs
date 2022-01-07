@@ -5,7 +5,7 @@ namespace Demo.Infrastructure.Events
 {
     public static class Extensions
     {
-        public static EventGridEvent ToEventGridEvent(this Event @event)
+        public static EventGridEvent ToEventGridEvent(this IEvent @event)
         {
             return new EventGridEvent(@event.Subject, @event.Type, @event.DataVersion, @event)
             {

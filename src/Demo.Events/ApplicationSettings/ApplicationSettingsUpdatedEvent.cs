@@ -4,16 +4,6 @@ namespace Demo.Events.ApplicationSettings
 {
     public class ApplicationSettingsUpdatedEvent : Event<ApplicationSettingsUpdatedEvent, ApplicationSettingsUpdatedEventData>
     {
-        public ApplicationSettingsUpdatedEvent(ApplicationSettingsUpdatedEventData data) : base(
-            Topics.ApplicationSettings,
-            data,
-            $"ApplicationSettings/{data.Id}",
-            data.EventDataVersion,
-            data.CorrelationId
-            )
-        {
-        }
-
         public static ApplicationSettingsUpdatedEvent Create(string correlationId, Guid id, Guid updatedBy)
         {
             var data = new ApplicationSettingsUpdatedEventData
@@ -22,7 +12,14 @@ namespace Demo.Events.ApplicationSettings
                 Id = id,
                 UpdatedBy = updatedBy
             };
-            return new ApplicationSettingsUpdatedEvent(data);
+            return new ApplicationSettingsUpdatedEvent
+            {
+                Topic = Topics.ApplicationSettings,
+                Subject = $"ApplicationSettings/{data.Id}",
+                Data = data,
+                DataVersion = data.EventDataVersion,
+                CorrelationId = data.CorrelationId
+            };
         }
     }
 

@@ -4,12 +4,11 @@ using System.Threading.Tasks;
 
 namespace Demo.WebApi.Tests.Helpers
 {
-    public class AcceptAllHasScopeRequirementAuthorizationHandler : AuthorizationHandler<HasScopeRequirement>
+    public class AllowUnauthorizedAuthorizationHandler : AuthorizationHandler<HasScopeRequirement>
     {
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, HasScopeRequirement requirement)
         {
             context.Succeed(requirement);
-
             return Task.CompletedTask;
         }
     }

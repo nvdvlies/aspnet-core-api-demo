@@ -6,7 +6,12 @@ using System.Threading.Tasks;
 
 namespace Demo.Domain.Shared.Interfaces
 {
-    public interface IDomainEntity<T> where T : IEntity
+    public interface IDomainEntity
+    {
+
+    }
+
+    public interface IDomainEntity<T> : IDomainEntity where T : IEntity
     {
         T Entity { get; }
         Guid EntityId { get; }
@@ -19,7 +24,7 @@ namespace Demo.Domain.Shared.Interfaces
         Task UpdateAsync(CancellationToken cancellationToken);
         Task UpsertAsync(CancellationToken cancellationToken);
         Task DeleteAsync(CancellationToken cancellationToken);
-        Task PublishIntegrationEventAsync<E, D>(Event<E, D> @event, CancellationToken cancellationToken) where D : IEventData;
-        Task SendMessageToQueueAsync<M>(Message<M> message, CancellationToken cancellationToken) where M : IMessageData;
+        Task AddEventAsync(IEvent @event, CancellationToken cancellationToken);
+        Task AddMessageAsync(IMessage message, CancellationToken cancellationToken);
     }
 }

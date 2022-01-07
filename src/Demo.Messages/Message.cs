@@ -1,45 +1,35 @@
 ﻿using System;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace Demo.Messages
 {
-    public class Message<T> : Message where T : IMessageData
-    {
-        public new T Data => (T)base.Data;
-
-        [JsonConstructor]
-        public Message(Queues queue, T data, string subject, string dataVersion, string correlationId) : base(queue, data, subject, dataVersion, correlationId)
-        {
-        }
-    }
-
-    public class Message
+    public abstract class Message<M, D> : IMessage where M : IMessage where D : IMessageData
     {
         [JsonInclude]
         public string Type { get; private set; }
         [JsonInclude]
-        public Queues Queue { get; private set; }
+        public Queues Queue { get; protected set; }
         [JsonInclude]
-        public IMessageData Data { get; private set; }
+        public D Data { get; protected set; }
         [JsonInclude]
         public DateTime CreatedOn { get; private set; }
         [JsonInclude]
-        public string Subject { get; private set; }
+        public string Subject { get; protected set; }
         [JsonInclude]
-        public string DataVersion { get; private set; }
+        public string DataVersion { get; protected set; }
         [JsonInclude]
-        public string CorrelationId { get; private set; }
+        public string CorrelationId { get; protected set; }
 
-        [JsonConstructor]
-        public Message(Queues queue, IMessageData data, string subject, string dataVersion, string correlationId)
+        public Message()
         {
             Type = GetType().FullName;
-            Queue = queue;
-            Data = data;
             CreatedOn = DateTime.UtcNow;
-            Subject = subject;
-            DataVersion = dataVersion;
-            CorrelationId = correlationId;
+        }
+
+        public static M FromJson(string json)
+        {
+            return JsonSerializer.Deserialize<M>(json, new JsonSerializerOptions());
         }
     }
 }

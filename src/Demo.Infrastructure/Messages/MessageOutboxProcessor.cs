@@ -31,17 +31,14 @@ namespace Demo.Infrastructure.Messages
             _messageOutboxProcessor = messageOutboxProcessor;
         }
 
-        public async Task AddToOutboxAsync(Message message, CancellationToken cancellationToken = default)
+        public async Task AddToOutboxAsync(IMessage message, CancellationToken cancellationToken = default)
         {
             var messageOutboxDomainEntity = _domainEntityFactory.CreateInstance<IMessageOutboxDomainEntity>();
             await messageOutboxDomainEntity.NewAsync(cancellationToken);
-            messageOutboxDomainEntity.With(x =>
-            {
-                x.Type = message.Type;
-                x.Message = message;
-            });
+            messageOutboxDomainEntity.SetMessage(message);
             messageOutboxDomainEntity.Lock();
             await messageOutboxDomainEntity.CreateAsync(cancellationToken);
+
             _queue.Enqueue(messageOutboxDomainEntity);
         }
 
@@ -56,7 +53,8 @@ namespace Demo.Infrastructure.Messages
                 bool isSent = false;
                 try
                 {
-                    await _messageOutboxProcessor.SendAsync(messageOutboxDomainEntity.Message, cancellationToken);
+                    var message = messageOutboxDomainEntity.GetMessage();
+                    await _messageOutboxProcessor.SendAsync(message, cancellationToken);
                     _logger.LogInformation("Sent message of type '{type}'", messageOutboxDomainEntity.Type);
                     isSent = true;
                 }

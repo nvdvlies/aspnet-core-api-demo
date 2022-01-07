@@ -15,8 +15,8 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.DomainEntity.OutputCol
             var entityName = context.Variables.Get<string>(Constants.EntityName);
 
             changes.Add(new CreateNewClass(
-                directory: Path.Combine(context.GetEntityDirectory(entityName), "DomainEntity", "Events"),
-                fileName: $"{entityName}DeletedDomainEvent.cs",
+                directory: Path.Combine(context.GetEventsDirectory(), entityName),
+                fileName: $"{entityName}DeletedEvent.cs",
                 content: GetTemplate(entityName)
             ));
 
@@ -26,21 +26,38 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.DomainEntity.OutputCol
         private static string GetTemplate(string entityName)
         {
             var code = @"
-using Demo.Domain.Shared.Interfaces;
 using System;
 
-namespace Demo.Domain.%ENTITY%.DomainEntity.Events
+namespace Demo.Events.%ENTITY%
 {
-    public class %ENTITY%DeletedDomainEvent : IDomainEvent
+    public class %ENTITY%DeletedEvent : Event<%ENTITY%DeletedEvent, %ENTITY%DeletedEventData>
     {
+        public static %ENTITY%DeletedEvent Create(string correlationId, Guid id, Guid deletedBy)
+        {
+            var data = new %ENTITY%DeletedEventData
+            {
+                CorrelationId = correlationId,
+                Id = id,
+                DeletedBy = deletedBy
+            };
+            return new %ENTITY%DeletedEvent
+            {
+                Topic = Topics.%ENTITY%,
+                Subject = $""%ENTITY%/{data.Id}"",
+                Data = data,
+                DataVersion = data.EventDataVersion,
+                CorrelationId = correlationId
+            };
+        }
+    }
+
+    public class %ENTITY%DeletedEventData : IEventData
+    {
+        public string EventDataVersion => ""1.0"";
+        public string CorrelationId { get; set; }
+
         public Guid Id { get; set; }
         public Guid DeletedBy { get; set; }
-
-        public %ENTITY%DeletedDomainEvent(Guid id, Guid deletedBy)
-        {
-            Id = id;
-            DeletedBy = deletedBy;
-        }
     }
 }";
             code = code.Replace("%ENTITY%", entityName);

@@ -13,7 +13,7 @@ namespace Demo.Domain.Shared.DomainEntity
             _serviceProvider = serviceProvider;
         }
 
-        public T CreateInstance<T>()
+        public T CreateInstance<T>() where T : IDomainEntity
         {
             return _serviceProvider.GetRequiredService<T>();
         }

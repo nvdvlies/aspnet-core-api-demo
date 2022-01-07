@@ -17,11 +17,10 @@ namespace Demo.Infrastructure.Messages
             _client = new ServiceBusClient(environmentSettings.ServiceBus.Namespace, new DefaultAzureCredential());
         }
 
-        public async Task SendAsync(Message message, CancellationToken cancellationToken)
+        public async Task SendAsync(IMessage message, CancellationToken cancellationToken)
         {
             var serviceBusMessage = new ServiceBusMessage(JsonSerializer.Serialize(message));
-            var queueName = "todo"; // TODO
-            var sender = _client.CreateSender(queueName);
+            var sender = _client.CreateSender(message.Queue.ToString());
             await sender.SendMessageAsync(serviceBusMessage, cancellationToken);
         }
     }

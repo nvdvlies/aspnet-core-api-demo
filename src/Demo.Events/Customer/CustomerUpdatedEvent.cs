@@ -4,16 +4,6 @@ namespace Demo.Events.Customer
 {
     public class CustomerUpdatedEvent : Event<CustomerUpdatedEvent, CustomerUpdatedEventData>
     {
-        internal CustomerUpdatedEvent(CustomerUpdatedEventData data) : base(
-            Topics.Customer,
-            data,
-            $"Customer/{data.Id}",
-            data.EventDataVersion,
-            data.CorrelationId
-            )
-        {
-        }
-
         public static CustomerUpdatedEvent Create(string correlationId, Guid id, Guid updatedBy)
         {
             var data = new CustomerUpdatedEventData
@@ -22,7 +12,14 @@ namespace Demo.Events.Customer
                 Id = id,
                 UpdatedBy = updatedBy
             };
-            return new CustomerUpdatedEvent(data);
+            return new CustomerUpdatedEvent
+            {
+                Topic = Topics.Customer,
+                Subject = $"Customer/{data.Id}",
+                Data = data,
+                DataVersion = data.EventDataVersion,
+                CorrelationId = correlationId
+            };
         }
     }
 

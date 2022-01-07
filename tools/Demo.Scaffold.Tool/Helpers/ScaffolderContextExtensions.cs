@@ -70,5 +70,10 @@ namespace Demo.Scaffold.Tool.Helpers
         {
             return Path.Combine(context.GetApplicationDirectory(), constrollerName, "Queries", queryName);
         }
+
+        public static string GetEventsDirectory(this ScaffolderContext context)
+        {
+            return Path.Combine(context.AppSettings.PathToSolutionRootDirectory, Constants.EventsPath);
+        }
     }
 }

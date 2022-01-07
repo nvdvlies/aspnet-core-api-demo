@@ -10,12 +10,14 @@ using Demo.WebApi.Tests.Helpers;
 using FluentAssertions;
 using FluentAssertions.Extensions;
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using System;
+using System.Linq;
 using System.Net;
 using System.Net.Http.Json;
 using System.Threading;
@@ -231,6 +233,35 @@ namespace Demo.WebApi.Tests.Controllers.Customers
             var content = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
             content.Type.Should().Be(nameof(ArgumentException));
             content.Title.Should().Be("TestException");
+        }
+
+        [Fact]
+        public async Task CreateCustomer_When_request_is_not_authenticated_It_should_return_statuscode_Unauthorized()
+        {
+            // Arrange
+            var client = _factory
+                .WithWebHostBuilder(builder =>
+                {
+                    builder.ConfigureTestServices(services =>
+                    {
+                        var serviceDescriptor = services
+                            .Where(x => x.ServiceType == typeof(IAuthorizationHandler))
+                            .Where(x => x.ImplementationType == typeof(AllowUnauthorizedAuthorizationHandler))
+                            .Single();
+                        services.Remove(serviceDescriptor);
+                    });
+                })
+                .CreateClient();
+            var command = new CreateCustomerCommand
+            {
+                Name = "Test"
+            };
+
+            // Act
+            var response = await client.CustomersController().CreateAsync(command);
+
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         }
     }
 }

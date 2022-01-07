@@ -25,13 +25,13 @@ namespace Demo.Domain.Invoice.Hooks
             switch (context.EditMode)
             {
                 case EditMode.Create:
-                    await context.PublishIntegrationEventAsync(InvoiceCreatedEvent.Create(_correlationIdProvider.Id, context.Entity.Id, _currentUser.Id), cancellationToken);
+                    await context.AddEventAsync(InvoiceCreatedEvent.Create(_correlationIdProvider.Id, context.Entity.Id, _currentUser.Id), cancellationToken);
                     break;
                 case EditMode.Update:
-                    await context.PublishIntegrationEventAsync(InvoiceUpdatedEvent.Create(_correlationIdProvider.Id, context.Entity.Id, _currentUser.Id), cancellationToken);
+                    await context.AddEventAsync(InvoiceUpdatedEvent.Create(_correlationIdProvider.Id, context.Entity.Id, _currentUser.Id), cancellationToken);
                     break;
                 case EditMode.Delete:
-                    await context.PublishIntegrationEventAsync(InvoiceDeletedEvent.Create(_correlationIdProvider.Id, context.Entity.Id, _currentUser.Id), cancellationToken);
+                    await context.AddEventAsync(InvoiceDeletedEvent.Create(_correlationIdProvider.Id, context.Entity.Id, _currentUser.Id), cancellationToken);
                     break;
             }
         }

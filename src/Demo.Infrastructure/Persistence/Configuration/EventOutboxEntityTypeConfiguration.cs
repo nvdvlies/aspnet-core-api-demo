@@ -1,8 +1,6 @@
 ﻿using Demo.Domain.EventOutbox;
-using Demo.Events;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System.Text.Json;
 
 namespace Demo.Infrastructure.Persistence.Configuration
 {
@@ -18,17 +16,7 @@ namespace Demo.Infrastructure.Persistence.Configuration
 
             builder.Property(x => x.Type)
                 .IsRequired();
-            builder.Property(x => x.Event)
-                .HasConversion(
-                    x => JsonSerializer.Serialize(x, new JsonSerializerOptions
-                    {
-                        WriteIndented = true
-                    }),
-                    x => JsonSerializer.Deserialize<Event>(x, new JsonSerializerOptions
-                    {
-
-                    })
-                );
+            builder.Property(x => x.Event);
             builder.Property(x => x.LockedUntil);
             builder.Property(x => x.LockToken)
                 .IsConcurrencyToken();

@@ -31,7 +31,7 @@ namespace Demo.Domain.Invoice.Hooks
             {
                 // An invoice always has an accompanying PDF document. We can create this by requesting synchronization via a domain event.
                 context.Entity.PdfIsSynced = false;
-                await context.SendMessageToQueueAsync(SynchronizeInvoicePdfMessage.Create(_correlationIdProvider.Id, context.Entity.Id), cancellationToken);
+                await context.AddMessageAsync(SynchronizeInvoicePdfMessage.Create(_correlationIdProvider.Id, context.Entity.Id), cancellationToken);
             }
             else if (type == HookType.BeforeUpdate && context.Pristine.Status == InvoiceStatus.Draft)
             {
@@ -53,7 +53,7 @@ namespace Demo.Domain.Invoice.Hooks
 
                     // Changes made to entity DO affect PDF content. Requesting synchronization.
                     context.Entity.PdfIsSynced = false;
-                    await context.SendMessageToQueueAsync(SynchronizeInvoicePdfMessage.Create(_correlationIdProvider.Id, context.Entity.Id), cancellationToken);
+                    await context.AddMessageAsync(SynchronizeInvoicePdfMessage.Create(_correlationIdProvider.Id, context.Entity.Id), cancellationToken);
                 }
                 else
                 {
@@ -64,7 +64,7 @@ namespace Demo.Domain.Invoice.Hooks
 
             if (context.Entity.PdfIsSynced && context.IsPropertyDirty(x => x.PdfIsSynced))
             {
-                await context.PublishIntegrationEventAsync(InvoicePdfSynchronizedEvent.Create(_correlationIdProvider.Id, context.Entity.Id), cancellationToken);
+                await context.AddEventAsync(InvoicePdfSynchronizedEvent.Create(_correlationIdProvider.Id, context.Entity.Id), cancellationToken);
             }
         }
     }

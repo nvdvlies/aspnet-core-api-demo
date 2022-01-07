@@ -26,13 +26,13 @@ namespace Demo.Domain.Invoice.Hooks
                 switch (context.Entity.Status)
                 {
                     case InvoiceStatus.Sent:
-                        await context.PublishIntegrationEventAsync(InvoiceSentEvent.Create(_correlationIdProvider.Id, context.Entity.Id), cancellationToken);
+                        await context.AddEventAsync(InvoiceSentEvent.Create(_correlationIdProvider.Id, context.Entity.Id), cancellationToken);
                         break;
                     case InvoiceStatus.Paid:
-                        await context.PublishIntegrationEventAsync(InvoicePaidEvent.Create(_correlationIdProvider.Id, context.Entity.Id), cancellationToken);
+                        await context.AddEventAsync(InvoicePaidEvent.Create(_correlationIdProvider.Id, context.Entity.Id), cancellationToken);
                         break;
                     case InvoiceStatus.Cancelled:
-                        await context.PublishIntegrationEventAsync(InvoiceCancelledEvent.Create(_correlationIdProvider.Id, context.Entity.Id), cancellationToken);
+                        await context.AddEventAsync(InvoiceCancelledEvent.Create(_correlationIdProvider.Id, context.Entity.Id), cancellationToken);
                         break;
                 }
             }

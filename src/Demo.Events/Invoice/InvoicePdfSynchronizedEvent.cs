@@ -4,16 +4,6 @@ namespace Demo.Events.Invoice
 {
     public class InvoicePdfSynchronizedEvent : Event<InvoicePdfSynchronizedEvent, InvoicePdfSynchronizedEventData>
     {
-        internal InvoicePdfSynchronizedEvent(InvoicePdfSynchronizedEventData data) : base(
-            Topics.Invoice,
-            data,
-            $"Invoice/{data.Id}",
-            data.EventDataVersion,
-            data.CorrelationId
-            )
-        {
-        }
-
         public static InvoicePdfSynchronizedEvent Create(string correlationId, Guid id)
         {
             var data = new InvoicePdfSynchronizedEventData
@@ -21,7 +11,14 @@ namespace Demo.Events.Invoice
                 CorrelationId = correlationId,
                 Id = id
             };
-            return new InvoicePdfSynchronizedEvent(data);
+            return new InvoicePdfSynchronizedEvent
+            {
+                Topic = Topics.Invoice,
+                Data = data,
+                Subject = $"Invoice/{data.Id}",
+                DataVersion = data.EventDataVersion,
+                CorrelationId = data.CorrelationId
+            };
         }
     }
 

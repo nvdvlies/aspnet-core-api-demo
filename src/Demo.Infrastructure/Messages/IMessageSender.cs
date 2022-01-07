@@ -6,6 +6,6 @@ namespace Demo.Infrastructure.Messages
 {
     internal interface IMessageSender
     {
-        Task SendAsync(Message message, CancellationToken cancellationToken);
+        Task SendAsync(IMessage message, CancellationToken cancellationToken);
     }
 }

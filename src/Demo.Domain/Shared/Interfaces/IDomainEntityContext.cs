@@ -14,7 +14,7 @@ namespace Demo.Domain.Shared.Interfaces
         T Pristine { get; }
         IDomainEntityState State { get; }
         PerformanceMeasurements PerformanceMeasurements { get; }
-        Task PublishIntegrationEventAsync<E, D>(Event<E, D> @event, CancellationToken cancellationToken) where D : IEventData;
-        Task SendMessageToQueueAsync<M>(Message<M> message, CancellationToken cancellationToken) where M : IMessageData;
+        Task AddEventAsync(IEvent @event, CancellationToken cancellationToken);
+        Task AddMessageAsync(IMessage message, CancellationToken cancellationToken);
     }
 }

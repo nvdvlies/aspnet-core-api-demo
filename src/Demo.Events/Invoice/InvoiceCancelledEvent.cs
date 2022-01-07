@@ -4,16 +4,6 @@ namespace Demo.Events.Invoice
 {
     public class InvoiceCancelledEvent : Event<InvoiceCancelledEvent, InvoiceCancelledEventData>
     {
-        internal InvoiceCancelledEvent(InvoiceCancelledEventData data) : base(
-            Topics.Invoice,
-            data,
-            $"Invoice/{data.Id}",
-            data.EventDataVersion,
-            data.CorrelationId
-            )
-        {
-        }
-
         public static InvoiceCancelledEvent Create(string correlationId, Guid id)
         {
             var data = new InvoiceCancelledEventData
@@ -21,7 +11,14 @@ namespace Demo.Events.Invoice
                 CorrelationId = correlationId,
                 Id = id
             };
-            return new InvoiceCancelledEvent(data);
+            return new InvoiceCancelledEvent
+            {
+                Topic = Topics.Invoice,
+                Data = data,
+                Subject = $"Invoice/{data.Id}",
+                DataVersion = data.EventDataVersion,
+                CorrelationId = data.CorrelationId
+            };
         }
     }
 

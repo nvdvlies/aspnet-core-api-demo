@@ -15,8 +15,8 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.DomainEntity.OutputCol
             var entityName = context.Variables.Get<string>(Constants.EntityName);
 
             changes.Add(new CreateNewClass(
-                directory: Path.Combine(context.GetEntityDirectory(entityName), "DomainEntity", "Events"),
-                fileName: $"{entityName}CreatedDomainEvent.cs",
+                directory: Path.Combine(context.GetEventsDirectory(), entityName),
+                fileName: $"{entityName}CreatedEvent.cs",
                 content: GetTemplate(entityName)
             ));
 
@@ -26,21 +26,38 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.DomainEntity.OutputCol
         private static string GetTemplate(string entityName)
         {
             var code = @"
-using Demo.Domain.Shared.Interfaces;
 using System;
 
-namespace Demo.Domain.%ENTITY%.DomainEntity.Events
+namespace Demo.Events.%ENTITY%
 {
-    public class %ENTITY%CreatedDomainEvent : IDomainEvent
+    public class %ENTITY%CreatedEvent : Event<%ENTITY%CreatedEvent, %ENTITY%CreatedEventData>
     {
+        public static %ENTITY%CreatedEvent Create(string correlationId, Guid id, Guid createdBy)
+        {
+            var data = new %ENTITY%CreatedEventData
+            {
+                CorrelationId = correlationId,
+                Id = id,
+                CreatedBy = createdBy
+            };
+            return new %ENTITY%CreatedEvent
+            {
+                Topic = Topics.%ENTITY%,
+                Subject = $""%ENTITY%/{data.Id}"",
+                Data = data,
+                DataVersion = data.EventDataVersion,
+                CorrelationId = correlationId
+            };
+        }
+    }
+
+    public class %ENTITY%CreatedEventData : IEventData
+    {
+        public string EventDataVersion => ""1.0"";
+        public string CorrelationId { get; set; }
+
         public Guid Id { get; set; }
         public Guid CreatedBy { get; set; }
-
-        public %ENTITY%CreatedDomainEvent(Guid id, Guid createdBy)
-        {
-            Id = id;
-            CreatedBy = createdBy;
-        }
     }
 }";
             code = code.Replace("%ENTITY%", entityName);

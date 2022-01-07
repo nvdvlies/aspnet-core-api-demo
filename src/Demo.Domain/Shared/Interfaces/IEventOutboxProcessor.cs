@@ -6,7 +6,7 @@ namespace Demo.Domain.Shared.Interfaces
 {
     public interface IEventOutboxProcessor
     {
-        Task AddToOutboxAsync(Event @event, CancellationToken cancellationToken);
+        Task AddToOutboxAsync(IEvent @event, CancellationToken cancellationToken);
         Task PublishAllAsync(CancellationToken cancellationToken);
     }
 }

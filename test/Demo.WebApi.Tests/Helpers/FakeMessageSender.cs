@@ -7,7 +7,7 @@ namespace Demo.WebApi.Tests.Helpers
 {
     public class FakeMessageSender : IMessageSender
     {
-        public Task SendAsync(Message message, CancellationToken cancellationToken)
+        public Task SendAsync(IMessage message, CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }

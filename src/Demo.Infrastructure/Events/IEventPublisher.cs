@@ -6,6 +6,6 @@ namespace Demo.Infrastructure.Events
 {
     internal interface IEventPublisher
     {
-        Task PublishAsync(Event @event, CancellationToken cancellationToken);
+        Task PublishAsync(IEvent @event, CancellationToken cancellationToken);
     }
 }

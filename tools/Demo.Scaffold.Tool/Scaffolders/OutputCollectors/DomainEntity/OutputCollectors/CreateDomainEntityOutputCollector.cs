@@ -2,7 +2,6 @@
 using Demo.Scaffold.Tool.Helpers;
 using Demo.Scaffold.Tool.Interfaces;
 using System.Collections.Generic;
-using System.IO;
 
 namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.DomainEntity.OutputCollectors
 {
@@ -15,7 +14,7 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.DomainEntity.OutputCol
             var entityName = context.Variables.Get<string>(Constants.EntityName);
 
             changes.Add(new CreateNewClass(
-                directory: Path.Combine(context.GetEntityDirectory(entityName), "DomainEntity"),
+                directory: context.GetEntityDirectory(entityName),
                 fileName: $"{entityName}DomainEntity.cs",
                 content: GetTemplate(entityName)
             ));
@@ -33,7 +32,7 @@ using Demo.Domain.Shared.Interfaces;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 
-namespace Demo.Domain.%ENTITY%.DomainEntity
+namespace Demo.Domain.%ENTITY%
 {
     internal class %ENTITY%DomainEntity : DomainEntity<%ENTITY%>, I%ENTITY%DomainEntity
     {
@@ -42,18 +41,18 @@ namespace Demo.Domain.%ENTITY%.DomainEntity
             ICurrentUser currentUser,
             IDateTime dateTime,
             IDbCommand<%ENTITY%> dbCommand, 
-            IEnumerable<IDefaultValuesSetter<%ENTITY%>> defaultValuesSetters, 
-            IEnumerable<IValidator<%ENTITY%>> validators, 
-            IEnumerable<IBeforeCreate<%ENTITY%>> beforeCreateHooks, 
-            IEnumerable<IAfterCreate<%ENTITY%>> afterCreateHooks,
-            IEnumerable<IBeforeUpdate<%ENTITY%>> beforeUpdateHooks,
-            IEnumerable<IAfterUpdate<%ENTITY%>> afterUpdateHooks,
-            IEnumerable<IBeforeDelete<%ENTITY%>> beforeDeleteHooks,
-            IEnumerable<IAfterDelete<%ENTITY%>> afterDeleteHooks,
-            IEventOutboxProcessor eventOutboxProcessor,
-            IMessageOutboxProcessor messageOutboxProcessor,
-            IJsonService<%ENTITY%> jsonService,
-            IAuditlogger<%ENTITY%> auditlogger
+            Lazy<IEnumerable<IDefaultValuesSetter<%ENTITY%>>> defaultValuesSetters, 
+            Lazy<IEnumerable<IValidator<%ENTITY%>>> validators, 
+            Lazy<IEnumerable<IBeforeCreate<%ENTITY%>>> beforeCreateHooks, 
+            Lazy<IEnumerable<IAfterCreate<%ENTITY%>>> afterCreateHooks,
+            Lazy<IEnumerable<IBeforeUpdate<%ENTITY%>>> beforeUpdateHooks,
+            Lazy<IEnumerable<IAfterUpdate<%ENTITY%>>> afterUpdateHooks,
+            Lazy<IEnumerable<IBeforeDelete<%ENTITY%>>> beforeDeleteHooks,
+            Lazy<IEnumerable<IAfterDelete<%ENTITY%>>> afterDeleteHooks,
+            Lazy<IEventOutboxProcessor> eventOutboxProcessor,
+            Lazy<IMessageOutboxProcessor> messageOutboxProcessor,
+            Lazy<IJsonService<%ENTITY%>> jsonService,
+            Lazy<IAuditlogger<%ENTITY%>> auditlogger
         ) 
             : base(logger, currentUser, dateTime, dbCommand, defaultValuesSetters, validators, beforeCreateHooks, afterCreateHooks, beforeUpdateHooks, afterUpdateHooks, beforeDeleteHooks, afterDeleteHooks, eventOutboxProcessor, messageOutboxProcessor, jsonService, auditlogger)
         {

@@ -2,6 +2,6 @@
 {
     public interface IDomainEntityFactory
     {
-        T CreateInstance<T>();
+        T CreateInstance<T>() where T : IDomainEntity;
     }
 }

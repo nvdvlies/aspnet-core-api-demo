@@ -4,16 +4,6 @@ namespace Demo.Events.Invoice
 {
     public class InvoiceSentEvent : Event<InvoiceSentEvent, InvoiceSentEventData>
     {
-        internal InvoiceSentEvent(InvoiceSentEventData data) : base(
-            Topics.Invoice,
-            data,
-            $"Invoice/{data.Id}",
-            data.EventDataVersion,
-            data.CorrelationId
-            )
-        {
-        }
-
         public static InvoiceSentEvent Create(string correlationId, Guid id)
         {
             var data = new InvoiceSentEventData
@@ -21,7 +11,14 @@ namespace Demo.Events.Invoice
                 CorrelationId = correlationId,
                 Id = id
             };
-            return new InvoiceSentEvent(data);
+            return new InvoiceSentEvent
+            {
+                Topic = Topics.Invoice,
+                Data = data,
+                Subject = $"Invoice/{data.Id}",
+                DataVersion = data.EventDataVersion,
+                CorrelationId = data.CorrelationId
+            };
         }
     }
 
