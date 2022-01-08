@@ -28,6 +28,7 @@ namespace Demo.Infrastructure.Auditlogging
                 .WithProperty(c => c.OrderReference)
                 .WithProperty(c => c.Status, customFormatter: InvoiceStatusEnumFormatter)
                 .WithChildEntityCollection(c => c.InvoiceLines, new AuditlogBuilder<InvoiceLine>()
+                    .WithProperty(c => c.LineNumber)
                     .WithProperty(c => c.Quantity)
                     .WithProperty(c => c.Description)
                     .WithProperty(c => c.SellingPrice, AuditlogType.Currency)

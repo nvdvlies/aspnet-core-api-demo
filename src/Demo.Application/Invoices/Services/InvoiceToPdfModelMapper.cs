@@ -5,6 +5,7 @@ using Demo.Domain.Invoice.Models;
 using Demo.Domain.Shared.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -51,7 +52,7 @@ namespace Demo.Application.Invoices.Services
                 InvoiceLines = new List<InvoiceToPdfInvoiceLineModel>()
             };
 
-            foreach (var entityInvoiceLine in invoice.InvoiceLines)
+            foreach (var entityInvoiceLine in invoice.InvoiceLines.OrderBy(x => x.LineNumber))
             {
                 //var item = entityInvoiceLine.ItemId.HasValue ?
                 //    items.Single(x => x.Id == entityInvoiceLine.ItemId) :

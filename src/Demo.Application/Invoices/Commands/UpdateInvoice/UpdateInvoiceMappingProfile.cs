@@ -11,6 +11,7 @@ namespace Demo.Application.Invoices.Commands.UpdateInvoice
         public UpdateInvoiceMappingProfile()
         {
             CreateMap<UpdateInvoiceCommandInvoiceLine, InvoiceLine>()
+                .ForMember(x => x.LineNumber, opt => opt.Ignore())
                 .ForMember(x => x.InvoiceId, opt => opt.Ignore())
                 .ForMember(x => x.Invoice, opt => opt.Ignore())
                 .ForMember(x => x.Id, opt => opt.Ignore())

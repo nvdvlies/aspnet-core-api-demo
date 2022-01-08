@@ -5,6 +5,7 @@ using Demo.Domain.Invoice;
 using Demo.Domain.Shared.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -27,8 +28,14 @@ namespace Demo.Application.Invoices.Queries.GetInvoiceById
         public async Task<GetInvoiceByIdQueryResult> Handle(GetInvoiceByIdQuery request, CancellationToken cancellationToken)
         {
             var invoice = await _query.AsQueryable()
+                .Include(invoice => invoice.InvoiceLines)
                 .ProjectTo<InvoiceDto>(_mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
+
+            if (invoice != null)
+            {
+                invoice.InvoiceLines = invoice.InvoiceLines.OrderBy(x => x.LineNumber).ToList();
+            }
 
             return new GetInvoiceByIdQueryResult { Invoice = invoice };
         }

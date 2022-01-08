@@ -39,7 +39,7 @@ namespace Demo.Domain.Invoice
         }
 
         internal override Func<IQueryable<Invoice>, IIncludableQueryable<Invoice, object>> Includes => _ => _
-            .Include(invoice => invoice.InvoiceLines);
+            .Include(invoice => invoice.InvoiceLines.OrderBy(y => y.LineNumber));
 
         public async Task GetAsNewCopyAsync(Guid id, CancellationToken cancellationToken)
         {

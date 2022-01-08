@@ -11,6 +11,9 @@ namespace Demo.Infrastructure.Persistence.Configuration
             builder.ToTable(nameof(InvoiceLine))
                 .HasKey(x => x.Id);
 
+            builder.Property(x => x.LineNumber)
+                .IsRequired();
+
             builder.Property(x => x.Quantity)
                 .IsRequired();
 

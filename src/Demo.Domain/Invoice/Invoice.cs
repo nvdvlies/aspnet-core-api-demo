@@ -8,6 +8,11 @@ namespace Demo.Domain.Invoice
 {
     public partial class Invoice : SoftDeleteEntity, IQueryableEntity
     {
+        public Invoice()
+        {
+            InvoiceLines = new List<InvoiceLine>();
+        }
+
         [JsonInclude]
         public string InvoiceNumber { get; internal set; }
         public Guid CustomerId { get; set; }
