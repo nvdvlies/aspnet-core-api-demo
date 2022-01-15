@@ -8,6 +8,7 @@ import { CoreModule } from '@core/core.module';
 import { DomainModule } from '@domain/domain.module';
 import { SharedModule } from '@shared/shared.module';
 import { ApiModule } from '@api/api.module';
+import { LayoutModule } from './layout/layout.module';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import { ApiModule } from '@api/api.module';
     CoreModule.forRoot(),
     DomainModule.forRoot(),
     SharedModule,
+    LayoutModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
