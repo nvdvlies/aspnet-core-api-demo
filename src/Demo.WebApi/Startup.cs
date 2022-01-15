@@ -39,7 +39,7 @@ namespace Demo.WebApi
 
             services.AddCors(o => o.AddDefaultPolicy(builder =>
             {
-                builder.WithOrigins("http://localhost:4201")
+                builder.WithOrigins("http://localhost:4401")
                        .AllowAnyMethod()
                        .AllowAnyHeader()
                        .AllowCredentials();
