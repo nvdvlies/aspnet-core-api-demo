@@ -4,7 +4,13 @@
 
 export const environment = {
   production: false,
-  apiBaseUrl: 'https://localhost:44309'
+  apiBaseUrl: 'https://localhost:44309',
+  auth: {
+    domain: 'dev-spke9m2i.us.auth0.com',
+    clientId: 'ReyDS7xhKCmSlo6vrua1AIGIGmQyQA3e',
+    audience: 'https://demo',
+    redirectUri: window.location.origin,
+  }
 };
 
 /*
