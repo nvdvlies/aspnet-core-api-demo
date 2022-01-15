@@ -23,6 +23,7 @@
       "dom"
     ],
     "paths": {
+      "@api/*": ["src/app/api/*"],
       "@core/*": ["src/app/core/*"],
       "@shared/*": ["src/app/shared/*"],
       "@domain/*": ["src/app/domain/*"],
