@@ -23,6 +23,7 @@
       "dom"
     ],
     "paths": {
+      "@env/*": ["src/environments/*"],
       "@api/*": ["src/app/api/*"],
       "@core/*": ["src/app/core/*"],
       "@shared/*": ["src/app/shared/*"],
