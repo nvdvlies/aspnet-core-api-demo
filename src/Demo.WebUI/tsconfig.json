@@ -25,7 +25,10 @@
     "paths": {
       "@core/*": ["src/app/core/*"],
       "@shared/*": ["src/app/shared/*"],
-      "@domain/*": ["src/app/domain/*"]
+      "@domain/*": ["src/app/domain/*"],
+      "@features/*": ["src/app/features/*"],
+      "@customers/*": ["src/app/features/customers/*"],
+      "@invoices/*": ["src/app/features/invoices/*"]
     }
   },
   "angularCompilerOptions": {
