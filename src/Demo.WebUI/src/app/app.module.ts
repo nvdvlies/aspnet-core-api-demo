@@ -17,8 +17,8 @@ import { DomainModule } from './domain/domain.module';
     AppRoutingModule,
     BrowserAnimationsModule,
     CoreModule.forRoot(),
+    DomainModule.forRoot(),
     SharedModule,
-    DomainModule
   ],
   providers: [],
   bootstrap: [AppComponent]
