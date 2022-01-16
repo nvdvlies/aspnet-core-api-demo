@@ -4,9 +4,10 @@
 // </auto-generated>
 //----------------------
 import { Injectable, Inject, InjectionToken } from '@angular/core';
-import { HubConnection } from '@microsoft/signalr';
-import { Subject } from 'rxjs';
+import { HubConnection, IHttpConnectionOptions } from '@microsoft/signalr';
+import { lastValueFrom, Subject } from 'rxjs';
 import * as signalR from '@microsoft/signalr';
+import { AuthService } from '@auth0/auth0-angular';
 
 export const SIGNALR_BASE_URL = new InjectionToken<string>('SIGNALR_BASE_URL');
 
@@ -15,15 +16,32 @@ export const SIGNALR_BASE_URL = new InjectionToken<string>('SIGNALR_BASE_URL');
 })
 export class SignalRService {
   public hubConnection: HubConnection;
-  constructor(@Inject(SIGNALR_BASE_URL) baseUrl: string) {
+
+  constructor(
+    @Inject(SIGNALR_BASE_URL) private readonly baseUrl: string,
+    private readonly authService: AuthService
+  ) {
     this.hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl(baseUrl + '/hub') //, { accessTokenFactory: () => this.loginToken }
+      .withUrl(this.baseUrl + '/hub', { accessTokenFactory: () => lastValueFrom(this.authService.getAccessTokenSilently()) } as IHttpConnectionOptions) 
       .withAutomaticReconnect()
       .configureLogging(signalR.LogLevel.Warning)
       .build();
+
+    this.authService.isAuthenticated$.subscribe(isAuthenticated => isAuthenticated ? this.connect() : this.disconnect());
+  }
+
+  private connect(): void {
     this.hubConnection
       .start()
       .catch(err => console.log('Error while starting connection: ' + err));
+  }
+
+  private disconnect(): void {
+    if (this.hubConnection) {
+      this.hubConnection
+        .stop()
+        .catch(err => console.log('Error while terminating connection: ' + err));
+    }
   }
 }
 
