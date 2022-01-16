@@ -11,6 +11,8 @@ import { ApiModule } from '@api/api.module';
 import { LayoutModule } from './layout/layout.module';
 import { AuthModule } from '@auth0/auth0-angular';
 import { environment } from '@env/environment';
+import { HttpClientModule } from '@angular/common/http';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -18,11 +20,10 @@ import { environment } from '@env/environment';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule,
     BrowserAnimationsModule,
-    ApiModule.forRoot(),
-    CoreModule.forRoot(),
-    DomainModule.forRoot(),
+    HttpClientModule,
+    ReactiveFormsModule,
+    AppRoutingModule,
     AuthModule.forRoot({
       ...environment.auth,
       scope: 'user',
@@ -38,8 +39,11 @@ import { environment } from '@env/environment';
         ],
       },
     }),
-    SharedModule,
+    ApiModule.forRoot(),
+    CoreModule.forRoot(),
+    DomainModule.forRoot(),
     LayoutModule,
+    SharedModule
   ],
   providers: [],
   bootstrap: [AppComponent]
