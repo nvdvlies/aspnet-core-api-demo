@@ -1,8 +1,9 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { InvoicesRoutingModule } from './invoices-routing.module';
-import { InvoicesComponent } from './invoices.component';
+import { SharedModule } from '@shared/shared.module';
+import { InvoicesComponent } from '@invoices/invoices.component';
+import { InvoicesRoutingModule } from '@invoices/invoices-routing.module';
 
 
 @NgModule({
@@ -11,6 +12,7 @@ import { InvoicesComponent } from './invoices.component';
   ],
   imports: [
     CommonModule,
+    SharedModule,
     InvoicesRoutingModule
   ]
 })

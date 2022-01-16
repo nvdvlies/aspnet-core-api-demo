@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
+
 import { combineLatest, Observable, of, Subject } from 'rxjs';
 import { tap, map, switchMap, filter, mergeMap } from 'rxjs/operators';
+
 import { CustomerDto, ApiCustomersClient, CreateCustomerCommand, UpdateCustomerCommand, DeleteCustomerCommand } from '@api/api.generated.clients';
 import { CustomerUpdatedEvent, CustomerDeletedEvent, CustomerEventsService } from '@api/signalr.generated.services';
 import { StoreBase } from '@domain/shared/store-base';

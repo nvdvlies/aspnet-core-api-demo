@@ -1,9 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgModule, Optional, SkipSelf, ModuleWithProviders } from '@angular/core';
+
+import { AuthHttpInterceptor } from '@auth0/auth0-angular';
+
 import { API_BASE_URL } from '@api/api.generated.clients';
 import { SIGNALR_BASE_URL } from '@api/signalr.generated.services';
-import { AuthHttpInterceptor } from '@auth0/auth0-angular';
 import { environment } from '@env/environment';
 
 @NgModule({

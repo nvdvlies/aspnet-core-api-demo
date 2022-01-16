@@ -1,8 +1,9 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { CustomersRoutingModule } from './customers-routing.module';
-import { CustomersComponent } from './customers.component';
+import { SharedModule } from '@shared/shared.module';
+import { CustomersComponent } from '@customers/customers.component';
+import { CustomersRoutingModule } from '@customers/customers-routing.module';
 
 
 @NgModule({
@@ -11,6 +12,7 @@ import { CustomersComponent } from './customers.component';
   ],
   imports: [
     CommonModule,
+    SharedModule,
     CustomersRoutingModule
   ]
 })

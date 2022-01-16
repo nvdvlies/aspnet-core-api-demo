@@ -29,7 +29,6 @@
       "@shared/*": ["src/app/shared/*"],
       "@domain/*": ["src/app/domain/*"],
       "@layout/*": ["src/app/layout/*"],
-      "@features/*": ["src/app/features/*"],
       "@customers/*": ["src/app/features/customers/*"],
       "@invoices/*": ["src/app/features/invoices/*"]
     }

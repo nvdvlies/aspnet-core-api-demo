@@ -1,8 +1,10 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { combineLatest, Observable, of } from 'rxjs';
+
+import { combineLatest, Observable } from 'rxjs';
 import { debounceTime, map } from 'rxjs/operators';
+
 import { InvoiceDto, IInvoiceDto, IInvoiceLineDto } from '@api/api.generated.clients';
 import { InvoiceStoreService } from '@domain/invoice/invoice-store.service';
 import { DomainEntityBase, DomainEntityContext, IDomainEntityContext, InitFromRouteOptions } from '@domain/shared/domain-entity-base';
