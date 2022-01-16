@@ -5,7 +5,7 @@ export interface IEntity<T> {
   clone(): T;
 }
 
-export class StoreBase<T extends IEntity<T>> {
+export abstract class StoreBase<T extends IEntity<T>> {
   protected readonly cache = new BehaviorSubject<T[]>([]);
 
   protected get items(): T[] {
