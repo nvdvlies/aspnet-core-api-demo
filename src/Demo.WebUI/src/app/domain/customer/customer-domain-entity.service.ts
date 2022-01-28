@@ -1,10 +1,8 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-
 import { combineLatest, Observable } from 'rxjs';
 import { debounceTime, map } from 'rxjs/operators';
-
 import { CustomerDto, ICustomerDto } from '@api/api.generated.clients';
 import { CustomerStoreService } from '@domain/customer/customer-store.service';
 import { DomainEntityBase, DomainEntityContext, IDomainEntityContext, InitFromRouteOptions } from '@domain/shared/domain-entity-base';
@@ -60,6 +58,29 @@ export class CustomerDomainEntityService extends DomainEntityBase<CustomerDto> i
     super.form = value;
   }
 
+  protected instantiateForm(): void {
+    this.form = this.buildInvoiceFormGroup();
+  }
+
+  private buildInvoiceFormGroup(): CustomerFormGroup {
+    return new FormGroup({
+      id: new FormControl(super.readonlyFormState),
+      name: new FormControl(null, [Validators.required, Validators.minLength(2)], []),
+      deleted: new FormControl(super.readonlyFormState),
+      deletedBy: new FormControl(super.readonlyFormState),
+      deletedOn: new FormControl(super.readonlyFormState),
+      createdBy: new FormControl(super.readonlyFormState),
+      createdOn: new FormControl(super.readonlyFormState),
+      lastModifiedBy: new FormControl(super.readonlyFormState),
+      lastModifiedOn: new FormControl(super.readonlyFormState),
+      timestamp: new FormControl(super.readonlyFormState)
+    } as CustomerControls) as CustomerFormGroup;
+  }
+
+  protected instantiateNewEntity(): CustomerDto {
+    return new CustomerDto();
+  }
+
   public override new(): Observable<null> {
     return super.new();
   }
@@ -88,30 +109,7 @@ export class CustomerDomainEntityService extends DomainEntityBase<CustomerDto> i
     return super.delete();
   }
 
-  protected instantiateForm(): void {
-    this.form = this.buildInvoiceFormGroup();
-  }
-
-  private buildInvoiceFormGroup(): CustomerFormGroup {
-    return new FormGroup({
-      id: new FormControl(),
-      name: new FormControl('', [Validators.required, Validators.minLength(2)], []),
-      deleted: new FormControl(),
-      deletedBy: new FormControl(),
-      deletedOn: new FormControl(),
-      createdBy: new FormControl(),
-      createdOn: new FormControl(),
-      lastModifiedBy: new FormControl(),
-      lastModifiedOn: new FormControl(),
-      timestamp: new FormControl()
-    } as CustomerControls) as CustomerFormGroup;
-  }
-
-  protected instantiateNewEntity(): CustomerDto {
-    return new CustomerDto();
-  }
-
   public override reset(): void {
-    super.reset()
+    super.reset();
   }
 }

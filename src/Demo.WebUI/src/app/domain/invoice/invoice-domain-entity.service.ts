@@ -1,11 +1,9 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-
-import { combineLatest, Observable } from 'rxjs';
+import { combineLatest, Observable, throwError } from 'rxjs';
 import { debounceTime, map } from 'rxjs/operators';
-
-import { InvoiceDto, IInvoiceDto, IInvoiceLineDto } from '@api/api.generated.clients';
+import { InvoiceDto, IInvoiceDto, IInvoiceLineDto, InvoiceLineDto, ApiInvoicesClient, CopyInvoiceCommand } from '@api/api.generated.clients';
 import { InvoiceStoreService } from '@domain/invoice/invoice-store.service';
 import { DomainEntityBase, DomainEntityContext, IDomainEntityContext, InitFromRouteOptions } from '@domain/shared/domain-entity-base';
 
@@ -52,7 +50,8 @@ export class InvoiceDomainEntityService extends DomainEntityBase<InvoiceDto> imp
   constructor(
     route: ActivatedRoute,
     protected readonly formBuilder: FormBuilder,
-    protected readonly invoiceStoreService: InvoiceStoreService
+    protected readonly invoiceStoreService: InvoiceStoreService,
+    private readonly apiInvoicesClient: ApiInvoicesClient,
   ) {
     super(route);
     super.init();
@@ -65,6 +64,61 @@ export class InvoiceDomainEntityService extends DomainEntityBase<InvoiceDto> imp
     super.form = value;
   }
 
+  protected instantiateForm(): void {
+    this.form = this.buildInvoiceFormGroup();
+  }
+
+  private buildInvoiceFormGroup(): InvoiceFormGroup {
+    return new FormGroup({
+      id: new FormControl(super.readonlyFormState),
+      invoiceNumber: new FormControl(super.readonlyFormState),
+      customerId: new FormControl(null, [Validators.required], []),
+      invoiceDate: new FormControl(null, [Validators.required], []),
+      paymentTerm: new FormControl(null),
+      orderReference: new FormControl(null),
+      status: new FormControl(super.readonlyFormState),
+      pdfIsSynced: new FormControl(super.readonlyFormState),
+      pdfDataChecksum: new FormControl(super.readonlyFormState),
+      invoiceLines: new FormArray([] as InvoiceLineFormGroup[]) as InvoiceLineFormArray,
+      deleted: new FormControl(super.readonlyFormState),
+      deletedBy: new FormControl(super.readonlyFormState),
+      deletedOn: new FormControl(super.readonlyFormState),
+      createdBy: new FormControl(super.readonlyFormState),
+      createdOn: new FormControl(super.readonlyFormState),
+      lastModifiedBy: new FormControl(super.readonlyFormState),
+      lastModifiedOn: new FormControl(super.readonlyFormState),
+      timestamp: new FormControl(super.readonlyFormState)
+    } as InvoiceControls) as InvoiceFormGroup;
+  }
+
+  private buildInvoiceLineFormGroup(): InvoiceLineFormGroup {
+    return new FormGroup({
+      id: new FormControl(super.readonlyFormState),
+      lineNumber: new FormControl(super.readonlyFormState),
+      quantity: new FormControl(null, [Validators.required], []),
+      sellingPrice: new FormControl(null, [Validators.required], []),
+      description: new FormControl(null, [Validators.required], []),
+      timestamp: new FormControl(super.readonlyFormState)
+    } as InvoiceLineControls) as InvoiceLineFormGroup;
+  }
+
+  public addInvoiceLine(): void {
+    const newInvoiceLineFormGroup = this.buildInvoiceLineFormGroup();
+    this.invoiceLineFormArray.push(newInvoiceLineFormGroup);
+  }
+
+  public removeInvoiceLine(index: number): void {
+    this.invoiceLineFormArray.removeAt(index);
+  }
+
+  protected instantiateNewEntity(): InvoiceDto {
+    const invoice = new InvoiceDto();
+    invoice.invoiceLines = [
+      new InvoiceLineDto()
+    ];
+    return invoice;
+  }
+  
   public get invoiceLines(): InvoiceLineFormGroup[] {
     return (this.form.controls.invoiceLines as InvoiceLineFormArray).controls as InvoiceLineFormGroup[];
   }
@@ -97,78 +151,40 @@ export class InvoiceDomainEntityService extends DomainEntityBase<InvoiceDto> imp
     return super.upsert();
   }
 
+  public markAsPaid(): Observable<InvoiceDto> {
+    return super.update(this.invoiceStoreService.markAsPaid);
+  }
+
+  public copy(): Observable<string> {
+    if (!this.id.value) {
+      return throwError(() => new Error('Id is not set.'));
+    }
+    const command = new CopyInvoiceCommand();
+    return this.apiInvoicesClient.copy(this.id.value, command)
+      .pipe(
+        map(x => x.id)
+      );
+  }
+
   public override delete(): Observable<void> {
     return super.delete();
   }
 
-  protected instantiateForm(): void {
-    this.form = this.buildInvoiceFormGroup();
-  }
-
-  private buildInvoiceFormGroup(): InvoiceFormGroup {
-    return new FormGroup({
-      id: new FormControl(),
-      invoiceNumber: new FormControl(),
-      customerId: new FormControl(),
-      invoiceDate: new FormControl(),
-      paymentTerm: new FormControl(),
-      orderReference: new FormControl(),
-      status: new FormControl(),
-      pdfIsSynced: new FormControl(),
-      pdfDataChecksum: new FormControl(),
-      invoiceLines: new FormArray([] as InvoiceLineFormGroup[]) as InvoiceLineFormArray,
-      deleted: new FormControl(),
-      deletedBy: new FormControl(),
-      deletedOn: new FormControl(),
-      createdBy: new FormControl(),
-      createdOn: new FormControl(),
-      lastModifiedBy: new FormControl(),
-      lastModifiedOn: new FormControl(),
-      timestamp: new FormControl()
-    } as InvoiceControls) as InvoiceFormGroup;
-  }
-
-  private buildInvoiceLineFormGroup(): InvoiceLineFormGroup {
-    return new FormGroup({
-      id: new FormControl(),
-      lineNumber: new FormControl({ value: null, disabled: true }),
-      quantity: new FormControl(null, [Validators.required], []),
-      sellingPrice: new FormControl(),
-      description: new FormControl(null, [Validators.required], []),
-      timestamp: new FormControl()
-    } as InvoiceLineControls) as InvoiceLineFormGroup;
-  }
-
-  public addInvoiceLine(): void {
-    const newInvoiceLineFormGroup = this.buildInvoiceLineFormGroup();
-    this.invoiceLineFormArray.push(newInvoiceLineFormGroup);
-  }
-
-  public removeInvoiceLine(index: number): void {
-    this.invoiceLineFormArray.removeAt(index);
-  }
-
-  protected instantiateNewEntity(): InvoiceDto {
-    const invoice = new InvoiceDto();
-    invoice.invoiceLines = [];
-    return invoice;
-  }
-
   protected override afterPatchEntityToFormHook(invoice: InvoiceDto): void {
     // form.patchValue doesnt modify FormArray structure, so we need to do this manually afterwards.
+    this.patchInvoiceLinesToForm(invoice);
+  };
+
+  private patchInvoiceLinesToForm(invoice: InvoiceDto): void {
     this.invoiceLineFormArray.clear();
     invoice.invoiceLines?.forEach(invoiceLine => {
       const invoiceLineFormGroup = this.buildInvoiceLineFormGroup();
       invoiceLineFormGroup.patchValue({...invoiceLine});
       this.invoiceLineFormArray.push(invoiceLineFormGroup);
     })
-  };
-
-  public markAsPaid(): Observable<InvoiceDto> {
-    return super.update(this.invoiceStoreService.markAsPaid);
   }
 
   public override  reset(): void {
-    super.reset()
+    super.reset();
   }
 }
