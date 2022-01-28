@@ -247,16 +247,6 @@ export abstract class DomainEntityBase<T extends DomainEntity<T>> implements OnD
     this.hasNewerVersionWithMergeConflict.next(false);
   }
 
-  // public patchValues(entity: Partial<T>): void {
-  //   if (this.entity.value == null) {
-  //     return;
-  //   }
-
-  //   this.form.patchValue({
-  //     ...entity
-  //   });
-  // }
-
   public hasErrors(): boolean {
     return this.problemDetails.value != null;
   }
