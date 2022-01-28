@@ -1,5 +1,29 @@
-<p>default-template works!</p>
-
-<button mat-button color="primary" (click)="logout()">Logout</button>
-
-<router-outlet></router-outlet>
+<mat-toolbar color="primary">
+    Demo
+    <span style="flex: 1 1 auto;"></span>
+    <div>
+        <button mat-icon-button [matMenuTriggerFor]="accountMenu">
+            <mat-icon>account_circle</mat-icon>
+        </button>
+        <mat-menu #accountMenu [overlapTrigger]="false" yPosition="below">
+            <button mat-menu-item routerLink="#">
+                <mat-icon>person</mat-icon><span>My Account</span>
+            </button>
+            <mat-divider></mat-divider>
+            <button mat-menu-item (click)="logout()">
+                <mat-icon>logout</mat-icon>Logout
+            </button>
+        </mat-menu>
+    </div>
+</mat-toolbar>
+<mat-sidenav-container style="height: calc(100% - 64px); margin: 0;">
+    <mat-sidenav #sidenav opened mode="side" class="mat-elevation-z1" style="width: 220px">
+        <mat-nav-list>
+            <mat-list-item routerLink="/customers" [routerLinkActive]="['active']">Customers</mat-list-item>
+            <mat-list-item routerLink="/invoices" [routerLinkActive]="['active']">Invoices</mat-list-item>
+        </mat-nav-list>
+    </mat-sidenav>
+    <mat-sidenav-content>
+        <router-outlet></router-outlet>
+    </mat-sidenav-content>
+</mat-sidenav-container>
