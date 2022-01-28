@@ -8,7 +8,7 @@ import { AuthService } from '@auth0/auth0-angular';
 })
 export class AppComponent implements OnInit {
   constructor(
-    public authService: AuthService
+    public readonly authService: AuthService
   ) {
   }
 
