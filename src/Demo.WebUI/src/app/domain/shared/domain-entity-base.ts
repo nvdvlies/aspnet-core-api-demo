@@ -1,11 +1,10 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { AbstractControl, FormArray, FormControl, FormGroup } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { ActivatedRoute, ParamMap } from '@angular/router';
-
 import { BehaviorSubject, combineLatest, Observable, of, Subject, throwError } from 'rxjs';
 import { catchError, debounceTime, filter, finalize, map, switchMap, take, takeUntil, tap } from 'rxjs/operators';
-
 import { ApiException, ProblemDetails, ValidationProblemDetails } from '@api/api.generated.clients';
+import { MergeUtil } from '@domain/shared/merge.util';
 
 export class InitFromRouteOptions {
   parameterName: string = "id";
@@ -79,6 +78,8 @@ export abstract class DomainEntityBase<T extends DomainEntity<T>> implements OnD
   protected hasNewerVersionWithMergeConflict$ = this.hasNewerVersionWithMergeConflict.asObservable();
   protected problemDetails$ = this.problemDetails.asObservable();
   protected onDestroy$ = this.onDestroy.asObservable();
+
+  protected readonly readonlyFormState: any = { value: null, disabled: true };
 
   protected observeInternal$ = combineLatest([
     this.id$,
@@ -165,7 +166,7 @@ export abstract class DomainEntityBase<T extends DomainEntity<T>> implements OnD
           this.patchEntityToForm(entity);
           this.pristine.next(entity.clone());
         }),
-        switchMap(_ => of(null)),
+        switchMap(() => of<null>(null)),
         finalize(() => this.isLoading.next(false))
       );
   }
@@ -173,30 +174,23 @@ export abstract class DomainEntityBase<T extends DomainEntity<T>> implements OnD
   protected initFromRoute(options: InitFromRouteOptions | undefined, getByIdFunction?: (id: string) => Observable<T>): Observable<null> {
     this.problemDetails.next(undefined);
     options ??= new InitFromRouteOptions();
-    return this.route.paramMap
-      .pipe(
-        take(1),
-        switchMap((params: ParamMap) => {
-          const id = params.get(options!.parameterName);
-          if (id == null) {
-            return throwError(`Couldn't find parameter '${options!.parameterName}' in route parameters.`);
-          }
-          return of(id);
-        }),
-        switchMap((id: string) => { 
-          if (id === options!.newValue) {
-            return this.new();
-          } else {
-            getByIdFunction ??= this.getByIdFunction;
-            return this.getById(id, getByIdFunction);
-          } 
-        })
-      );
+
+    const id = this.route.snapshot.paramMap.get(options!.parameterName);
+    if (id == null) {
+      return throwError(() => new Error(`Couldn't find parameter '${options!.parameterName}' in route parameters.`));
+    }
+
+    if (id === options!.newValue) {
+      return this.new();
+    } else {
+      getByIdFunction ??= this.getByIdFunction;
+      return this.getById(id, getByIdFunction);
+    } 
   }
 
   protected create(createFunction?: (entity: T) => Observable<T>): Observable<T> {
     if (!this.form.valid) {
-      return throwError('Form is not valid.');
+      return throwError(() => new Error('Form is not valid.'));
     }
     this.isSaving.next(true);
     this.problemDetails.next(undefined);
@@ -211,7 +205,7 @@ export abstract class DomainEntityBase<T extends DomainEntity<T>> implements OnD
 
   protected update(updateFunction?: (entity: T) => Observable<T>): Observable<T> {
     if (!this.form.valid) {
-      return throwError('Form is not valid.');
+      return throwError(() => new Error('Form is not valid.'));
     }
     this.isSaving.next(true);
     this.problemDetails.next(undefined);
@@ -230,7 +224,7 @@ export abstract class DomainEntityBase<T extends DomainEntity<T>> implements OnD
 
   protected delete(deleteFunction?: (id: string) => Observable<void>): Observable<void> {
     if (!this.id.value) {
-      return throwError('\'Id\' is not defined.');
+      return throwError(() => new Error('\'Id\' is not defined.'));
     }
     this.problemDetails.next(undefined);
     this.isDeleting.next(true);
@@ -275,41 +269,21 @@ export abstract class DomainEntityBase<T extends DomainEntity<T>> implements OnD
     this.afterPatchEntityToFormHook?.(entity);
   }
 
-  protected tryPatchEntityToForm(updated: T, pristine: T): boolean {
-    if (this.form.dirty && !this.tryPatchEntityToFormInternal(updated, pristine, this.form.controls)) {
+  protected tryMerge(updated: T, pristine: T, form: FormGroup): boolean {
+    if (MergeUtil.hasMergeConflictInFormGroup(updated, pristine, form)) {
       return false;
     }
-    this.patchEntityToForm(updated);
-    return true;
-  }
-
-  private tryPatchEntityToFormInternal(updated: T, pristine: T, controls: {[key: string]: AbstractControl}): boolean {
-    for (const key in controls) {
-      const control = controls[key] as FormControl | FormGroup | FormArray;
-      if (control instanceof FormGroup) {
-        if (!this.tryPatchEntityToFormInternal(updated, pristine, control.controls)) {
-          return false;
-        }
-      } else {
-        if (control.dirty) { // control value has been changed by current user
-          if (updated[key as keyof T] === pristine[key as keyof T]) { // control value has not been changed by other user; take value of current user
-            (updated[key as keyof T] as any) = control.value;
-          } else if (updated[key as keyof T] !== control.value) { // both users changed the same control with different values; merge conflict
-            return false;
-          }
-        }
-      }
-    }
+    MergeUtil.mergeIntoFormGroup(updated, form);
     return true;
   }
 
   protected patchFormToEntity(): void {
-    this.entity.next(Object.assign(this.entity.value, this.form.value));
+    this.entity.next(Object.assign(this.entity.value, this.form.getRawValue()));
   }
 
   protected setProblemDetailsAndRethrow(problemDetails: ValidationProblemDetails | ProblemDetails | ApiException): Observable<never> {
     this.problemDetails.next(problemDetails);
-    return throwError(new Error('An error occured. See \'problemDetails\' for more information')); 
+    return throwError(() => new Error('An error occured. See \'problemDetails\' for more information')); 
   }
 
   private subscribeToEntityUpdatedEvent(): void {
@@ -328,7 +302,7 @@ export abstract class DomainEntityBase<T extends DomainEntity<T>> implements OnD
           return;
         }
   
-        const hasMergeConflict = !this.tryPatchEntityToForm(entity, this.pristine.value);
+        const hasMergeConflict = !this.tryMerge(entity, this.pristine.value, this.form);
         if (hasMergeConflict) {
           this.hasNewerVersionWithMergeConflict.next(true);
         }
