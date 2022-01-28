@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
-
-import { combineLatest, Observable, of, Subject } from 'rxjs';
-import { tap, map, switchMap, filter, mergeMap } from 'rxjs/operators';
-
+import { Observable, of } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 import { InvoiceDto, ApiInvoicesClient, CreateInvoiceCommand, UpdateInvoiceCommand, DeleteInvoiceCommand, MarkInvoiceAsPaidCommand } from '@api/api.generated.clients';
 import { InvoiceUpdatedEvent, InvoiceDeletedEvent, InvoiceEventsService } from '@api/signalr.generated.services';
 import { StoreBase } from '@domain/shared/store-base';
@@ -11,111 +9,58 @@ import { StoreBase } from '@domain/shared/store-base';
   providedIn: 'root'
 })
 export class InvoiceStoreService extends StoreBase<InvoiceDto> {
-  private readonly invoiceUpdatedInStore = new Subject<[InvoiceUpdatedEvent, InvoiceDto]>();
-  private readonly invoiceDeletedFromStore = new Subject<InvoiceDeletedEvent>();
-  private readonly createdBySelf = new Subject<InvoiceDto>();
-
   public readonly invoices$ = this.cache.asObservable();
-  public readonly invoiceUpdatedInStore$ = this.invoiceUpdatedInStore.asObservable();
-  public readonly invoiceDeletedFromStore$ = this.invoiceDeletedFromStore.asObservable();
+  public readonly invoiceUpdatedInStore$ = this.entityUpdatedInStore.asObservable() as Observable<[InvoiceUpdatedEvent, InvoiceDto]>;
+  public readonly invoiceDeletedFromStore$ = this.entityDeletedFromStore.asObservable() as Observable<InvoiceDeletedEvent>;
   public readonly createdBySelf$ = this.createdBySelf.asObservable();
 
+  protected entityUpdatedEvent$ = this.invoiceEventsService.invoiceUpdated$;
+  protected entityDeletedEvent$ = this.invoiceEventsService.invoiceDeleted$;
+  
   constructor(
     private apiInvoicesClient: ApiInvoicesClient,
     private invoiceEventsService: InvoiceEventsService
   ) {
     super();
-    this.subscribeToEvents();
   }
 
-  public getById(id: string, skipCache: boolean = false): Observable<InvoiceDto> {
-    let invoice = !skipCache
-      ? this.cache.value.find(x => x.id === id)
-      : null;
+  protected getByIdFunction = (id: string) => {
+    return this.apiInvoicesClient.getInvoiceById(id).pipe(map(x => x.invoice!));
+  };
 
-    return invoice != null
-      ? of(invoice)
-      : this.apiInvoicesClient.getInvoiceById(id)
-        .pipe(
-          map((response) => {
-            invoice = new InvoiceDto({ ...response.invoice! });
-            this.addToOrReplaceCache(invoice);
-            return invoice;
-          })
-        );
+  public override getById(id: string, skipCache: boolean = false): Observable<InvoiceDto> {
+    return super.getById(id, skipCache);
   }
 
-  public create(invoice: InvoiceDto): Observable<InvoiceDto> {
+  protected createFunction = (invoice: InvoiceDto) => {
     const command = new CreateInvoiceCommand({ ...invoice });
-    return this.apiInvoicesClient.create(command)
-      .pipe(
-        switchMap((response) => {
-          return this.getById(response.id);
-        }),
-        tap((createdInvoice) => {
-          this.createdBySelf.next(createdInvoice);
-        })
-      );
+    return this.apiInvoicesClient.create(command).pipe(switchMap(_ => of<void>(undefined)));
+  };
+
+  public override create(invoice: InvoiceDto): Observable<InvoiceDto> {
+    return super.create(invoice);
   }
 
-  public update(invoice: InvoiceDto): Observable<InvoiceDto> {
-    const command = new UpdateInvoiceCommand({
-      ...invoice
-    });
-    return this.apiInvoicesClient.update(invoice.id, command)
-      .pipe(
-        switchMap(() => {
-          return this.getById(invoice.id, true);
-        }),
-      );
+  protected updateFunction = (invoice: InvoiceDto) => {
+    const command = new UpdateInvoiceCommand({ ...invoice });
+    return this.apiInvoicesClient.update(invoice.id, command);
+  };
+
+  public override update(invoice: InvoiceDto): Observable<InvoiceDto> {
+    return super.update(invoice);
   }
 
   public markAsPaid(invoice: InvoiceDto): Observable<InvoiceDto> {
     const command = new MarkInvoiceAsPaidCommand();
-    return this.apiInvoicesClient.markAsPaid(invoice.id, command)
-      .pipe(
-        switchMap(() => {
-          return this.getById(invoice.id, true);
-        }),
-      );
+    return super.update(invoice, (invoice: InvoiceDto) => this.apiInvoicesClient.markAsPaid(invoice.id, command))
   }
 
-  public delete(id: string): Observable<void> {
+  protected deleteFunction = (id: string) => {
     const command = new DeleteInvoiceCommand();
-    return this.apiInvoicesClient.delete(id, command)
-      .pipe(
-        tap(() => {
-          this.removeFromCache(id);
-        }),
-      );
-  }
+    return this.apiInvoicesClient.delete(id, command);
+  };
 
-  private subscribeToEvents(): void {
-    this.subscribeToUpdatedEvent();
-    this.subscribeToDeletedEvent();
-  }
-
-  private subscribeToUpdatedEvent(): void {
-    this.invoiceEventsService.invoiceUpdated$
-      .pipe(
-        filter(event => this.cache.value.find(x => x.id === event.id) != null),
-        // todo: filter created by self
-        mergeMap(event => combineLatest([of(event), this.getById(event.id, true)]))
-      )
-      .subscribe(([event, invoice]) => {
-        super.addToOrReplaceCache(invoice);
-        this.invoiceUpdatedInStore.next([event, invoice]);
-      });
-  }
-
-  private subscribeToDeletedEvent(): void {
-    this.invoiceEventsService.invoiceDeleted$
-      .pipe(
-        filter(event => this.cache.value.find(x => x.id === event.id) != null),
-      )
-      .subscribe(event => {
-        this.removeFromCache(event.id);
-        this.invoiceDeletedFromStore.next(event);
-      });
+  public override delete(id: string): Observable<void> {
+    return super.delete(id);
   }
 }
