@@ -35,7 +35,7 @@ export class InvoiceStoreService extends StoreBase<InvoiceDto> {
 
   protected createFunction = (invoice: InvoiceDto) => {
     const command = new CreateInvoiceCommand({ ...invoice });
-    return this.apiInvoicesClient.create(command).pipe(switchMap(_ => of<void>(undefined)));
+    return this.apiInvoicesClient.create(command).pipe(map(response => response.id));
   };
 
   public override create(invoice: InvoiceDto): Observable<InvoiceDto> {

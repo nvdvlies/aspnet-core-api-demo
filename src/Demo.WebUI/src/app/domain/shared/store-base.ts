@@ -21,7 +21,7 @@ export abstract class StoreBase<T extends IEntity<T>> {
   protected readonly cache = new BehaviorSubject<T[]>([]);
 
   protected abstract getByIdFunction: (id: string) => Observable<T>;
-  protected abstract createFunction: (entity: T) => Observable<void>;
+  protected abstract createFunction: (entity: T) => Observable<string>;
   protected abstract updateFunction: (entity: T) => Observable<void>;
   protected abstract deleteFunction: (id: string) => Observable<void>;
 
@@ -66,12 +66,12 @@ export abstract class StoreBase<T extends IEntity<T>> {
         );
   }
 
-  protected create(entity: T, createFunction?: (entity: T) => Observable<void>): Observable<T> {
+  protected create(entity: T, createFunction?: (entity: T) => Observable<string>): Observable<T> {
     createFunction ??= this.createFunction;
     return createFunction(entity)
       .pipe(
-        switchMap(_ => {
-          return this.getById(entity.id);
+        switchMap(id => {
+          return this.getById(id);
         }),
         tap((createdEntity) => {
           this.createdBySelf.next(createdEntity);

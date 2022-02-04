@@ -35,7 +35,7 @@ export class CustomerStoreService extends StoreBase<CustomerDto> {
 
   protected createFunction = (customer: CustomerDto) => {
     const command = new CreateCustomerCommand({ ...customer });
-    return this.apiCustomersClient.create(command).pipe(switchMap(_ => of<void>(undefined)));
+    return this.apiCustomersClient.create(command).pipe(map(response => response.id));
   };
 
   public override create(customer: CustomerDto): Observable<CustomerDto> {
