@@ -22,6 +22,7 @@ export class CustomerStoreService extends StoreBase<CustomerDto> {
     private customerEventsService: CustomerEventsService
   ) {
     super();
+    super.init();
   }
 
   protected getByIdFunction = (id: string) => {

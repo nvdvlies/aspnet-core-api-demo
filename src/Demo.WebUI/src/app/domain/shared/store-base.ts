@@ -41,6 +41,9 @@ export abstract class StoreBase<T extends IEntity<T>> {
   }
 
   constructor() {
+  }
+
+  protected init(): void {
     this.subscribeToEvents();
   }
 

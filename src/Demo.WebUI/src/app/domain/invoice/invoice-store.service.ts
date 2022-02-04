@@ -22,6 +22,7 @@ export class InvoiceStoreService extends StoreBase<InvoiceDto> {
     private invoiceEventsService: InvoiceEventsService
   ) {
     super();
+    super.init();
   }
 
   protected getByIdFunction = (id: string) => {
