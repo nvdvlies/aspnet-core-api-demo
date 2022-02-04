@@ -1,0 +1,12 @@
+{{ initFromRoute$ | async }}
+
+<ng-container *ngIf="vm$ | async as vm; else loading">
+    <ng-container *ngIf="!vm.isLoading; else loading">
+        <!-- TODO -->
+    </ng-container>
+    {{ vm | json }}
+</ng-container>
+
+<ng-template #loading>
+    <mat-spinner></mat-spinner>
+</ng-template>
