@@ -56,6 +56,7 @@ export class TableFilterContainerDirective implements AfterContentInit {
       const subscription = filter.filterChange
         .subscribe(value => {
           this.filterCriteria ??= new TableFilterCriteria();
+          this.filterCriteria.pageIndex = 0;
           this.filterCriteria.filters.set(filter.tableFilter!, value);
           this.filterChange.emit(this.filterCriteria);
         });
