@@ -22,7 +22,7 @@ export interface IDomainEntityContext<T> {
   problemDetails: ValidationProblemDetails | ProblemDetails | undefined;
 }
 
-export class DomainEntityContext<T> implements DomainEntityContext<T> {
+export class DomainEntityContext<T> implements IDomainEntityContext<T> {
   constructor() {
     this.id = null;
     this.isLoading = false;
