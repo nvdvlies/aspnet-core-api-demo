@@ -2,7 +2,14 @@
 
 <ng-container *ngIf="vm$ | async as vm; else loading">
     <ng-container *ngIf="!vm.isLoading; else loading">
-        <!-- TODO -->
+        <form [formGroup]="form" (ngSubmit)="save()">
+
+            <mat-form-field>
+                <input matInput placeholder="Name" formControlName="name">
+            </mat-form-field>
+
+            <button type="submit" mat-raised-button color="primary" [disabled]="!form.valid || vm.isSaving">Submit</button>
+          </form>
     </ng-container>
     {{ vm | json }}
 </ng-container>

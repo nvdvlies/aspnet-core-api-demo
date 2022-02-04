@@ -1,5 +1,8 @@
 <ng-container *ngIf="vm$ | async as vm; else loading">
     <ng-container *ngIf="!vm.isLoadingForFirstTime; else loading">
+
+        <button mat-button color="primary" routerLink="/customers/new">Add new customer</button>
+
         <div class="table-container" tableFilterContainer [filterCriteria]="vm.criteria" (filterChange)="search($event)">
 
             <mat-form-field>
