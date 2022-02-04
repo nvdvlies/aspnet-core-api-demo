@@ -65,6 +65,7 @@ export class CustomerDomainEntityService extends DomainEntityBase<CustomerDto> i
   private buildInvoiceFormGroup(): CustomerFormGroup {
     return new FormGroup({
       id: new FormControl(super.readonlyFormState),
+      code: new FormControl(super.readonlyFormState),
       name: new FormControl(null, [Validators.required, Validators.minLength(2)], []),
       deleted: new FormControl(super.readonlyFormState),
       deletedBy: new FormControl(super.readonlyFormState),

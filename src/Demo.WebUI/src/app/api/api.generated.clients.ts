@@ -2462,6 +2462,7 @@ export interface ISoftDeleteEntityDto extends IAuditableEntityDto {
 }
 
 export class CustomerDto extends SoftDeleteEntityDto implements ICustomerDto {
+    code?: string | undefined;
     name?: string | undefined;
 
     constructor(data?: ICustomerDto) {
@@ -2471,6 +2472,7 @@ export class CustomerDto extends SoftDeleteEntityDto implements ICustomerDto {
     init(_data?: any) {
         super.init(_data);
         if (_data) {
+            this.code = _data["code"];
             this.name = _data["name"];
         }
     }
@@ -2484,6 +2486,7 @@ export class CustomerDto extends SoftDeleteEntityDto implements ICustomerDto {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["code"] = this.code;
         data["name"] = this.name;
         super.toJSON(data);
         return data;
@@ -2498,6 +2501,7 @@ export class CustomerDto extends SoftDeleteEntityDto implements ICustomerDto {
 }
 
 export interface ICustomerDto extends ISoftDeleteEntityDto {
+    code?: string | undefined;
     name?: string | undefined;
 }
 
