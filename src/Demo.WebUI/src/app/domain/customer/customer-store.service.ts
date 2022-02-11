@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { CustomerDto, ApiCustomersClient, CreateCustomerCommand, UpdateCustomerCommand, DeleteCustomerCommand } from '@api/api.generated.clients';
 import { CustomerUpdatedEvent, CustomerDeletedEvent, CustomerEventsService } from '@api/signalr.generated.services';
 import { StoreBase } from '@domain/shared/store-base';
+import { CurrentUserService } from '@core/services/current-user.service';
 
 @Injectable({
   providedIn: 'root'
@@ -18,10 +19,11 @@ export class CustomerStoreService extends StoreBase<CustomerDto> {
   protected entityDeletedEvent$ = this.customerEventsService.customerDeleted$;
   
   constructor(
+    currentUserService: CurrentUserService,
     private apiCustomersClient: ApiCustomersClient,
     private customerEventsService: CustomerEventsService
   ) {
-    super();
+    super(currentUserService);
     super.init();
   }
 

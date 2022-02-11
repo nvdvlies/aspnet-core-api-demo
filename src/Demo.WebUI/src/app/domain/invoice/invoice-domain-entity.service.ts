@@ -184,7 +184,7 @@ export class InvoiceDomainEntityService extends DomainEntityBase<InvoiceDto> imp
     })
   }
 
-  public override  reset(): void {
+  public override reset(): void {
     super.reset();
   }
 }

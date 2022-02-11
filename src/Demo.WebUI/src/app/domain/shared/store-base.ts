@@ -1,7 +1,7 @@
 import { BehaviorSubject } from 'rxjs';
 import { combineLatest, Observable, of, Subject } from 'rxjs';
 import { tap, map, switchMap, filter, mergeMap } from 'rxjs/operators';
-
+import { CurrentUserService } from '@core/services/current-user.service';
 export interface IEntity<T> {
   id: string;
   clone(): T;
@@ -40,7 +40,7 @@ export abstract class StoreBase<T extends IEntity<T>> {
     this.cache.next(value);
   }
 
-  constructor() {
+  constructor(protected readonly currentUserService: CurrentUserService) {
   }
 
   protected init(): void {
@@ -133,7 +133,7 @@ export abstract class StoreBase<T extends IEntity<T>> {
     this.entityUpdatedEvent$
       .pipe(
         filter(event => this.cache.value.find(x => x.id === event.id) != null),
-        // todo: filter created by self
+        filter(event => event.updatedBy != this.currentUserService.id), // create() and update() will refresh the entity itself, so we can ignore the event
         mergeMap(event => combineLatest([of(event), this.getById(event.id, true)]))
       )
       .subscribe(([event, invoice]) => {
@@ -145,7 +145,7 @@ export abstract class StoreBase<T extends IEntity<T>> {
   private subscribeToDeletedEvent(): void {
     this.entityDeletedEvent$
       .pipe(
-        filter(event => this.cache.value.find(x => x.id === event.id) != null),
+        filter(event => this.cache.value.find(x => x.id === event.id) != null)
       )
       .subscribe(event => {
         this.removeFromCache(event.id);
