@@ -5,11 +5,13 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { TableFilterContainerDirective } from './directives/table-filter/table-filter-container.directive';
 import { TableFilterDirective } from './directives/table-filter/table-filter.directive';
+import { PageHeaderComponent } from './components/page-header/page-header.component';
 
 @NgModule({
   declarations: [
     TableFilterContainerDirective,
-    TableFilterDirective
+    TableFilterDirective,
+    PageHeaderComponent
   ],
   imports: [
     CommonModule,
@@ -22,7 +24,8 @@ import { TableFilterDirective } from './directives/table-filter/table-filter.dir
     MaterialModule,
     FlexLayoutModule,
     TableFilterContainerDirective,
-    TableFilterDirective
+    TableFilterDirective,
+    PageHeaderComponent
   ]
 })
 export class SharedModule { }

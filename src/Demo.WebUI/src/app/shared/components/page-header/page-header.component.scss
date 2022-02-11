@@ -1,0 +1,21 @@
+.page-header {
+    display: flex;
+    box-sizing: border-box;
+    padding: 0 15px;
+    width: 100%;
+    flex-direction: row;
+    align-items: center;
+    white-space: nowrap;
+
+    background: #8489a7;
+    height: 50px;
+
+    .title {
+        font-size: 16px;
+        color: white;
+    }
+
+    .mat-icon {
+        color: white;
+    }
+  }
