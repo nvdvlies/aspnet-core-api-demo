@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { combineLatest, map, Observable } from 'rxjs';
 import { CustomerTableDataSource } from '@customers/customer-list/customer-table-datasource';
 import { CustomerTableDataContext, CustomerTableDataService } from '@customers/customer-list/customer-table-data.service';
-import { combineLatest, map, Observable } from 'rxjs';
 import { TableFilterCriteria } from '@shared/directives/table-filter/table-filter-criteria';
 
 interface ViewModel extends CustomerTableDataContext {

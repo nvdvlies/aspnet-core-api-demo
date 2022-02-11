@@ -1,88 +1,71 @@
 import { Injectable } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { ApiCustomersClient, SearchCustomerDto, SearchCustomersOrderByEnum, SearchCustomersQueryResult } from '@api/api.generated.clients';
+import { combineLatest, debounceTime, map, Observable } from 'rxjs';
+import { ApiCustomersClient, SearchCustomerDto, SearchCustomersOrderByEnum } from '@api/api.generated.clients';
+import { CustomerEventsService } from '@api/signalr.generated.services';
+import { CustomerStoreService } from '@domain/customer/customer-store.service';
 import { TableFilterCriteria } from '@shared/directives/table-filter/table-filter-criteria';
-import { BehaviorSubject, combineLatest, debounceTime, finalize, map, Observable } from 'rxjs';
-
-export interface TableDataContext<T> {
-  items: T[] | undefined;
-  criteria: TableFilterCriteria | undefined;
-  isLoadingForFirstTime: boolean;
-  isLoading: boolean;
-  pageIndex: number | undefined;
-  pageSize: number | undefined;
-  totalItems: number | undefined;
-  totalPages: number | undefined;
-  hasPreviousPage: boolean | undefined;
-  hasNextPage: boolean | undefined;
-}
+import { TableDataBase, TableDataContext, TableDataSearchResult } from '@shared/services/table-data-base';
 
 export interface CustomerTableDataContext extends TableDataContext<SearchCustomerDto> {
 }
 
 @Injectable()
-export class CustomerTableDataService {
-  private readonly searchResult = new BehaviorSubject<SearchCustomersQueryResult | undefined>(undefined);
-  private readonly criteria = new BehaviorSubject<TableFilterCriteria>(new TableFilterCriteria());
-  private readonly isLoadingForFirstTime = new BehaviorSubject<boolean>(true);
-  private readonly isLoading = new BehaviorSubject<boolean>(true);
-
-  private searchResult$ = this.searchResult.asObservable();
-  private criteria$ = this.criteria.asObservable();
-  private isLoadingForFirstTime$ = this.isLoadingForFirstTime.asObservable();
-  private isLoading$ = this.isLoading.asObservable();
+export class CustomerTableDataService extends TableDataBase<SearchCustomerDto> {
+  public searchTerm = new FormControl();
 
   public observe$ = combineLatest([
-    this.searchResult$,
-    this.criteria$,
-    this.isLoadingForFirstTime$,
-    this.isLoading$
+    this.observeInternal$
   ])
     .pipe(
       debounceTime(0),
       map(([
-        searchResult,
-        criteria,
-        isLoadingForFirstTime,
-        isLoading
+        context,
       ]) => {
         return {
-          ...searchResult,
-          items: searchResult?.customers,
-          criteria,
-          isLoadingForFirstTime,
-          isLoading
+          ...context
         } as CustomerTableDataContext;
       })
     ) as Observable<CustomerTableDataContext>;
 
-  public searchTerm = new FormControl();
+  protected entityUpdatedInStore$ = this.customerStoreService.customerUpdatedInStore$;
+  protected entityDeletedEvent$ = this.customerEventsService.customerDeleted$; 
   
-  constructor(private readonly apiCustomersClient: ApiCustomersClient) {
+  constructor(
+    private readonly apiCustomersClient: ApiCustomersClient,
+    private readonly customerStoreService: CustomerStoreService,
+    private readonly customerEventsService: CustomerEventsService
+  ) {
+    super();
+    this.init();
     this.search(this.criteria.value);
   }
 
-  public search(criteria: TableFilterCriteria): void {
-    this.isLoading.next(true);
-    this.searchResult.next(undefined);
-    this.apiCustomersClient
+  protected searchFunction = (criteria: TableFilterCriteria) => {
+    return this.apiCustomersClient
       .search(
-        criteria.sortColumn == "code" ? SearchCustomersOrderByEnum.Code : criteria.sortColumn == "name" ? SearchCustomersOrderByEnum.Name : undefined,
-        criteria.sortDirection == 'desc' ? true : criteria.sortDirection == 'asc' ? false : undefined,
+        criteria.sortColumn === 'code' ? SearchCustomersOrderByEnum.Code 
+          : criteria.sortColumn === 'name' ? SearchCustomersOrderByEnum.Name 
+          : undefined,
+        criteria.sortDirection === 'desc' ? true 
+          : criteria.sortDirection === 'asc' ? false 
+          : undefined,
         criteria.pageIndex,
         criteria.pageSize,
-        criteria.filters.get("searchTerm")
+        this.searchTerm.value
       )
       .pipe(
-        finalize(() => {
-          this.isLoading.next(false);
-          if (this.isLoadingForFirstTime.value) {
-            this.isLoadingForFirstTime.next(false);
-          }
+        map((response) => {
+          return {
+            items: response.customers,
+            pageIndex: response.pageIndex,
+            pageSize: response.pageSize,
+            totalItems: response.totalItems,
+            totalPages: response.totalPages,
+            hasPreviousPage: response.hasPreviousPage,
+            hasNextPage: response.hasNextPage
+          } as TableDataSearchResult<SearchCustomerDto>
         })
-      )
-      .subscribe(response => {
-        this.searchResult.next(response);
-      });
-  }
+      );
+  };
 }
