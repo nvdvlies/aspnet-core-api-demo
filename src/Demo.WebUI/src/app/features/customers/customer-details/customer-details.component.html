@@ -2,18 +2,37 @@
 
 <ng-container *ngIf="vm$ | async as vm; else loading">
     <ng-container *ngIf="!vm.isLoading; else loading">
-        <form [formGroup]="form" (ngSubmit)="save()">
 
-            <mat-form-field>
-                <input matInput placeholder="Name" formControlName="name">
-            </mat-form-field>
+        <app-page-header title="Customer"></app-page-header>
+        <div class="content-container">
+            <form [formGroup]="form" novalidate (ngSubmit)="save()">
+                <mat-card class="customer-card">
+                    <mat-card-header>
+                        <mat-card-title>Customer Details</mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content>
+                        <div class="row">
+                            <div class="col">
+                                <mat-form-field class="full-width">
+                                    <input matInput placeholder="Name" formControlName="name">
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </mat-card-content>
+                    <mat-card-actions>
+                        <button mat-raised-button color="primary" type="submit"
+                            [disabled]="!form.valid || vm.isSaving">Submit</button>
+                    </mat-card-actions>
+                </mat-card>
+            </form>
+        </div>
 
-            <button type="submit" mat-raised-button color="primary" [disabled]="!form.valid || vm.isSaving">Submit</button>
-          </form>
     </ng-container>
-    {{ vm | json }}
+    <!-- {{ vm | json }} -->
 </ng-container>
 
 <ng-template #loading>
-    <mat-spinner></mat-spinner>
+    <div class="spinner-container">
+        <mat-spinner [diameter]="50"></mat-spinner>
+    </div>
 </ng-template>

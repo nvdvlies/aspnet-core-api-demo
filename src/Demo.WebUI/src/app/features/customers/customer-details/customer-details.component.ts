@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { combineLatest, map, Observable } from 'rxjs';
 import { CustomerDto, ProblemDetails, ValidationProblemDetails } from '@api/api.generated.clients';
 import { CustomerDomainEntityService, CustomerFormGroup, ICustomerDomainEntityContext } from '@domain/customer/customer-domain-entity.service';
-import { AbstractControl } from '@angular/forms';
+import { FormControl } from '@angular/forms';
 
 interface ViewModel extends ICustomerDomainEntityContext {
   id: string | null;
@@ -49,7 +49,7 @@ export class CustomerDetailsComponent implements OnInit {
 
   public form: CustomerFormGroup = this.customerDomainEntityService.form;
 
-  public get name(): AbstractControl { return this.form.controls.name!; }
+  // public get name(): FormControl { return this.form.controls.name as FormControl; }
 
   public save(): void {
     this.customerDomainEntityService.upsert()
