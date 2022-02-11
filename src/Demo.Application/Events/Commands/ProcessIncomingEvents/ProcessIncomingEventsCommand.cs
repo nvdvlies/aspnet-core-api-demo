@@ -6,6 +6,6 @@ namespace Demo.Application.Events.Commands.ProcessIncomingEvents
 {
     public class ProcessIncomingEventsCommand : IRequest<Unit>
     {
-        public IEnumerable<IEvent> Events { get; set; }
+        public IEnumerable<INotification> Events { get; set; }
     }
 }

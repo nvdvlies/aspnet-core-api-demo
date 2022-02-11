@@ -1,5 +1,6 @@
 ﻿using Azure.Messaging.EventGrid;
 using Demo.Application.Events.Commands.ProcessIncomingEvents;
+using Demo.Infrastructure.Events;
 using Demo.WebApi.Auth;
 using Demo.WebApi.Extensions;
 using Microsoft.AspNetCore.Authorization;

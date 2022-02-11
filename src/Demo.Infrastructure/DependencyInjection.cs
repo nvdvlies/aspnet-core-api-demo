@@ -25,7 +25,13 @@ namespace Demo.Infrastructure
             services.AddScoped(typeof(IJsonService<>), typeof(JsonService<>));
             services.AddScoped<IApplicationSettingsProvider, ApplicationSettingsProvider>();
             services.AddScoped<IEventOutboxProcessor, EventOutboxProcessor>();
+
+#if DEBUG
+            services.AddSingleton<IEventPublisher, DebugEventPublisher>();
+#else
             services.AddSingleton<IEventPublisher, EventGridPublisher>();
+#endif
+
             services.AddScoped<IMessageOutboxProcessor, MessageOutboxProcessor>();
             services.AddSingleton<IMessageSender, ServiceBusQueueMessageSender>();
 

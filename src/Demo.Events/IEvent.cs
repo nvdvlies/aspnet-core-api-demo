@@ -1,8 +1,9 @@
-﻿using System;
+﻿using MediatR;
+using System;
 
 namespace Demo.Events
 {
-    public interface IEvent
+    public interface IEvent: INotification
     {
         string CorrelationId { get; }
         DateTime CreatedOn { get; }
