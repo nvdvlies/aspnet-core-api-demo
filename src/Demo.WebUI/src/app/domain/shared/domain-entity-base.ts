@@ -1,8 +1,8 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { FormGroup } from '@angular/forms';
-import { ActivatedRoute, ParamMap } from '@angular/router';
+import { FormControl, FormGroup } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject, combineLatest, Observable, of, Subject, throwError } from 'rxjs';
-import { catchError, debounceTime, filter, finalize, map, switchMap, take, takeUntil, tap } from 'rxjs/operators';
+import { catchError, debounceTime, filter, finalize, map, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { ApiException, ProblemDetails, ValidationProblemDetails } from '@api/api.generated.clients';
 import { MergeUtil } from '@domain/shared/merge.util';
 
@@ -19,7 +19,7 @@ export interface IDomainEntityContext<T> {
   isSaving: boolean;
   isDeleting: boolean;
   hasNewerVersionWithMergeConflict: boolean;
-  problemDetails: ValidationProblemDetails | ProblemDetails | undefined;
+  problemDetails: ValidationProblemDetails | ProblemDetails | ApiException | undefined;
 }
 
 export class DomainEntityContext<T> implements IDomainEntityContext<T> {
@@ -38,15 +38,17 @@ export class DomainEntityContext<T> implements IDomainEntityContext<T> {
   isSaving: boolean;
   isDeleting: boolean;
   hasNewerVersionWithMergeConflict: boolean;
-  problemDetails: ValidationProblemDetails | ProblemDetails | undefined;
+  problemDetails: ValidationProblemDetails | ProblemDetails | ApiException | undefined;
 }
 
 export interface DomainEntity<T> {
   id: string | undefined;
-  createdOn: Date;
+  createdOn: Date | undefined;
   lastModifiedOn?: Date | undefined;
   clone(): T;
 }
+
+export type DomainEntityFormControl = FormControl & { warnings: any[], info: any[] };  
 
 @Injectable()
 export abstract class DomainEntityBase<T extends DomainEntity<T>> implements OnDestroy {
@@ -79,7 +81,9 @@ export abstract class DomainEntityBase<T extends DomainEntity<T>> implements OnD
   protected problemDetails$ = this.problemDetails.asObservable();
   protected onDestroy$ = this.onDestroy.asObservable();
 
-  protected readonly readonlyFormState: any = { value: null, disabled: true };
+  protected get readonlyFormState(): any {
+    return { value: null, disabled: true }
+  };
 
   protected observeInternal$ = combineLatest([
     this.id$,
@@ -287,7 +291,7 @@ export abstract class DomainEntityBase<T extends DomainEntity<T>> implements OnD
           return;
         }
         const currentLastModifiedOn = this.pristine.value.lastModifiedOn ?? this.pristine.value.createdOn;
-        const newLastModifiedOn = entity.lastModifiedOn ?? entity.createdOn;
+        const newLastModifiedOn = entity.lastModifiedOn ?? entity.createdOn!;
         if (newLastModifiedOn <= currentLastModifiedOn) {
           return;
         }
