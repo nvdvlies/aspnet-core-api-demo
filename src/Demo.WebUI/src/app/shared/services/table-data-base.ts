@@ -1,5 +1,6 @@
+import { ApiException, ProblemDetails } from '@api/api.generated.clients';
 import { TableFilterCriteria } from '@shared/directives/table-filter/table-filter-criteria';
-import { BehaviorSubject, combineLatest, debounceTime, filter, finalize, map, Observable } from 'rxjs';
+import { BehaviorSubject, catchError, combineLatest, debounceTime, filter, finalize, map, Observable, of } from 'rxjs';
 
 export interface TableDataSearchResult<T> {
   items: T[] | undefined;
@@ -22,6 +23,7 @@ export interface TableDataContext<T> {
   totalPages: number | undefined;
   hasPreviousPage: boolean | undefined;
   hasNextPage: boolean | undefined;
+  problemDetails: ProblemDetails | ApiException | undefined;
 }
 
 export interface IEntityUpdatedEvent {
@@ -43,6 +45,7 @@ export abstract class TableDataBase<T extends ITableDataSearchResultItem> {
 
   protected abstract entityUpdatedInStore$: Observable<[IEntityUpdatedEvent, any]>;
   protected abstract entityDeletedEvent$: Observable<IEntityDeletedEvent>;
+  protected readonly problemDetails = new BehaviorSubject<ProblemDetails | ApiException | undefined>(undefined);
 
   protected readonly searchResult = new BehaviorSubject<TableDataSearchResult<T> | undefined>(undefined);
   protected readonly criteria = new BehaviorSubject<TableFilterCriteria>(new TableFilterCriteria());
@@ -53,12 +56,14 @@ export abstract class TableDataBase<T extends ITableDataSearchResultItem> {
   protected criteria$ = this.criteria.asObservable();
   protected isLoadingForFirstTime$ = this.isLoadingForFirstTime.asObservable();
   protected isLoading$ = this.isLoading.asObservable();
+  protected problemDetails$ = this.problemDetails.asObservable();
 
   protected observeInternal$ = combineLatest([
     this.searchResult$,
     this.criteria$,
     this.isLoadingForFirstTime$,
-    this.isLoading$
+    this.isLoading$,
+    this.problemDetails$
   ])
     .pipe(
       debounceTime(0),
@@ -66,13 +71,15 @@ export abstract class TableDataBase<T extends ITableDataSearchResultItem> {
         searchResult,
         criteria,
         isLoadingForFirstTime,
-        isLoading
+        isLoading,
+        problemDetails
       ]) => {
         return {
           ...searchResult,
           criteria,
           isLoadingForFirstTime,
-          isLoading
+          isLoading,
+          problemDetails
         } as TableDataContext<T>;
       })
     ) as Observable<TableDataContext<T>>;
@@ -83,6 +90,18 @@ export abstract class TableDataBase<T extends ITableDataSearchResultItem> {
     this.searchResult.next(undefined);
     this.searchFunction(criteria)
       .pipe(
+        catchError((error: ProblemDetails | ApiException) => {
+          this.problemDetails.next(error);
+          return of({
+            items: [],
+            pageIndex: criteria.pageIndex,
+            pageSize: criteria.pageSize,
+            totalItems: 0,
+            totalPages: 0,
+            hasNextPage: false,
+            hasPreviousPage: false
+          } as TableDataSearchResult<T>)
+        }),
         finalize(() => {
           this.isLoading.next(false);
           if (this.isLoadingForFirstTime.value === true) {
