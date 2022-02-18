@@ -7,8 +7,10 @@ import { CustomerStoreService } from '@domain/customer/customer-store.service';
 import { ITableFilterCriteria, TableFilterCriteria } from '@shared/directives/table-filter/table-filter-criteria';
 import { TableDataBase, TableDataContext, TableDataSearchResult } from '@shared/services/table-data-base';
 
+export declare type CustomerSortColumn = 'code' | 'name' | undefined;
+
 export class CustomerTableFilterCriteria extends TableFilterCriteria implements ITableFilterCriteria {
-  override sortColumn: 'code' | 'name' | undefined;
+  override sortColumn: CustomerSortColumn;
 
   constructor() {
     super();
@@ -54,12 +56,8 @@ export class CustomerTableDataService extends TableDataBase<SearchCustomerDto> {
   protected searchFunction = (criteria: CustomerTableFilterCriteria) => {
     return this.apiCustomersClient
       .search(
-        criteria.sortColumn === 'code' ? SearchCustomersOrderByEnum.Code 
-          : criteria.sortColumn === 'name' ? SearchCustomersOrderByEnum.Name 
-          : undefined,
-        criteria.sortDirection === 'desc' ? true 
-          : criteria.sortDirection === 'asc' ? false 
-          : undefined,
+        this.sortColumn(criteria.sortColumn),
+        this.sortbyDescending(criteria.sortDirection),
         criteria.pageIndex,
         criteria.pageSize,
         this.searchTerm.value
@@ -78,4 +76,19 @@ export class CustomerTableDataService extends TableDataBase<SearchCustomerDto> {
         })
       );
   };
+
+  private sortColumn(sortColumn: CustomerSortColumn): SearchCustomersOrderByEnum | undefined {
+    switch (sortColumn) {
+      case undefined:
+        return undefined;
+      case 'code':
+        return SearchCustomersOrderByEnum.Code;
+      case 'name':
+        return SearchCustomersOrderByEnum.Name;
+      default: {
+          const exhaustiveCheck: never = sortColumn; // this line will result in a compiler error when CustomerSortColumn contains an option that's not handled in the switch statement.
+          throw new Error(exhaustiveCheck);
+      }
+    }
+  }
 }

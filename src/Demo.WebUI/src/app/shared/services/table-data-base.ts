@@ -1,3 +1,4 @@
+import { SortDirection } from '@angular/material/sort';
 import { ApiException, ProblemDetails } from '@api/api.generated.clients';
 import { ITableFilterCriteria, TableFilterCriteria } from '@shared/directives/table-filter/table-filter-criteria';
 import { BehaviorSubject, catchError, combineLatest, debounceTime, filter, finalize, map, Observable, of } from 'rxjs';
@@ -149,5 +150,11 @@ export abstract class TableDataBase<T extends ITableDataSearchResultItem> {
           this.searchResult.next({ ...this.searchResult.value, items: newItems });
         }
       });
+  }
+
+  protected sortbyDescending(sortDirection: SortDirection | undefined): boolean | undefined {
+    return sortDirection === 'desc' ? true 
+      : sortDirection === 'asc' ? false 
+      : undefined;
   }
 }
