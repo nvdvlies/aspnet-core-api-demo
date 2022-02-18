@@ -1,0 +1,8 @@
+<h1 mat-dialog-title>Warning</h1>
+<div mat-dialog-content>
+  <p>You have unsaved changes. Do you want to proceed and discard?</p>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="confirmDiscard()" cdkFocusInitial>Proceed</button>
+  <button mat-button (click)="cancelDiscard()">Cancel</button>
+</div>

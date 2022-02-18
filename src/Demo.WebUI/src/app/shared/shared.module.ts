@@ -6,12 +6,14 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { TableFilterContainerDirective } from './directives/table-filter/table-filter-container.directive';
 import { TableFilterDirective } from './directives/table-filter/table-filter.directive';
 import { PageHeaderComponent } from './components/page-header/page-header.component';
+import { DiscardUnsavedChangesModalComponent } from './modals/discard-unsaved-changes-modal/discard-unsaved-changes-modal.component';
 
 @NgModule({
   declarations: [
     TableFilterContainerDirective,
     TableFilterDirective,
-    PageHeaderComponent
+    PageHeaderComponent,
+    DiscardUnsavedChangesModalComponent
   ],
   imports: [
     CommonModule,
@@ -25,7 +27,8 @@ import { PageHeaderComponent } from './components/page-header/page-header.compon
     FlexLayoutModule,
     TableFilterContainerDirective,
     TableFilterDirective,
-    PageHeaderComponent
+    PageHeaderComponent,
+    DiscardUnsavedChangesModalComponent
   ]
 })
 export class SharedModule { }

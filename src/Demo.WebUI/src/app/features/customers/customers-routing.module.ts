@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from '@auth0/auth0-angular';
 import { CustomerDetailsComponent } from '@customers/customer-details/customer-details.component';
 import { CustomerListComponent } from '@customers/customer-list/customer-list.component';
+import { UnsavedChangesGuard } from '@shared/guards/unsaved-changes.guard';
 
 const routes: Routes = [
   { 
@@ -15,7 +16,8 @@ const routes: Routes = [
       },
       { 
         path: ':id', 
-        component: CustomerDetailsComponent 
+        component: CustomerDetailsComponent,
+        canDeactivate: [UnsavedChangesGuard]
       }
     ]
   },
