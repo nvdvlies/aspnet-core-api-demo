@@ -1,11 +1,12 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { combineLatest, Observable } from 'rxjs';
 import { debounceTime, map } from 'rxjs/operators';
 import { CustomerDto, ICustomerDto } from '@api/api.generated.clients';
 import { CustomerStoreService } from '@domain/customer/customer-store.service';
 import { DomainEntityBase, DomainEntityContext, IDomainEntityContext, InitFromRouteOptions } from '@domain/shared/domain-entity-base';
+import { MatDialog } from '@angular/material/dialog';
 
 export interface ICustomerDomainEntityContext extends IDomainEntityContext<CustomerDto> {
 
@@ -44,10 +45,10 @@ export class CustomerDomainEntityService extends DomainEntityBase<CustomerDto> i
 
   constructor(
     route: ActivatedRoute,
-    protected readonly formBuilder: FormBuilder,
-    protected readonly customerStoreService: CustomerStoreService
+    matDialog: MatDialog,
+    private readonly customerStoreService: CustomerStoreService
   ) {
-    super(route);
+    super(route, matDialog);
     super.init();
   }
 
@@ -104,6 +105,10 @@ export class CustomerDomainEntityService extends DomainEntityBase<CustomerDto> i
 
   public override upsert(): Observable<CustomerDto> {
     return super.upsert();
+  }
+
+  public override deleteWithConfirmation(): Observable<void> {
+    return super.deleteWithConfirmation();
   }
 
   public override delete(): Observable<void> {

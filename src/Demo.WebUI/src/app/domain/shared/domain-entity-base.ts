@@ -1,10 +1,13 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { BehaviorSubject, combineLatest, Observable, of, Subject, throwError } from 'rxjs';
+import { BehaviorSubject, combineLatest, EMPTY, Observable, of, Subject, throwError } from 'rxjs';
 import { catchError, debounceTime, filter, finalize, map, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { ApiException, ProblemDetails, ValidationProblemDetails } from '@api/api.generated.clients';
 import { MergeUtil } from '@domain/shared/merge.util';
+import { MatDialog } from '@angular/material/dialog';
+import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { ConfirmDeleteModalComponent } from '@domain/shared/confirm-delete-modal.component';
 
 export class InitFromRouteOptions {
   parameterName: string = "id";
@@ -129,7 +132,8 @@ export abstract class DomainEntityBase<T extends DomainEntity<T>> implements OnD
   }
 
   constructor(
-    protected readonly route: ActivatedRoute
+    protected readonly route: ActivatedRoute,
+    protected readonly matDialog: MatDialog
   ) {
   }
 
@@ -203,6 +207,12 @@ export abstract class DomainEntityBase<T extends DomainEntity<T>> implements OnD
     return createFunction(this.entity.value!)
       .pipe(
         catchError((error: ValidationProblemDetails | ProblemDetails | ApiException) => this.setProblemDetailsAndRethrow(error)),
+        map((entity: T) => entity.clone()),
+        tap((entity) => {
+          this.entity.next(entity);
+          this.patchEntityToForm(entity);
+          this.pristine.next(entity.clone());
+        }),
         finalize(() => this.isSaving.next(false))
       )
   }
@@ -218,12 +228,33 @@ export abstract class DomainEntityBase<T extends DomainEntity<T>> implements OnD
     return updateFunction(this.entity.value!)
       .pipe(
         catchError((error: ValidationProblemDetails | ProblemDetails | ApiException) => this.setProblemDetailsAndRethrow(error)),
+        map((entity: T) => entity.clone()),
+        tap((entity) => {
+          this.entity.next(entity);
+          this.patchEntityToForm(entity);
+          this.pristine.next(entity.clone());
+        }),
         finalize(() => this.isSaving.next(false))
       )
   }
 
   protected upsert(createFunction?: (entity: T) => Observable<T>, updateFunction?: (entity: T) => Observable<T>): Observable<T> {
     return this.id.value == null ? this.create(createFunction): this.update(updateFunction);
+  }
+
+  protected deleteWithConfirmation(deleteFunction?: (id: string) => Observable<void>): Observable<void> {
+    const dialogRef = this.matDialog.open(ConfirmDeleteModalComponent);
+    return dialogRef.afterClosed()
+      .pipe(
+        map(confirmDelete => coerceBooleanProperty(confirmDelete)),
+        switchMap((confirmDelete) => {
+          if (confirmDelete) {
+            return this.delete(deleteFunction);
+          } else {
+            return EMPTY;
+          }
+        })
+      );
   }
 
   protected delete(deleteFunction?: (id: string) => Observable<void>): Observable<void> {
@@ -236,6 +267,7 @@ export abstract class DomainEntityBase<T extends DomainEntity<T>> implements OnD
     return deleteFunction(this.id.value)
       .pipe(
         catchError((error: ValidationProblemDetails | ProblemDetails | ApiException) => this.setProblemDetailsAndRethrow(error)),
+        tap(() => this.form.reset()),
         finalize(() => this.isDeleting.next(false))
       )
   }

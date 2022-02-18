@@ -1,11 +1,12 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { combineLatest, Observable, throwError } from 'rxjs';
 import { debounceTime, map } from 'rxjs/operators';
 import { InvoiceDto, IInvoiceDto, IInvoiceLineDto, InvoiceLineDto, ApiInvoicesClient, CopyInvoiceCommand } from '@api/api.generated.clients';
 import { InvoiceStoreService } from '@domain/invoice/invoice-store.service';
 import { DomainEntityBase, DomainEntityContext, IDomainEntityContext, InitFromRouteOptions } from '@domain/shared/domain-entity-base';
+import { MatDialog } from '@angular/material/dialog';
 
 export interface IInvoiceDomainEntityContext extends IDomainEntityContext<InvoiceDto> {
 
@@ -49,11 +50,11 @@ export class InvoiceDomainEntityService extends DomainEntityBase<InvoiceDto> imp
 
   constructor(
     route: ActivatedRoute,
-    protected readonly formBuilder: FormBuilder,
-    protected readonly invoiceStoreService: InvoiceStoreService,
+    matDialog: MatDialog,
+    private readonly invoiceStoreService: InvoiceStoreService,
     private readonly apiInvoicesClient: ApiInvoicesClient,
   ) {
-    super(route);
+    super(route, matDialog);
     super.init();
   }
 
@@ -166,6 +167,10 @@ export class InvoiceDomainEntityService extends DomainEntityBase<InvoiceDto> imp
       );
   }
 
+  public override deleteWithConfirmation(): Observable<void> {
+    return super.deleteWithConfirmation();
+  }
+  
   public override delete(): Observable<void> {
     return super.delete();
   }

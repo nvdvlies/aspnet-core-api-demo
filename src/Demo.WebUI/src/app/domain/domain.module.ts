@@ -1,10 +1,15 @@
 import { ModuleWithProviders, NgModule, Optional, SkipSelf } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ConfirmDeleteModalComponent } from './shared/confirm-delete-modal.component';
+import { SharedModule } from '@shared/shared.module';
 
 @NgModule({
-  declarations: [],
+  declarations: [
+    ConfirmDeleteModalComponent
+  ],
   imports: [
-    CommonModule
+    CommonModule,
+    SharedModule
   ]
 })
 export class DomainModule {
