@@ -4,10 +4,20 @@ import { combineLatest, debounceTime, map, Observable } from 'rxjs';
 import { ApiCustomersClient, SearchCustomerDto, SearchCustomersOrderByEnum } from '@api/api.generated.clients';
 import { CustomerEventsService } from '@api/signalr.generated.services';
 import { CustomerStoreService } from '@domain/customer/customer-store.service';
-import { TableFilterCriteria } from '@shared/directives/table-filter/table-filter-criteria';
+import { ITableFilterCriteria, TableFilterCriteria } from '@shared/directives/table-filter/table-filter-criteria';
 import { TableDataBase, TableDataContext, TableDataSearchResult } from '@shared/services/table-data-base';
 
+export class CustomerTableFilterCriteria extends TableFilterCriteria implements ITableFilterCriteria {
+  override sortColumn: 'code' | 'name' | undefined;
+
+  constructor() {
+    super();
+    this.sortColumn = 'code';
+    this.sortDirection = 'asc';
+  }
+}
 export interface CustomerTableDataContext extends TableDataContext<SearchCustomerDto> {
+  criteria: CustomerTableFilterCriteria | undefined;
 }
 
 @Injectable()
@@ -37,11 +47,11 @@ export class CustomerTableDataService extends TableDataBase<SearchCustomerDto> {
     private readonly customerEventsService: CustomerEventsService
   ) {
     super();
-    this.init();
-    this.search(this.criteria.value);
+    this.init(new CustomerTableFilterCriteria());
+    this.search();
   }
 
-  protected searchFunction = (criteria: TableFilterCriteria) => {
+  protected searchFunction = (criteria: CustomerTableFilterCriteria) => {
     return this.apiCustomersClient
       .search(
         criteria.sortColumn === 'code' ? SearchCustomersOrderByEnum.Code 

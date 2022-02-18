@@ -1,6 +1,13 @@
 import { SortDirection } from "@angular/material/sort";
 
-export class TableFilterCriteria {
+export interface ITableFilterCriteria {
+  pageIndex: number;
+  pageSize: number;
+  sortColumn: any | undefined;
+  sortDirection: SortDirection | undefined;
+}
+
+export class TableFilterCriteria implements ITableFilterCriteria {
   pageIndex: number;
   pageSize: number;
   sortColumn: string | undefined;

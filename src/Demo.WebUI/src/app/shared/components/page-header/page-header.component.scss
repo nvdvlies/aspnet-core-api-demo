@@ -1,21 +1,44 @@
+@import "~@angular/material/theming";
+@import "../../../../scss/theme.scss";
+
 .page-header {
-    display: flex;
-    box-sizing: border-box;
-    padding: 0 15px;
-    width: 100%;
-    flex-direction: row;
-    align-items: center;
-    white-space: nowrap;
+  display: flex;
+  flex-direction: column;
+}
 
-    background: #8489a7;
-    height: 50px;
+.page-header-title {
+  display: flex;
+  box-sizing: border-box;
+  padding: 0 4px 0 12px;
+  width: 100%;
+  flex-direction: row;
+  align-items: center;
+  white-space: nowrap;
+  height: 50px;
+  background-color: mat-color($default-theme-accent);
 
-    .title {
-        font-size: 16px;
-        color: white;
-    }
-
-    .mat-icon {
-        color: white;
-    }
+  .title {
+    font-size: 16px;
+    color: mat-contrast($default-theme-accent, 900);
   }
+}
+
+:host ::ng-deep .mat-icon {
+  color: mat-contrast($default-theme-accent, 900);
+}
+
+.page-header-buttonbar {
+  display: flex;
+  box-sizing: border-box;
+  padding: 0 12px 0 8px;
+  width: 100%;
+  flex-direction: row;
+  align-items: center;
+  white-space: nowrap;
+  height: 50px;
+  background-color: #fafafa;
+}
+
+:host ::ng-deep .mat-raised-button {
+  margin-right: 8px;
+}

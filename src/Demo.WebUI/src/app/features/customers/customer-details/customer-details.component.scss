@@ -1,8 +1,7 @@
 .customer-card {
-    min-width: 120px;
-    max-width: 500px;
-    margin: 20px auto;
-  }
+  min-width: 120px;
+  margin: 20px auto;
+}
 
 .row {
   display: flex;
@@ -15,6 +14,5 @@
 }
 
 .col:last-child {
-    margin-right: 0;
-  }
-  
+  margin-right: 0;
+}

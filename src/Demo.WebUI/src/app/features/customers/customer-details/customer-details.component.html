@@ -2,13 +2,28 @@
 
 <ng-container *ngIf="vm$ | async as vm; else loading">
     <ng-container *ngIf="!vm.isLoading; else loading">
-
-        <app-page-header title="Customer"></app-page-header>
-        <div class="content-container">
-            <form [formGroup]="form" novalidate (ngSubmit)="save()">
+        <form [formGroup]="form" novalidate (ngSubmit)="save()">
+            <app-page-header title="{{ vm.id != null ? 'Customer: ' + vm.pristine?.name : 'New customer' }}">
+                <button mat-icon-button>
+                    <mat-icon>settings</mat-icon>
+                </button>
+                <button mat-icon-button>
+                    <mat-icon>history</mat-icon>
+                </button>
+                <button mat-raised-button color="primary" type="submit" [disabled]="!form.valid || vm.isSaving">
+                    Submit
+                </button>
+                    <button mat-raised-button (click)="delete()" type="button">
+                    Delete
+                </button>
+                <button mat-raised-button routerLink="/customers" type="button">
+                    Close
+                </button>
+            </app-page-header>
+            <div class="content-container">
                 <mat-card class="customer-card">
                     <mat-card-header>
-                        <mat-card-title>Customer Details</mat-card-title>
+                        <mat-card-title>General</mat-card-title>
                     </mat-card-header>
                     <mat-card-content>
                         <div class="row">
@@ -19,14 +34,9 @@
                             </div>
                         </div>
                     </mat-card-content>
-                    <mat-card-actions>
-                        <button mat-raised-button color="primary" type="submit"
-                            [disabled]="!form.valid || vm.isSaving">Submit</button>
-                    </mat-card-actions>
                 </mat-card>
-            </form>
-        </div>
-
+            </div>
+        </form>
     </ng-container>
     <!-- {{ vm | json }} -->
 </ng-container>

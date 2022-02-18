@@ -9,8 +9,6 @@ import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core
 export class PageHeaderComponent implements OnInit {
   @Input() title: string | undefined;
 
-  constructor() { }
-
   ngOnInit(): void {
   }
 

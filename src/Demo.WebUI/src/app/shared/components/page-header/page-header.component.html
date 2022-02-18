@@ -1,10 +1,12 @@
 <div class="page-header">
-    <span class="title">{{ title }}</span>
-    <span style="flex: 1 1 auto;"></span>
-    <button mat-icon-button>
-        <mat-icon>settings</mat-icon>
-    </button>
-    <button mat-icon-button>
-        <mat-icon>history</mat-icon>
-    </button>
+    <div class="page-header-title">
+        <span class="title">{{ title }}</span>
+        <span style="flex: 1 1 auto;"></span>
+        <ng-content select="[mat-icon-button]"></ng-content>
+    </div>
+    <div class="page-header-buttonbar">
+        <ng-content select="[mat-raised-button]"></ng-content>
+        <span style="flex: 1 1 auto;"></span>
+        test
+    </div>
 </div>
