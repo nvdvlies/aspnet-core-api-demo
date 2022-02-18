@@ -1,19 +1,10 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { combineLatest, map, Observable } from 'rxjs';
-import { CustomerDto, ProblemDetails, ValidationProblemDetails } from '@api/api.generated.clients';
 import { CustomerDomainEntityService, CustomerFormGroup, ICustomerDomainEntityContext } from '@domain/customer/customer-domain-entity.service';
-import { FormControl } from '@angular/forms';
+import { IHasForm } from '@shared/guards/unsaved-changes.guard';
 
 interface ViewModel extends ICustomerDomainEntityContext {
-  id: string | null;
-  entity: Readonly<CustomerDto> | undefined;
-  pristine: Readonly<CustomerDto> | undefined;
-  isLoading: boolean;
-  isSaving: boolean;
-  isDeleting: boolean;
-  hasNewerVersionWithMergeConflict: boolean;
-  problemDetails: ValidationProblemDetails | ProblemDetails | undefined;
 }
 
 @Component({
@@ -22,7 +13,7 @@ interface ViewModel extends ICustomerDomainEntityContext {
   providers: [CustomerDomainEntityService],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CustomerDetailsComponent implements OnInit {
+export class CustomerDetailsComponent implements OnInit, IHasForm {
   public initFromRoute$ = this.customerDomainEntityService.initFromRoute();
 
   public vm$ = combineLatest([
@@ -59,7 +50,7 @@ export class CustomerDetailsComponent implements OnInit {
   }
 
   public delete(): void {
-    this.customerDomainEntityService.delete()
+    this.customerDomainEntityService.deleteWithConfirmation()
       .subscribe(() => {
         this.router.navigateByUrl('/customers');
       });
