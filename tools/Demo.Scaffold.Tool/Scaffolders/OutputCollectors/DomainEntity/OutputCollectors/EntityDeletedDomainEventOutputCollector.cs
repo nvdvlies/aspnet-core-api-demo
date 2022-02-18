@@ -32,7 +32,7 @@ namespace Demo.Events.%ENTITY%
 {
     public class %ENTITY%DeletedEvent : Event<%ENTITY%DeletedEvent, %ENTITY%DeletedEventData>
     {
-        public static %ENTITY%DeletedEvent Create(string correlationId, Guid id, Guid deletedBy)
+        public static %ENTITY%DeletedEvent Create(string correlationId, Guid id, string deletedBy)
         {
             var data = new %ENTITY%DeletedEventData
             {
@@ -57,7 +57,7 @@ namespace Demo.Events.%ENTITY%
         public string CorrelationId { get; set; }
 
         public Guid Id { get; set; }
-        public Guid DeletedBy { get; set; }
+        public string DeletedBy { get; set; }
     }
 }";
             code = code.Replace("%ENTITY%", entityName);

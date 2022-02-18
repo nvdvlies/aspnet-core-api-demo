@@ -85,7 +85,7 @@ namespace Demo.WebApi.Tests.Controllers.Customers
             };
 
             Guid idFromEvent = Guid.Empty;
-            using var subscription = _hubConnection.On(nameof(ICustomerEventHub.CustomerCreated), (Guid id, Guid createdBy) =>
+            using var subscription = _hubConnection.On(nameof(ICustomerEventHub.CustomerCreated), (Guid id, string createdBy) =>
             {
                 idFromEvent = id;
             });

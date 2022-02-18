@@ -26,8 +26,8 @@ namespace Demo.Infrastructure.Persistence.Configuration
 
             builder.Property(x => x.Timestamp).IsRowVersion();
             builder.Property(x => x.CreatedOn).IsRequired();
-            builder.Property(x => x.CreatedBy).IsRequired();
-            builder.Property(x => x.LastModifiedBy);
+            builder.Property(x => x.CreatedBy).HasMaxLength(64).IsRequired();
+            builder.Property(x => x.LastModifiedBy).HasMaxLength(64);
             builder.Property(x => x.LastModifiedOn);
         }
     }

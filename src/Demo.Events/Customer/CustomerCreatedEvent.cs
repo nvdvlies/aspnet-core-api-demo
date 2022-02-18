@@ -4,7 +4,7 @@ namespace Demo.Events.Customer
 {
     public class CustomerCreatedEvent : Event<CustomerCreatedEvent, CustomerCreatedEventData>
     {
-        public static CustomerCreatedEvent Create(string correlationId, Guid id, Guid createdBy)
+        public static CustomerCreatedEvent Create(string correlationId, Guid id, string createdBy)
         {
             var data = new CustomerCreatedEventData
             {
@@ -29,6 +29,6 @@ namespace Demo.Events.Customer
         public string CorrelationId { get; set; }
 
         public Guid Id { get; set; }
-        public Guid CreatedBy { get; set; }
+        public string CreatedBy { get; set; }
     }
 }

@@ -5,7 +5,7 @@ namespace Demo.Common.Interfaces
 {
     public interface ICurrentUser
     {
-        Guid Id { get; }
+        string Id { get; }
         TimeZoneInfo TimeZone { get; }
         CultureInfo Culture { get; }
     }

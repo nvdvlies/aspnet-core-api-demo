@@ -9,7 +9,7 @@ namespace Demo.Domain.Auditlog
     {
         public string EntityName { get; set; }
         public Guid EntityId { get; set; }
-        public Guid ModifiedBy { get; set; }
+        public string ModifiedBy { get; set; }
         public DateTime ModifiedOn { get; set; }
 
         public List<AuditlogItem> AuditlogItems { get; set; }

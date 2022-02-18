@@ -1,5 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
-using System;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Demo.Infrastructure.Persistence.Migrations
 {
@@ -32,9 +32,9 @@ namespace Demo.Infrastructure.Persistence.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Settings = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Timestamp = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: true),
-                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedBy = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    LastModifiedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    LastModifiedBy = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: true),
                     LastModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
@@ -50,7 +50,7 @@ namespace Demo.Infrastructure.Persistence.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     EntityName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     EntityId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ModifiedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ModifiedBy = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: false),
                     ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Timestamp = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: true)
                 },
@@ -69,17 +69,53 @@ namespace Demo.Infrastructure.Persistence.Migrations
                     Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     InvoiceEmailAddress = table.Column<string>(type: "nvarchar(320)", maxLength: 320, nullable: true),
                     Timestamp = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: true),
-                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedBy = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    LastModifiedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    LastModifiedBy = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: true),
                     LastModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Deleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
-                    DeletedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    DeletedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DeletedOn = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Customer", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "EventOutbox",
+                schema: "demo",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Type = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Event = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LockedUntil = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    LockToken = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsPublished = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    Timestamp = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EventOutbox", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MessageOutbox",
+                schema: "demo",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Type = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Message = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LockedUntil = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    LockToken = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsSent = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    Timestamp = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MessageOutbox", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -131,12 +167,12 @@ namespace Demo.Infrastructure.Persistence.Migrations
                     PdfIsSynced = table.Column<bool>(type: "bit", nullable: false),
                     PdfChecksum = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Timestamp = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: true),
-                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedBy = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    LastModifiedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    LastModifiedBy = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: true),
                     LastModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Deleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
-                    DeletedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    DeletedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DeletedOn = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
@@ -157,6 +193,7 @@ namespace Demo.Infrastructure.Persistence.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    LineNumber = table.Column<int>(type: "int", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     SellingPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
@@ -188,6 +225,18 @@ namespace Demo.Infrastructure.Persistence.Migrations
                 column: "ParentAuditlogItemId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_EventOutbox_IsPublished",
+                schema: "demo",
+                table: "EventOutbox",
+                column: "IsPublished");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_EventOutbox_LockedUntil",
+                schema: "demo",
+                table: "EventOutbox",
+                column: "LockedUntil");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Invoice_CustomerId",
                 schema: "demo",
                 table: "Invoice",
@@ -198,6 +247,18 @@ namespace Demo.Infrastructure.Persistence.Migrations
                 schema: "demo",
                 table: "InvoiceLine",
                 column: "InvoiceId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MessageOutbox_IsSent",
+                schema: "demo",
+                table: "MessageOutbox",
+                column: "IsSent");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MessageOutbox_LockedUntil",
+                schema: "demo",
+                table: "MessageOutbox",
+                column: "LockedUntil");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -211,7 +272,15 @@ namespace Demo.Infrastructure.Persistence.Migrations
                 schema: "demo");
 
             migrationBuilder.DropTable(
+                name: "EventOutbox",
+                schema: "demo");
+
+            migrationBuilder.DropTable(
                 name: "InvoiceLine",
+                schema: "demo");
+
+            migrationBuilder.DropTable(
+                name: "MessageOutbox",
                 schema: "demo");
 
             migrationBuilder.DropTable(

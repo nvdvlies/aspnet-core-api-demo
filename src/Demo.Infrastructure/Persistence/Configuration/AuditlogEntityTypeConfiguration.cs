@@ -19,6 +19,7 @@ namespace Demo.Infrastructure.Persistence.Configuration
                 .IsRequired();
 
             builder.Property(t => t.ModifiedBy)
+                .HasMaxLength(64)
                 .IsRequired();
 
             builder.Property(t => t.ModifiedOn)

@@ -16,7 +16,7 @@ namespace Demo.WebApi.Services
             _context = context;
         }
 
-        public Guid Id => Guid.NewGuid(); // _context.HttpContext.User?.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+        public string Id => _context.HttpContext.User?.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
 
         public TimeZoneInfo TimeZone => TimeZoneInfo.FindSystemTimeZoneById("W. Europe Standard Time"); // linux: Europe/Amsterdam
 
