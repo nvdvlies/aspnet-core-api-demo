@@ -51,8 +51,6 @@ export interface DomainEntity<T> {
   clone(): T;
 }
 
-export type DomainEntityFormControl = FormControl & { warnings: any[], info: any[] };  
-
 @Injectable()
 export abstract class DomainEntityBase<T extends DomainEntity<T>> implements OnDestroy {
   protected abstract instantiateForm(): void;
