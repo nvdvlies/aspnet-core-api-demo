@@ -26,7 +26,7 @@ export class ProblemDetailsComponent implements OnInit {
 
   private setErrorMessage(): void {
     if (!this.problemDetails) {
-      return undefined;
+      this.errorMessage = undefined;
     }
 
     if (this.problemDetails instanceof ValidationProblemDetails) {
