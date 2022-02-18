@@ -7,13 +7,15 @@ import { TableFilterContainerDirective } from './directives/table-filter/table-f
 import { TableFilterDirective } from './directives/table-filter/table-filter.directive';
 import { PageHeaderComponent } from './components/page-header/page-header.component';
 import { DiscardUnsavedChangesModalComponent } from './modals/discard-unsaved-changes-modal/discard-unsaved-changes-modal.component';
+import { ProblemDetailsComponent } from './components/problem-details/problem-details.component';
 
 @NgModule({
   declarations: [
     TableFilterContainerDirective,
     TableFilterDirective,
     PageHeaderComponent,
-    DiscardUnsavedChangesModalComponent
+    DiscardUnsavedChangesModalComponent,
+    ProblemDetailsComponent
   ],
   imports: [
     CommonModule,
@@ -28,7 +30,8 @@ import { DiscardUnsavedChangesModalComponent } from './modals/discard-unsaved-ch
     TableFilterContainerDirective,
     TableFilterDirective,
     PageHeaderComponent,
-    DiscardUnsavedChangesModalComponent
+    DiscardUnsavedChangesModalComponent,
+    ProblemDetailsComponent
   ]
 })
 export class SharedModule { }
