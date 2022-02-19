@@ -13,7 +13,7 @@
                 <button mat-raised-button color="primary" type="submit" [disabled]="!form.valid || vm.isSaving">
                     Submit
                 </button>
-                    <button mat-raised-button (click)="delete()" type="button">
+                    <button mat-raised-button (click)="delete()" type="button" *ngIf="vm.id != null">
                     Delete
                 </button>
                 <button mat-raised-button routerLink="/customers" type="button">
