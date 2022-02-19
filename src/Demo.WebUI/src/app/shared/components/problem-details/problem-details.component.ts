@@ -32,16 +32,16 @@ export class ProblemDetailsComponent implements OnInit {
 
     if (this.problemDetails instanceof ValidationProblemDetails) {
       this.errorMessage = this.problemDetails.title;
-      if (this.problemDetails.errors) {
-        this.errorMessage += '<ul>';
-        for (const key in this.problemDetails.errors) {
-          const errors = this.problemDetails.errors[key];
-          for (const error of errors) {
-            this.errorMessage += `<li>${key}: ${error}</li>`;
-          }
-        }
-        this.errorMessage += '</ul>';
-      }
+      // if (this.problemDetails.errors) {
+      //   this.errorMessage += '<ul>';
+      //   for (const key in this.problemDetails.errors) {
+      //     const errors = this.problemDetails.errors[key];
+      //     for (const error of errors) {
+      //       this.errorMessage += `<li>${key}: ${error}</li>`;
+      //     }
+      //   }
+      //   this.errorMessage += '</ul>';
+      // }
     } else if (this.problemDetails instanceof ProblemDetails) {
       this.errorMessage = this.problemDetails.title;
     } else if (this.problemDetails instanceof ApiException) {
