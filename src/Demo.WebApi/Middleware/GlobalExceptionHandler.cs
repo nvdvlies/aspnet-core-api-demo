@@ -90,7 +90,7 @@ namespace Demo.WebApi.Middleware
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
                 WriteIndented = env.IsDevelopment()
             };
-            var json = JsonSerializer.Serialize(problemDetails, options);
+            var json = JsonSerializer.Serialize(problemDetails, problemDetails.GetType(), options);
             await context.Response.WriteAsync(json);
         }
     }
