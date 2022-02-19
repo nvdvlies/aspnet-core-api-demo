@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject, combineLatest, EMPTY, Observable, of, Subject, throwError } from 'rxjs';
 import { catchError, debounceTime, filter, finalize, map, switchMap, takeUntil, tap } from 'rxjs/operators';
@@ -44,7 +44,7 @@ export class DomainEntityContext<T> implements IDomainEntityContext<T> {
   problemDetails: ValidationProblemDetails | ProblemDetails | ApiException | undefined;
 }
 
-export interface DomainEntity<T> {
+export interface IDomainEntity<T> {
   id: string | undefined;
   createdOn: Date | undefined;
   lastModifiedOn?: Date | undefined;
@@ -52,7 +52,12 @@ export interface DomainEntity<T> {
 }
 
 @Injectable()
-export abstract class DomainEntityBase<T extends DomainEntity<T>> implements OnDestroy {
+export abstract class BaseDomainEntityService {
+  public abstract getErrorMessage(errorKey: string, errorValue: any): string | undefined;
+}
+
+@Injectable()
+export abstract class DomainEntityBase<T extends IDomainEntity<T>> implements BaseDomainEntityService, OnDestroy {
   protected abstract instantiateForm(): void;
   protected abstract instantiateNewEntity(): T;
   protected abstract getByIdFunction: (id: string) => Observable<T>;
@@ -191,7 +196,7 @@ export abstract class DomainEntityBase<T extends DomainEntity<T>> implements OnD
     } else {
       getByIdFunction ??= this.getByIdFunction;
       return this.getById(id, getByIdFunction);
-    } 
+    }
   }
 
   protected create(createFunction?: (entity: T) => Observable<T>): Observable<T> {
@@ -237,7 +242,7 @@ export abstract class DomainEntityBase<T extends DomainEntity<T>> implements OnD
   }
 
   protected upsert(createFunction?: (entity: T) => Observable<T>, updateFunction?: (entity: T) => Observable<T>): Observable<T> {
-    return this.id.value == null ? this.create(createFunction): this.update(updateFunction);
+    return this.id.value == null ? this.create(createFunction) : this.update(updateFunction);
   }
 
   protected deleteWithConfirmation(deleteFunction?: (id: string) => Observable<void>): Observable<void> {
@@ -307,7 +312,7 @@ export abstract class DomainEntityBase<T extends DomainEntity<T>> implements OnD
 
   protected setProblemDetailsAndRethrow(problemDetails: ValidationProblemDetails | ProblemDetails | ApiException): Observable<never> {
     this.problemDetails.next(problemDetails);
-    return throwError(() => new Error('An error occured. See \'problemDetails\' for more information')); 
+    return throwError(() => new Error('An error occured. See \'problemDetails\' for more information'));
   }
 
   private subscribeToEntityUpdatedEvent(): void {
@@ -325,7 +330,7 @@ export abstract class DomainEntityBase<T extends DomainEntity<T>> implements OnD
         if (newLastModifiedOn <= currentLastModifiedOn) {
           return;
         }
-  
+
         const hasMergeConflict = !this.tryMerge(entity, this.pristine.value, this.form);
         if (hasMergeConflict) {
           this.hasNewerVersionWithMergeConflict.next(true);
@@ -333,6 +338,21 @@ export abstract class DomainEntityBase<T extends DomainEntity<T>> implements OnD
 
         this.pristine.next(entity.clone());
       });
+  }
+
+  public getErrorMessage(errorKey: string, errorValue: any): string | undefined {
+    switch (errorKey) {
+      case 'required': return 'Field is required.';
+      case 'maxlength': return `Field must have at most ${errorValue.requiredLength} characters.`;
+      case 'minlength': return `Field must have at least ${errorValue.requiredLength} characters.`;
+      case 'min': return 'todo: min';
+      case 'max': return 'todo: max';
+      case 'pattern': return 'todo: pattern';
+      case 'email': return 'todo: email';
+      case 'numeric': return 'todo: numeric';
+      default:
+        return undefined;
+    }
   }
 
   protected reset(): void {

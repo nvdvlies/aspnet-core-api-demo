@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { combineLatest, map, Observable } from 'rxjs';
+import { BaseDomainEntityService } from '@domain/shared/domain-entity-base';
 import { CustomerDomainEntityService, CustomerFormGroup, ICustomerDomainEntityContext } from '@domain/customer/customer-domain-entity.service';
 import { IHasForm } from '@shared/guards/unsaved-changes.guard';
 
@@ -10,7 +11,10 @@ interface ViewModel extends ICustomerDomainEntityContext {
 @Component({
   templateUrl: './customer-details.component.html',
   styleUrls: ['./customer-details.component.scss'],
-  providers: [CustomerDomainEntityService],
+  providers: [
+    CustomerDomainEntityService,
+    { provide: BaseDomainEntityService, useExisting: CustomerDomainEntityService }
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CustomerDetailsComponent implements OnInit, IHasForm {

@@ -115,6 +115,14 @@ export class CustomerDomainEntityService extends DomainEntityBase<CustomerDto> i
     return super.delete();
   }
 
+  public override getErrorMessage(errorKey: string, errorValue: any): string | undefined {
+    switch (errorKey) {
+      case 'some_custom_error_key': return 'Some custom error description';
+      default:
+        return super.getErrorMessage(errorKey, errorValue);
+    }
+  }
+
   public override reset(): void {
     super.reset();
   }

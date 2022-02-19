@@ -8,6 +8,7 @@ import { TableFilterDirective } from './directives/table-filter/table-filter.dir
 import { PageHeaderComponent } from './components/page-header/page-header.component';
 import { DiscardUnsavedChangesModalComponent } from './modals/discard-unsaved-changes-modal/discard-unsaved-changes-modal.component';
 import { ProblemDetailsComponent } from './components/problem-details/problem-details.component';
+import { DomainEntityErrorMessageDirective } from './directives/domain-entity-error-message/domain-entity-error-message.directive';
 
 @NgModule({
   declarations: [
@@ -15,7 +16,8 @@ import { ProblemDetailsComponent } from './components/problem-details/problem-de
     TableFilterDirective,
     PageHeaderComponent,
     DiscardUnsavedChangesModalComponent,
-    ProblemDetailsComponent
+    ProblemDetailsComponent,
+    DomainEntityErrorMessageDirective
   ],
   imports: [
     CommonModule,
@@ -31,7 +33,8 @@ import { ProblemDetailsComponent } from './components/problem-details/problem-de
     TableFilterDirective,
     PageHeaderComponent,
     DiscardUnsavedChangesModalComponent,
-    ProblemDetailsComponent
+    ProblemDetailsComponent,
+    DomainEntityErrorMessageDirective
   ]
 })
 export class SharedModule { }
