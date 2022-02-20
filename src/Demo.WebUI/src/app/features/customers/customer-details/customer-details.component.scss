@@ -16,3 +16,9 @@
 .col:last-child {
   margin-right: 0;
 }
+
+.auditlog {
+  display: flex;
+  flex-direction: column;
+  text-align: right; 
+}

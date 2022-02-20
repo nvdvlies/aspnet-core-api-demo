@@ -7,15 +7,19 @@
                 <button mat-icon-button>
                     <mat-icon>history</mat-icon>
                 </button>
-                <button mat-raised-button color="primary" type="submit" [disabled]="vm.isSaving" [class.button-spinner]="vm.isSaving">
+                <button mat-raised-button color="primary" type="submit" [disabled]="vm.isSaving || vm.isDeleting" [class.button-spinner]="vm.isSaving">
                     Submit
                 </button>
-                    <button mat-raised-button (click)="delete()" type="button" *ngIf="vm.id != null">
+                <button mat-raised-button (click)="delete()" type="button" *ngIf="vm.id != null" [disabled]="vm.isSaving || vm.isDeleting" [class.button-spinner]="vm.isDeleting">
                     Delete
                 </button>
                 <button mat-raised-button routerLink="/customers" type="button">
                     Close
                 </button>
+                <div class="auditlog" *ngIf="vm.id != null">
+                    <small>Created by <a href="">John Doe</a> on {{ vm.pristine?.createdOn | date:'short' }}</small>
+                    <small>Last modified by <a href="">John Doe</a> on {{ vm.pristine?.lastModifiedOn | date:'short' }}</small>
+                </div>
             </app-page-header>
             <div class="content-container">
                 <app-problem-details [problemDetails]="vm.problemDetails"></app-problem-details>
