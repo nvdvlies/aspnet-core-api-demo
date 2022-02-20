@@ -6,6 +6,8 @@
         </app-page-header>
 
         <div class="content-container">
+            <app-problem-details [problemDetails]="vm.problemDetails"></app-problem-details>
+            
             <div tableFilterContainer [filterCriteria]="vm.criteria"
                 (filterChange)="search($event)">
 
