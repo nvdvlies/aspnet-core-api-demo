@@ -1,8 +1,9 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { combineLatest, map, Observable } from 'rxjs';
 import { CustomerTableDataSource } from '@customers/customer-list/customer-table-datasource';
 import { CustomerTableDataContext, CustomerTableDataService } from '@customers/customer-list/customer-table-data.service';
 import { TableFilterCriteria } from '@shared/directives/table-filter/table-filter-criteria';
+import { SearchCustomerDto } from '@api/api.generated.clients';
 
 interface ViewModel extends CustomerTableDataContext {
 }
@@ -12,7 +13,7 @@ interface ViewModel extends CustomerTableDataContext {
   styleUrls: ['./customer-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CustomerListComponent implements OnInit {
+export class CustomerListComponent implements OnInit, OnDestroy {
   public displayedColumns = ["code", "name"];
   public dataSource!: CustomerTableDataSource;
   public searchTerm = this.customerTableDataService.searchTerm;
@@ -40,5 +41,13 @@ export class CustomerListComponent implements OnInit {
 
   public search(criteria: TableFilterCriteria): void {
     this.customerTableDataService.search(criteria);
+  }
+
+  public trackById(index: number, item: SearchCustomerDto): string {
+    return item.id;
+  }
+
+  ngOnDestroy(): void {
+    this.customerTableDataService.clearSpotlight();
   }
 }

@@ -25,6 +25,7 @@ export interface TableDataContext<T> {
   hasPreviousPage: boolean | undefined;
   hasNextPage: boolean | undefined;
   problemDetails: ProblemDetails | ApiException | undefined;
+  spotlightIdentifier: string | undefined;
 }
 
 export interface IEntityUpdatedEvent {
@@ -43,6 +44,7 @@ export interface ITableDataSearchResultItem {
 
 export abstract class TableDataBase<T extends ITableDataSearchResultItem> {
   protected abstract searchFunction: (criteria: ITableFilterCriteria) => Observable<TableDataSearchResult<T>>;
+  protected abstract getByIdFunction: (id: string) => Observable<T>;
 
   protected abstract entityUpdatedInStore$: Observable<[IEntityUpdatedEvent, any]>;
   protected abstract entityDeletedEvent$: Observable<IEntityDeletedEvent>;
@@ -52,19 +54,22 @@ export abstract class TableDataBase<T extends ITableDataSearchResultItem> {
   protected readonly criteria = new BehaviorSubject<ITableFilterCriteria | undefined>(undefined);
   protected readonly isLoadingForFirstTime = new BehaviorSubject<boolean>(true);
   protected readonly isLoading = new BehaviorSubject<boolean>(true);
+  protected readonly spotlightIdentifier = new BehaviorSubject<string | undefined>(undefined);
 
   protected searchResult$ = this.searchResult.asObservable();
   protected criteria$ = this.criteria.asObservable();
   protected isLoadingForFirstTime$ = this.isLoadingForFirstTime.asObservable();
   protected isLoading$ = this.isLoading.asObservable();
   protected problemDetails$ = this.problemDetails.asObservable();
+  protected spotlightIdentifier$ = this.spotlightIdentifier.asObservable();
 
   protected observeInternal$ = combineLatest([
     this.searchResult$,
     this.criteria$,
     this.isLoadingForFirstTime$,
     this.isLoading$,
-    this.problemDetails$
+    this.problemDetails$,
+    this.spotlightIdentifier$
   ])
     .pipe(
       debounceTime(0),
@@ -73,19 +78,21 @@ export abstract class TableDataBase<T extends ITableDataSearchResultItem> {
         criteria,
         isLoadingForFirstTime,
         isLoading,
-        problemDetails
+        problemDetails,
+        spotlightIdentifier
       ]) => {
         return {
           ...searchResult,
           criteria,
           isLoadingForFirstTime,
           isLoading,
-          problemDetails
+          problemDetails,
+          spotlightIdentifier
         } as TableDataContext<T>;
       })
     ) as Observable<TableDataContext<T>>;
 
-    
+
   protected init(defaultCriteria: TableFilterCriteria): void {
     this.criteria.next(defaultCriteria);
     this.subscribeToEvents();
@@ -121,6 +128,50 @@ export abstract class TableDataBase<T extends ITableDataSearchResultItem> {
       });
   }
 
+  public spotlight(id: string): void {
+    if (!this.exists(id)) {
+      // add a newly created entity on top of the list
+      this.getByIdFunction(id)
+        .subscribe(item => {
+          if (this.searchResult.value != null) {
+            const newItems = [
+              item,
+              ...this.searchResult.value?.items ?? [],
+            ];
+            this.searchResult.next({ ...this.searchResult.value, items: newItems });
+          } else {
+            this.searchResult.next({
+              items: [item],
+              pageIndex: 0,
+              pageSize: this.criteria.value?.pageSize ?? 10,
+              totalItems: 1,
+              totalPages: 1,
+              hasPreviousPage: false,
+              hasNextPage: false
+            } as TableDataSearchResult<T>);
+          }
+          this.setSpotlightIdentifier(id);
+        });
+    } else {
+      this.setSpotlightIdentifier(id);
+    }
+  }
+
+  private setSpotlightIdentifier(id: string): void {
+    this.spotlightIdentifier.next(id);
+    setTimeout(() => {
+      if (this.spotlightIdentifier.value === id) {
+        this.spotlightIdentifier.next(undefined);
+      }
+    }, 4000);
+  }
+
+  public clearSpotlight(): void {
+    if (this.spotlightIdentifier.value != undefined) {
+      this.spotlightIdentifier.next(undefined);
+    }
+  }
+
   private subscribeToEvents(): void {
     this.subscribeToUpdatedInStoreEvent();
     this.subscribeToDeletedEvent();
@@ -129,7 +180,7 @@ export abstract class TableDataBase<T extends ITableDataSearchResultItem> {
   private subscribeToUpdatedInStoreEvent(): void {
     this.entityUpdatedInStore$
       .pipe(
-        filter(event => this.searchResult.value?.items?.find(x => x.id === event[0].id) != null),
+        filter(event => this.exists(event[0].id)),
       )
       .subscribe(([event, entity]) => {
         if (this.searchResult.value?.items != null) {
@@ -142,7 +193,7 @@ export abstract class TableDataBase<T extends ITableDataSearchResultItem> {
   private subscribeToDeletedEvent(): void {
     this.entityDeletedEvent$
       .pipe(
-        filter(event => this.searchResult.value?.items?.find(x => x.id === event.id) != null),
+        filter(event => this.exists(event.id)),
       )
       .subscribe(event => {
         if (this.searchResult.value?.items != null) {
@@ -153,8 +204,12 @@ export abstract class TableDataBase<T extends ITableDataSearchResultItem> {
   }
 
   protected sortbyDescending(sortDirection: SortDirection | undefined): boolean | undefined {
-    return sortDirection === 'desc' ? true 
-      : sortDirection === 'asc' ? false 
-      : undefined;
+    return sortDirection === 'desc' ? true
+      : sortDirection === 'asc' ? false
+        : undefined;
+  }
+
+  private exists(id: string): boolean {
+    return this.searchResult.value?.items?.find(x => x.id === id) != null;
   }
 }

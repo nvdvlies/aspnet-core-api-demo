@@ -3,7 +3,7 @@
 <ng-container *ngIf="vm$ | async as vm; else loading">
     <ng-container *ngIf="!vm.isLoading; else loading">
         <form [formGroup]="form" novalidate (ngSubmit)="save()">
-            <app-page-header title="{{ vm.id != null ? 'Customer: ' + vm.pristine?.name : 'New customer' }}">
+            <app-page-header title="{{ vm.id != null ? 'Customer: ' + vm.pristine?.code + ' - ' + vm.pristine?.name : 'New customer' }}">
                 <button mat-icon-button>
                     <mat-icon>settings</mat-icon>
                 </button>

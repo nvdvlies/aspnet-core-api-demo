@@ -41,8 +41,8 @@ export class CustomerTableDataService extends TableDataBase<SearchCustomerDto> {
     ) as Observable<CustomerTableDataContext>;
 
   protected entityUpdatedInStore$ = this.customerStoreService.customerUpdatedInStore$;
-  protected entityDeletedEvent$ = this.customerEventsService.customerDeleted$; 
-  
+  protected entityDeletedEvent$ = this.customerEventsService.customerDeleted$;
+
   constructor(
     private readonly apiCustomersClient: ApiCustomersClient,
     private readonly customerStoreService: CustomerStoreService,
@@ -86,9 +86,17 @@ export class CustomerTableDataService extends TableDataBase<SearchCustomerDto> {
       case 'name':
         return SearchCustomersOrderByEnum.Name;
       default: {
-          const exhaustiveCheck: never = sortColumn; // this line will result in a compiler error when CustomerSortColumn contains an option that's not handled in the switch statement.
-          throw new Error(exhaustiveCheck);
+        const exhaustiveCheck: never = sortColumn; // this line will result in a compiler error when CustomerSortColumn contains an option that's not handled in the switch statement.
+        throw new Error(exhaustiveCheck);
       }
     }
   }
+
+  protected getByIdFunction = (id: string) => this.customerStoreService
+    .getById(id)
+    .pipe(
+      map(customer => {
+        return new SearchCustomerDto(customer);
+      })
+    );
 }

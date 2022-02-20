@@ -4,6 +4,7 @@ import { combineLatest, map, Observable } from 'rxjs';
 import { BaseDomainEntityService } from '@domain/shared/domain-entity-base';
 import { CustomerDomainEntityService, CustomerFormGroup, ICustomerDomainEntityContext } from '@domain/customer/customer-domain-entity.service';
 import { IHasForm } from '@shared/guards/unsaved-changes.guard';
+import { CustomerTableDataService } from '@customers/customer-list/customer-table-data.service';
 
 interface ViewModel extends ICustomerDomainEntityContext {
 }
@@ -35,7 +36,8 @@ export class CustomerDetailsComponent implements OnInit, IHasForm {
     
   constructor(
     private readonly router: Router,
-    private readonly customerDomainEntityService: CustomerDomainEntityService
+    private readonly customerDomainEntityService: CustomerDomainEntityService,
+    private readonly customerTableDataService: CustomerTableDataService
   ) { 
   }
 
@@ -48,7 +50,8 @@ export class CustomerDetailsComponent implements OnInit, IHasForm {
 
   public save(): void {
     this.customerDomainEntityService.upsert()
-      .subscribe(() => {
+      .subscribe(customer => {
+        this.customerTableDataService.spotlight(customer.id);
         this.router.navigateByUrl('/customers');
       });
   }
