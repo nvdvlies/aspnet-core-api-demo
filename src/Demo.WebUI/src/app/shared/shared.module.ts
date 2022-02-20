@@ -9,6 +9,7 @@ import { PageHeaderComponent } from './components/page-header/page-header.compon
 import { DiscardUnsavedChangesModalComponent } from './modals/discard-unsaved-changes-modal/discard-unsaved-changes-modal.component';
 import { ProblemDetailsComponent } from './components/problem-details/problem-details.component';
 import { DomainEntityErrorMessageDirective } from './directives/domain-entity-error-message/domain-entity-error-message.directive';
+import { FocusDirective } from './directives/focus/focus.directive';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import { DomainEntityErrorMessageDirective } from './directives/domain-entity-er
     PageHeaderComponent,
     DiscardUnsavedChangesModalComponent,
     ProblemDetailsComponent,
-    DomainEntityErrorMessageDirective
+    DomainEntityErrorMessageDirective,
+    FocusDirective
   ],
   imports: [
     CommonModule,
@@ -34,7 +36,8 @@ import { DomainEntityErrorMessageDirective } from './directives/domain-entity-er
     PageHeaderComponent,
     DiscardUnsavedChangesModalComponent,
     ProblemDetailsComponent,
-    DomainEntityErrorMessageDirective
+    DomainEntityErrorMessageDirective,
+    FocusDirective
   ]
 })
 export class SharedModule { }
