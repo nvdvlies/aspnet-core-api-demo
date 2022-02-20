@@ -4,7 +4,7 @@ namespace Demo.Application.Customers.Queries.GetCustomerById.Dtos
 {
     public class CustomerDto : SoftDeleteEntityDto
     {
-        public string Code { get; set; }
+        public int Code { get; set; }
         public string Name { get; set; }
     }
 }
