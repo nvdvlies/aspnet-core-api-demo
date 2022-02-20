@@ -16,10 +16,11 @@ export class DomainEntityErrorMessageDirective implements AfterViewInit {
   }
 
   public ngAfterViewInit() {
+    this.setErrorMessage();
     this.formField._control.ngControl?.statusChanges?.subscribe((state: 'VALID' | 'INVALID') => this.setErrorMessage(state));
   }
 
-  private setErrorMessage(state: 'VALID' | 'INVALID'): void {
+  private setErrorMessage(state?: 'VALID' | 'INVALID'): void {
     if (state === 'VALID') { 
       this.errorMessage = undefined;
       return;

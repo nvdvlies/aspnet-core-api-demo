@@ -343,13 +343,12 @@ export abstract class DomainEntityBase<T extends IDomainEntity<T>> implements Ba
   public getErrorMessage(errorKey: string, errorValue: any): string | undefined {
     switch (errorKey) {
       case 'required': return 'Field is required.';
-      case 'maxlength': return `Field must have at most ${errorValue.requiredLength} characters.`;
-      case 'minlength': return `Field must have at least ${errorValue.requiredLength} characters.`;
-      case 'min': return 'todo: min';
-      case 'max': return 'todo: max';
-      case 'pattern': return 'todo: pattern';
-      case 'email': return 'todo: email';
-      case 'numeric': return 'todo: numeric';
+      case 'maxlength': return `Field must be ${errorValue.requiredLength} characters or fewer. You entered ${errorValue.actualLength} characters.`;
+      case 'minlength': return `Field must be at least ${errorValue.requiredLength} characters. You entered ${errorValue.actualLength} characters.`;
+      case 'min': return `Field must be greater than or equal to ${errorValue.min}`;
+      case 'max': return `Field must be less than or equal to ${errorValue.max}`;
+      case 'pattern': return 'Field is not in the correct format.';
+      case 'email': return 'Field must be a valid email address.';
       default:
         return undefined;
     }

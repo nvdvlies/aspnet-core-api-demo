@@ -2,16 +2,7 @@
     <ng-container *ngIf="!vm.isLoadingForFirstTime; else loading">
 
         <app-page-header title="Customers">
-            <button mat-icon-button>
-                <mat-icon>settings</mat-icon>
-            </button>
-            <button mat-icon-button>
-                <mat-icon>history</mat-icon>
-            </button>
-
-            <button mat-raised-button routerLink="/customers/new">New customer</button>
-            <button mat-raised-button routerLink="/customers/new">Test</button>
-
+            <button mat-raised-button routerLink="/customers/new" type="button">New customer</button>
         </app-page-header>
 
         <div class="content-container">
