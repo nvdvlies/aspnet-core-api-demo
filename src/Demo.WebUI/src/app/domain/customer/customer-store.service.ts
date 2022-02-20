@@ -4,7 +4,6 @@ import { map } from 'rxjs/operators';
 import { CustomerDto, ApiCustomersClient, CreateCustomerCommand, UpdateCustomerCommand, DeleteCustomerCommand } from '@api/api.generated.clients';
 import { CustomerUpdatedEvent, CustomerDeletedEvent, CustomerEventsService } from '@api/signalr.generated.services';
 import { StoreBase } from '@domain/shared/store-base';
-import { CurrentUserService } from '@core/services/current-user.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,17 +12,15 @@ export class CustomerStoreService extends StoreBase<CustomerDto> {
   public readonly customers$ = this.cache.asObservable();
   public readonly customerUpdatedInStore$ = this.entityUpdatedInStore.asObservable() as Observable<[CustomerUpdatedEvent, CustomerDto]>;
   public readonly customerDeletedFromStore$ = this.entityDeletedFromStore.asObservable() as Observable<CustomerDeletedEvent>;
-  public readonly createdBySelf$ = this.createdBySelf.asObservable();
 
   protected entityUpdatedEvent$ = this.customerEventsService.customerUpdated$;
   protected entityDeletedEvent$ = this.customerEventsService.customerDeleted$;
-  
+
   constructor(
-    currentUserService: CurrentUserService,
     private apiCustomersClient: ApiCustomersClient,
     private customerEventsService: CustomerEventsService
   ) {
-    super(currentUserService);
+    super();
     super.init();
   }
 

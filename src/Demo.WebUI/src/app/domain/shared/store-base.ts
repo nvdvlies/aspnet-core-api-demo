@@ -1,9 +1,10 @@
 import { BehaviorSubject } from 'rxjs';
-import { combineLatest, Observable, of, Subject } from 'rxjs';
-import { tap, map, switchMap, filter, mergeMap } from 'rxjs/operators';
-import { CurrentUserService } from '@core/services/current-user.service';
+import {  Observable, of, Subject } from 'rxjs';
+import { tap, map, switchMap, filter, finalize } from 'rxjs/operators';
+
 export interface IEntity<T> {
   id: string;
+  lastModifiedBy?: string | undefined;
   clone(): T;
 }
 
@@ -30,8 +31,9 @@ export abstract class StoreBase<T extends IEntity<T>> {
 
   protected readonly entityUpdatedInStore = new Subject<[IEntityUpdatedEvent, T]>(); 
   protected readonly entityDeletedFromStore = new Subject<IEntityDeletedEvent>(); 
-  protected readonly createdBySelf = new Subject<T>();
   
+  private updateLockEntityId: string | undefined;
+
   private get items(): T[] {
     return this.cache.getValue();
   }
@@ -40,7 +42,7 @@ export abstract class StoreBase<T extends IEntity<T>> {
     this.cache.next(value);
   }
 
-  constructor(protected readonly currentUserService: CurrentUserService) {
+  constructor() {
   }
 
   protected init(): void {
@@ -60,7 +62,7 @@ export abstract class StoreBase<T extends IEntity<T>> {
     return getByIdFunction(id)
         .pipe(
           map((entity) => {
-            this.addToOrReplaceCache(entity);
+            this.addToOrReplaceInCache(entity);
             return entity;
           })
         );
@@ -72,20 +74,17 @@ export abstract class StoreBase<T extends IEntity<T>> {
       .pipe(
         switchMap(id => {
           return this.getById(id);
-        }),
-        tap((createdEntity) => {
-          this.createdBySelf.next(createdEntity);
         })
       );
   }
 
   protected update(entity: T, updateFunction?: (entity: T) => Observable<void>): Observable<T> {
+    this.updateLockEntityId = entity.id;
     updateFunction ??= this.updateFunction;
     return updateFunction(entity)
       .pipe(
-        switchMap(_ => {
-          return this.getById(entity.id, true);
-        })
+        switchMap(() => this.getById(entity.id, true)),
+        finalize(() => this.updateLockEntityId = undefined)
       );
   }
 
@@ -106,18 +105,22 @@ export abstract class StoreBase<T extends IEntity<T>> {
     ];
   }
 
-  private addToOrReplaceCache(updatedItem: T): void {
-    if (!this.items.find(x => x.id === updatedItem.id)) {
+  private addToOrReplaceInCache(updatedItem: T): void {
+    if (this.existsInCache(updatedItem.id)) {
+      this.replaceInCache(updatedItem);
+    } else {
       this.addToCache(updatedItem);
-      return;
     }
-
+  }
+  
+  private replaceInCache(updatedItem: T): void {
     this.items = this.items.map((item, _) => {
       if (item.id !== updatedItem.id) {
         return item;
       }
       return updatedItem;
     });
+    this.entityUpdatedInStore.next([{ id: updatedItem.id, updatedBy: updatedItem.lastModifiedBy } as IEntityUpdatedEvent, updatedItem]);
   }
 
   private removeFromCache(id: string): void {
@@ -132,24 +135,27 @@ export abstract class StoreBase<T extends IEntity<T>> {
   private subscribeToUpdatedEvent(): void {
     this.entityUpdatedEvent$
       .pipe(
-        filter(event => this.cache.value.find(x => x.id === event.id) != null),
-        filter(event => event.updatedBy != this.currentUserService.id), // create() and update() will refresh the entity itself, so we can ignore the event
-        mergeMap(event => combineLatest([of(event), this.getById(event.id, true)]))
+        filter(event => this.existsInCache(event.id)),
+        filter(event => event.id != this.updateLockEntityId), // update() will refresh the entity itself, so we should ignore the event to prevent unnecessary requests
+        switchMap(event => this.getById(event.id, true))
       )
-      .subscribe(([event, invoice]) => {
-        this.addToOrReplaceCache(invoice);
-        this.entityUpdatedInStore.next([event, invoice]);
+      .subscribe((entity) => {
+        this.replaceInCache(entity);
       });
   }
 
   private subscribeToDeletedEvent(): void {
     this.entityDeletedEvent$
       .pipe(
-        filter(event => this.cache.value.find(x => x.id === event.id) != null)
+        filter(event => this.existsInCache(event.id))
       )
       .subscribe(event => {
         this.removeFromCache(event.id);
         this.entityDeletedFromStore.next(event);
       });
+  }
+
+  private existsInCache(id: string): boolean {
+    return this.cache.value.find(x => x.id === id) != null;
   }
 }
