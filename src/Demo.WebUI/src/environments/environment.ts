@@ -9,7 +9,7 @@ export const environment = {
     domain: 'dev-spke9m2i.us.auth0.com',
     clientId: 'ReyDS7xhKCmSlo6vrua1AIGIGmQyQA3e',
     audience: 'https://demo',
-    redirectUri: window.location.origin,
+    redirectUri: window.location.origin
   }
 };
 
@@ -20,4 +20,4 @@ export const environment = {
  * This import should be commented out in production mode because it will have a negative impact
  * on performance if an error is thrown.
  */
-import 'zone.js/plugins/zone-error';  // Included with Angular CLI.
+import 'zone.js/plugins/zone-error'; // Included with Angular CLI.

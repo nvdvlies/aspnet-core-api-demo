@@ -22,25 +22,29 @@ export class SignalRService {
     private readonly authService: AuthService
   ) {
     this.hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl(this.baseUrl + '/hub', { accessTokenFactory: () => lastValueFrom(this.authService.getAccessTokenSilently()) } as IHttpConnectionOptions) 
+      .withUrl(this.baseUrl + '/hub', {
+        accessTokenFactory: () => lastValueFrom(this.authService.getAccessTokenSilently())
+      } as IHttpConnectionOptions)
       .withAutomaticReconnect()
       .configureLogging(signalR.LogLevel.Warning)
       .build();
 
-    this.authService.isAuthenticated$.subscribe(isAuthenticated => isAuthenticated ? this.connect() : this.disconnect());
+    this.authService.isAuthenticated$.subscribe((isAuthenticated) =>
+      isAuthenticated ? this.connect() : this.disconnect()
+    );
   }
 
   private connect(): void {
     this.hubConnection
       .start()
-      .catch(err => console.log('Error while starting connection: ' + err));
+      .catch((err) => console.log('Error while starting connection: ' + err));
   }
 
   private disconnect(): void {
     if (this.hubConnection) {
       this.hubConnection
         .stop()
-        .catch(err => console.log('Error while terminating connection: ' + err));
+        .catch((err) => console.log('Error while terminating connection: ' + err));
     }
   }
 }
@@ -73,9 +77,15 @@ export class CustomerEventsService {
   public customerDeleted$ = this.customerDeleted.asObservable();
 
   constructor(private signalRService: SignalRService) {
-    this.signalRService.hubConnection.on('CustomerCreated', (id: string, createdBy: string) => this.customerCreated.next({ id, createdBy }));
-    this.signalRService.hubConnection.on('CustomerUpdated', (id: string, updatedBy: string) => this.customerUpdated.next({ id, updatedBy }));
-    this.signalRService.hubConnection.on('CustomerDeleted', (id: string, deletedBy: string) => this.customerDeleted.next({ id, deletedBy }));
+    this.signalRService.hubConnection.on('CustomerCreated', (id: string, createdBy: string) =>
+      this.customerCreated.next({ id, createdBy })
+    );
+    this.signalRService.hubConnection.on('CustomerUpdated', (id: string, updatedBy: string) =>
+      this.customerUpdated.next({ id, updatedBy })
+    );
+    this.signalRService.hubConnection.on('CustomerDeleted', (id: string, deletedBy: string) =>
+      this.customerDeleted.next({ id, deletedBy })
+    );
   }
 }
 
@@ -107,8 +117,14 @@ export class InvoiceEventsService {
   public invoiceDeleted$ = this.invoiceDeleted.asObservable();
 
   constructor(private signalRService: SignalRService) {
-    this.signalRService.hubConnection.on('InvoiceCreated', (id: string, createdBy: string) => this.invoiceCreated.next({ id, createdBy }));
-    this.signalRService.hubConnection.on('InvoiceUpdated', (id: string, updatedBy: string) => this.invoiceUpdated.next({ id, updatedBy }));
-    this.signalRService.hubConnection.on('InvoiceDeleted', (id: string, deletedBy: string) => this.invoiceDeleted.next({ id, deletedBy }));
+    this.signalRService.hubConnection.on('InvoiceCreated', (id: string, createdBy: string) =>
+      this.invoiceCreated.next({ id, createdBy })
+    );
+    this.signalRService.hubConnection.on('InvoiceUpdated', (id: string, updatedBy: string) =>
+      this.invoiceUpdated.next({ id, updatedBy })
+    );
+    this.signalRService.hubConnection.on('InvoiceDeleted', (id: string, deletedBy: string) =>
+      this.invoiceDeleted.next({ id, deletedBy })
+    );
   }
 }

@@ -4,26 +4,20 @@ import { ConfirmDeleteModalComponent } from './shared/confirm-delete-modal.compo
 import { SharedModule } from '@shared/shared.module';
 
 @NgModule({
-  declarations: [
-    ConfirmDeleteModalComponent
-  ],
-  imports: [
-    CommonModule,
-    SharedModule
-  ]
+  declarations: [ConfirmDeleteModalComponent],
+  imports: [CommonModule, SharedModule]
 })
 export class DomainModule {
   static forRoot(): ModuleWithProviders<DomainModule> {
     return {
-        ngModule: DomainModule,
-        providers: [
-        ]
+      ngModule: DomainModule,
+      providers: []
     };
   }
 
   constructor(@Optional() @SkipSelf() parentModule: DomainModule) {
-      if (parentModule) {
-          throw new Error("DomainModule is already loaded. Import in AppModule only");
-      }
+    if (parentModule) {
+      throw new Error('DomainModule is already loaded. Import in AppModule only');
+    }
   }
 }

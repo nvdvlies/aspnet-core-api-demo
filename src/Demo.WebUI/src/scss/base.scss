@@ -4,7 +4,7 @@ body {
 }
 body {
   margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
 }
 
 .content-container {
@@ -29,7 +29,7 @@ body {
 }
 
 .button-spinner:before {
-  content: "";
+  content: '';
   box-sizing: border-box;
   position: absolute;
   top: 50%;

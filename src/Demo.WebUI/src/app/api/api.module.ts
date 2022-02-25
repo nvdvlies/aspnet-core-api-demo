@@ -8,29 +8,27 @@ import { environment } from '@env/environment';
 
 @NgModule({
   declarations: [],
-  imports: [
-    CommonModule
-  ]
+  imports: [CommonModule]
 })
 export class ApiModule {
   static forRoot(): ModuleWithProviders<ApiModule> {
     return {
-        ngModule: ApiModule,
-        providers: [
-          {
-            provide: HTTP_INTERCEPTORS,
-            useClass: AuthHttpInterceptor,
-            multi: true,
-          },
-          { provide: API_BASE_URL, useValue: environment.apiBaseUrl },
-          { provide: SIGNALR_BASE_URL, useValue: environment.apiBaseUrl }
-        ]
+      ngModule: ApiModule,
+      providers: [
+        {
+          provide: HTTP_INTERCEPTORS,
+          useClass: AuthHttpInterceptor,
+          multi: true
+        },
+        { provide: API_BASE_URL, useValue: environment.apiBaseUrl },
+        { provide: SIGNALR_BASE_URL, useValue: environment.apiBaseUrl }
+      ]
     };
   }
 
   constructor(@Optional() @SkipSelf() parentModule: ApiModule) {
-      if (parentModule) {
-          throw new Error("ApiModule is already loaded. Import in AppModule only");
-      }
+    if (parentModule) {
+      throw new Error('ApiModule is already loaded. Import in AppModule only');
+    }
   }
 }

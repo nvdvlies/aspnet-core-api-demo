@@ -5,13 +5,7 @@ import { InvoicesComponent } from '@invoices/invoices.component';
 import { InvoicesRoutingModule } from '@invoices/invoices-routing.module';
 
 @NgModule({
-  declarations: [
-    InvoicesComponent
-  ],
-  imports: [
-    CommonModule,
-    SharedModule,
-    InvoicesRoutingModule
-  ]
+  declarations: [InvoicesComponent],
+  imports: [CommonModule, SharedModule, InvoicesRoutingModule]
 })
-export class InvoicesModule { }
+export class InvoicesModule {}

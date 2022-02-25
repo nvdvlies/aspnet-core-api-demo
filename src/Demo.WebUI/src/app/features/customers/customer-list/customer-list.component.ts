@@ -1,11 +1,18 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
 import { combineLatest, map, Observable } from 'rxjs';
 import { CustomerTableDataSource } from '@customers/customer-list/customer-table-datasource';
-import { CustomerTableDataContext, CustomerTableDataService } from '@customers/customer-list/customer-table-data.service';
+import {
+  CustomerTableDataContext,
+  CustomerTableDataService
+} from '@customers/customer-list/customer-table-data.service';
 import { TableFilterCriteria } from '@shared/directives/table-filter/table-filter-criteria';
 import { SearchCustomerDto } from '@api/api.generated.clients';
 
-interface ViewModel extends CustomerTableDataContext {
+interface ViewModel extends CustomerTableDataContext {}
+
+export interface CustomerListRouteState {
+  spotlightIdentifier: string | undefined;
 }
 
 @Component({
@@ -14,29 +21,30 @@ interface ViewModel extends CustomerTableDataContext {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CustomerListComponent implements OnInit, OnDestroy {
-  public displayedColumns = ["code", "name"];
+  public displayedColumns = ['code', 'name'];
   public dataSource!: CustomerTableDataSource;
   public searchTerm = this.customerTableDataService.searchTerm;
 
-  public vm$ = combineLatest([
-    this.customerTableDataService.observe$,
-  ])
-    .pipe(
-      map(([
-       context
-      ]) => {
-        return {
-          ...context
-        } as ViewModel;
-      })
-    ) as Observable<ViewModel>;
-    
-  constructor(
-    private readonly customerTableDataService: CustomerTableDataService
-  ) { }
+  public vm$ = combineLatest([this.customerTableDataService.observe$]).pipe(
+    map(([context]) => {
+      return {
+        ...context
+      } as ViewModel;
+    })
+  ) as Observable<ViewModel>;
 
-  ngOnInit(): void {
+  constructor(
+    private readonly location: Location,
+    private readonly customerTableDataService: CustomerTableDataService
+  ) {}
+
+  public ngOnInit(): void {
     this.dataSource = new CustomerTableDataSource(this.customerTableDataService);
+
+    const state = this.location.getState() as CustomerListRouteState;
+    if (state && state.spotlightIdentifier) {
+      this.customerTableDataService.spotlight(state.spotlightIdentifier);
+    }
   }
 
   public search(criteria: TableFilterCriteria): void {
@@ -47,7 +55,7 @@ export class CustomerListComponent implements OnInit, OnDestroy {
     return item.id;
   }
 
-  ngOnDestroy(): void {
+  public ngOnDestroy(): void {
     this.customerTableDataService.clearSpotlight();
   }
 }

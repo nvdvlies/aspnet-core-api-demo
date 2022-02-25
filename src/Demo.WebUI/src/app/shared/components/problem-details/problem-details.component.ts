@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { ApiException, ProblemDetails, ValidationProblemDetails } from '@api/api.generated.clients';
 
 @Component({
@@ -7,47 +7,45 @@ import { ApiException, ProblemDetails, ValidationProblemDetails } from '@api/api
   styleUrls: ['./problem-details.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ProblemDetailsComponent implements OnInit {
+export class ProblemDetailsComponent {
   private _problemDetails: ValidationProblemDetails | ProblemDetails | ApiException | undefined;
   get problemDetails(): ValidationProblemDetails | ProblemDetails | ApiException | undefined {
-      return this._problemDetails;
+    return this._problemDetails;
   }
-  @Input() set problemDetails(value: ValidationProblemDetails | ProblemDetails | ApiException | undefined) {
-      this._problemDetails = value;
-      this.setErrorMessage();
+  @Input() set problemDetails(
+    value: ValidationProblemDetails | ProblemDetails | ApiException | undefined
+  ) {
+    this._problemDetails = value;
+    this.setErrorMessage();
   }
 
-  public errorMessage: string | undefined;
+  public errorMessages: string[] = [];
 
-  constructor() { }
-
-  ngOnInit(): void {
-  }
+  constructor() {}
 
   private setErrorMessage(): void {
     if (!this.problemDetails) {
-      this.errorMessage = undefined;
+      this.errorMessages = [];
       return;
     }
 
     if (this.problemDetails instanceof ValidationProblemDetails) {
-      this.errorMessage = this.problemDetails.title;
-      // if (this.problemDetails.errors) {
-      //   this.errorMessage += '<ul>';
-      //   for (const key in this.problemDetails.errors) {
-      //     const errors = this.problemDetails.errors[key];
-      //     for (const error of errors) {
-      //       this.errorMessage += `<li>${key}: ${error}</li>`;
-      //     }
-      //   }
-      //   this.errorMessage += '</ul>';
-      // }
+      if (this.problemDetails.errors) {
+        for (const key in this.problemDetails.errors) {
+          const errors = this.problemDetails.errors[key];
+          for (const error of errors) {
+            this.errorMessages.push(error);
+          }
+        }
+      } else {
+        this.errorMessages.push(this.problemDetails.title!);
+      }
     } else if (this.problemDetails instanceof ProblemDetails) {
-      this.errorMessage = this.problemDetails.title;
+      this.errorMessages.push(this.problemDetails.title!);
     } else if (this.problemDetails instanceof ApiException) {
-      this.errorMessage = this.problemDetails.message;
+      this.errorMessages.push(this.problemDetails.message);
     } else {
-      this.errorMessage = 'An unknown exception occured.'
+      this.errorMessages.push('An unknown exception occured.');
     }
   }
 }

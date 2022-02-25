@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
@@ -6,14 +6,8 @@ import { MatDialogRef } from '@angular/material/dialog';
   styleUrls: ['./discard-unsaved-changes-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DiscardUnsavedChangesModalComponent implements OnInit {
-
-  constructor(
-    public dialogRef: MatDialogRef<DiscardUnsavedChangesModalComponent>
-  ) {}
-
-  ngOnInit(): void {
-  }
+export class DiscardUnsavedChangesModalComponent {
+  constructor(public dialogRef: MatDialogRef<DiscardUnsavedChangesModalComponent>) {}
 
   public confirmDiscard(): void {
     this.dialogRef.close(true);

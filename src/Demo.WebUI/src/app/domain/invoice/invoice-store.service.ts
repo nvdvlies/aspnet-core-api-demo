@@ -1,8 +1,19 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { InvoiceDto, ApiInvoicesClient, CreateInvoiceCommand, UpdateInvoiceCommand, DeleteInvoiceCommand, MarkInvoiceAsPaidCommand } from '@api/api.generated.clients';
-import { InvoiceUpdatedEvent, InvoiceDeletedEvent, InvoiceEventsService } from '@api/signalr.generated.services';
+import {
+  InvoiceDto,
+  ApiInvoicesClient,
+  CreateInvoiceCommand,
+  UpdateInvoiceCommand,
+  DeleteInvoiceCommand,
+  MarkInvoiceAsPaidCommand
+} from '@api/api.generated.clients';
+import {
+  InvoiceUpdatedEvent,
+  InvoiceDeletedEvent,
+  InvoiceEventsService
+} from '@api/signalr.generated.services';
 import { StoreBase } from '@domain/shared/store-base';
 
 @Injectable({
@@ -10,12 +21,15 @@ import { StoreBase } from '@domain/shared/store-base';
 })
 export class InvoiceStoreService extends StoreBase<InvoiceDto> {
   public readonly invoices$ = this.cache.asObservable();
-  public readonly invoiceUpdatedInStore$ = this.entityUpdatedInStore.asObservable() as Observable<[InvoiceUpdatedEvent, InvoiceDto]>;
-  public readonly invoiceDeletedFromStore$ = this.entityDeletedFromStore.asObservable() as Observable<InvoiceDeletedEvent>;
+  public readonly invoiceUpdatedInStore$ = this.entityUpdatedInStore.asObservable() as Observable<
+    [InvoiceUpdatedEvent, InvoiceDto]
+  >;
+  public readonly invoiceDeletedFromStore$ =
+    this.entityDeletedFromStore.asObservable() as Observable<InvoiceDeletedEvent>;
 
   protected entityUpdatedEvent$ = this.invoiceEventsService.invoiceUpdated$;
   protected entityDeletedEvent$ = this.invoiceEventsService.invoiceDeleted$;
-  
+
   constructor(
     private apiInvoicesClient: ApiInvoicesClient,
     private invoiceEventsService: InvoiceEventsService
@@ -25,7 +39,7 @@ export class InvoiceStoreService extends StoreBase<InvoiceDto> {
   }
 
   protected getByIdFunction = (id: string) => {
-    return this.apiInvoicesClient.getInvoiceById(id).pipe(map(x => x.invoice!));
+    return this.apiInvoicesClient.getInvoiceById(id).pipe(map((x) => x.invoice!));
   };
 
   public override getById(id: string, skipCache: boolean = false): Observable<InvoiceDto> {
@@ -34,7 +48,7 @@ export class InvoiceStoreService extends StoreBase<InvoiceDto> {
 
   protected createFunction = (invoice: InvoiceDto) => {
     const command = new CreateInvoiceCommand({ ...invoice });
-    return this.apiInvoicesClient.create(command).pipe(map(response => response.id));
+    return this.apiInvoicesClient.create(command).pipe(map((response) => response.id));
   };
 
   public override create(invoice: InvoiceDto): Observable<InvoiceDto> {
@@ -52,7 +66,9 @@ export class InvoiceStoreService extends StoreBase<InvoiceDto> {
 
   public markAsPaid(invoice: InvoiceDto): Observable<InvoiceDto> {
     const command = new MarkInvoiceAsPaidCommand();
-    return super.update(invoice, (invoice: InvoiceDto) => this.apiInvoicesClient.markAsPaid(invoice.id, command))
+    return super.update(invoice, (invoice: InvoiceDto) =>
+      this.apiInvoicesClient.markAsPaid(invoice.id, command)
+    );
   }
 
   protected deleteFunction = (id: string) => {

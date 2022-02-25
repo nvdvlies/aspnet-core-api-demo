@@ -1,4 +1,4 @@
-@import "~@angular/material/theming";
+@import '~@angular/material/theming';
 
 @include mat-core();
 
@@ -6,11 +6,7 @@ $default-theme-primary: mat-palette($mat-light-blue);
 $default-theme-accent: mat-palette($mat-blue-gray);
 $default-theme-warn: mat-palette($mat-red);
 
-$default-theme: mat-light-theme(
-  $default-theme-primary,
-  $default-theme-accent,
-  $default-theme-warn
-);
+$default-theme: mat-light-theme($default-theme-primary, $default-theme-accent, $default-theme-warn);
 
 .default-theme {
   @include angular-material-theme($default-theme);

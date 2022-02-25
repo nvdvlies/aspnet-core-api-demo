@@ -14,28 +14,24 @@ export interface IHasForm {
   providedIn: 'root'
 })
 export class UnsavedChangesGuard implements CanDeactivate<IHasForm> {
-
-  constructor(
-    private readonly matDialog: MatDialog
-  ){
-  }
+  constructor(private readonly matDialog: MatDialog) {}
 
   canDeactivate(
     component: IHasForm,
     currentRoute: ActivatedRouteSnapshot,
     currentState: RouterStateSnapshot,
-    nextState?: RouterStateSnapshot): Observable<boolean> | boolean {
-      if (component.form.dirty) {
-        return this.confirmDialog();  
-      }
-      return true;
+    nextState?: RouterStateSnapshot
+  ): Observable<boolean> | boolean {
+    if (component.form.dirty) {
+      return this.confirmDialog();
+    }
+    return true;
   }
 
   private confirmDialog(): Observable<boolean> {
     const dialogRef = this.matDialog.open(DiscardUnsavedChangesModalComponent);
-    return dialogRef.afterClosed()
-      .pipe(
-        map(canDeactivate => coerceBooleanProperty(canDeactivate))
-      );
+    return dialogRef
+      .afterClosed()
+      .pipe(map((canDeactivate) => coerceBooleanProperty(canDeactivate)));
   }
 }

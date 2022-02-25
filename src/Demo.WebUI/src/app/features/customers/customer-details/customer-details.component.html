@@ -1,51 +1,79 @@
 {{ initFromRoute$ | async }}
 
 <ng-container *ngIf="vm$ | async as vm; else loading">
-    <ng-container *ngIf="!vm.isLoading; else loading">
-        <form [formGroup]="form" novalidate (ngSubmit)="save()">
-            <app-page-header title="{{ vm.id != null ? 'Customer: ' + vm.pristine?.code + ' - ' + vm.pristine?.name : 'New customer' }}">
-                <button mat-icon-button>
-                    <mat-icon>history</mat-icon>
-                </button>
-                <button mat-raised-button color="primary" type="submit" [disabled]="vm.isSaving || vm.isDeleting" [class.button-spinner]="vm.isSaving">
-                    Submit
-                </button>
-                <button mat-raised-button (click)="delete()" type="button" *ngIf="vm.id != null" [disabled]="vm.isSaving || vm.isDeleting" [class.button-spinner]="vm.isDeleting">
-                    Delete
-                </button>
-                <button mat-raised-button routerLink="/customers" type="button">
-                    Close
-                </button>
-                <div class="auditlog" *ngIf="vm.id != null">
-                    <small>Created by <a href="">John Doe</a> on {{ vm.pristine?.createdOn | date:'short' }}</small>
-                    <small>Last modified by <a href="">John Doe</a> on {{ vm.pristine?.lastModifiedOn | date:'short' }}</small>
-                </div>
-            </app-page-header>
-            <div class="content-container">
-                <app-problem-details [problemDetails]="vm.problemDetails"></app-problem-details>
-                <mat-card class="customer-card">
-                    <mat-card-header>
-                        <mat-card-title>General</mat-card-title>
-                    </mat-card-header>
-                    <mat-card-content>
-                        <div class="row">
-                            <div class="col">
-                                <mat-form-field class="full-width">
-                                    <input matInput [appFocus]="vm.id == null" placeholder="Name" formControlName="name">
-                                    <mat-error appDomainEntityErrorMessage></mat-error>
-                                </mat-form-field>
-                            </div>
-                        </div>
-                    </mat-card-content>
-                </mat-card>
+  <ng-container *ngIf="!vm.isLoading; else loading">
+    <form [formGroup]="form" novalidate (ngSubmit)="save()">
+      <app-page-header
+        title="{{
+          vm.id != null
+            ? 'Customer: ' + vm.pristine?.code + ' - ' + vm.pristine?.name
+            : 'New customer'
+        }}"
+      >
+        <button mat-icon-button type="button" *ngIf="vm.id != null" routerLink="auditlog">
+          <mat-icon>history</mat-icon>
+        </button>
+        <button
+          mat-raised-button
+          color="primary"
+          type="submit"
+          [disabled]="vm.isSaving"
+          [class.button-spinner]="vm.isSaving"
+        >
+          Submit
+        </button>
+        <button
+          mat-raised-button
+          (click)="delete()"
+          type="button"
+          *ngIf="vm.id != null"
+          [disabled]="vm.isDeleting"
+          [class.button-spinner]="vm.isDeleting"
+        >
+          Delete
+        </button>
+        <button mat-raised-button routerLink="/customers" type="button">Close</button>
+        <div class="auditlog" *ngIf="vm.id != null">
+          <small
+            >Created by <a href="">{{ vm.createdByFullname }}</a> on
+            {{ vm.pristine?.createdOn | date: 'short' }}</small
+          >
+          <small
+            >Last modified by <a href="">{{ vm.lastModifiedByFullname }}</a> on
+            {{ vm.pristine?.lastModifiedOn | date: 'short' }}</small
+          >
+        </div>
+      </app-page-header>
+      <div class="content-container">
+        <app-problem-details [problemDetails]="vm.problemDetails"></app-problem-details>
+        <mat-card class="customer-card">
+          <mat-card-header>
+            <mat-card-title>General</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="row">
+              <div class="col">
+                <mat-form-field class="full-width">
+                  <input
+                    matInput
+                    [appFocus]="vm.id == null"
+                    placeholder="Name"
+                    formControlName="name"
+                  />
+                  <mat-error appDomainEntityErrorMessage></mat-error>
+                </mat-form-field>
+              </div>
             </div>
-        </form>
-    </ng-container>
-    <!-- {{ vm | json }} -->
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </form>
+  </ng-container>
+  <!-- {{ vm | json }} -->
 </ng-container>
 
 <ng-template #loading>
-    <div class="spinner-container">
-        <mat-spinner [diameter]="50"></mat-spinner>
-    </div>
+  <div class="spinner-container">
+    <mat-spinner [diameter]="50"></mat-spinner>
+  </div>
 </ng-template>

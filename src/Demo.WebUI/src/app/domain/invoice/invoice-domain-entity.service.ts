@@ -1,30 +1,47 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { AbstractControl, FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { combineLatest, Observable, throwError } from 'rxjs';
+import { combineLatest, Observable, of, throwError } from 'rxjs';
 import { debounceTime, map } from 'rxjs/operators';
-import { InvoiceDto, IInvoiceDto, IInvoiceLineDto, InvoiceLineDto, ApiInvoicesClient, CopyInvoiceCommand } from '@api/api.generated.clients';
+import {
+  InvoiceDto,
+  IInvoiceDto,
+  IInvoiceLineDto,
+  InvoiceLineDto,
+  ApiInvoicesClient,
+  CopyInvoiceCommand
+} from '@api/api.generated.clients';
 import { InvoiceStoreService } from '@domain/invoice/invoice-store.service';
-import { DomainEntityBase, DomainEntityContext, IDomainEntityContext, InitFromRouteOptions } from '@domain/shared/domain-entity-base';
+import {
+  DomainEntityBase,
+  DomainEntityContext,
+  IDomainEntityContext,
+  InitFromRouteOptions
+} from '@domain/shared/domain-entity-base';
 import { MatDialog } from '@angular/material/dialog';
 
-export interface IInvoiceDomainEntityContext extends IDomainEntityContext<InvoiceDto> {
+export interface IInvoiceDomainEntityContext extends IDomainEntityContext<InvoiceDto> {}
 
-}
-
-export class InvoiceDomainEntityContext extends DomainEntityContext<InvoiceDto> implements IInvoiceDomainEntityContext {
+export class InvoiceDomainEntityContext
+  extends DomainEntityContext<InvoiceDto>
+  implements IInvoiceDomainEntityContext
+{
   constructor() {
     super();
   }
 }
 
 type InvoiceControls = { [key in keyof IInvoiceDto]: AbstractControl };
-export type InvoiceFormGroup = FormGroup & { controls: InvoiceControls };  
+export type InvoiceFormGroup = FormGroup & { controls: InvoiceControls };
 
 type InvoiceLineControls = { [key in keyof IInvoiceLineDto]: AbstractControl };
-export type InvoiceLineFormGroup = FormGroup & { controls: InvoiceLineControls };  
+export type InvoiceLineFormGroup = FormGroup & {
+  controls: InvoiceLineControls;
+};
 
-export type InvoiceLineFormArray = FormArray & { controls: InvoiceLineFormGroup[] }; 
+export type InvoiceLineFormArray = FormArray & {
+  controls: InvoiceLineFormGroup[];
+};
 
 @Injectable()
 export class InvoiceDomainEntityService extends DomainEntityBase<InvoiceDto> implements OnDestroy {
@@ -34,25 +51,20 @@ export class InvoiceDomainEntityService extends DomainEntityBase<InvoiceDto> imp
   protected deleteFunction = (id: string) => this.invoiceStoreService.delete(id);
   protected entityUpdatedEvent$ = this.invoiceStoreService.invoiceUpdatedInStore$;
 
-  public observe$ = combineLatest([
-    this.observeInternal$
-  ])
-    .pipe(
-      debounceTime(0),
-      map(([
-        context,
-      ]) => {
-        return {
-          ...context
-        } as InvoiceDomainEntityContext;
-      })
-    ) as Observable<InvoiceDomainEntityContext>;
+  public observe$ = combineLatest([this.observeInternal$]).pipe(
+    debounceTime(0),
+    map(([context]) => {
+      return {
+        ...context
+      } as InvoiceDomainEntityContext;
+    })
+  ) as Observable<InvoiceDomainEntityContext>;
 
   constructor(
     route: ActivatedRoute,
     matDialog: MatDialog,
     private readonly invoiceStoreService: InvoiceStoreService,
-    private readonly apiInvoicesClient: ApiInvoicesClient,
+    private readonly apiInvoicesClient: ApiInvoicesClient
   ) {
     super(route, matDialog);
     super.init();
@@ -112,16 +124,15 @@ export class InvoiceDomainEntityService extends DomainEntityBase<InvoiceDto> imp
     this.invoiceLineFormArray.removeAt(index);
   }
 
-  protected instantiateNewEntity(): InvoiceDto {
+  protected instantiateNewEntity(): Observable<InvoiceDto> {
     const invoice = new InvoiceDto();
-    invoice.invoiceLines = [
-      new InvoiceLineDto()
-    ];
-    return invoice;
+    invoice.invoiceLines = [new InvoiceLineDto()];
+    return of(invoice);
   }
-  
+
   public get invoiceLines(): InvoiceLineFormGroup[] {
-    return (this.form.controls.invoiceLines as InvoiceLineFormArray).controls as InvoiceLineFormGroup[];
+    return (this.form.controls.invoiceLines as InvoiceLineFormArray)
+      .controls as InvoiceLineFormGroup[];
   }
 
   private get invoiceLineFormArray(): FormArray {
@@ -161,16 +172,13 @@ export class InvoiceDomainEntityService extends DomainEntityBase<InvoiceDto> imp
       return throwError(() => new Error('Id is not set.'));
     }
     const command = new CopyInvoiceCommand();
-    return this.apiInvoicesClient.copy(this.id.value, command)
-      .pipe(
-        map(x => x.id)
-      );
+    return this.apiInvoicesClient.copy(this.id.value, command).pipe(map((x) => x.id));
   }
 
   public override deleteWithConfirmation(): Observable<void> {
     return super.deleteWithConfirmation();
   }
-  
+
   public override delete(): Observable<void> {
     return super.delete();
   }
@@ -178,15 +186,15 @@ export class InvoiceDomainEntityService extends DomainEntityBase<InvoiceDto> imp
   protected override afterPatchEntityToFormHook(invoice: InvoiceDto): void {
     // form.patchValue doesnt modify FormArray structure, so we need to do this manually afterwards.
     this.patchInvoiceLinesToForm(invoice);
-  };
+  }
 
   private patchInvoiceLinesToForm(invoice: InvoiceDto): void {
     this.invoiceLineFormArray.clear();
-    invoice.invoiceLines?.forEach(invoiceLine => {
+    invoice.invoiceLines?.forEach((invoiceLine) => {
       const invoiceLineFormGroup = this.buildInvoiceLineFormGroup();
-      invoiceLineFormGroup.patchValue({...invoiceLine});
+      invoiceLineFormGroup.patchValue({ ...invoiceLine });
       this.invoiceLineFormArray.push(invoiceLineFormGroup);
-    })
+    });
   }
 
   public override reset(): void {

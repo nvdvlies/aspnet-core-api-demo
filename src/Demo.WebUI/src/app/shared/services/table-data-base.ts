@@ -1,7 +1,20 @@
 import { SortDirection } from '@angular/material/sort';
 import { ApiException, ProblemDetails } from '@api/api.generated.clients';
-import { ITableFilterCriteria, TableFilterCriteria } from '@shared/directives/table-filter/table-filter-criteria';
-import { BehaviorSubject, catchError, combineLatest, debounceTime, filter, finalize, map, Observable, of } from 'rxjs';
+import {
+  ITableFilterCriteria,
+  TableFilterCriteria
+} from '@shared/directives/table-filter/table-filter-criteria';
+import {
+  BehaviorSubject,
+  catchError,
+  combineLatest,
+  debounceTime,
+  filter,
+  finalize,
+  map,
+  Observable,
+  of
+} from 'rxjs';
 
 export interface TableDataSearchResult<T> {
   items: T[] | undefined;
@@ -43,14 +56,20 @@ export interface ITableDataSearchResultItem {
 }
 
 export abstract class TableDataBase<T extends ITableDataSearchResultItem> {
-  protected abstract searchFunction: (criteria: ITableFilterCriteria) => Observable<TableDataSearchResult<T>>;
+  protected abstract searchFunction: (
+    criteria: ITableFilterCriteria
+  ) => Observable<TableDataSearchResult<T>>;
   protected abstract getByIdFunction: (id: string) => Observable<T>;
 
   protected abstract entityUpdatedInStore$: Observable<[IEntityUpdatedEvent, any]>;
   protected abstract entityDeletedEvent$: Observable<IEntityDeletedEvent>;
-  protected readonly problemDetails = new BehaviorSubject<ProblemDetails | ApiException | undefined>(undefined);
+  protected readonly problemDetails = new BehaviorSubject<
+    ProblemDetails | ApiException | undefined
+  >(undefined);
 
-  protected readonly searchResult = new BehaviorSubject<TableDataSearchResult<T> | undefined>(undefined);
+  protected readonly searchResult = new BehaviorSubject<TableDataSearchResult<T> | undefined>(
+    undefined
+  );
   protected readonly criteria = new BehaviorSubject<ITableFilterCriteria | undefined>(undefined);
   protected readonly isLoadingForFirstTime = new BehaviorSubject<boolean>(true);
   protected readonly isLoading = new BehaviorSubject<boolean>(true);
@@ -70,10 +89,10 @@ export abstract class TableDataBase<T extends ITableDataSearchResultItem> {
     this.isLoading$,
     this.problemDetails$,
     this.spotlightIdentifier$
-  ])
-    .pipe(
-      debounceTime(0),
-      map(([
+  ]).pipe(
+    debounceTime(0),
+    map(
+      ([
         searchResult,
         criteria,
         isLoadingForFirstTime,
@@ -89,9 +108,9 @@ export abstract class TableDataBase<T extends ITableDataSearchResultItem> {
           problemDetails,
           spotlightIdentifier
         } as TableDataContext<T>;
-      })
-    ) as Observable<TableDataContext<T>>;
-
+      }
+    )
+  ) as Observable<TableDataContext<T>>;
 
   protected init(defaultCriteria: TableFilterCriteria): void {
     this.criteria.next(defaultCriteria);
@@ -114,7 +133,7 @@ export abstract class TableDataBase<T extends ITableDataSearchResultItem> {
             totalPages: 0,
             hasNextPage: false,
             hasPreviousPage: false
-          } as TableDataSearchResult<T>)
+          } as TableDataSearchResult<T>);
         }),
         finalize(() => {
           this.isLoading.next(false);
@@ -123,7 +142,7 @@ export abstract class TableDataBase<T extends ITableDataSearchResultItem> {
           }
         })
       )
-      .subscribe(response => {
+      .subscribe((response) => {
         this.searchResult.next(response);
       });
   }
@@ -131,27 +150,26 @@ export abstract class TableDataBase<T extends ITableDataSearchResultItem> {
   public spotlight(id: string): void {
     if (!this.exists(id)) {
       // add a newly created entity on top of the list
-      this.getByIdFunction(id)
-        .subscribe(item => {
-          if (this.searchResult.value != null) {
-            const newItems = [
-              item,
-              ...this.searchResult.value?.items ?? [],
-            ];
-            this.searchResult.next({ ...this.searchResult.value, items: newItems });
-          } else {
-            this.searchResult.next({
-              items: [item],
-              pageIndex: 0,
-              pageSize: this.criteria.value?.pageSize ?? 10,
-              totalItems: 1,
-              totalPages: 1,
-              hasPreviousPage: false,
-              hasNextPage: false
-            } as TableDataSearchResult<T>);
-          }
-          this.setSpotlightIdentifier(id);
-        });
+      this.getByIdFunction(id).subscribe((item) => {
+        if (this.searchResult.value != null) {
+          const newItems = [item, ...(this.searchResult.value?.items ?? [])];
+          this.searchResult.next({
+            ...this.searchResult.value,
+            items: newItems
+          });
+        } else {
+          this.searchResult.next({
+            items: [item],
+            pageIndex: 0,
+            pageSize: this.criteria.value?.pageSize ?? 10,
+            totalItems: 1,
+            totalPages: 1,
+            hasPreviousPage: false,
+            hasNextPage: false
+          } as TableDataSearchResult<T>);
+        }
+        this.setSpotlightIdentifier(id);
+      });
     } else {
       this.setSpotlightIdentifier(id);
     }
@@ -179,37 +197,37 @@ export abstract class TableDataBase<T extends ITableDataSearchResultItem> {
 
   private subscribeToUpdatedInStoreEvent(): void {
     this.entityUpdatedInStore$
-      .pipe(
-        filter(event => this.exists(event[0].id)),
-      )
+      .pipe(filter((event) => this.exists(event[0].id)))
       .subscribe(([event, entity]) => {
         if (this.searchResult.value?.items != null) {
-          const newItems = this.searchResult.value.items.map((item, _) => item.id !== event.id ? item : Object.assign(item, entity));
-          this.searchResult.next({ ...this.searchResult.value, items: newItems });
+          const newItems = this.searchResult.value.items.map((item, _) =>
+            item.id !== event.id ? item : Object.assign(item, entity)
+          );
+          this.searchResult.next({
+            ...this.searchResult.value,
+            items: newItems
+          });
         }
       });
   }
 
   private subscribeToDeletedEvent(): void {
-    this.entityDeletedEvent$
-      .pipe(
-        filter(event => this.exists(event.id)),
-      )
-      .subscribe(event => {
-        if (this.searchResult.value?.items != null) {
-          const newItems = this.searchResult.value.items.filter(x => x.id !== event.id);
-          this.searchResult.next({ ...this.searchResult.value, items: newItems });
-        }
-      });
+    this.entityDeletedEvent$.pipe(filter((event) => this.exists(event.id))).subscribe((event) => {
+      if (this.searchResult.value?.items != null) {
+        const newItems = this.searchResult.value.items.filter((x) => x.id !== event.id);
+        this.searchResult.next({
+          ...this.searchResult.value,
+          items: newItems
+        });
+      }
+    });
   }
 
   protected sortbyDescending(sortDirection: SortDirection | undefined): boolean | undefined {
-    return sortDirection === 'desc' ? true
-      : sortDirection === 'asc' ? false
-        : undefined;
+    return sortDirection === 'desc' ? true : sortDirection === 'asc' ? false : undefined;
   }
 
   private exists(id: string): boolean {
-    return this.searchResult.value?.items?.find(x => x.id === id) != null;
+    return this.searchResult.value?.items?.find((x) => x.id === id) != null;
   }
 }

@@ -1,8 +1,18 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { CustomerDto, ApiCustomersClient, CreateCustomerCommand, UpdateCustomerCommand, DeleteCustomerCommand } from '@api/api.generated.clients';
-import { CustomerUpdatedEvent, CustomerDeletedEvent, CustomerEventsService } from '@api/signalr.generated.services';
+import {
+  CustomerDto,
+  ApiCustomersClient,
+  CreateCustomerCommand,
+  UpdateCustomerCommand,
+  DeleteCustomerCommand
+} from '@api/api.generated.clients';
+import {
+  CustomerUpdatedEvent,
+  CustomerDeletedEvent,
+  CustomerEventsService
+} from '@api/signalr.generated.services';
 import { StoreBase } from '@domain/shared/store-base';
 
 @Injectable({
@@ -10,8 +20,11 @@ import { StoreBase } from '@domain/shared/store-base';
 })
 export class CustomerStoreService extends StoreBase<CustomerDto> {
   public readonly customers$ = this.cache.asObservable();
-  public readonly customerUpdatedInStore$ = this.entityUpdatedInStore.asObservable() as Observable<[CustomerUpdatedEvent, CustomerDto]>;
-  public readonly customerDeletedFromStore$ = this.entityDeletedFromStore.asObservable() as Observable<CustomerDeletedEvent>;
+  public readonly customerUpdatedInStore$ = this.entityUpdatedInStore.asObservable() as Observable<
+    [CustomerUpdatedEvent, CustomerDto]
+  >;
+  public readonly customerDeletedFromStore$ =
+    this.entityDeletedFromStore.asObservable() as Observable<CustomerDeletedEvent>;
 
   protected entityUpdatedEvent$ = this.customerEventsService.customerUpdated$;
   protected entityDeletedEvent$ = this.customerEventsService.customerDeleted$;
@@ -25,7 +38,7 @@ export class CustomerStoreService extends StoreBase<CustomerDto> {
   }
 
   protected getByIdFunction = (id: string) => {
-    return this.apiCustomersClient.getCustomerById(id).pipe(map(x => x.customer!));
+    return this.apiCustomersClient.getCustomerById(id).pipe(map((x) => x.customer!));
   };
 
   public override getById(id: string, skipCache: boolean = false): Observable<CustomerDto> {
@@ -34,7 +47,7 @@ export class CustomerStoreService extends StoreBase<CustomerDto> {
 
   protected createFunction = (customer: CustomerDto) => {
     const command = new CreateCustomerCommand({ ...customer });
-    return this.apiCustomersClient.create(command).pipe(map(response => response.id));
+    return this.apiCustomersClient.create(command).pipe(map((response) => response.id));
   };
 
   public override create(customer: CustomerDto): Observable<CustomerDto> {

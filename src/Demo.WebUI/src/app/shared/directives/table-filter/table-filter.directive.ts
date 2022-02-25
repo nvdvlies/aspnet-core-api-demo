@@ -1,14 +1,24 @@
 import { coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
-import { AfterContentInit, Directive, EventEmitter, Input, OnDestroy, Output, Self } from '@angular/core';
+import {
+  AfterContentInit,
+  Directive,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  Output,
+  Self
+} from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, filter, Subscription } from 'rxjs';
 
 @Directive({
-  selector: '[tableFilter]'
+  selector: '[appTableFilter]'
 })
 export class TableFilterDirective implements AfterContentInit, OnDestroy {
   @Input()
-  get debounceTime() { return this._debounceTime; }
+  get debounceTime() {
+    return this._debounceTime;
+  }
   set debounceTime(value: NumberInput) {
     this._debounceTime = coerceNumberProperty(value, 0);
   }
@@ -18,11 +28,11 @@ export class TableFilterDirective implements AfterContentInit, OnDestroy {
 
   private subscription: Subscription | undefined;
 
-  constructor(@Self() private ngControl: NgControl) { }
+  constructor(@Self() private ngControl: NgControl) {}
 
   public ngAfterContentInit(): void {
-    this.subscription = this.ngControl.valueChanges?.pipe
-      (
+    this.subscription = this.ngControl.valueChanges
+      ?.pipe(
         distinctUntilChanged(),
         filter(() => this.ngControl.dirty === true),
         debounceTime(this._debounceTime > 0 ? this._debounceTime : 0)

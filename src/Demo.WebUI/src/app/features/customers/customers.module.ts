@@ -5,19 +5,11 @@ import { CustomersRoutingModule } from '@customers/customers-routing.module';
 import { CustomerListComponent } from './customer-list/customer-list.component';
 import { CustomerDetailsComponent } from './customer-details/customer-details.component';
 import { CustomerTableDataService } from '@customers/customer-list/customer-table-data.service';
+import { CustomerAuditlogComponent } from './customer-auditlog/customer-auditlog.component';
 
 @NgModule({
-  declarations: [
-    CustomerListComponent,
-    CustomerDetailsComponent
-  ],
-  imports: [
-    CommonModule,
-    SharedModule,
-    CustomersRoutingModule
-  ],
-  providers: [
-    CustomerTableDataService
-  ]
+  declarations: [CustomerListComponent, CustomerDetailsComponent, CustomerAuditlogComponent],
+  imports: [CommonModule, SharedModule, CustomersRoutingModule],
+  providers: [CustomerTableDataService]
 })
-export class CustomersModule { }
+export class CustomersModule {}

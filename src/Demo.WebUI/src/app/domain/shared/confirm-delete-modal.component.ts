@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
@@ -12,18 +12,11 @@ import { MatDialogRef } from '@angular/material/dialog';
       <button mat-button (click)="cancelDelete()">Cancel</button>
     </div>
   `,
-  styles: [
-  ],
+  styles: [],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ConfirmDeleteModalComponent implements OnInit {
-
-  constructor(
-    public dialogRef: MatDialogRef<ConfirmDeleteModalComponent>
-  ) {}
-
-  ngOnInit(): void {
-  }
+export class ConfirmDeleteModalComponent {
+  constructor(public dialogRef: MatDialogRef<ConfirmDeleteModalComponent>) {}
 
   public confirmDelete(): void {
     this.dialogRef.close(true);

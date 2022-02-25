@@ -1,7 +1,6 @@
-import { FormArray, FormControl, FormGroup } from "@angular/forms";
+import { FormArray, FormControl, FormGroup } from '@angular/forms';
 
 export class MergeUtil {
-
   public static mergeIntoFormGroup(updated: any, form: FormGroup): void {
     for (const key in form.controls) {
       const control = form.controls[key] as FormControl | FormGroup | FormArray;
@@ -16,11 +15,11 @@ export class MergeUtil {
   }
 
   public static hasMergeConflictInFormGroup(updated: any, pristine: any, form: FormGroup): boolean {
-    if (!form.dirty) { 
+    if (!form.dirty) {
       // control has not been changed by current user
       return false;
     }
-    
+
     for (const key in form.controls) {
       const control = form.controls[key] as FormControl | FormGroup | FormArray;
       if (control instanceof FormGroup) {
@@ -61,19 +60,23 @@ export class MergeUtil {
     }
   }
 
-  private static hasMergeConflictInFormArray(updated: any[], pristine: any[], formArray: FormArray): boolean {
-    if (!formArray.dirty) { 
+  private static hasMergeConflictInFormArray(
+    updated: any[],
+    pristine: any[],
+    formArray: FormArray
+  ): boolean {
+    if (!formArray.dirty) {
       // control has not been changed by current user
       return false;
     }
 
-    if (updated === pristine) { 
+    if (updated === pristine) {
       // value has not been changed by other user
       return false;
     }
 
-    if (updated.length != formArray.length) { 
-      // array length is not identical in; merge conflict 
+    if (updated.length != formArray.length) {
+      // array length is not identical in; merge conflict
       return true;
     }
 
@@ -97,18 +100,22 @@ export class MergeUtil {
     return false;
   }
 
-  private static hasMergeConflictInFormControl(updated: any, pristine: any, control: FormControl): boolean {
-    if (!control.dirty) { 
+  private static hasMergeConflictInFormControl(
+    updated: any,
+    pristine: any,
+    control: FormControl
+  ): boolean {
+    if (!control.dirty) {
       // control has not been changed by current user
       return false;
     }
 
-    if (updated === pristine) { 
+    if (updated === pristine) {
       // control value has not been changed by other user
       return false;
     }
 
-    if (updated === control.value) { 
+    if (updated === control.value) {
       // both users changed the same control with the same value
       return false;
     }

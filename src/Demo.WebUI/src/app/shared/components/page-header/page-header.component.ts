@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 
 @Component({
   selector: 'app-page-header',
@@ -6,10 +6,6 @@ import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core
   styleUrls: ['./page-header.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PageHeaderComponent implements OnInit {
+export class PageHeaderComponent {
   @Input() title: string | undefined;
-
-  ngOnInit(): void {
-  }
-
 }

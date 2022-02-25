@@ -7,13 +7,10 @@ import { AuthService } from '@auth0/auth0-angular';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  constructor(
-    public readonly authService: AuthService
-  ) {
-  }
+  constructor(public readonly authService: AuthService) {}
 
-  ngOnInit(): void {
-    this.authService.isAuthenticated$.subscribe(isAuthenticated => {
+  public ngOnInit(): void {
+    this.authService.isAuthenticated$.subscribe((isAuthenticated) => {
       if (!isAuthenticated) {
         this.authService.loginWithRedirect();
       }

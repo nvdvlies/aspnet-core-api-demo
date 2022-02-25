@@ -5,16 +5,8 @@ import { SharedModule } from '@shared/shared.module';
 import { DefaultTemplateComponent } from './default-template/default-template.component';
 
 @NgModule({
-  declarations: [
-    DefaultTemplateComponent
-  ],
-  imports: [
-    CommonModule,
-    RouterModule,
-    SharedModule
-  ],
-  exports: [
-    DefaultTemplateComponent
-  ]
+  declarations: [DefaultTemplateComponent],
+  imports: [CommonModule, RouterModule, SharedModule],
+  exports: [DefaultTemplateComponent]
 })
-export class LayoutModule { }
+export class LayoutModule {}

@@ -14,9 +14,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
 @NgModule({
-  declarations: [
-    AppComponent
-  ],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -35,8 +33,8 @@ import { AppComponent } from './app.component';
               scope: 'user'
             }
           }
-        ],
-      },
+        ]
+      }
     }),
     ApiModule.forRoot(),
     CoreModule.forRoot(),
@@ -47,4 +45,4 @@ import { AppComponent } from './app.component';
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}

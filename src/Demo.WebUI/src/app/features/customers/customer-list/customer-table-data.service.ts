@@ -1,15 +1,29 @@
 import { Injectable } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { combineLatest, debounceTime, map, Observable } from 'rxjs';
-import { ApiCustomersClient, SearchCustomerDto, SearchCustomersOrderByEnum } from '@api/api.generated.clients';
+import {
+  ApiCustomersClient,
+  SearchCustomerDto,
+  SearchCustomersOrderByEnum
+} from '@api/api.generated.clients';
 import { CustomerEventsService } from '@api/signalr.generated.services';
 import { CustomerStoreService } from '@domain/customer/customer-store.service';
-import { ITableFilterCriteria, TableFilterCriteria } from '@shared/directives/table-filter/table-filter-criteria';
-import { TableDataBase, TableDataContext, TableDataSearchResult } from '@shared/services/table-data-base';
+import {
+  ITableFilterCriteria,
+  TableFilterCriteria
+} from '@shared/directives/table-filter/table-filter-criteria';
+import {
+  TableDataBase,
+  TableDataContext,
+  TableDataSearchResult
+} from '@shared/services/table-data-base';
 
 export declare type CustomerSortColumn = 'code' | 'name' | undefined;
 
-export class CustomerTableFilterCriteria extends TableFilterCriteria implements ITableFilterCriteria {
+export class CustomerTableFilterCriteria
+  extends TableFilterCriteria
+  implements ITableFilterCriteria
+{
   override sortColumn: CustomerSortColumn;
 
   constructor() {
@@ -26,19 +40,14 @@ export interface CustomerTableDataContext extends TableDataContext<SearchCustome
 export class CustomerTableDataService extends TableDataBase<SearchCustomerDto> {
   public searchTerm = new FormControl();
 
-  public observe$ = combineLatest([
-    this.observeInternal$
-  ])
-    .pipe(
-      debounceTime(0),
-      map(([
-        context,
-      ]) => {
-        return {
-          ...context
-        } as CustomerTableDataContext;
-      })
-    ) as Observable<CustomerTableDataContext>;
+  public observe$ = combineLatest([this.observeInternal$]).pipe(
+    debounceTime(0),
+    map(([context]) => {
+      return {
+        ...context
+      } as CustomerTableDataContext;
+    })
+  ) as Observable<CustomerTableDataContext>;
 
   protected entityUpdatedInStore$ = this.customerStoreService.customerUpdatedInStore$;
   protected entityDeletedEvent$ = this.customerEventsService.customerDeleted$;
@@ -72,7 +81,7 @@ export class CustomerTableDataService extends TableDataBase<SearchCustomerDto> {
             totalPages: response.totalPages,
             hasPreviousPage: response.hasPreviousPage,
             hasNextPage: response.hasNextPage
-          } as TableDataSearchResult<SearchCustomerDto>
+          } as TableDataSearchResult<SearchCustomerDto>;
         })
       );
   };
@@ -92,10 +101,9 @@ export class CustomerTableDataService extends TableDataBase<SearchCustomerDto> {
     }
   }
 
-  protected getByIdFunction = (id: string) => this.customerStoreService
-    .getById(id)
-    .pipe(
-      map(customer => {
+  protected getByIdFunction = (id: string) =>
+    this.customerStoreService.getById(id).pipe(
+      map((customer) => {
         return new SearchCustomerDto(customer);
       })
     );

@@ -8,7 +8,7 @@ export class CurrentUserService {
   public id: string | undefined;
 
   constructor(private readonly authService: AuthService) {
-    this.authService.user$.subscribe(user => {
+    this.authService.user$.subscribe((user) => {
       this.id = user?.sub;
     });
   }

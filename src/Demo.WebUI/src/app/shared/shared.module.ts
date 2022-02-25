@@ -21,12 +21,7 @@ import { FocusDirective } from './directives/focus/focus.directive';
     DomainEntityErrorMessageDirective,
     FocusDirective
   ],
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    MaterialModule,
-    FlexLayoutModule
-  ],
+  imports: [CommonModule, ReactiveFormsModule, MaterialModule, FlexLayoutModule],
   exports: [
     ReactiveFormsModule,
     MaterialModule,
@@ -40,4 +35,4 @@ import { FocusDirective } from './directives/focus/focus.directive';
     FocusDirective
   ]
 })
-export class SharedModule { }
+export class SharedModule {}

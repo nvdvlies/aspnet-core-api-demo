@@ -2,7 +2,16 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject, combineLatest, EMPTY, Observable, of, Subject, throwError } from 'rxjs';
-import { catchError, debounceTime, filter, finalize, map, switchMap, takeUntil, tap } from 'rxjs/operators';
+import {
+  catchError,
+  debounceTime,
+  filter,
+  finalize,
+  map,
+  switchMap,
+  takeUntil,
+  tap
+} from 'rxjs/operators';
 import { ApiException, ProblemDetails, ValidationProblemDetails } from '@api/api.generated.clients';
 import { MergeUtil } from '@domain/shared/merge.util';
 import { MatDialog } from '@angular/material/dialog';
@@ -10,8 +19,8 @@ import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { ConfirmDeleteModalComponent } from '@domain/shared/confirm-delete-modal.component';
 
 export class InitFromRouteOptions {
-  parameterName: string = "id";
-  newValue: string = "new";
+  parameterName: string = 'id';
+  newValue: string = 'new';
 }
 
 export interface IDomainEntityContext<T> {
@@ -57,14 +66,18 @@ export abstract class BaseDomainEntityService {
 }
 
 @Injectable()
-export abstract class DomainEntityBase<T extends IDomainEntity<T>> implements BaseDomainEntityService, OnDestroy {
+export abstract class DomainEntityBase<T extends IDomainEntity<T>>
+  implements BaseDomainEntityService, OnDestroy
+{
   protected abstract instantiateForm(): void;
-  protected abstract instantiateNewEntity(): T;
+  protected abstract instantiateNewEntity(): Observable<T>;
   protected abstract getByIdFunction: (id: string) => Observable<T>;
   protected abstract createFunction: (entity: T) => Observable<T>;
   protected abstract updateFunction: (entity: T) => Observable<T>;
   protected abstract deleteFunction: (id: string) => Observable<void>;
   protected afterPatchEntityToFormHook?(entity: T): void;
+  public afterNewHook?: (entity: T) => Observable<null>;
+  public afterGetByIdHook?: (entity: T) => Observable<null>;
   protected abstract entityUpdatedEvent$: Observable<[any, T]>;
 
   protected readonly id = new BehaviorSubject<string | undefined>(undefined);
@@ -74,7 +87,9 @@ export abstract class DomainEntityBase<T extends IDomainEntity<T>> implements Ba
   protected readonly isSaving = new BehaviorSubject<boolean>(false);
   protected readonly isDeleting = new BehaviorSubject<boolean>(false);
   protected readonly hasNewerVersionWithMergeConflict = new BehaviorSubject<boolean>(false);
-  protected readonly problemDetails = new BehaviorSubject<ValidationProblemDetails | ProblemDetails | ApiException | undefined>(undefined);
+  protected readonly problemDetails = new BehaviorSubject<
+    ValidationProblemDetails | ProblemDetails | ApiException | undefined
+  >(undefined);
   protected readonly onDestroy = new Subject<void>();
 
   protected id$ = this.id.asObservable();
@@ -83,13 +98,14 @@ export abstract class DomainEntityBase<T extends IDomainEntity<T>> implements Ba
   protected isLoading$ = this.isLoading.asObservable();
   protected isSaving$ = this.isSaving.asObservable();
   protected isDeleting$ = this.isDeleting.asObservable();
-  protected hasNewerVersionWithMergeConflict$ = this.hasNewerVersionWithMergeConflict.asObservable();
+  protected hasNewerVersionWithMergeConflict$ =
+    this.hasNewerVersionWithMergeConflict.asObservable();
   protected problemDetails$ = this.problemDetails.asObservable();
   protected onDestroy$ = this.onDestroy.asObservable();
 
   protected get readonlyFormState(): any {
-    return { value: null, disabled: true }
-  };
+    return { value: null, disabled: true };
+  }
 
   protected observeInternal$ = combineLatest([
     this.id$,
@@ -99,11 +115,11 @@ export abstract class DomainEntityBase<T extends IDomainEntity<T>> implements Ba
     this.isSaving$,
     this.isDeleting$,
     this.hasNewerVersionWithMergeConflict$,
-    this.problemDetails$,
-  ])
-    .pipe(
-      debounceTime(0),
-      map(([
+    this.problemDetails$
+  ]).pipe(
+    debounceTime(0),
+    map(
+      ([
         id,
         entity,
         pristine,
@@ -123,8 +139,9 @@ export abstract class DomainEntityBase<T extends IDomainEntity<T>> implements Ba
           hasNewerVersionWithMergeConflict,
           problemDetails
         } as DomainEntityContext<T>;
-      })
-    ) as Observable<DomainEntityContext<T>>;
+      }
+    )
+  ) as Observable<DomainEntityContext<T>>;
 
   private _form: FormGroup | undefined;
   protected get form(): FormGroup {
@@ -134,11 +151,7 @@ export abstract class DomainEntityBase<T extends IDomainEntity<T>> implements Ba
     this._form = value;
   }
 
-  constructor(
-    protected readonly route: ActivatedRoute,
-    protected readonly matDialog: MatDialog
-  ) {
-  }
+  constructor(protected readonly route: ActivatedRoute, protected readonly matDialog: MatDialog) {}
 
   protected init(): void {
     this.instantiateForm();
@@ -147,48 +160,53 @@ export abstract class DomainEntityBase<T extends IDomainEntity<T>> implements Ba
 
   protected new(): Observable<null> {
     this.problemDetails.next(undefined);
-    return new Observable(observer => {
-      try {
-        this.isLoading.next(true);
-        const entity = this.instantiateNewEntity();
+    this.isLoading.next(true);
+    return this.instantiateNewEntity().pipe(
+      map((entity: T) => {
         this.entity.next(entity);
         this.patchEntityToForm(entity);
         this.pristine.next(entity.clone());
-      }
-      finally {
-        this.isLoading.next(false);
-        observer.next();
-        observer.complete();
-      }
-    });
+        return entity;
+      }),
+      switchMap((entity: T) => this.afterNewHook?.(entity).pipe(map(() => null)) ?? of<null>(null)),
+      finalize(() => this.isLoading.next(false))
+    );
   }
 
   protected getById(id: string, getByIdFunction?: (id: string) => Observable<T>): Observable<null> {
     this.problemDetails.next(undefined);
     this.isLoading.next(true);
     getByIdFunction ??= this.getByIdFunction;
-    return getByIdFunction(id)
-      .pipe(
-        catchError((error: ValidationProblemDetails | ProblemDetails | ApiException) => this.setProblemDetailsAndRethrow(error)),
-        map((entity: T) => entity.clone()),
-        tap((entity: T) => {
-          this.id.next(entity.id);
-          this.entity.next(entity);
-          this.patchEntityToForm(entity);
-          this.pristine.next(entity.clone());
-        }),
-        switchMap(() => of<null>(null)),
-        finalize(() => this.isLoading.next(false))
-      );
+    return getByIdFunction(id).pipe(
+      catchError((error: ValidationProblemDetails | ProblemDetails | ApiException) =>
+        this.setProblemDetailsAndRethrow(error)
+      ),
+      map((entity: T) => entity.clone()),
+      tap((entity: T) => {
+        this.id.next(entity.id);
+        this.entity.next(entity);
+        this.patchEntityToForm(entity);
+        this.pristine.next(entity.clone());
+      }),
+      switchMap(
+        (entity: T) => this.afterGetByIdHook?.(entity).pipe(map(() => null)) ?? of<null>(null)
+      ),
+      finalize(() => this.isLoading.next(false))
+    );
   }
 
-  protected initFromRoute(options: InitFromRouteOptions | undefined, getByIdFunction?: (id: string) => Observable<T>): Observable<null> {
+  protected initFromRoute(
+    options: InitFromRouteOptions | undefined,
+    getByIdFunction?: (id: string) => Observable<T>
+  ): Observable<null> {
     this.problemDetails.next(undefined);
     options ??= new InitFromRouteOptions();
 
     const id = this.route.snapshot.paramMap.get(options!.parameterName);
     if (id == null) {
-      return throwError(() => new Error(`Couldn't find parameter '${options!.parameterName}' in route parameters.`));
+      return throwError(
+        () => new Error(`Couldn't find parameter '${options!.parameterName}' in route parameters.`)
+      );
     }
 
     if (id === options!.newValue) {
@@ -207,17 +225,18 @@ export abstract class DomainEntityBase<T extends IDomainEntity<T>> implements Ba
     this.problemDetails.next(undefined);
     this.patchFormToEntity();
     createFunction ??= this.createFunction;
-    return createFunction(this.entity.value!)
-      .pipe(
-        catchError((error: ValidationProblemDetails | ProblemDetails | ApiException) => this.setProblemDetailsAndRethrow(error)),
-        map((entity: T) => entity.clone()),
-        tap((entity) => {
-          this.entity.next(entity);
-          this.patchEntityToForm(entity);
-          this.pristine.next(entity.clone());
-        }),
-        finalize(() => this.isSaving.next(false))
-      )
+    return createFunction(this.entity.value!).pipe(
+      catchError((error: ValidationProblemDetails | ProblemDetails | ApiException) =>
+        this.setProblemDetailsAndRethrow(error)
+      ),
+      map((entity: T) => entity.clone()),
+      tap((entity) => {
+        this.entity.next(entity);
+        this.patchEntityToForm(entity);
+        this.pristine.next(entity.clone());
+      }),
+      finalize(() => this.isSaving.next(false))
+    );
   }
 
   protected update(updateFunction?: (entity: T) => Observable<T>): Observable<T> {
@@ -228,51 +247,57 @@ export abstract class DomainEntityBase<T extends IDomainEntity<T>> implements Ba
     this.problemDetails.next(undefined);
     this.patchFormToEntity();
     updateFunction ??= this.updateFunction;
-    return updateFunction(this.entity.value!)
-      .pipe(
-        catchError((error: ValidationProblemDetails | ProblemDetails | ApiException) => this.setProblemDetailsAndRethrow(error)),
-        map((entity: T) => entity.clone()),
-        tap((entity) => {
-          this.entity.next(entity);
-          this.patchEntityToForm(entity);
-          this.pristine.next(entity.clone());
-        }),
-        finalize(() => this.isSaving.next(false))
-      )
+    return updateFunction(this.entity.value!).pipe(
+      catchError((error: ValidationProblemDetails | ProblemDetails | ApiException) =>
+        this.setProblemDetailsAndRethrow(error)
+      ),
+      map((entity: T) => entity.clone()),
+      tap((entity) => {
+        this.entity.next(entity);
+        this.patchEntityToForm(entity);
+        this.pristine.next(entity.clone());
+      }),
+      finalize(() => this.isSaving.next(false))
+    );
   }
 
-  protected upsert(createFunction?: (entity: T) => Observable<T>, updateFunction?: (entity: T) => Observable<T>): Observable<T> {
+  protected upsert(
+    createFunction?: (entity: T) => Observable<T>,
+    updateFunction?: (entity: T) => Observable<T>
+  ): Observable<T> {
     return this.id.value == null ? this.create(createFunction) : this.update(updateFunction);
   }
 
-  protected deleteWithConfirmation(deleteFunction?: (id: string) => Observable<void>): Observable<void> {
+  protected deleteWithConfirmation(
+    deleteFunction?: (id: string) => Observable<void>
+  ): Observable<void> {
     const dialogRef = this.matDialog.open(ConfirmDeleteModalComponent);
-    return dialogRef.afterClosed()
-      .pipe(
-        map(confirmDelete => coerceBooleanProperty(confirmDelete)),
-        switchMap((confirmDelete) => {
-          if (confirmDelete) {
-            return this.delete(deleteFunction);
-          } else {
-            return EMPTY;
-          }
-        })
-      );
+    return dialogRef.afterClosed().pipe(
+      map((confirmDelete) => coerceBooleanProperty(confirmDelete)),
+      switchMap((confirmDelete) => {
+        if (confirmDelete) {
+          return this.delete(deleteFunction);
+        } else {
+          return EMPTY;
+        }
+      })
+    );
   }
 
   protected delete(deleteFunction?: (id: string) => Observable<void>): Observable<void> {
     if (!this.id.value) {
-      return throwError(() => new Error('\'Id\' is not defined.'));
+      return throwError(() => new Error("'Id' is not defined."));
     }
     this.problemDetails.next(undefined);
     this.isDeleting.next(true);
     deleteFunction ??= this.deleteFunction;
-    return deleteFunction(this.id.value)
-      .pipe(
-        catchError((error: ValidationProblemDetails | ProblemDetails | ApiException) => this.setProblemDetailsAndRethrow(error)),
-        tap(() => this.form.reset()),
-        finalize(() => this.isDeleting.next(false))
-      )
+    return deleteFunction(this.id.value).pipe(
+      catchError((error: ValidationProblemDetails | ProblemDetails | ApiException) =>
+        this.setProblemDetailsAndRethrow(error)
+      ),
+      tap(() => this.form.reset()),
+      finalize(() => this.isDeleting.next(false))
+    );
   }
 
   public resolveMergeConflictWithTakeTheirs(): void {
@@ -310,22 +335,27 @@ export abstract class DomainEntityBase<T extends IDomainEntity<T>> implements Ba
     this.entity.next(Object.assign(this.entity.value, this.form.getRawValue()));
   }
 
-  protected setProblemDetailsAndRethrow(problemDetails: ValidationProblemDetails | ProblemDetails | ApiException): Observable<never> {
+  protected setProblemDetailsAndRethrow(
+    problemDetails: ValidationProblemDetails | ProblemDetails | ApiException
+  ): Observable<never> {
     this.problemDetails.next(problemDetails);
-    return throwError(() => new Error('An error occured. See \'problemDetails\' for more information'));
+    return throwError(
+      () => new Error("An error occured. See 'problemDetails' for more information")
+    );
   }
 
   private subscribeToEntityUpdatedEvent(): void {
     this.entityUpdatedEvent$
       .pipe(
         takeUntil(this.onDestroy$),
-        filter(([_, entity]) => this.id.value != null && entity.id == this.id.value),
+        filter(([_, entity]) => this.id.value != null && entity.id == this.id.value)
       )
       .subscribe(([_, entity]) => {
         if (this.pristine.value == null) {
           return;
         }
-        const currentLastModifiedOn = this.pristine.value.lastModifiedOn ?? this.pristine.value.createdOn;
+        const currentLastModifiedOn =
+          this.pristine.value.lastModifiedOn ?? this.pristine.value.createdOn;
         const newLastModifiedOn = entity.lastModifiedOn ?? entity.createdOn!;
         if (newLastModifiedOn <= currentLastModifiedOn) {
           return;
@@ -342,13 +372,20 @@ export abstract class DomainEntityBase<T extends IDomainEntity<T>> implements Ba
 
   public getErrorMessage(errorKey: string, errorValue: any): string | undefined {
     switch (errorKey) {
-      case 'required': return 'Field is required.';
-      case 'maxlength': return `Field must be ${errorValue.requiredLength} characters or fewer. You entered ${errorValue.actualLength} characters.`;
-      case 'minlength': return `Field must be at least ${errorValue.requiredLength} characters. You entered ${errorValue.actualLength} characters.`;
-      case 'min': return `Field must be greater than or equal to ${errorValue.min}`;
-      case 'max': return `Field must be less than or equal to ${errorValue.max}`;
-      case 'pattern': return 'Field is not in the correct format.';
-      case 'email': return 'Field must be a valid email address.';
+      case 'required':
+        return 'Field is required.';
+      case 'maxlength':
+        return `Field must be ${errorValue.requiredLength} characters or fewer. You entered ${errorValue.actualLength} characters.`;
+      case 'minlength':
+        return `Field must be at least ${errorValue.requiredLength} characters. You entered ${errorValue.actualLength} characters.`;
+      case 'min':
+        return `Field must be greater than or equal to ${errorValue.min}`;
+      case 'max':
+        return `Field must be less than or equal to ${errorValue.max}`;
+      case 'pattern':
+        return 'Field is not in the correct format.';
+      case 'email':
+        return 'Field must be a valid email address.';
       default:
         return undefined;
     }
