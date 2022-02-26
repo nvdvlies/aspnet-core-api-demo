@@ -1,3 +1,4 @@
+using Demo.Application.Customers.Queries.CustomerLookup;
 using Demo.Application.Customers.Commands.CreateCustomer;
 using Demo.Application.Customers.Commands.DeleteCustomer;
 using Demo.Application.Customers.Commands.UpdateCustomer;
@@ -85,6 +86,15 @@ namespace Demo.WebApi.Controllers
         {
             query.SetCustomerId(id);
 
+            return await Mediator.Send(query, cancellationToken);
+        }
+
+
+        [HttpGet("Lookup")]
+        [ProducesResponseType(typeof(CustomerLookupQueryResult), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
+        public async Task<ActionResult<CustomerLookupQueryResult>> Lookup([FromQuery] CustomerLookupQuery query, CancellationToken cancellationToken)
+        {
             return await Mediator.Send(query, cancellationToken);
         }
 

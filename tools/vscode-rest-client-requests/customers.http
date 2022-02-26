@@ -74,3 +74,17 @@ Authorization: Bearer {{access_token}}
 }
 
 ###
+
+# @name lookup
+GET {{baseUrl}}/api/customers/lookup
+  ?orderBy=0 
+  &orderByDescending=true
+  &pageIndex=0
+  &pageSize=10
+  //&searchTerm=Microsoft
+  //&ids=E8ACA2F3-2BBF-45AD-7F16-08D9F7A0C34A
+  //&ids=7B27EE10-6D87-4C49-7F14-08D9F7A0C34A
+Accept: application/json
+Authorization: Bearer {{access_token}}
+
+###
