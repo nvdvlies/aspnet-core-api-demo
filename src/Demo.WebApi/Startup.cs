@@ -16,6 +16,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using NSwag;
+using NSwag.Generation.Processors.Security;
+using System.Linq;
 
 namespace Demo.WebApi
 {
@@ -35,7 +38,19 @@ namespace Demo.WebApi
             services.AddSingleton(environmentSettings);
 
             services.AddControllers();
-            services.AddSwaggerDocument();
+            services.AddSwaggerDocument(config =>
+            {
+                config.OperationProcessors.Add(new OperationSecurityScopeProcessor("Bearer"));
+                config.AddSecurity("Bearer", Enumerable.Empty<string>(),
+                    new OpenApiSecurityScheme()
+                    {
+                        Type = OpenApiSecuritySchemeType.ApiKey,
+                        Name = "Authorization",
+                        In = OpenApiSecurityApiKeyLocation.Header,
+                        Description = "Example value: Bearer {token}"
+                    }
+                );
+            });
 
             services.AddCors(o => o.AddDefaultPolicy(builder =>
             {
