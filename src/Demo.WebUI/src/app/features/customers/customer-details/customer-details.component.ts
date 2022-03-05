@@ -96,10 +96,12 @@ export class CustomerDetailsComponent implements OnInit, IHasForm {
     ]).pipe(
       tap(([users]) => {
         this.createdByFullname.next(
-          users.find((x) => x.id === customer.createdBy)?.fullName ?? undefined
+          users.find((x) => x.id?.toLowerCase() === customer.createdBy?.toLowerCase())?.fullName ??
+            undefined
         );
         this.lastModifiedByFullname.next(
-          users.find((x) => x.id === customer.lastModifiedBy)?.fullName ?? undefined
+          users.find((x) => x.id?.toLowerCase() === customer.lastModifiedBy?.toLowerCase())
+            ?.fullName ?? undefined
         );
       }),
       switchMap(() => of(null))

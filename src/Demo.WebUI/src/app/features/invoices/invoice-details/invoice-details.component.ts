@@ -82,10 +82,12 @@ export class InvoiceDetailsComponent implements OnInit, IHasForm {
     ]).pipe(
       tap(([users]) => {
         this.createdByFullname.next(
-          users.find((x) => x.id === invoice.createdBy)?.fullName ?? undefined
+          users.find((x) => x.id?.toLowerCase() === invoice.createdBy?.toLowerCase())?.fullName ??
+            undefined
         );
         this.lastModifiedByFullname.next(
-          users.find((x) => x.id === invoice.lastModifiedBy)?.fullName ?? undefined
+          users.find((x) => x.id?.toLowerCase() === invoice.lastModifiedBy?.toLowerCase())
+            ?.fullName ?? undefined
         );
       }),
       switchMap(() => of(null))

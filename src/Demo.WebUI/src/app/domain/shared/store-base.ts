@@ -53,7 +53,9 @@ export abstract class StoreBase<T extends IEntity<T>> {
     skipCache: boolean = false,
     getByIdFunction?: (id: string) => Observable<T>
   ): Observable<T> {
-    let entityFromCache = !skipCache ? this.cache.value.find((x) => x.id === id) : null;
+    let entityFromCache = !skipCache
+      ? this.cache.value.find((x) => x.id.toLowerCase() === id.toLowerCase())
+      : null;
 
     if (entityFromCache != null) {
       return of(entityFromCache);
@@ -157,6 +159,6 @@ export abstract class StoreBase<T extends IEntity<T>> {
   }
 
   private existsInCache(id: string): boolean {
-    return this.cache.value.find((x) => x.id === id) != null;
+    return this.cache.value.find((x) => x.id.toLowerCase() === id.toLowerCase()) != null;
   }
 }

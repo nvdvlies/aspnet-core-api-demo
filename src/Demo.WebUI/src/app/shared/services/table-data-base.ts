@@ -228,6 +228,8 @@ export abstract class TableDataBase<T extends ITableDataSearchResultItem> {
   }
 
   private exists(id: string): boolean {
-    return this.searchResult.value?.items?.find((x) => x.id === id) != null;
+    return (
+      this.searchResult.value?.items?.find((x) => x.id.toLowerCase() === id.toLowerCase()) != null
+    );
   }
 }
