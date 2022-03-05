@@ -13,11 +13,14 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 @NgModule({
   declarations: [],
   exports: [
     MatButtonModule,
+    MatFormFieldModule,
     MatInputModule,
     MatToolbarModule,
     MatIconModule,
@@ -30,7 +33,8 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatPaginatorModule,
     MatSortModule,
     MatCardModule,
-    MatDialogModule
+    MatDialogModule,
+    MatAutocompleteModule
   ]
 })
 export class MaterialModule {}

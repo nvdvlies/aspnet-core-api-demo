@@ -1,0 +1,31 @@
+<div
+  role="group"
+  class="app-autocomplete-container"
+  [formGroup]="form"
+  [attr.aria-labelledby]="_formField?.getLabelId()"
+  (focusin)="onFocusIn($event)"
+  (focusout)="onFocusOut($event)"
+>
+  <input formControlName="id" hidden="true" matInput #idInput />
+  <input
+    [hidden]="isLookupOngoing$ | async"
+    type="text"
+    [placeholder]="placeholder"
+    matInput
+    formControlName="search"
+    [matAutocomplete]="auto"
+    (focus)="onFocus()"
+    (blur)="onBlur()"
+    #searchInput
+  />
+  <mat-autocomplete #auto="matAutocomplete" autoActiveFirstOption>
+    <mat-option
+      *ngFor="let option of options$ | async"
+      [value]="option.label"
+      (onSelectionChange)="onSelect(option)"
+    >
+      {{ option.label }}
+    </mat-option>
+  </mat-autocomplete>
+  <mat-spinner *ngIf="isLookupOngoing$ | async" diameter="13"></mat-spinner>
+</div>

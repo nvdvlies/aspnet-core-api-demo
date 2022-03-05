@@ -10,6 +10,7 @@ import { DiscardUnsavedChangesModalComponent } from './modals/discard-unsaved-ch
 import { ProblemDetailsComponent } from './components/problem-details/problem-details.component';
 import { DomainEntityErrorMessageDirective } from './directives/domain-entity-error-message/domain-entity-error-message.directive';
 import { FocusDirective } from './directives/focus/focus.directive';
+import { CustomerAutocompleteComponent } from './components/autocomplete/customer-autocomplete/customer-autocomplete.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { FocusDirective } from './directives/focus/focus.directive';
     DiscardUnsavedChangesModalComponent,
     ProblemDetailsComponent,
     DomainEntityErrorMessageDirective,
-    FocusDirective
+    FocusDirective,
+    CustomerAutocompleteComponent
   ],
   imports: [CommonModule, ReactiveFormsModule, MaterialModule, FlexLayoutModule],
   exports: [
@@ -32,7 +34,8 @@ import { FocusDirective } from './directives/focus/focus.directive';
     DiscardUnsavedChangesModalComponent,
     ProblemDetailsComponent,
     DomainEntityErrorMessageDirective,
-    FocusDirective
+    FocusDirective,
+    CustomerAutocompleteComponent
   ]
 })
 export class SharedModule {}
