@@ -62,6 +62,10 @@ export class CustomerDetailsComponent implements OnInit, IHasForm {
     })
   ) as Observable<ViewModel>;
 
+  public form: CustomerFormGroup = this.customerDomainEntityService.form;
+
+  // public get name(): FormControl { return this.form.controls.name as FormControl; }
+
   constructor(
     private readonly router: Router,
     private readonly customerDomainEntityService: CustomerDomainEntityService
@@ -102,11 +106,11 @@ export class CustomerDetailsComponent implements OnInit, IHasForm {
     );
   }
 
-  public form: CustomerFormGroup = this.customerDomainEntityService.form;
-
-  // public get name(): FormControl { return this.form.controls.name as FormControl; }
-
   public save(): void {
+    if (!this.form.valid) {
+      return;
+    }
+
     this.customerDomainEntityService.upsert().subscribe((customer) => {
       this.router.navigateByUrl('/customers', {
         state: { spotlightIdentifier: customer.id } as CustomerListRouteState
