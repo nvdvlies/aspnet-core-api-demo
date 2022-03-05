@@ -116,7 +116,7 @@
       "checksumCacheEnabled": false,
       "serviceHost": null,
       "serviceSchemes": null,
-      "output": "api.generated.clients.ts",
+      "output": "../../src/Demo.WebUI/src/app/api/api.generated.clients.ts",
       "newLineBehavior": "Auto"
     }
   }
