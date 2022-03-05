@@ -386,6 +386,8 @@ export abstract class DomainEntityBase<T extends IDomainEntity<T>>
         return 'Field is not in the correct format.';
       case 'email':
         return 'Field must be a valid email address.';
+      case 'serverError':
+        return errorValue;
       default:
         return undefined;
     }
