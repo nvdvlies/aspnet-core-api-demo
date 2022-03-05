@@ -637,6 +637,81 @@ export class ApiCustomersClient {
         }
         return _observableOf<GetCustomerAuditlogQueryResult>(<any>null);
     }
+
+    lookup(orderBy?: CustomerLookupOrderByEnum | undefined, orderByDescending?: boolean | undefined, pageIndex?: number | undefined, pageSize?: number | undefined, searchTerm?: string | null | undefined, ids?: string[] | null | undefined): Observable<CustomerLookupQueryResult> {
+        let url_ = this.baseUrl + "/api/Customers/Lookup?";
+        if (orderBy === null)
+            throw new Error("The parameter 'orderBy' cannot be null.");
+        else if (orderBy !== undefined)
+            url_ += "OrderBy=" + encodeURIComponent("" + orderBy) + "&";
+        if (orderByDescending === null)
+            throw new Error("The parameter 'orderByDescending' cannot be null.");
+        else if (orderByDescending !== undefined)
+            url_ += "OrderByDescending=" + encodeURIComponent("" + orderByDescending) + "&";
+        if (pageIndex === null)
+            throw new Error("The parameter 'pageIndex' cannot be null.");
+        else if (pageIndex !== undefined)
+            url_ += "PageIndex=" + encodeURIComponent("" + pageIndex) + "&";
+        if (pageSize === null)
+            throw new Error("The parameter 'pageSize' cannot be null.");
+        else if (pageSize !== undefined)
+            url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
+        if (searchTerm !== undefined && searchTerm !== null)
+            url_ += "SearchTerm=" + encodeURIComponent("" + searchTerm) + "&";
+        if (ids !== undefined && ids !== null)
+            ids && ids.forEach(item => { url_ += "Ids=" + encodeURIComponent("" + item) + "&"; });
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processLookup(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processLookup(<any>response_);
+                } catch (e) {
+                    return <Observable<CustomerLookupQueryResult>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<CustomerLookupQueryResult>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processLookup(response: HttpResponseBase): Observable<CustomerLookupQueryResult> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = CustomerLookupQueryResult.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 500) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result500: any = null;
+            let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result500 = ProblemDetails.fromJS(resultData500);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result500);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<CustomerLookupQueryResult>(<any>null);
+    }
 }
 
 @Injectable({
@@ -2727,6 +2802,110 @@ export interface IGetCustomerAuditlogQueryResult extends IBasePaginatedResult {
     auditlogs?: AuditlogDto[] | undefined;
 }
 
+export class CustomerLookupQueryResult extends BasePaginatedResult implements ICustomerLookupQueryResult {
+    customers?: CustomerLookupDto[] | undefined;
+
+    constructor(data?: ICustomerLookupQueryResult) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            if (Array.isArray(_data["customers"])) {
+                this.customers = [] as any;
+                for (let item of _data["customers"])
+                    this.customers!.push(CustomerLookupDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): CustomerLookupQueryResult {
+        data = typeof data === 'object' ? data : {};
+        let result = new CustomerLookupQueryResult();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.customers)) {
+            data["customers"] = [];
+            for (let item of this.customers)
+                data["customers"].push(item.toJSON());
+        }
+        super.toJSON(data);
+        return data; 
+    }
+
+    clone(): CustomerLookupQueryResult {
+        const json = this.toJSON();
+        let result = new CustomerLookupQueryResult();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICustomerLookupQueryResult extends IBasePaginatedResult {
+    customers?: CustomerLookupDto[] | undefined;
+}
+
+export class CustomerLookupDto implements ICustomerLookupDto {
+    id?: string | undefined;
+    code!: number;
+    name?: string | undefined;
+
+    constructor(data?: ICustomerLookupDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.code = _data["code"];
+            this.name = _data["name"];
+        }
+    }
+
+    static fromJS(data: any): CustomerLookupDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CustomerLookupDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["code"] = this.code;
+        data["name"] = this.name;
+        return data; 
+    }
+
+    clone(): CustomerLookupDto {
+        const json = this.toJSON();
+        let result = new CustomerLookupDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICustomerLookupDto {
+    id?: string | undefined;
+    code: number;
+    name?: string | undefined;
+}
+
+export enum CustomerLookupOrderByEnum {
+    Code = 0,
+    Name = 1,
+}
+
 /** Properties of an event published to an Event Grid topic using the EventGrid Schema. */
 export class EventGridEvent implements IEventGridEvent {
     /** Gets or sets the event payload as BinaryData. Using BinaryData,
@@ -2906,6 +3085,7 @@ export interface ISearchInvoicesQueryResult extends IBasePaginatedResult {
 export class SearchInvoiceDto extends SoftDeleteEntityDto implements ISearchInvoiceDto {
     invoiceNumber?: string | undefined;
     customerId!: string;
+    customerName?: string | undefined;
     invoiceDate!: Date;
     paymentTerm!: number;
     orderReference?: string | undefined;
@@ -2920,6 +3100,7 @@ export class SearchInvoiceDto extends SoftDeleteEntityDto implements ISearchInvo
         if (_data) {
             this.invoiceNumber = _data["invoiceNumber"];
             this.customerId = _data["customerId"];
+            this.customerName = _data["customerName"];
             this.invoiceDate = _data["invoiceDate"] ? new Date(_data["invoiceDate"].toString()) : <any>undefined;
             this.paymentTerm = _data["paymentTerm"];
             this.orderReference = _data["orderReference"];
@@ -2938,6 +3119,7 @@ export class SearchInvoiceDto extends SoftDeleteEntityDto implements ISearchInvo
         data = typeof data === 'object' ? data : {};
         data["invoiceNumber"] = this.invoiceNumber;
         data["customerId"] = this.customerId;
+        data["customerName"] = this.customerName;
         data["invoiceDate"] = this.invoiceDate ? this.invoiceDate.toISOString() : <any>undefined;
         data["paymentTerm"] = this.paymentTerm;
         data["orderReference"] = this.orderReference;
@@ -2957,6 +3139,7 @@ export class SearchInvoiceDto extends SoftDeleteEntityDto implements ISearchInvo
 export interface ISearchInvoiceDto extends ISoftDeleteEntityDto {
     invoiceNumber?: string | undefined;
     customerId: string;
+    customerName?: string | undefined;
     invoiceDate: Date;
     paymentTerm: number;
     orderReference?: string | undefined;
