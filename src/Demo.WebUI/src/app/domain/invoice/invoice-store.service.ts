@@ -31,8 +31,8 @@ export class InvoiceStoreService extends StoreBase<InvoiceDto> {
   protected entityDeletedEvent$ = this.invoiceEventsService.invoiceDeleted$;
 
   constructor(
-    private apiInvoicesClient: ApiInvoicesClient,
-    private invoiceEventsService: InvoiceEventsService
+    private readonly apiInvoicesClient: ApiInvoicesClient,
+    private readonly invoiceEventsService: InvoiceEventsService
   ) {
     super();
     super.init();
