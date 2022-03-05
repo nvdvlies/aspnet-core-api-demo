@@ -30,8 +30,8 @@ export class CustomerStoreService extends StoreBase<CustomerDto> {
   protected entityDeletedEvent$ = this.customerEventsService.customerDeleted$;
 
   constructor(
-    private apiCustomersClient: ApiCustomersClient,
-    private customerEventsService: CustomerEventsService
+    private readonly apiCustomersClient: ApiCustomersClient,
+    private readonly customerEventsService: CustomerEventsService
   ) {
     super();
     super.init();
