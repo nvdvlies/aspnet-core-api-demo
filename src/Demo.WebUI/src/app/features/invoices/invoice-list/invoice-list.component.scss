@@ -1,0 +1,30 @@
+@import '~@angular/material/theming';
+@import '../../../../scss/theme.scss';
+
+table {
+  width: 100%;
+}
+
+.spotlight-row {
+  -webkit-animation: target-fade 4s;
+  animation: target-fade 4s;
+}
+
+@-webkit-keyframes target-fade {
+  from {
+    background-color: mat-color($default-theme-accent);
+  }
+
+  to {
+    background-color: transparent;
+  }
+}
+
+@keyframes target-fade {
+  from {
+    background-color: mat-color($default-theme-accent);
+  }
+  to {
+    background-color: transparent;
+  }
+}
