@@ -47,7 +47,8 @@ export class InvoiceStoreService extends StoreBase<InvoiceDto> {
   }
 
   protected createFunction = (invoice: InvoiceDto) => {
-    const command = new CreateInvoiceCommand({ ...invoice });
+    const command = new CreateInvoiceCommand();
+    command.init({ ...invoice });
     return this.apiInvoicesClient.create(command).pipe(map((response) => response.id));
   };
 
@@ -56,7 +57,8 @@ export class InvoiceStoreService extends StoreBase<InvoiceDto> {
   }
 
   protected updateFunction = (invoice: InvoiceDto) => {
-    const command = new UpdateInvoiceCommand({ ...invoice });
+    const command = new UpdateInvoiceCommand();
+    command.init({ ...invoice });
     return this.apiInvoicesClient.update(invoice.id, command);
   };
 

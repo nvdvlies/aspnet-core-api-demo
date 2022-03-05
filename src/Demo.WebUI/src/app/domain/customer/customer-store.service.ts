@@ -46,7 +46,8 @@ export class CustomerStoreService extends StoreBase<CustomerDto> {
   }
 
   protected createFunction = (customer: CustomerDto) => {
-    const command = new CreateCustomerCommand({ ...customer });
+    const command = new CreateCustomerCommand();
+    command.init({ ...customer });
     return this.apiCustomersClient.create(command).pipe(map((response) => response.id));
   };
 
@@ -55,7 +56,8 @@ export class CustomerStoreService extends StoreBase<CustomerDto> {
   }
 
   protected updateFunction = (customer: CustomerDto) => {
-    const command = new UpdateCustomerCommand({ ...customer });
+    const command = new UpdateCustomerCommand();
+    command.init({ ...customer });
     return this.apiCustomersClient.update(customer.id, command);
   };
 
