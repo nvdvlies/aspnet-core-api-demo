@@ -7,6 +7,7 @@ namespace Demo.Application.Invoices.Queries.SearchInvoices.Dtos
     {
         public string InvoiceNumber { get; set; }
         public Guid CustomerId { get; set; }
+        public string CustomerName { get; set; }
         public DateTime InvoiceDate { get; set; }
         public int PaymentTerm { get; set; }
         public string OrderReference { get; set; }

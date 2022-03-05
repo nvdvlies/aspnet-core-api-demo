@@ -30,7 +30,9 @@ namespace Demo.Application.Invoices.Queries.SearchInvoices
 
         public async Task<SearchInvoicesQueryResult> Handle(SearchInvoicesQuery request, CancellationToken cancellationToken)
         {
-            var query = _query.AsQueryable();
+            var query = _query.AsQueryable()
+                .Include(x => x.Customer)
+                .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(request.InvoiceNumber))
             {
