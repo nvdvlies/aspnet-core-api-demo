@@ -22,6 +22,8 @@ namespace Demo.Infrastructure.Persistence.Configuration
                 .IsRequired();
 
             builder.Property(x => x.SellingPrice)
+                .HasColumnType("decimal")
+                .HasPrecision(18, 2)
                 .IsRequired();
 
             builder.HasOne(x => x.Invoice)
