@@ -21,6 +21,7 @@ namespace Demo.Infrastructure.Persistence.Configuration
 
             builder.Property(x => x.InvoiceDate)
                 .HasColumnType("date")
+                .IsUtc()
                 .IsRequired();
 
             builder.Property(t => t.Status)

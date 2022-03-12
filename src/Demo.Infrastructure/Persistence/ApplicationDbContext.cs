@@ -35,10 +35,11 @@ namespace Demo.Infrastructure.Persistence
         {
             builder.HasDefaultSchema(Constants.SchemaName);
 
+            base.OnModelCreating(builder);
+
             builder.ConfigureSequences();
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-
-            base.OnModelCreating(builder);
+            builder.ApplyUtcDateTimeConverter();
         }
     }
 }
