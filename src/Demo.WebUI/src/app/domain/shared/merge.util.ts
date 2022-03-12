@@ -2,6 +2,7 @@ import { FormArray, FormControl, FormGroup } from '@angular/forms';
 
 export class MergeUtil {
   public static mergeIntoFormGroup(updated: any, form: FormGroup): void {
+    debugger;
     for (const key in form.controls) {
       const control = form.controls[key] as FormControl | FormGroup | FormArray;
       if (control instanceof FormGroup) {
@@ -45,7 +46,7 @@ export class MergeUtil {
       const updatedValue = updated[i];
       const control = formArray.controls[key] as FormControl | FormGroup;
       if (control instanceof FormGroup) {
-        this.mergeIntoFormGroup(updatedValue[key], control);
+        this.mergeIntoFormGroup(updatedValue, control);
       } else {
         this.mergeFormControl(updatedValue[key], control);
       }
