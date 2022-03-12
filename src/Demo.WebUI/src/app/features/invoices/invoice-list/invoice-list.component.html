@@ -37,7 +37,7 @@
             <ng-container matColumnDef="CustomerName">
               <th mat-header-cell *matHeaderCellDef disableClear>Customer</th>
               <td mat-cell *matCellDef="let row">
-                {{ row.customerName ?? '-' }}
+                {{ row.customerName ?? (row.customerId | customerIdToName | async) ?? '' }}
               </td>
             </ng-container>
             <ng-container matColumnDef="InvoiceDate">

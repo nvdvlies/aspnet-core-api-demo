@@ -16,7 +16,7 @@ import {
   TableDataBase,
   TableDataContext,
   TableDataSearchResult
-} from '@shared/services/table-data-base';
+} from '@shared/base/table-data-base';
 
 export declare type CustomerSortColumn = 'code' | 'name' | undefined;
 

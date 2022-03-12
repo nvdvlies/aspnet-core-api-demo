@@ -15,7 +15,8 @@ import { BaseDomainEntityService } from '@domain/shared/domain-entity-base';
 import {
   InvoiceDomainEntityService,
   InvoiceFormGroup,
-  IInvoiceDomainEntityContext
+  IInvoiceDomainEntityContext,
+  InvoiceLineFormArray
 } from '@domain/invoice/invoice-domain-entity.service';
 import { IHasForm } from '@shared/guards/unsaved-changes.guard';
 import { InvoiceDto } from '@api/api.generated.clients';
@@ -63,6 +64,9 @@ export class InvoiceDetailsComponent implements OnInit, IHasForm {
   ) as Observable<ViewModel>;
 
   public form: InvoiceFormGroup = this.invoiceDomainEntityService.form;
+  public get invoiceLines(): InvoiceLineFormArray {
+    return this.form.controls.invoiceLines as InvoiceLineFormArray;
+  }
 
   constructor(
     private readonly router: Router,
@@ -96,6 +100,7 @@ export class InvoiceDetailsComponent implements OnInit, IHasForm {
 
   public save(): void {
     if (!this.form.valid) {
+      //this.form.markAllAsTouched();
       return;
     }
 
@@ -104,6 +109,14 @@ export class InvoiceDetailsComponent implements OnInit, IHasForm {
         state: { spotlightIdentifier: invoice.id } as InvoiceListRouteState
       });
     });
+  }
+
+  public addInvoiceLine(): void {
+    this.invoiceDomainEntityService.addInvoiceLine();
+  }
+
+  public removeInvoiceLine(index: number): void {
+    this.invoiceDomainEntityService.removeInvoiceLine(index);
   }
 
   public delete(): void {

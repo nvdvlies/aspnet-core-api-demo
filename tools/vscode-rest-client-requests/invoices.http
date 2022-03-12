@@ -1,4 +1,4 @@
-@baseUrl = https://localhost:44309
+@baseUrl = https://localhost:5001
 @access_token = {{ auth.response.body.$.access_token}}
 @createdInvoiceLocation = {{create.response.headers.location}}
 @copyInvoiceLocation = {{copy.response.headers.location}}
@@ -35,7 +35,7 @@ Authorization: Bearer {{access_token}}
 Request-Id: 654321
 
 {
-  "customerId": "200b4c4c-eecd-4e44-8533-08d997bb99df",
+  "customerId": "86f9deb5-dfd2-4415-e1e7-08d9fbb5df71",
   "invoiceDate": "2021-04-24T00:00:00",
   "paymentTerm": 30,
   "orderReference": "test",

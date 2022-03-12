@@ -40,7 +40,10 @@ export class InvoiceListComponent implements OnInit, OnDestroy {
 
   public ngOnInit(): void {
     this.dataSource = new InvoiceTableDataSource(this.invoiceTableDataService);
+    this.spotlight();
+  }
 
+  private spotlight(): void {
     const state = this.location.getState() as InvoiceListRouteState;
     if (state && state.spotlightIdentifier) {
       this.invoiceTableDataService.spotlight(state.spotlightIdentifier);

@@ -7,6 +7,7 @@ export class CustomerTableDataSource implements DataSource<SearchCustomerDto> {
   constructor(private customerTableDataService: CustomerTableDataService) {}
 
   connect(collectionViewer: CollectionViewer): Observable<SearchCustomerDto[]> {
+    this.customerTableDataService.onDatasourceConnect();
     return this.customerTableDataService.observe$.pipe(map((x) => x.items ?? []));
   }
 

@@ -1,0 +1,36 @@
+<ng-container *ngIf="vm$ | async as vm">
+  <input [formControl]="formControl" hidden="true" matInput #idInput />
+  <input
+    [hidden]="vm.isLookupOngoing"
+    type="text"
+    [placeholder]="placeholder"
+    matInput
+    [formControl]="searchFormControl"
+    [matAutocomplete]="auto"
+    (focus)="onFocus()"
+    (blur)="onBlur()"
+    #searchInput
+  />
+  <mat-autocomplete #auto="matAutocomplete" autoActiveFirstOption>
+    <mat-option disabled class="loading" *ngIf="vm.isSearching">
+      <mat-spinner diameter="20"></mat-spinner>
+    </mat-option>
+
+    <mat-option disabled *ngIf="!vm.isSearching && vm.options.length === 0">
+      No results
+    </mat-option>
+
+    <ng-container *ngIf="!vm.isSearching">
+      <mat-option
+        *ngFor="let option of vm.options"
+        [value]="option.label"
+        (onSelectionChange)="onSelect($event, option)"
+      >
+        {{ option.label }}
+      </mat-option>
+    </ng-container>
+  </mat-autocomplete>
+  <div class="spinner-wrapper" *ngIf="vm.isLookupOngoing">
+    <mat-spinner diameter="13"></mat-spinner>
+  </div>
+</ng-container>

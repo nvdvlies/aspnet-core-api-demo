@@ -7,6 +7,7 @@ export class InvoiceTableDataSource implements DataSource<SearchInvoiceDto> {
   constructor(private invoiceTableDataService: InvoiceTableDataService) {}
 
   connect(collectionViewer: CollectionViewer): Observable<SearchInvoiceDto[]> {
+    this.invoiceTableDataService.onDatasourceConnect();
     return this.invoiceTableDataService.observe$.pipe(map((x) => x.items ?? []));
   }
 

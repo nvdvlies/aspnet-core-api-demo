@@ -1,4 +1,4 @@
-@baseUrl = https://localhost:44309
+@baseUrl = https://localhost:5001
 @access_token = {{ auth.response.body.$.access_token}}
 
 # @name auth

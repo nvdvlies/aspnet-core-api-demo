@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { combineLatest, debounceTime, map, Observable } from 'rxjs';
+import { combineLatest, debounceTime, forkJoin, map, Observable, switchMap } from 'rxjs';
 import {
   ApiInvoicesClient,
+  CustomerLookupDto,
+  InvoiceDto,
   SearchInvoiceDto,
   SearchInvoicesOrderByEnum
 } from '@api/api.generated.clients';
@@ -16,7 +18,8 @@ import {
   TableDataBase,
   TableDataContext,
   TableDataSearchResult
-} from '@shared/services/table-data-base';
+} from '@shared/base/table-data-base';
+import { CustomerLookupService } from '@shared/services/customer-lookup.service';
 
 export declare type InvoiceSortColumn = 'InvoiceNumber' | 'InvoiceDate' | undefined;
 
@@ -55,7 +58,8 @@ export class InvoiceTableDataService extends TableDataBase<SearchInvoiceDto> {
   constructor(
     private readonly apiInvoicesClient: ApiInvoicesClient,
     private readonly invoiceStoreService: InvoiceStoreService,
-    private readonly invoiceEventsService: InvoiceEventsService
+    private readonly invoiceEventsService: InvoiceEventsService,
+    private readonly customerLookupService: CustomerLookupService
   ) {
     super();
     this.init(new InvoiceTableFilterCriteria());

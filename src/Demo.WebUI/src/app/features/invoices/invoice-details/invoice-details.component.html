@@ -53,13 +53,13 @@
             <div class="row">
               <div class="col">
                 <mat-form-field class="full-width">
-                  <app-customer-autocomplete
+                  <app-customer-autocomplete-form-field-control
                     #customerAutocomplete
                     matInput
                     placeholder="Customer"
                     formControlName="customerId"
                   >
-                  </app-customer-autocomplete>
+                  </app-customer-autocomplete-form-field-control>
                   <button
                     type="button"
                     mat-button
@@ -73,8 +73,77 @@
                 </mat-form-field>
               </div>
             </div>
+            <div class="row">
+              <div class="col">
+                <mat-form-field class="full-width">
+                  <input
+                    matInput
+                    formControlName="invoiceDate"
+                    [matDatepicker]="picker"
+                    placeholder="Invoice date"
+                  />
+                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+                  <mat-error appDomainEntityErrorMessage></mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col">
+                <mat-form-field class="full-width">
+                  <input matInput placeholder="Order reference" formControlName="orderReference" />
+                  <mat-error appDomainEntityErrorMessage></mat-error>
+                </mat-form-field>
+              </div>
+            </div>
           </mat-card-content>
         </mat-card>
+
+        <ng-container formArrayName="invoiceLines">
+          <table class="mat-table cdk-table mat-elevation-z1">
+            <thead role="rowgroup">
+              <tr class="mat-header-row cdk-header-row">
+                <th class="mat-header-cell cdk-header-cell">Quantity</th>
+                <th class="mat-header-cell cdk-header-cell">Description</th>
+                <th class="mat-header-cell cdk-header-cell">Selling price</th>
+                <th class="mat-header-cell cdk-header-cell"></th>
+              </tr>
+            </thead>
+            <tbody role="rowgroup">
+              <tr class="mat-row cdk-row" *ngFor="let _ of invoiceLines.controls; index as i">
+                <ng-container [formGroupName]="i">
+                  <td class="mat-cell cdk-cell">
+                    <mat-form-field class="full-width">
+                      <input matInput type="number" formControlName="quantity" />
+                      <mat-error appDomainEntityErrorMessage></mat-error>
+                    </mat-form-field>
+                  </td>
+                  <td class="mat-cell cdk-cell">
+                    <mat-form-field class="full-width">
+                      <input matInput formControlName="description" />
+                      <mat-error appDomainEntityErrorMessage></mat-error>
+                    </mat-form-field>
+                  </td>
+                  <td class="mat-cell cdk-cell">
+                    <mat-form-field class="full-width">
+                      <input matInput appCurrencyInput formControlName="sellingPrice" />
+                      <mat-error appDomainEntityErrorMessage></mat-error>
+                    </mat-form-field>
+                  </td>
+                  <td class="mat-cell cdk-cell">
+                    <button mat-icon-button type="button" (click)="removeInvoiceLine(i)">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </td>
+                </ng-container>
+              </tr>
+            </tbody>
+          </table>
+        </ng-container>
+        <button mat-icon-button type="button" (click)="addInvoiceLine()">
+          <mat-icon>add</mat-icon>
+        </button>
       </div>
       {{ form.value | json }}
     </form>

@@ -4,43 +4,28 @@ import {
   CustomerLookupDto,
   CustomerLookupOrderByEnum
 } from '@api/api.generated.clients';
-import { BehaviorSubject, map, Observable, of, tap } from 'rxjs';
+import { CustomerEventsService } from '@api/signalr.generated.services';
+import { LookupBase } from '@shared/base/lookup.base';
+import { map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
-export class CustomerLookupService {
-  private readonly cache = new BehaviorSubject<CustomerLookupDto[]>([]);
+export class CustomerLookupService extends LookupBase<CustomerLookupDto> {
+  protected entityUpdatedEvent$ = this.customerEventsService.customerUpdated$.pipe(
+    map((x) => x.id)
+  );
 
-  private get items(): CustomerLookupDto[] {
-    return this.cache.getValue();
+  constructor(
+    private readonly apiCustomersClient: ApiCustomersClient,
+    private readonly customerEventsService: CustomerEventsService
+  ) {
+    super();
   }
 
-  private set items(value: CustomerLookupDto[]) {
-    this.cache.next(value);
-  }
-
-  private addToCache(item: CustomerLookupDto): void {
-    this.items = [...this.items, item];
-  }
-
-  constructor(private readonly apiCustomersClient: ApiCustomersClient) {}
-
-  public getById(id: string): Observable<CustomerLookupDto | undefined> {
-    const cachedItem = this.cache.value.find((x) => x.id?.toLowerCase() === id.toLowerCase());
-    if (cachedItem) {
-      return of(cachedItem);
-    } else {
-      return this.apiCustomersClient
-        .lookup(CustomerLookupOrderByEnum.Name, false, 0, 1, undefined, [id])
-        .pipe(
-          map((response) => response.customers?.[0]),
-          tap((customer) => {
-            if (customer) {
-              this.addToCache(customer);
-            }
-          })
-        );
-    }
-  }
+  protected getByIdFunction = (id: string) => {
+    return this.apiCustomersClient
+      .lookup(CustomerLookupOrderByEnum.Name, false, 0, 1, undefined, [id])
+      .pipe(map((response) => response.customers?.[0]));
+  };
 }

@@ -120,6 +120,7 @@ export abstract class TableDataBase<T extends ITableDataSearchResultItem> {
   public search(criteria?: ITableFilterCriteria): void {
     this.isLoading.next(true);
     this.searchResult.next(undefined);
+    this.problemDetails.next(undefined);
     criteria ??= this.criteria.value;
     this.searchFunction(criteria!)
       .pipe(
@@ -187,6 +188,12 @@ export abstract class TableDataBase<T extends ITableDataSearchResultItem> {
   public clearSpotlight(): void {
     if (this.spotlightIdentifier.value != undefined) {
       this.spotlightIdentifier.next(undefined);
+    }
+  }
+
+  public onDatasourceConnect(): void {
+    if (this.problemDetails.value != null) {
+      this.search();
     }
   }
 
