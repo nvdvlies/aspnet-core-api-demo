@@ -347,6 +347,7 @@ export abstract class DomainEntityBase<T extends IDomainEntity<T>>
     this.entityUpdatedEvent$
       .pipe(
         takeUntil(this.onDestroy$),
+        filter(() => this.isSaving.value == false),
         filter(([_, entity]) => this.id.value != null && entity.id == this.id.value)
       )
       .subscribe(([_, entity]) => {
