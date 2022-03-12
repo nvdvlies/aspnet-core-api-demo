@@ -316,8 +316,7 @@ export abstract class DomainEntityBase<T extends IDomainEntity<T>>
   }
 
   protected patchEntityToForm(entity: T): void {
-    this.form.reset();
-    this.form.patchValue({
+    this.form.reset({
       ...entity
     });
     this.afterPatchEntityToFormHook?.(entity);
