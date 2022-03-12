@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { combineLatest, map, Observable } from 'rxjs';
-import { InvoiceTableDataSource } from '@invoices/invoice-list/invoice-table-datasource';
+import { InvoiceTableDataSource } from '@invoices/pages/invoice-list/invoice-table-datasource';
 import {
   InvoiceTableDataContext,
   InvoiceTableDataService
-} from '@invoices/invoice-list/invoice-table-data.service';
+} from '@invoices/pages/invoice-list/invoice-table-data.service';
 import { TableFilterCriteria } from '@shared/directives/table-filter/table-filter-criteria';
 import { SearchInvoiceDto } from '@api/api.generated.clients';
 

@@ -20,7 +20,7 @@ import {
 } from '@domain/invoice/invoice-domain-entity.service';
 import { IHasForm } from '@shared/guards/unsaved-changes.guard';
 import { InvoiceDto } from '@api/api.generated.clients';
-import { InvoiceListRouteState } from '@invoices/invoice-list/invoice-list.component';
+import { InvoiceListRouteState } from '@invoices/pages/invoice-list/invoice-list.component';
 
 interface ViewModel extends IInvoiceDomainEntityContext {
   createdByFullname: string | undefined;

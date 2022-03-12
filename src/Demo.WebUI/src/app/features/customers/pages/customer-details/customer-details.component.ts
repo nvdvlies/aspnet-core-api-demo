@@ -19,7 +19,7 @@ import {
 } from '@domain/customer/customer-domain-entity.service';
 import { IHasForm } from '@shared/guards/unsaved-changes.guard';
 import { CustomerDto } from '@api/api.generated.clients';
-import { CustomerListRouteState } from '@customers/customer-list/customer-list.component';
+import { CustomerListRouteState } from '@customers/pages/customer-list/customer-list.component';
 
 interface ViewModel extends ICustomerDomainEntityContext {
   createdByFullname: string | undefined;

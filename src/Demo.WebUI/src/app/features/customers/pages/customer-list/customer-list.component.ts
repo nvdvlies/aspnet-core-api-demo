@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { combineLatest, map, Observable } from 'rxjs';
-import { CustomerTableDataSource } from '@customers/customer-list/customer-table-datasource';
+import { CustomerTableDataSource } from '@customers/pages/customer-list/customer-table-datasource';
 import {
   CustomerTableDataContext,
   CustomerTableDataService
-} from '@customers/customer-list/customer-table-data.service';
+} from '@customers/pages/customer-list/customer-table-data.service';
 import { TableFilterCriteria } from '@shared/directives/table-filter/table-filter-criteria';
 import { SearchCustomerDto } from '@api/api.generated.clients';
 

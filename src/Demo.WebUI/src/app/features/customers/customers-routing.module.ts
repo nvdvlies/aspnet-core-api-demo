@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from '@auth0/auth0-angular';
-import { CustomerAuditlogComponent } from '@customers/customer-auditlog/customer-auditlog.component';
-import { CustomerDetailsComponent } from '@customers/customer-details/customer-details.component';
-import { CustomerListComponent } from '@customers/customer-list/customer-list.component';
+import { CustomerAuditlogComponent } from '@customers/pages/customer-auditlog/customer-auditlog.component';
+import { CustomerDetailsComponent } from '@customers/pages/customer-details/customer-details.component';
+import { CustomerListComponent } from '@customers/pages/customer-list/customer-list.component';
 import { UnsavedChangesGuard } from '@shared/guards/unsaved-changes.guard';
 
 const routes: Routes = [
