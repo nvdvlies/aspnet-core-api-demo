@@ -87,8 +87,8 @@ export class InvoiceDomainEntityService extends DomainEntityBase<InvoiceDto> imp
       invoiceNumber: new FormControl(super.readonlyFormState),
       customerId: new FormControl(null, [Validators.required], []),
       invoiceDate: new FormControl(null, [Validators.required], []),
-      paymentTerm: new FormControl(null),
-      orderReference: new FormControl(null),
+      paymentTerm: new FormControl(null, [Validators.required], []),
+      orderReference: new FormControl(null, [Validators.required], []),
       status: new FormControl(super.readonlyFormState),
       pdfIsSynced: new FormControl(super.readonlyFormState),
       pdfDataChecksum: new FormControl(super.readonlyFormState),
@@ -126,7 +126,14 @@ export class InvoiceDomainEntityService extends DomainEntityBase<InvoiceDto> imp
 
   protected instantiateNewEntity(): Observable<InvoiceDto> {
     const invoice = new InvoiceDto();
-    invoice.invoiceLines = [new InvoiceLineDto()];
+    invoice.invoiceDate = new Date();
+    invoice.paymentTerm = 30;
+    //invoice.orderReference = '';
+    const invoiceLine = new InvoiceLineDto();
+    invoiceLine.quantity = 1;
+    invoiceLine.description = 'test1';
+    invoiceLine.sellingPrice = 1;
+    invoice.invoiceLines = [invoiceLine];
     return of(invoice);
   }
 
