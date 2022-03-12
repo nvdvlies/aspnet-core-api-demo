@@ -17,6 +17,10 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import {
+  MatMomentDateModule,
+  MAT_MOMENT_DATE_ADAPTER_OPTIONS
+} from '@angular/material-moment-adapter';
 
 @NgModule({
   declarations: [],
@@ -38,9 +42,9 @@ import { MatNativeDateModule } from '@angular/material/core';
     MatDialogModule,
     MatAutocompleteModule,
     MatDatepickerModule,
-    MatNativeDateModule
-    //MatMomentDateModule
-  ]
-  //providers: [{ provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } }]
+    MatNativeDateModule,
+    MatMomentDateModule
+  ],
+  providers: [{ provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } }]
 })
 export class MaterialModule {}
