@@ -15,3 +15,4 @@ A DomainEntity offers:
  - In the frontend:
    - Manages FormControls, state, API communication and error handling to keep the components thin. View example [component](https://github.com/nvdvlies/dotnet-api-and-angular-frontend/blob/main/src/Demo.WebUI/src/app/features/customers/customer-details/customer-details.component.ts) and [domain entity](https://github.com/nvdvlies/dotnet-api-and-angular-frontend/blob/main/src/Demo.WebUI/src/app/domain/invoice/invoice-domain-entity.service.ts).
    - Auto merging of changes others made when making changes yourself. [View example](https://github.com/nvdvlies/dotnet-api-and-angular-frontend/blob/main/src/Demo.WebUI/src/app/domain/shared/domain-entity-base.ts#L279).
+   - Strongly-typed forms
