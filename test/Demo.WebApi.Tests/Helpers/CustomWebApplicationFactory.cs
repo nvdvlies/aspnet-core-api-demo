@@ -1,5 +1,4 @@
-﻿using Demo.Infrastructure.Events;
-using Demo.Infrastructure.Messages;
+﻿using Demo.Application.Shared.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;

@@ -32,9 +32,14 @@ namespace Demo.Application.Customers.Queries.SearchCustomers
         {
             var query = _query.AsQueryable();
 
-            if (!string.IsNullOrWhiteSpace(request.Name))
+            if (!string.IsNullOrWhiteSpace(request.SearchTerm))
             {
-                query = query.Where(x => EF.Functions.Like(x.Name, $"%{request.Name}%"));
+                var isValidInteger = int.TryParse(request.SearchTerm, out var integerValue);
+
+                query = query.Where(x =>
+                    EF.Functions.Like(x.Name, $"%{request.SearchTerm}%")
+                    || (isValidInteger && EF.Functions.Like(x.Code.ToString(), $"%{request.SearchTerm}%"))
+                );
             }
 
             var totalItems = await query.CountAsync(cancellationToken);

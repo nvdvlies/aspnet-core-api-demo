@@ -47,13 +47,13 @@ namespace Demo.Domain.Shared.DomainEntity
             Lazy<IEnumerable<IAfterUpdate<T>>> afterUpdateHooks,
             Lazy<IEnumerable<IBeforeDelete<T>>> beforeDeleteHooks,
             Lazy<IEnumerable<IAfterDelete<T>>> afterDeleteHooks,
-            Lazy<IEventOutboxProcessor> eventOutboxProcessor,
-            Lazy<IMessageOutboxProcessor> messageOutboxProcessor,
+            Lazy<IOutboxEventCreator> outboxEventCreator,
+            Lazy<IOutboxMessageCreator> outboxMessageCreator,
             Lazy<IJsonService<T>> jsonService,
             Lazy<IAuditlogger<T>> auditlogger
         )
         {
-            Context = new DomainEntityContext<T>(logger, eventOutboxProcessor, messageOutboxProcessor, jsonService);
+            Context = new DomainEntityContext<T>(logger, outboxEventCreator, outboxMessageCreator, jsonService);
             Logger = logger;
             CurrentUser = currentUser;
             DateTime = dateTime;

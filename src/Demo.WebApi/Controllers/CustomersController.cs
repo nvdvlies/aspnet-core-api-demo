@@ -1,7 +1,7 @@
-using Demo.Application.Customers.Queries.CustomerLookup;
 using Demo.Application.Customers.Commands.CreateCustomer;
 using Demo.Application.Customers.Commands.DeleteCustomer;
 using Demo.Application.Customers.Commands.UpdateCustomer;
+using Demo.Application.Customers.Queries.CustomerLookup;
 using Demo.Application.Customers.Queries.GetCustomerAuditlog;
 using Demo.Application.Customers.Queries.GetCustomerById;
 using Demo.Application.Customers.Queries.SearchCustomers;

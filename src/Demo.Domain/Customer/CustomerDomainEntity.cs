@@ -23,12 +23,12 @@ namespace Demo.Domain.Customer
             Lazy<IEnumerable<IAfterUpdate<Customer>>> afterUpdateHooks,
             Lazy<IEnumerable<IBeforeDelete<Customer>>> beforeDeleteHooks,
             Lazy<IEnumerable<IAfterDelete<Customer>>> afterDeleteHooks,
-            Lazy<IEventOutboxProcessor> eventOutboxProcessor,
-            Lazy<IMessageOutboxProcessor> messageOutboxProcessor,
+            Lazy<IOutboxEventCreator> outboxEventCreator,
+            Lazy<IOutboxMessageCreator> outboxMessageCreator,
             Lazy<IJsonService<Customer>> jsonService,
             Lazy<IAuditlogger<Customer>> auditlogger
         )
-            : base(logger, currentUser, dateTime, dbCommand, defaultValuesSetters, validators, beforeCreateHooks, afterCreateHooks, beforeUpdateHooks, afterUpdateHooks, beforeDeleteHooks, afterDeleteHooks, eventOutboxProcessor, messageOutboxProcessor, jsonService, auditlogger)
+            : base(logger, currentUser, dateTime, dbCommand, defaultValuesSetters, validators, beforeCreateHooks, afterCreateHooks, beforeUpdateHooks, afterUpdateHooks, beforeDeleteHooks, afterDeleteHooks, outboxEventCreator, outboxMessageCreator, jsonService, auditlogger)
         {
         }
     }

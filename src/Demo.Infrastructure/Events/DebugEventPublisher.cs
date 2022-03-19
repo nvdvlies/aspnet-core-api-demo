@@ -1,4 +1,4 @@
-﻿using Demo.Application.Events.Commands.ProcessIncomingEvents;
+﻿using Demo.Application.Shared.Interfaces;
 using Demo.Events;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,6 +22,7 @@ namespace Demo.Infrastructure.Events
             using (var scope = _serviceProvider.CreateScope())
             {
                 var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+
                 var eventGridEvent = @event.ToEventGridEvent();
                 var @event2 = eventGridEvent.ToEvent();
 

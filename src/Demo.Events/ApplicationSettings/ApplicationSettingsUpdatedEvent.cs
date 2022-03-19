@@ -4,7 +4,7 @@ namespace Demo.Events.ApplicationSettings
 {
     public class ApplicationSettingsUpdatedEvent : Event<ApplicationSettingsUpdatedEvent, ApplicationSettingsUpdatedEventData>
     {
-        public static ApplicationSettingsUpdatedEvent Create(string correlationId, Guid id, string updatedBy)
+        public static ApplicationSettingsUpdatedEvent Create(string correlationId, Guid id, Guid updatedBy)
         {
             var data = new ApplicationSettingsUpdatedEventData
             {
@@ -29,6 +29,6 @@ namespace Demo.Events.ApplicationSettings
         public string CorrelationId { get; set; }
 
         public Guid Id { get; set; }
-        public string UpdatedBy { get; set; }
+        public Guid UpdatedBy { get; set; }
     }
 }

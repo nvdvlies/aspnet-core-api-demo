@@ -25,9 +25,9 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.DomainEntity
             new CreateEntityTypeConfigurationOutputCollector(),
             new AddDbSetToDbContextOutputCollector(),
             new AddUsingStatementToDbContextOutputCollector(),
-            new EntityCreatedDomainEventOutputCollector(),
-            new EntityUpdatedDomainEventOutputCollector(),
-            new EntityDeletedDomainEventOutputCollector(),
+            new EntityCreatedEventOutputCollector(),
+            new EntityUpdatedEventOutputCollector(),
+            new EntityDeletedEventOutputCollector(),
             new EventHookOutputCollector(),
             new EventHubOutputCollector()
         };

@@ -7,6 +7,7 @@
     matInput
     [formControl]="searchFormControl"
     [matAutocomplete]="auto"
+    [appFocus]="focus"
     (focus)="onFocus()"
     (blur)="onBlur()"
     #searchInput
@@ -16,7 +17,10 @@
       <mat-spinner diameter="20"></mat-spinner>
     </mat-option>
 
-    <mat-option disabled *ngIf="!vm.isSearching && vm.options.length === 0">
+    <mat-option
+      disabled
+      *ngIf="!vm.isSearching && vm.options.length === 0 && searchFormControl.touched"
+    >
       No results
     </mat-option>
 

@@ -21,7 +21,7 @@ import {
   FormArrayName,
   NgForm
 } from '@angular/forms';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { FocusMonitor } from '@angular/cdk/a11y';
 
@@ -55,6 +55,17 @@ export abstract class MatFormFieldControlBase<T>
   protected readonly onDestroy = new Subject<void>();
   protected onDestroy$ = this.onDestroy.asObservable();
 
+  @Input()
+  public get focus() {
+    return this._focus;
+  }
+  public set focus(value: BooleanInput) {
+    this._focus = coerceBooleanProperty(value);
+  }
+  private _focus = false;
+
+  private formGroupDirective: FormGroupDirective | undefined;
+
   constructor(
     @Optional() protected readonly elementRef: ElementRef<HTMLElement>,
     @Optional() protected readonly focusMonitor: FocusMonitor,
@@ -78,16 +89,15 @@ export abstract class MatFormFieldControlBase<T>
       }
     }
 
-    let formGroupDirective: FormGroupDirective;
     if (
       this.controlContainer instanceof FormGroupName ||
       this.controlContainer instanceof FormArrayName
     ) {
-      formGroupDirective = <FormGroupDirective>this.controlContainer.formDirective;
+      this.formGroupDirective = <FormGroupDirective>this.controlContainer.formDirective;
     } else {
-      formGroupDirective = <FormGroupDirective>this.controlContainer;
+      this.formGroupDirective = <FormGroupDirective>this.controlContainer;
     }
-    formGroupDirective.ngSubmit.pipe(takeUntil(this.onDestroy$)).subscribe(() => {
+    this.formGroupDirective.ngSubmit.pipe(takeUntil(this.onDestroy$)).subscribe(() => {
       if (!this.touched) {
         this.touched = true;
         this.onTouched();
@@ -138,7 +148,9 @@ export abstract class MatFormFieldControlBase<T>
   }
 
   public get errorState(): boolean {
-    return this.formControl.invalid && this.touched;
+    return (
+      this.formControl.invalid && (this.touched || (this.formGroupDirective?.submitted ?? false))
+    );
   }
 
   public get empty() {

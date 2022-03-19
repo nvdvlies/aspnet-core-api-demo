@@ -11,6 +11,12 @@ namespace Demo.Infrastructure.Persistence.Configuration
             builder.ToTable(nameof(Invoice))
                 .HasKey(x => x.Id);
 
+            builder.HasIndex(x => x.InvoiceNumber).IsUnique();
+            builder.HasIndex(x => x.CustomerId);
+            builder.HasIndex(x => x.InvoiceDate);
+            builder.HasIndex(x => x.Status);
+            builder.HasIndex(x => x.Deleted);
+
             builder.Property(x => x.InvoiceNumber)
                 .HasMaxLength(10)
                 .HasDefaultValueSql($"CONCAT(YEAR(GETUTCDATE()), NEXT VALUE FOR {Constants.SchemaName}.{Sequences.InvoiceNumber})")

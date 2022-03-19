@@ -12,7 +12,7 @@ import { DomainEntityErrorMessageDirective } from './directives/domain-entity-er
 import { FocusDirective } from './directives/focus/focus.directive';
 import { CustomerAutocompleteComponent } from './components/autocomplete/customer-autocomplete/customer-autocomplete.component';
 import { CustomerIdToNamePipe } from './pipes/customer-id-to-name.pipe';
-import { CurrencyInputDirective } from './directives/currency-input/currency-input.directive';
+import { CurrencyFormFieldControlComponent } from './components/currency-form-field-control/currency-form-field-control.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +25,7 @@ import { CurrencyInputDirective } from './directives/currency-input/currency-inp
     FocusDirective,
     CustomerAutocompleteComponent,
     CustomerIdToNamePipe,
-    CurrencyInputDirective
+    CurrencyFormFieldControlComponent
   ],
   imports: [CommonModule, ReactiveFormsModule, FormsModule, MaterialModule, FlexLayoutModule],
   exports: [
@@ -42,7 +42,7 @@ import { CurrencyInputDirective } from './directives/currency-input/currency-inp
     FocusDirective,
     CustomerAutocompleteComponent,
     CustomerIdToNamePipe,
-    CurrencyInputDirective
+    CurrencyFormFieldControlComponent
   ]
 })
 export class SharedModule {}

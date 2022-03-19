@@ -8,6 +8,7 @@ using Demo.Domain.Shared.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -34,16 +35,12 @@ namespace Demo.Application.Customers.Queries.CustomerLookup
 
             if (!string.IsNullOrWhiteSpace(request.SearchTerm))
             {
-                var isNumericSearchTerm = int.TryParse(request.SearchTerm, out var numericSearchTerm);
-                if (isNumericSearchTerm)
-                {
-                    query = query.Where(x => EF.Functions.Like(x.Name, $"%{request.SearchTerm}%")
-                        || EF.Functions.Like(x.Code.ToString(), $"%{request.SearchTerm}%"));
-                }
-                else
-                {
-                    query = query.Where(x => EF.Functions.Like(x.Name, $"%{request.SearchTerm}%"));
-                }
+                var isValidInteger = int.TryParse(request.SearchTerm, NumberStyles.Integer, CultureInfo.GetCultureInfo("nl-NL"), out var integerValue);
+
+                query = query.Where(x =>
+                    EF.Functions.Like(x.Name, $"%{request.SearchTerm}%")
+                    || (isValidInteger && EF.Functions.Like(x.Code.ToString(), $"%{request.SearchTerm}%"))
+                );
             }
 
             if (request.Ids != null && request.Ids.Length > 0)

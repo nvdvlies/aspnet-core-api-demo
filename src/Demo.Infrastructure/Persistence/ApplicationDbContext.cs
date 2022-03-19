@@ -1,9 +1,11 @@
 using Demo.Domain.ApplicationSettings;
 using Demo.Domain.Auditlog;
 using Demo.Domain.Customer;
-using Demo.Domain.EventOutbox;
 using Demo.Domain.Invoice;
-using Demo.Domain.MessageOutbox;
+using Demo.Domain.OutboxEvent;
+using Demo.Domain.OutboxMessage;
+using Demo.Domain.Role;
+using Demo.Domain.User;
 using Demo.Infrastructure.Persistence.Configuration;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
@@ -18,12 +20,14 @@ namespace Demo.Infrastructure.Persistence
         {
         }
 
-        public DbSet<EventOutbox> EventOutbox { get; set; }
-        public DbSet<MessageOutbox> MessageOutbox { get; set; }
+        public DbSet<OutboxEvent> OutboxEvents { get; set; }
+        public DbSet<OutboxMessage> OutboxMessages { get; set; }
         public DbSet<Auditlog> Auditlogs { get; set; }
         public DbSet<ApplicationSettings> ApplicationSettings { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Invoice> Invoices { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<Role> Roles { get; set; }
         // SCAFFOLD-MARKER: DBSET
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())

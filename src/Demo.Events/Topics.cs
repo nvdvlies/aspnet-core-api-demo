@@ -4,6 +4,10 @@
     {
         ApplicationSettings,
         Customer,
-        Invoice
+        Invoice,
+        User,
+        Role,
+        OutboxEvent,
+        OutboxMessage
     }
 }

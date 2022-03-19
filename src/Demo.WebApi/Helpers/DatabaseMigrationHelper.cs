@@ -25,9 +25,11 @@ namespace Demo.WebApi.Helpers
                 {
                     logger.LogInformation("Pending database migrations are available.");
 
-                    var lastAppliedMigration = appContext.Database.GetAppliedMigrations().Last();
-
-                    logger.LogInformation("Database currently on migration '{lastAppliedMigration}'.", lastAppliedMigration);
+                    var lastAppliedMigration = appContext.Database.GetAppliedMigrations().LastOrDefault();
+                    if (!string.IsNullOrEmpty(lastAppliedMigration))
+                    {
+                        logger.LogInformation("Database currently on migration '{lastAppliedMigration}'.", lastAppliedMigration);
+                    }
                     logger.LogInformation("Applying {count} migration(s) ({names}).", pendingMigrations.Count(), string.Join(",", pendingMigrations));
 
                     appContext.Database.Migrate();

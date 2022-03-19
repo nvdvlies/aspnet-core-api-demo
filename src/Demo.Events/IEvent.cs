@@ -3,7 +3,7 @@ using System;
 
 namespace Demo.Events
 {
-    public interface IEvent: INotification
+    public interface IEvent : INotification
     {
         string CorrelationId { get; }
         DateTime CreatedOn { get; }

@@ -8,6 +8,7 @@ export interface ILookupEntity {
 @Injectable()
 export abstract class LookupBase<T extends ILookupEntity> implements OnInit, OnDestroy {
   protected abstract getByIdFunction: (id: string) => Observable<T | undefined>;
+  protected abstract getBatchByIdFunction: (ids: string[]) => Observable<T[] | undefined>;
   protected abstract entityUpdatedEvent$: Observable<string>;
 
   protected readonly onDestroy = new Subject<void>();
@@ -23,8 +24,32 @@ export abstract class LookupBase<T extends ILookupEntity> implements OnInit, OnD
     this.cache.next(value);
   }
 
-  protected addToCache(item: T): void {
+  private addToOrReplaceInCache(item: T): void {
+    if (this.existsInCache(item)) {
+      this.replaceInCache(item);
+    } else {
+      this.addToCache(item);
+    }
+  }
+
+  private addToCache(item: T): void {
     this.items = [...this.items, item];
+  }
+
+  private replaceInCache(updatedItem: T): void {
+    this.items = this.items.map((item, _) => {
+      if (item.id !== updatedItem.id) {
+        return item;
+      }
+      return updatedItem;
+    });
+  }
+
+  private existsInCache(item: T): boolean {
+    if (!item || !item.id) {
+      return false;
+    }
+    return this.cache.value.find((x) => x.id?.toLowerCase() === item?.id?.toLowerCase()) != null;
   }
 
   protected removeFromCache(id: string): void {
@@ -44,8 +69,29 @@ export abstract class LookupBase<T extends ILookupEntity> implements OnInit, OnD
     } else {
       return this.getByIdFunction(id).pipe(
         tap((item) => {
-          if (item) {
-            this.addToCache(item);
+          if (item && item.id) {
+            this.addToOrReplaceInCache(item);
+          }
+        })
+      );
+    }
+  }
+
+  public getBatchById(ids: string[], skipCache: boolean = false): Observable<T[] | undefined> {
+    const cachedItems = !skipCache
+      ? this.cache.value.filter((x) => ids.some((id) => x.id?.toLowerCase() === id.toLowerCase()))
+      : [];
+    if (cachedItems.length === ids.length) {
+      return of(cachedItems);
+    } else {
+      return this.getBatchByIdFunction(ids).pipe(
+        tap((items) => {
+          if (items) {
+            for (const item of items) {
+              if (item && item.id) {
+                this.addToOrReplaceInCache(item);
+              }
+            }
           }
         })
       );

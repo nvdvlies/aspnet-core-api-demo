@@ -364,7 +364,7 @@ namespace Demo.WebApi.Tests.Controllers.Customers
 
             var query = new SearchCustomersQuery
             {
-                Name = "hello"
+                SearchTerm = "hello"
             };
 
             // Act

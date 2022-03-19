@@ -1,10 +1,12 @@
-﻿using Demo.Application.Shared.Interfaces;
+﻿using Auth0.ManagementApi;
+using Demo.Application.Shared.Interfaces;
 using Demo.Common.Helpers;
 using Demo.Common.Interfaces;
 using Demo.Domain.ApplicationSettings.Interfaces;
 using Demo.Domain.Shared.Entities;
 using Demo.Domain.Shared.Interfaces;
 using Demo.Infrastructure.Auditlogging;
+using Demo.Infrastructure.Auth0;
 using Demo.Infrastructure.Events;
 using Demo.Infrastructure.Messages;
 using Demo.Infrastructure.Persistence;
@@ -24,17 +26,23 @@ namespace Demo.Infrastructure
             services.AddTransient<IDateTime, DateTimeService>();
             services.AddScoped(typeof(IJsonService<>), typeof(JsonService<>));
             services.AddScoped<IApplicationSettingsProvider, ApplicationSettingsProvider>();
-            services.AddScoped<IEventOutboxProcessor, EventOutboxProcessor>();
-
+            services.AddScoped<IUserProvider, UserProvider>();
+            services.AddScoped<IOutboxEventCreator, OutboxEventCreator>();
+            services.AddScoped<IOutboxMessageCreator, OutboxMessageCreator>();
+            services.AddScoped<IOutboxEventCreatedEvents, OutboxEventCreatedEvents>();
+            services.AddScoped<IOutboxMessageCreatedEvents, OutboxMessageCreatedEvents>();
+            services.AddScoped<IOutboxEventPublisher, OutboxEventPublisher>();
+            services.AddScoped<IOutboxMessageSender, OutboxMessageSender>();
 #if DEBUG
             services.AddSingleton<IEventPublisher, DebugEventPublisher>();
 #else
             services.AddSingleton<IEventPublisher, EventGridPublisher>();
 #endif
-
-            services.AddScoped<IMessageOutboxProcessor, MessageOutboxProcessor>();
+#if DEBUG
+            services.AddSingleton<IMessageSender, DebugMessageSender>();
+#else
             services.AddSingleton<IMessageSender, ServiceBusQueueMessageSender>();
-
+#endif
             services.AddDbContext<ApplicationDbContext>(options =>
                     options.UseSqlServer(configuration.GetConnectionString("SqlDatabase"))
                 );
@@ -50,6 +58,10 @@ namespace Demo.Infrastructure
             services.AddAuditlogging();
 
             services.AddMemoryCache();
+
+            services.AddSingleton<IManagementConnection, HttpClientManagementConnection>();
+            services.AddScoped<IAuth0UserManagementClient, Auth0UserManagementClient>();
+            services.AddScoped<IAuth0ManagementApiClientProvider, Auth0ManagementApiClientProvider>();
 
             return services;
         }

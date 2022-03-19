@@ -1,10 +1,11 @@
-﻿using System;
+﻿using MediatR;
+using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace Demo.Messages
 {
-    public abstract class Message<M, D> : IMessage where M : IMessage where D : IMessageData
+    public abstract class Message<M, D> : IRequest<Unit>, IMessage where M : IMessage where D : IMessageData
     {
         [JsonInclude]
         public string Type { get; private set; }
@@ -25,6 +26,11 @@ namespace Demo.Messages
         {
             Type = GetType().FullName;
             CreatedOn = DateTime.UtcNow;
+        }
+
+        public static M FromBinaryData(BinaryData binaryData)
+        {
+            return binaryData.ToObjectFromJson<M>();
         }
 
         public static M FromJson(string json)

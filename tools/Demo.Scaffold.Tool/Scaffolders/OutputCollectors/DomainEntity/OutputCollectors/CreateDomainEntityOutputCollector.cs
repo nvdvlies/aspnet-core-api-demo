@@ -25,9 +25,10 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.DomainEntity.OutputCol
         private static string GetTemplate(string entityName)
         {
             var code = @"
+using System;
 using Demo.Common.Interfaces;
 using Demo.Domain.Shared.DomainEntity;
-using Demo.Domain.%ENTITY%.DomainEntity.Interfaces;
+using Demo.Domain.%ENTITY%.Interfaces;
 using Demo.Domain.Shared.Interfaces;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
@@ -49,12 +50,12 @@ namespace Demo.Domain.%ENTITY%
             Lazy<IEnumerable<IAfterUpdate<%ENTITY%>>> afterUpdateHooks,
             Lazy<IEnumerable<IBeforeDelete<%ENTITY%>>> beforeDeleteHooks,
             Lazy<IEnumerable<IAfterDelete<%ENTITY%>>> afterDeleteHooks,
-            Lazy<IEventOutboxProcessor> eventOutboxProcessor,
-            Lazy<IMessageOutboxProcessor> messageOutboxProcessor,
+            Lazy<IOutboxEventProcessor> outboxEventProcessor,
+            Lazy<IOutboxMessageProcessor> outboxMessageProcessor,
             Lazy<IJsonService<%ENTITY%>> jsonService,
             Lazy<IAuditlogger<%ENTITY%>> auditlogger
         ) 
-            : base(logger, currentUser, dateTime, dbCommand, defaultValuesSetters, validators, beforeCreateHooks, afterCreateHooks, beforeUpdateHooks, afterUpdateHooks, beforeDeleteHooks, afterDeleteHooks, eventOutboxProcessor, messageOutboxProcessor, jsonService, auditlogger)
+            : base(logger, currentUser, dateTime, dbCommand, defaultValuesSetters, validators, beforeCreateHooks, afterCreateHooks, beforeUpdateHooks, afterUpdateHooks, beforeDeleteHooks, afterDeleteHooks, outboxEventProcessor, outboxMessageProcessor, jsonService, auditlogger)
         {
         }
     }

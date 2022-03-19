@@ -1,5 +1,6 @@
 ﻿using Azure.Identity;
 using Azure.Messaging.EventGrid;
+using Demo.Application.Shared.Interfaces;
 using Demo.Events;
 using Demo.Infrastructure.Settings;
 using System;

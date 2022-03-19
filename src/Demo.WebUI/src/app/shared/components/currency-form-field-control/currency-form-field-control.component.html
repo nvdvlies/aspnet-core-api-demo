@@ -1,0 +1,12 @@
+<input [formControl]="formControl" hidden="true" matInput #value />
+<input
+  #input
+  type="text"
+  [placeholder]="placeholder"
+  matInput
+  [formControl]="inputFormControl"
+  [appFocus]="focus"
+  (focus)="onFocus()"
+  (blur)="onBlur($event)"
+  (keydown)="onKeydown($event)"
+/>

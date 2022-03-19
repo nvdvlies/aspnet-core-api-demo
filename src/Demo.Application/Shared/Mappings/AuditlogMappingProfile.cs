@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Demo.Application.Shared.Dtos;
-using Demo.Common.Interfaces;
 using Demo.Domain.Auditlog;
+using Demo.Domain.Shared.Interfaces;
 using System;
 
 namespace Demo.Application.Shared.Mappings

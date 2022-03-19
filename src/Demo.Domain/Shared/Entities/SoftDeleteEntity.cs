@@ -9,11 +9,11 @@ namespace Demo.Domain.Shared.Entities
         [JsonInclude]
         public bool Deleted { get; private set; }
         [JsonInclude]
-        public string DeletedBy { get; private set; }
+        public Guid DeletedBy { get; private set; }
         [JsonInclude]
         public DateTime? DeletedOn { get; private set; }
 
-        void ISoftDeleteEntity.MarkAsDeleted(string deletedBy, DateTime deletedOn)
+        void ISoftDeleteEntity.MarkAsDeleted(Guid deletedBy, DateTime deletedOn)
         {
             Deleted = true;
             DeletedBy = deletedBy;

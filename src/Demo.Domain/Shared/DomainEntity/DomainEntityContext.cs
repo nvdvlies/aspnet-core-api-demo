@@ -11,8 +11,8 @@ namespace Demo.Domain.Shared.DomainEntity
     internal class DomainEntityContext<T> : IDomainEntityContext<T> where T : IEntity
     {
         private readonly ILogger _logger;
-        private readonly Lazy<IEventOutboxProcessor> _eventOutboxProcessor;
-        private readonly Lazy<IMessageOutboxProcessor> _messageOutboxProcessor;
+        private readonly Lazy<IOutboxEventCreator> _outboxEventCreator;
+        private readonly Lazy<IOutboxMessageCreator> _outboxMessageCreator;
         private readonly Lazy<IJsonService<T>> _jsonService;
         private T _entity;
         private readonly object _entityLock = new object();
@@ -21,13 +21,13 @@ namespace Demo.Domain.Shared.DomainEntity
 
         public DomainEntityContext(
             ILogger logger,
-            Lazy<IEventOutboxProcessor> eventOutboxProcessor,
-            Lazy<IMessageOutboxProcessor> messageOutboxProcessor,
+            Lazy<IOutboxEventCreator> outboxEventCreator,
+            Lazy<IOutboxMessageCreator> outboxMessageCreator,
             Lazy<IJsonService<T>> jsonService)
         {
             _logger = logger;
-            _eventOutboxProcessor = eventOutboxProcessor;
-            _messageOutboxProcessor = messageOutboxProcessor;
+            _outboxEventCreator = outboxEventCreator;
+            _outboxMessageCreator = outboxMessageCreator;
             _jsonService = jsonService;
 
             PerformanceMeasurements = new PerformanceMeasurements(logger);
@@ -53,12 +53,12 @@ namespace Demo.Domain.Shared.DomainEntity
 
         public async Task AddEventAsync(IEvent @event, CancellationToken cancellationToken)
         {
-            await _eventOutboxProcessor.Value.AddToOutboxAsync(@event, cancellationToken);
+            await _outboxEventCreator.Value.CreateAsync(@event, cancellationToken);
         }
 
         public async Task AddMessageAsync(IMessage message, CancellationToken cancellationToken)
         {
-            await _messageOutboxProcessor.Value.AddToOutboxAsync(message, cancellationToken);
+            await _outboxMessageCreator.Value.CreateAsync(message, cancellationToken);
         }
 
         private T DeepCopy(T entity)

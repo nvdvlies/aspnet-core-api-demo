@@ -26,11 +26,11 @@ namespace Demo.Domain.Auditlog
             Lazy<IEnumerable<IAfterUpdate<Auditlog>>> afterUpdateHooks,
             Lazy<IEnumerable<IBeforeDelete<Auditlog>>> beforeDeleteHooks,
             Lazy<IEnumerable<IAfterDelete<Auditlog>>> afterDeleteHooks,
-            Lazy<IEventOutboxProcessor> eventOutboxProcessor,
-            Lazy<IMessageOutboxProcessor> messageOutboxProcessor,
+            Lazy<IOutboxEventCreator> outboxEventCreator,
+            Lazy<IOutboxMessageCreator> outboxMessageCreator,
             Lazy<IJsonService<Auditlog>> jsonService
         )
-            : base(logger, currentUser, dateTime, dbCommand, defaultValuesSetters, validators, beforeCreateHooks, afterCreateHooks, beforeUpdateHooks, afterUpdateHooks, beforeDeleteHooks, afterDeleteHooks, eventOutboxProcessor, messageOutboxProcessor, jsonService, null)
+            : base(logger, currentUser, dateTime, dbCommand, defaultValuesSetters, validators, beforeCreateHooks, afterCreateHooks, beforeUpdateHooks, afterUpdateHooks, beforeDeleteHooks, afterDeleteHooks, outboxEventCreator, outboxMessageCreator, jsonService, null)
         {
         }
 

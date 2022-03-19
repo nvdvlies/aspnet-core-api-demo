@@ -30,7 +30,11 @@ export interface ViewModel {
   isSearching: boolean;
 }
 
-export class AutocompleteOption {
+export interface IAutocompleteOption {
+  id: string;
+  label: string;
+}
+export class AutocompleteOption implements IAutocompleteOption {
   constructor(public id: string, public label: string) {}
 }
 
@@ -39,14 +43,14 @@ export class AutocompleteOption {
 })
 export abstract class AutocompleteMatFormFieldControlBase extends MatFormFieldControlBase<string> {
   @Output()
-  public optionSelected = new EventEmitter<AutocompleteOption>();
+  public optionSelected = new EventEmitter<IAutocompleteOption>();
 
   protected abstract searchFunction: (
     searchTerm: string | undefined
-  ) => Observable<AutocompleteOption[]>;
-  protected abstract lookupFunction: (id: string) => Observable<string | undefined>;
+  ) => Observable<IAutocompleteOption[]>;
+  protected abstract lookupFunction: (id: string) => Observable<IAutocompleteOption | undefined>;
 
-  private readonly options = new BehaviorSubject<AutocompleteOption[]>([]);
+  private readonly options = new BehaviorSubject<IAutocompleteOption[]>([]);
   private readonly isLookupOngoing = new BehaviorSubject<boolean>(false);
   private readonly isSearching = new BehaviorSubject<boolean>(false);
 
@@ -67,11 +71,11 @@ export abstract class AutocompleteMatFormFieldControlBase extends MatFormFieldCo
 
   public searchFormControl = new FormControl(null);
 
-  private _selectedOption: AutocompleteOption | undefined;
-  private get selectedOption(): AutocompleteOption | undefined {
+  private _selectedOption: IAutocompleteOption | undefined;
+  private get selectedOption(): IAutocompleteOption | undefined {
     return this._selectedOption;
   }
-  private set selectedOption(value: AutocompleteOption | undefined) {
+  private set selectedOption(value: IAutocompleteOption | undefined) {
     this._selectedOption = value;
   }
 
@@ -121,9 +125,9 @@ export abstract class AutocompleteMatFormFieldControlBase extends MatFormFieldCo
     this.isLookupOngoing.next(true);
     this.lookupFunction(id)
       .pipe(finalize(() => this.isLookupOngoing.next(false)))
-      .subscribe((label) => {
-        if (label && this.value != null) {
-          this.selectedOption = new AutocompleteOption(id, label);
+      .subscribe((option) => {
+        if (option && this.value != null) {
+          this.selectedOption = option;
           this.searchFormControl.setValue(this.selectedOption.label);
         }
       });
@@ -131,7 +135,7 @@ export abstract class AutocompleteMatFormFieldControlBase extends MatFormFieldCo
 
   public onFocus(): void {
     if (!this.searchFormControl.value || this.searchFormControl.value.length === 0) {
-      this.searchFormControl.setValue('');
+      this.search(undefined);
     }
   }
 
@@ -153,7 +157,7 @@ export abstract class AutocompleteMatFormFieldControlBase extends MatFormFieldCo
     }
   }
 
-  public onSelect(event: MatOptionSelectionChange, option: AutocompleteOption): void {
+  public onSelect(event: MatOptionSelectionChange, option: IAutocompleteOption): void {
     if (event.isUserInput) {
       this.selectedOption = option;
       this.searchFormControl.setValue(option.label, { emitEvent: false });
@@ -176,9 +180,5 @@ export abstract class AutocompleteMatFormFieldControlBase extends MatFormFieldCo
     if (value != null && this.selectedOption == null) {
       this.lookup(value);
     }
-  }
-
-  public override ngOnDestroy() {
-    super.ngOnDestroy();
   }
 }

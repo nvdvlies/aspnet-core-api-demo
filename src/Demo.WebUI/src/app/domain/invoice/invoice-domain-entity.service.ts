@@ -1,5 +1,12 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { AbstractControl, FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormArray,
+  FormControl,
+  FormGroup,
+  ValidatorFn,
+  Validators
+} from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { combineLatest, Observable, of, throwError } from 'rxjs';
 import { debounceTime, map } from 'rxjs/operators';
@@ -92,7 +99,11 @@ export class InvoiceDomainEntityService extends DomainEntityBase<InvoiceDto> imp
       status: new FormControl(super.readonlyFormState),
       pdfIsSynced: new FormControl(super.readonlyFormState),
       pdfDataChecksum: new FormControl(super.readonlyFormState),
-      invoiceLines: new FormArray([] as InvoiceLineFormGroup[]) as InvoiceLineFormArray,
+      invoiceLines: new FormArray(
+        [] as InvoiceLineFormGroup[],
+        [Validators.required],
+        []
+      ) as InvoiceLineFormArray,
       deleted: new FormControl(super.readonlyFormState),
       deletedBy: new FormControl(super.readonlyFormState),
       deletedOn: new FormControl(super.readonlyFormState),
@@ -121,7 +132,9 @@ export class InvoiceDomainEntityService extends DomainEntityBase<InvoiceDto> imp
   }
 
   public removeInvoiceLine(index: number): void {
+    //if (this.invoiceLineFormArray.length > 1) {
     this.invoiceLineFormArray.removeAt(index);
+    //}
   }
 
   protected instantiateNewEntity(): Observable<InvoiceDto> {

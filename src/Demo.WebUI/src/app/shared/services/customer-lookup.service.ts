@@ -28,4 +28,10 @@ export class CustomerLookupService extends LookupBase<CustomerLookupDto> {
       .lookup(CustomerLookupOrderByEnum.Name, false, 0, 1, undefined, [id])
       .pipe(map((response) => response.customers?.[0]));
   };
+
+  protected getBatchByIdFunction = (ids: string[]) => {
+    return this.apiCustomersClient
+      .lookup(CustomerLookupOrderByEnum.Name, false, 0, 1, undefined, ids)
+      .pipe(map((response) => response.customers));
+  };
 }

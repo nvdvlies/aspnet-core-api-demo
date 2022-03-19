@@ -3,6 +3,7 @@ using Demo.Application.Shared.Interfaces;
 using Demo.Common;
 using Demo.Common.Interfaces;
 using Demo.Domain;
+using Demo.Domain.Shared.Interfaces;
 using Demo.Infrastructure;
 using Demo.Infrastructure.Settings;
 using Demo.WebApi.Auth;
@@ -73,6 +74,8 @@ namespace Demo.WebApi
             services.AddAuthorization(options =>
             {
                 options.AddPolicy(nameof(Policies.User), policy => policy.Requirements.Add(new HasScopeRequirement(Auth0Scopes.User, environmentSettings.Auth0.Domain)));
+                options.AddPolicy(nameof(Policies.Admin), policy => policy.Requirements.Add(new HasScopeRequirement(Auth0Scopes.Admin, environmentSettings.Auth0.Domain)));
+                options.AddPolicy(nameof(Policies.Machine), policy => policy.Requirements.Add(new HasScopeRequirement(Auth0Scopes.Machine, environmentSettings.Auth0.Domain)));
             });
 
             services.AddApplicationInsightsTelemetry();

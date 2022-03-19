@@ -9,6 +9,6 @@ namespace Demo.Application.Invoices.Queries.SearchInvoices
         public bool OrderByDescending { get; set; }
         public int PageIndex { get; set; } = 0;
         public int PageSize { get; set; } = 10;
-        public string InvoiceNumber { get; set; }
+        public string SearchTerm { get; set; }
     }
 }

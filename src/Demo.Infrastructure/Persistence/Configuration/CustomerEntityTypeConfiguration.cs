@@ -11,6 +11,10 @@ namespace Demo.Infrastructure.Persistence.Configuration
             builder.ToTable(nameof(Customer))
                 .HasKey(x => x.Id);
 
+            builder.HasIndex(x => x.Code).IsUnique();
+            builder.HasIndex(x => x.Name);
+            builder.HasIndex(x => x.Deleted);
+
             builder.Property(x => x.Code)
                 .HasMaxLength(10)
                 .HasDefaultValueSql($"NEXT VALUE FOR {Constants.SchemaName}.{Sequences.CustomerCode}")

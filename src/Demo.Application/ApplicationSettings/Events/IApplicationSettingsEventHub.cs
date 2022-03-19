@@ -5,6 +5,6 @@ namespace Demo.Application.ApplicationSettings.Events
 {
     public interface IApplicationSettingsEventHub
     {
-        Task ApplicationSettingsUpdated(Guid id, string updatedBy);
+        Task ApplicationSettingsUpdated(Guid id, Guid updatedBy);
     }
 }

@@ -28,12 +28,12 @@ namespace Demo.Domain.ApplicationSettings
             Lazy<IEnumerable<IAfterUpdate<ApplicationSettings>>> afterUpdateHooks,
             Lazy<IEnumerable<IBeforeDelete<ApplicationSettings>>> beforeDeleteHooks,
             Lazy<IEnumerable<IAfterDelete<ApplicationSettings>>> afterDeleteHooks,
-            Lazy<IEventOutboxProcessor> eventOutboxProcessor,
-            Lazy<IMessageOutboxProcessor> messageOutboxProcessor,
+            Lazy<IOutboxEventCreator> outboxEventCreator,
+            Lazy<IOutboxMessageCreator> outboxMessageCreator,
             Lazy<IJsonService<ApplicationSettings>> jsonService,
             Lazy<IAuditlogger<ApplicationSettings>> auditlogger
         )
-            : base(logger, currentUser, dateTime, dbCommand, defaultValuesSetters, validators, beforeCreateHooks, afterCreateHooks, beforeUpdateHooks, afterUpdateHooks, beforeDeleteHooks, afterDeleteHooks, eventOutboxProcessor, messageOutboxProcessor, jsonService, auditlogger)
+            : base(logger, currentUser, dateTime, dbCommand, defaultValuesSetters, validators, beforeCreateHooks, afterCreateHooks, beforeUpdateHooks, afterUpdateHooks, beforeDeleteHooks, afterDeleteHooks, outboxEventCreator, outboxMessageCreator, jsonService, auditlogger)
         {
             _dbCommand = dbCommand;
         }

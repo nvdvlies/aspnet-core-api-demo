@@ -46,8 +46,8 @@ namespace Demo.Application
 
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingPipelineBehavior<,>));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationPipelineBehavior<,>));
-            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(SendMessagesAfterCommitPipelineBehavior<,>));
-            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(PublishEventsAfterCommitPipelineBehavior<,>));
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ProcessOutboxMessageCreatedEventsPipelineBehavior<,>));
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ProcessOutboxEventCreatedEventsPipelineBehavior<,>));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(UnitOfWorkPipelineBehavior<,>));
         }
 

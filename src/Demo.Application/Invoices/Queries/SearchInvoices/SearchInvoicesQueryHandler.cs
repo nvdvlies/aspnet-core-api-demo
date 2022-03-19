@@ -8,6 +8,7 @@ using Demo.Domain.Shared.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -34,9 +35,17 @@ namespace Demo.Application.Invoices.Queries.SearchInvoices
                 .Include(x => x.Customer)
                 .AsQueryable();
 
-            if (!string.IsNullOrWhiteSpace(request.InvoiceNumber))
+            if (!string.IsNullOrWhiteSpace(request.SearchTerm))
             {
-                query = query.Where(x => EF.Functions.Like(x.InvoiceNumber, $"%{request.InvoiceNumber}%"));
+                var isValidDate = DateTime.TryParse(request.SearchTerm, CultureInfo.GetCultureInfo("nl-NL"), DateTimeStyles.None, out var dateValue);
+                var isValidAmount = decimal.TryParse(request.SearchTerm, NumberStyles.Number, CultureInfo.GetCultureInfo("nl-NL"), out var amountValue);
+
+                query = query.Where(x =>
+                    EF.Functions.Like(x.InvoiceNumber, $"%{request.SearchTerm}%")
+                    || EF.Functions.Like(x.Customer.Name, $"%{request.SearchTerm}%")
+                    || (isValidDate && x.InvoiceDate == dateValue)
+                // || (isValidAmount && x.Amount == amountValue)
+                );
             }
 
             var totalItems = await query.CountAsync(cancellationToken);

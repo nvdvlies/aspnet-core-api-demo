@@ -4,16 +4,16 @@ namespace Demo.Domain.Shared.Interfaces
 {
     public interface IAuditableEntity : IEntity
     {
-        public string CreatedBy { get; }
+        public Guid CreatedBy { get; }
 
         public DateTime CreatedOn { get; }
 
-        public string LastModifiedBy { get; }
+        public Guid LastModifiedBy { get; }
 
         public DateTime? LastModifiedOn { get; }
 
-        internal void SetCreatedByAndCreatedOn(string createdBy, DateTime createdOn);
-        internal void SetLastModifiedByAndLastModifiedOn(string lastModifiedBy, DateTime lastModifiedOn);
+        internal void SetCreatedByAndCreatedOn(Guid createdBy, DateTime createdOn);
+        internal void SetLastModifiedByAndLastModifiedOn(Guid lastModifiedBy, DateTime lastModifiedOn);
         internal void ClearCreatedAndLastModified();
     }
 }

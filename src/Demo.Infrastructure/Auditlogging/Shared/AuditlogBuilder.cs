@@ -51,6 +51,12 @@ namespace Demo.Infrastructure.Auditlogging.Shared
             return this;
         }
 
+        public AuditlogBuilder<T> WithProperty(Expression<Func<T, DateTime?>> expression, AuditlogType type = AuditlogType.DateTime, Func<DateTime?, string> customFormatter = null)
+        {
+            _actions.Add(new Action(() => WithPropertyInternal(expression, type, customFormatter ?? AuditlogFormatters.DateFormatter)));
+            return this;
+        }
+
         public AuditlogBuilder<T> WithProperty(Expression<Func<T, int>> expression, AuditlogType type = AuditlogType.Number, Func<int, string> customFormatter = null)
         {
             _actions.Add(new Action(() => WithPropertyInternal(expression, type, customFormatter ?? AuditlogFormatters.NumberFormatter)));

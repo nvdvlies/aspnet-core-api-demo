@@ -11,6 +11,9 @@ namespace Demo.Infrastructure.Persistence.Configuration
             builder.ToTable(nameof(Auditlog))
                 .HasKey(x => x.Id);
 
+            builder.HasIndex(x => x.EntityName);
+            builder.HasIndex(x => x.EntityId);
+
             builder.Property(t => t.EntityName)
                 .HasMaxLength(50)
                 .IsRequired();

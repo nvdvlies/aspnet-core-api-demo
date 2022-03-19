@@ -82,7 +82,7 @@ export class InvoiceDetailsComponent implements OnInit, IHasForm {
       of([
         { id: invoice.createdBy, fullName: 'John Doe' },
         { id: invoice.lastModifiedBy, fullName: 'Jane Doe' }
-      ]) // this.usersQuickSearch.getByIds([invoice.createdBy, invoice.lastModifiedBy])
+      ]) // this.usersQuickSearch.getMultipleById([invoice.createdBy, invoice.lastModifiedBy])
     ]).pipe(
       tap(([users]) => {
         this.createdByFullname.next(
@@ -100,7 +100,6 @@ export class InvoiceDetailsComponent implements OnInit, IHasForm {
 
   public save(): void {
     if (!this.form.valid) {
-      //this.form.markAllAsTouched();
       return;
     }
 

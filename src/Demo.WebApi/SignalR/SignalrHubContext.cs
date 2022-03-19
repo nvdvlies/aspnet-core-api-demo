@@ -1,5 +1,5 @@
 ﻿using Demo.Application.Shared.Interfaces;
-using Demo.Common.Interfaces;
+using Demo.Domain.Shared.Interfaces;
 using Microsoft.AspNetCore.SignalR;
 using System;
 

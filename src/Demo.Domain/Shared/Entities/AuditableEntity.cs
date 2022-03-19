@@ -7,15 +7,15 @@ namespace Demo.Domain.Shared.Entities
     public abstract class AuditableEntity : Entity, IAuditableEntity, IEntity
     {
         [JsonInclude]
-        public string CreatedBy { get; private set; }
+        public Guid CreatedBy { get; private set; }
         [JsonInclude]
         public DateTime CreatedOn { get; private set; }
         [JsonInclude]
-        public string LastModifiedBy { get; private set; }
+        public Guid LastModifiedBy { get; private set; }
         [JsonInclude]
         public DateTime? LastModifiedOn { get; private set; }
 
-        void IAuditableEntity.SetCreatedByAndCreatedOn(string createdBy, DateTime createdOn)
+        void IAuditableEntity.SetCreatedByAndCreatedOn(Guid createdBy, DateTime createdOn)
         {
             CreatedBy = createdBy;
             CreatedOn = createdOn;
@@ -23,7 +23,7 @@ namespace Demo.Domain.Shared.Entities
             LastModifiedOn = createdOn;
         }
 
-        void IAuditableEntity.SetLastModifiedByAndLastModifiedOn(string lastModifiedBy, DateTime lastModifiedOn)
+        void IAuditableEntity.SetLastModifiedByAndLastModifiedOn(Guid lastModifiedBy, DateTime lastModifiedOn)
         {
             LastModifiedBy = lastModifiedBy;
             LastModifiedOn = lastModifiedOn;

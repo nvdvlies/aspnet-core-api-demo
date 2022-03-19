@@ -4,7 +4,7 @@ namespace Demo.Events.Invoice
 {
     public class InvoiceUpdatedEvent : Event<InvoiceUpdatedEvent, InvoiceUpdatedEventData>
     {
-        public static InvoiceUpdatedEvent Create(string correlationId, Guid id, string updatedBy)
+        public static InvoiceUpdatedEvent Create(string correlationId, Guid id, Guid updatedBy)
         {
             var data = new InvoiceUpdatedEventData
             {
@@ -29,6 +29,6 @@ namespace Demo.Events.Invoice
         public string CorrelationId { get; set; }
 
         public Guid Id { get; set; }
-        public string UpdatedBy { get; set; }
+        public Guid UpdatedBy { get; set; }
     }
 }

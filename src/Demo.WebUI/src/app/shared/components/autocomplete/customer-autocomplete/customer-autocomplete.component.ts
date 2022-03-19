@@ -2,7 +2,6 @@ import { FocusMonitor } from '@angular/cdk/a11y';
 import {
   Component,
   ChangeDetectionStrategy,
-  ViewEncapsulation,
   Optional,
   ElementRef,
   Host,
@@ -26,7 +25,6 @@ import { map } from 'rxjs';
     '../../../base/autocomplete-mat-form-field-control-base.scss',
     './customer-autocomplete.component.scss'
   ],
-  encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {
@@ -49,7 +47,7 @@ export class CustomerAutocompleteComponent extends AutocompleteMatFormFieldContr
 
   protected searchFunction = (searchTerm: string | undefined) => {
     return this.apiCustomersClient
-      .lookup(CustomerLookupOrderByEnum.Name, false, 0, 15, searchTerm, undefined)
+      .lookup(CustomerLookupOrderByEnum.Name, false, 0, 25, searchTerm, undefined)
       .pipe(
         map(
           (response) =>
@@ -61,6 +59,12 @@ export class CustomerAutocompleteComponent extends AutocompleteMatFormFieldContr
   };
 
   protected lookupFunction = (id: string) => {
-    return this.customerLookupService.getById(id).pipe(map((customer) => customer?.name));
+    return this.customerLookupService
+      .getById(id)
+      .pipe(
+        map((customer) =>
+          customer ? new AutocompleteOption(customer.id!, customer.name!) : undefined
+        )
+      );
   };
 }

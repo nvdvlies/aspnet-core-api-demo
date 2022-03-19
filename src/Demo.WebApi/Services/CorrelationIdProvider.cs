@@ -15,7 +15,8 @@ namespace Demo.WebApi.Services
 
         public string Id
         {
-            get {
+            get
+            {
                 var operation = _httpContextAccessor.HttpContext?.Features.Get<RequestTelemetry>()?.Context?.Operation;
                 return !string.IsNullOrEmpty(operation.ParentId) ? operation.ParentId : operation.Id;
             }
