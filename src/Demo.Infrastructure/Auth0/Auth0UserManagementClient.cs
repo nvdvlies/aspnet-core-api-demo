@@ -31,9 +31,10 @@ namespace Demo.Infrastructure.Auth0
                 UserId = internalUser.Id.ToString(),
                 Email = internalUser.Email,
                 EmailVerified = false,
+                Password = string.Concat(internalUser.Id.ToString(), "@" , new Random().Next(9999)),
                 FirstName = internalUser.GivenName,
                 LastName = $"{internalUser.MiddleName} {internalUser.FamilyName}".Trim(),
-                VerifyEmail = true
+                VerifyEmail = false
             };
             var user = await client.Users.CreateAsync(userCreateRequest, cancellationToken);
             var roles = _environmentSettings.Auth0.Roles
@@ -45,6 +46,17 @@ namespace Demo.Infrastructure.Auth0
                 Roles = roles
             };
             await client.Users.AssignRolesAsync(user.UserId, assignRolesRequest, cancellationToken);
+
+            // TODO
+            //var passwordChangeTicketRequest = new PasswordChangeTicketRequest
+            //{
+            //    UserId = string.Concat("auth0|", internalUser.Id.ToString()),
+            //    MarkEmailAsVerified = true,
+            //    ResultUrl = "http://localhost:4401",
+            //    IncludeEmailInRedirect = true,
+            //    Ttl = 604800 // one week
+            //};
+            //var passwordChangeTicketUri = (await client.Tickets.CreatePasswordChangeTicketAsync(passwordChangeTicketRequest, cancellationToken)).Value;
         }
 
         public async Task SyncEmailToAuth0Async(Domain.User.User internalUser, CancellationToken cancellationToken = default)

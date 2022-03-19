@@ -7,7 +7,7 @@ namespace Demo.Infrastructure.Persistence.Configuration
 {
     public class UserEntityTypeConfiguration : IEntityTypeConfiguration<User>
     {
-        public static readonly Guid AdministratorUserId = Guid.Parse("3D223F4C-9578-4930-9034-830D1C923EF4");
+        public static readonly Guid AdministratorUserId = Guid.Parse("08463267-7065-4631-9944-08DA09D992D6");
 
         public void Configure(EntityTypeBuilder<User> builder)
         {

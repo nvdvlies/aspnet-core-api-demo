@@ -1,0 +1,96 @@
+@baseUrl = https://localhost:5001
+@access_token = {{ auth.response.body.$.access_token}}
+@createdLocation = {{create.response.headers.location}}
+
+# @name auth
+POST https://dev-spke9m2i.us.auth0.com/oauth/token
+Content-Type: application/json
+
+{ 
+  "client_id": "{{client_id}}",
+  "client_secret": "{{client_secret}}",
+  "audience": "{{audience}}",
+  "grant_type": "client_credentials"
+}
+
+###
+
+# @name search
+GET {{baseUrl}}/api/users
+  ?orderBy=0 
+  &orderByDescending=true
+  &pageIndex=0
+  &pageSize=10
+Accept: application/json
+Authorization: Bearer {{access_token}}
+
+###
+
+# @name create
+POST {{baseUrl}}/api/users
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "email": "niels.vandervlies@gmail.com",
+  "familyName": "Administrator",
+  "userRoles": [
+      {
+          "roleId": "7C20005D-D5F8-4079-AF26-434D69B43C82"
+      }
+  ]
+}
+
+###
+
+# @name getById
+GET {{createdLocation}}
+Accept: application/json
+Authorization: Bearer {{access_token}}
+
+###
+
+# @name update
+PUT {{createdLocation}}
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "timestamp": "AAAAAAAAhNY=",
+  "familyName": "Test3"
+}
+
+###
+
+# @name auditlog
+GET {{createdLocation}}/auditlog
+  ?pageIndex=0
+  &pageSize=10
+Accept: application/json
+Authorization: Bearer {{access_token}}
+
+###
+
+# @name delete
+DELETE {{createdLocation}}
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+}
+
+###
+
+# @name lookup
+GET {{baseUrl}}/api/users/lookup
+  ?orderBy=0 
+  &orderByDescending=true
+  &pageIndex=0
+  &pageSize=10
+  //&searchTerm=John
+  //&ids=E8ACA2F3-2BBF-45AD-7F16-08D9F7A0C34A
+  //&ids=7B27EE10-6D87-4C49-7F14-08D9F7A0C34A
+Accept: application/json
+Authorization: Bearer {{access_token}}
+
+###

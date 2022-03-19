@@ -27,12 +27,12 @@ namespace Demo.Domain.User.Validators
 
             if (context.IsPropertyDirty(x => x.Email))
             {
-                var isNameAvailable = await _userQuery.AsQueryable()
+                var alreadyExists = await _userQuery.AsQueryable()
                     .Where(x => x.Id != context.Entity.Id)
                     .Where(x => x.Email == context.Entity.Email)
                     .AnyAsync(cancellationToken);
 
-                if (!isNameAvailable)
+                if (alreadyExists)
                 {
                     return ValidationResult.Invalid($"A user with email '{context.Entity.Email}' already exists.");
                 }

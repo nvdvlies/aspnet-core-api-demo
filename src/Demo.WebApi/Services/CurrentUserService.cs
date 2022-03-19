@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Globalization;
+using System.Linq;
+using System.Security.Claims;
 
 namespace Demo.WebApi.Services
 {
@@ -15,7 +17,15 @@ namespace Demo.WebApi.Services
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public Guid Id => Guid.Parse("3D223F4C-9578-4930-9034-830D1C923EF4"); // TODO: Guid.Parse(_httpContextAccessor.HttpContext.User?.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value);
+        public Guid Id {
+            get
+            {
+                var auth0UserId = _httpContextAccessor.HttpContext.User?.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+                var auth0UserIdWithoutPrefix = auth0UserId.Substring(auth0UserId.LastIndexOf('|') + 1);
+                Guid.TryParse(auth0UserIdWithoutPrefix, out var id);
+                return id;
+            }
+        }
 
         public TimeZoneInfo TimeZone => TimeZoneInfo.FindSystemTimeZoneById("W. Europe Standard Time"); // linux: Europe/Amsterdam
 

@@ -1,6 +1,7 @@
 ﻿using Auth0.ManagementApi;
 using Demo.Infrastructure.Settings;
 using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading;
@@ -33,7 +34,7 @@ namespace Demo.Infrastructure.Auth0
             var accessToken = await GetAccessToken(cancellationToken);
             _managementApiClient = new ManagementApiClient(
                 accessToken,
-                _environmentSettings.Auth0.Domain,
+                new Uri(_environmentSettings.Auth0.Domain).Host,
                 _managementConnection);
             return _managementApiClient;
         }
@@ -41,7 +42,7 @@ namespace Demo.Infrastructure.Auth0
         private async Task<string> GetAccessToken(CancellationToken cancellationToken = default)
         {
             using var client = new HttpClient();
-            client.BaseAddress = new System.Uri(_environmentSettings.Auth0.Domain);
+            client.BaseAddress = new Uri(_environmentSettings.Auth0.Domain);
             var response = await client.PostAsync("oauth/token", new FormUrlEncodedContent(
                 new Dictionary<string, string>
                 {
@@ -50,10 +51,18 @@ namespace Demo.Infrastructure.Auth0
                             { "client_secret", _environmentSettings.Auth0.ClientSecret },
                             { "audience", $"{_environmentSettings.Auth0.Domain}api/v2/" }
                 }
-            ));
+            ), cancellationToken);
+
             var content = await response.Content.ReadAsStringAsync(cancellationToken);
-            var json = JObject.Parse(content);
-            return json["access_token"].Value<string>();
+            if (response.IsSuccessStatusCode)
+            {
+                var json = JObject.Parse(content);
+                return json["access_token"].Value<string>();
+            } 
+            else 
+            {
+                throw new Exception($"Failed to retrieve access token for Auth0 Management Api. StatusCode: {response.StatusCode}. Content: {content}");
+            }
         }
     }
 }

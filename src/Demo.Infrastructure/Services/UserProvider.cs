@@ -33,8 +33,9 @@ namespace Demo.Infrastructure.Services
         {
             if (refreshCache || !_memoryCache.TryGetValue($"{CacheKeyPrefix}/{id}", out User user))
             {
-                _userDomainEntity.WithOptions(x => x.AsNoTracking = true);
-                await _userDomainEntity.GetAsync(id, cancellationToken);
+                await _userDomainEntity
+                    .WithOptions(x => x.AsNoTracking = true)
+                    .GetAsync(id, cancellationToken);
                 user = _userDomainEntity.Entity;
 
                 var cacheEntryOptions = new MemoryCacheEntryOptions()

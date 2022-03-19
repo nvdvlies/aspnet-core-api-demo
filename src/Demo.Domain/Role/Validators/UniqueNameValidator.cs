@@ -27,12 +27,12 @@ namespace Demo.Domain.Role.Validators
 
             if (context.IsPropertyDirty(x => x.Name))
             {
-                var isNameAvailable = await _roleQuery.AsQueryable()
+                var alreadyExists = await _roleQuery.AsQueryable()
                     .Where(x => x.Id != context.Entity.Id)
                     .Where(x => x.Name == context.Entity.Name)
                     .AnyAsync(cancellationToken);
 
-                if (!isNameAvailable)
+                if (alreadyExists)
                 {
                     return ValidationResult.Invalid($"A role with name '{context.Entity.Name}' already exists.");
                 }
