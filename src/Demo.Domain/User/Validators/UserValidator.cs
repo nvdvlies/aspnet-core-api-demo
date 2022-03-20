@@ -14,6 +14,7 @@ namespace Demo.Domain.User.Validators
         public async Task<IEnumerable<ValidationMessage>> ValidateAsync(IDomainEntityContext<User> context, CancellationToken cancellationToken = default)
         {
             RuleFor(user => user.Email).NotEmpty();
+            RuleFor(user => user.Email).EmailAddress();
             RuleFor(user => user.FamilyName).NotEmpty();
             RuleFor(user => user.UserRoles).NotEmpty();
             RuleForEach(user => user.UserRoles).ChildRules(userRole =>
