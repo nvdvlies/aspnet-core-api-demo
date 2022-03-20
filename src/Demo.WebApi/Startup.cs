@@ -73,14 +73,14 @@ namespace Demo.WebApi
 
             services.AddAuthorization(options =>
             {
-                options.AddPolicy(nameof(Policies.User), policy => policy.Requirements.Add(new HasScopeRequirement(Auth0Scopes.User, environmentSettings.Auth0.Domain)));
-                options.AddPolicy(nameof(Policies.Admin), policy => policy.Requirements.Add(new HasScopeRequirement(Auth0Scopes.Admin, environmentSettings.Auth0.Domain)));
-                options.AddPolicy(nameof(Policies.Machine), policy => policy.Requirements.Add(new HasScopeRequirement(Auth0Scopes.Machine, environmentSettings.Auth0.Domain)));
+                options.AddPolicy(nameof(Policies.User), policy => policy.Requirements.Add(new HasRoleRequirement(Auth0Roles.User, environmentSettings.Auth0.Domain)));
+                options.AddPolicy(nameof(Policies.Admin), policy => policy.Requirements.Add(new HasRoleRequirement(Auth0Roles.Admin, environmentSettings.Auth0.Domain)));
+                options.AddPolicy(nameof(Policies.Machine), policy => policy.Requirements.Add(new HasRoleRequirement(Auth0Roles.Machine, environmentSettings.Auth0.Domain)));
             });
 
             services.AddApplicationInsightsTelemetry();
 
-            services.AddSingleton<IAuthorizationHandler, HasScopeRequirementAuthorizationHandler>();
+            services.AddSingleton<IAuthorizationHandler, HasRoleRequirementAuthorizationHandler>();
 
             services.AddScoped<ICorrelationIdProvider, CorrelationIdProvider>();
             services.AddScoped<ICurrentUser, CurrentUserService>();

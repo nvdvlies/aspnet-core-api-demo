@@ -2,7 +2,7 @@
 
 namespace Demo.Infrastructure.Settings
 {
-    public class Auth0Roles
+    public class Auth0RoleMapping
     {
         public string Auth0RoleId { get; set; }
         public Guid InternalRoleId { get; set; }

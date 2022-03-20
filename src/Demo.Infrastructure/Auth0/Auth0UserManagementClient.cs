@@ -39,7 +39,7 @@ namespace Demo.Infrastructure.Auth0
                 VerifyEmail = false
             };
             var user = await client.Users.CreateAsync(userCreateRequest, cancellationToken);
-            var roles = _environmentSettings.Auth0.Roles
+            var roles = _environmentSettings.Auth0.Auth0RoleMappings
                 .Where(x => internalUser.UserRoles.Any(y => y.RoleId == x.InternalRoleId))
                 .Select(x => x.Auth0RoleId)
                 .ToArray();
@@ -93,7 +93,7 @@ namespace Demo.Infrastructure.Auth0
         {
             var client = await _auth0ManagementApiClientCreator.GetClient(cancellationToken);
 
-            var roleIdsAssignedToUser = _environmentSettings.Auth0.Roles
+            var roleIdsAssignedToUser = _environmentSettings.Auth0.Auth0RoleMappings
                 .Where(x => internalUser.UserRoles.Any(y => y.RoleId == x.InternalRoleId))
                 .Select(x => x.Auth0RoleId);
 

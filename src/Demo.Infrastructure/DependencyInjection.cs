@@ -23,7 +23,7 @@ namespace Demo.Infrastructure
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddTransient<IDateTime, DateTimeService>();
+            services.AddTransient<IDateTime, DateTimeProvider>();
             services.AddScoped(typeof(IJsonService<>), typeof(JsonService<>));
             services.AddScoped<IApplicationSettingsProvider, ApplicationSettingsProvider>();
             services.AddScoped<IUserProvider, UserProvider>();

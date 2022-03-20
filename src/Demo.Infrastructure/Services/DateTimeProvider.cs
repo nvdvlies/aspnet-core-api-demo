@@ -3,7 +3,7 @@ using System;
 
 namespace Demo.Infrastructure.Services
 {
-    public class DateTimeService : IDateTime
+    public class DateTimeProvider : IDateTime
     {
         public DateTime UtcNow => DateTime.UtcNow;
     }
