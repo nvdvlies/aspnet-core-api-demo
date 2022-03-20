@@ -25,6 +25,8 @@ namespace Demo.Infrastructure.Auth0
         public async Task CreateAsync(Domain.User.User internalUser, CancellationToken cancellationToken = default)
         {
             var client = await _auth0ManagementApiClientCreator.GetClient(cancellationToken);
+            //var existingUser = await client.Users.GetAsync(internalUser.Id.ToString(), cancellationToken: cancellationToken); // TODO : make idempotent
+
             var userCreateRequest = new UserCreateRequest
             {
                 Connection = _environmentSettings.Auth0.Connection,
@@ -46,17 +48,20 @@ namespace Demo.Infrastructure.Auth0
                 Roles = roles
             };
             await client.Users.AssignRolesAsync(user.UserId, assignRolesRequest, cancellationToken);
+        }
 
-            // TODO
-            //var passwordChangeTicketRequest = new PasswordChangeTicketRequest
-            //{
-            //    UserId = string.Concat("auth0|", internalUser.Id.ToString()),
-            //    MarkEmailAsVerified = true,
-            //    ResultUrl = "http://localhost:4401",
-            //    IncludeEmailInRedirect = true,
-            //    Ttl = 604800 // one week
-            //};
-            //var passwordChangeTicketUri = (await client.Tickets.CreatePasswordChangeTicketAsync(passwordChangeTicketRequest, cancellationToken)).Value;
+        public async Task<string> GetSetPasswordUrl(Domain.User.User internalUser, CancellationToken cancellationToken = default)
+        {
+            var client = await _auth0ManagementApiClientCreator.GetClient(cancellationToken);
+            var passwordChangeTicketRequest = new PasswordChangeTicketRequest
+            {
+                UserId = string.Concat("auth0|", internalUser.Id.ToString()),
+                MarkEmailAsVerified = true,
+                ResultUrl = "http://localhost:4401", // TODO: from config
+                IncludeEmailInRedirect = true,
+                Ttl = 604800 // one week
+            };
+            return (await client.Tickets.CreatePasswordChangeTicketAsync(passwordChangeTicketRequest, cancellationToken)).Value;
         }
 
         public async Task SyncEmailToAuth0Async(Domain.User.User internalUser, CancellationToken cancellationToken = default)
