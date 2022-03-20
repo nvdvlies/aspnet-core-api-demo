@@ -39,9 +39,9 @@ namespace Demo.Infrastructure.Auditlogging.Shared
             return this;
         }
 
-        public AuditlogBuilder<T> WithProperty<T2>(Expression<Func<T, IList<T2>>> expression, AuditlogType type = AuditlogType.Text, Func<IList<T2>, string> customFormatter = null)
+        public AuditlogBuilder<T> WithProperty<T2>(Expression<Func<T, IList<T2>>> expression, string propertyName = null, AuditlogType type = AuditlogType.Text, Func<IList<T2>, string> customFormatter = null)
         {
-            _actions.Add(new Action(() => WithPropertyInternal(expression, type, customFormatter ?? AuditlogFormatters.ListFormatter)));
+            _actions.Add(new Action(() => WithPropertyInternal(expression, type, customFormatter ?? AuditlogFormatters.ListFormatter, propertyName)));
             return this;
         }
 
@@ -110,9 +110,9 @@ namespace Demo.Infrastructure.Auditlogging.Shared
             return _auditlogItems;
         }
 
-        private void WithPropertyInternal<T2>(Expression<Func<T, T2>> expression, AuditlogType type, Func<T2, string> formatter)
+        private void WithPropertyInternal<T2>(Expression<Func<T, T2>> expression, AuditlogType type, Func<T2, string> formatter, string propertyName = null)
         {
-            var propertyName = GetPropertyName(expression);
+            propertyName ??= GetPropertyName(expression);
             T2 currentValue = _current != null ? expression.Compile()(_current) : default;
             T2 previousValue = _previous != null ? expression.Compile()(_previous) : default;
 

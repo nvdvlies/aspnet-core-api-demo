@@ -1,4 +1,5 @@
-﻿using Auth0.ManagementApi.Models;
+﻿using Auth0.Core.Exceptions;
+using Auth0.ManagementApi.Models;
 using Demo.Application.Shared.Interfaces;
 using Demo.Infrastructure.Settings;
 using System;
@@ -25,22 +26,34 @@ namespace Demo.Infrastructure.Auth0
         public async Task CreateAsync(Domain.User.User internalUser, CancellationToken cancellationToken = default)
         {
             var client = await _auth0ManagementApiClientCreator.GetClient(cancellationToken);
-            //var existingUser = await client.Users.GetAsync(internalUser.Id.ToString(), cancellationToken: cancellationToken); // TODO : make idempotent
 
-            var userCreateRequest = new UserCreateRequest
+            User user = null;
+            try
             {
-                Connection = _environmentSettings.Auth0.Connection,
-                UserId = internalUser.Id.ToString(),
-                Email = internalUser.Email,
-                EmailVerified = false,
-                Password = string.Concat(internalUser.Id.ToString(), "@" , new Random().Next(9999)),
-                FirstName = internalUser.GivenName,
-                LastName = $"{internalUser.MiddleName} {internalUser.FamilyName}".Trim(),
-                VerifyEmail = false
-            };
-            var user = await client.Users.CreateAsync(userCreateRequest, cancellationToken);
+                user = await client.Users.GetAsync(string.Concat("auth0|", internalUser.Id.ToString()), cancellationToken: cancellationToken);
+            }
+            catch (ErrorApiException ex) when (ex.ApiError?.ErrorCode == "inexistent_user")
+            {
+            }
+
+            if (user == null)
+            {
+                var userCreateRequest = new UserCreateRequest
+                {
+                    Connection = _environmentSettings.Auth0.Connection,
+                    UserId = internalUser.Id.ToString(),
+                    Email = internalUser.Email,
+                    EmailVerified = false,
+                    Password = string.Concat(internalUser.Id.ToString(), "@", new Random().Next(9999)),
+                    FirstName = internalUser.GivenName,
+                    LastName = $"{internalUser.MiddleName} {internalUser.FamilyName}".Trim(),
+                    VerifyEmail = false
+                };
+                user = await client.Users.CreateAsync(userCreateRequest, cancellationToken);
+            }
+
             var roles = _environmentSettings.Auth0.Auth0RoleMappings
-                .Where(x => internalUser.UserRoles.Any(y => y.RoleId == x.InternalRoleId))
+                .Where(mapping => internalUser.UserRoles.Any(userRole => userRole.RoleId == mapping.InternalRoleId))
                 .Select(x => x.Auth0RoleId)
                 .ToArray();
             var assignRolesRequest = new AssignRolesRequest

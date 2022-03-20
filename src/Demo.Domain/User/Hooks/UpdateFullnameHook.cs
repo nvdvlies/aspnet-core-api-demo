@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Demo.Domain.User.Hooks
 {
-    internal class UpdateFullnameHook : IAfterCreate<User>, IAfterUpdate<User>
+    internal class UpdateFullnameHook : IBeforeCreate<User>, IBeforeUpdate<User>
     {
         public Task ExecuteAsync(HookType type, IDomainEntityContext<User> context, CancellationToken cancellationToken)
         {

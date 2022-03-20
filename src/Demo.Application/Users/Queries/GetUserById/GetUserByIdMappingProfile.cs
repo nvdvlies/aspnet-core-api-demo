@@ -8,7 +8,8 @@ namespace Demo.Application.Users.Queries.GetUserById
     {
         public GetUserByIdMappingProfile()
         {
-            CreateMap<User, UserDto>();
+            CreateMap<User, UserDto>()
+                .ForMember(dto => dto.Gender, opt => opt.MapFrom(entity => (GenderEnum)entity.Gender));
             CreateMap<UserRole, UserRoleDto>();
         }
     }

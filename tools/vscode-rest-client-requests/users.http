@@ -44,20 +44,22 @@ Authorization: Bearer {{access_token}}
 ###
 
 # @name getById
-GET {{createdLocation}}
+GET {{baseUrl}}/api/users/d3381c3e-a43b-44d7-d397-08da09e1b47e 
 Accept: application/json
 Authorization: Bearer {{access_token}}
 
 ###
 
 # @name update
-PUT {{createdLocation}}
+//PUT {{createdLocation}}
+PUT {{baseUrl}}/api/users/d3381c3e-a43b-44d7-d397-08da09e1b47e 
 Content-Type: application/json
 Authorization: Bearer {{access_token}}
 
 {
-  "timestamp": "AAAAAAAAhNY=",
-  "familyName": "Test3"
+  "timestamp": "AAAAAAAACGA=",
+  "familyName": "Administrator2"  "timestamp": "AAAAAAAACGA=",
+  "familyName": "Administrator2"
 }
 
 ###
