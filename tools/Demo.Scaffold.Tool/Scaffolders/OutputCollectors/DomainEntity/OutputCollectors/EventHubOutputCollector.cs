@@ -34,9 +34,9 @@ namespace Demo.Application.%COLLECTIONNAME%.Events
 {
     public interface I%ENTITY%EventHub
     {
-        Task %ENTITY%Created(Guid id, string createdBy);
-        Task %ENTITY%Updated(Guid id, string updatedBy);
-        Task %ENTITY%Deleted(Guid id, string deletedBy);
+        Task %ENTITY%Created(Guid id, Guid createdBy);
+        Task %ENTITY%Updated(Guid id, Guid updatedBy);
+        Task %ENTITY%Deleted(Guid id, Guid deletedBy);
         %SCAFFOLDMARKER%
     }
 }";

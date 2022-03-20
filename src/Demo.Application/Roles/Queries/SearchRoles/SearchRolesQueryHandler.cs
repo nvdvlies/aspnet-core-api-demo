@@ -2,9 +2,9 @@ using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Demo.Application.Shared.Extensions;
 using Demo.Application.Shared.Models;
-using Demo.Application.Users.Queries.SearchUsers.Dtos;
+using Demo.Application.Roles.Queries.SearchRoles.Dtos;
 using Demo.Domain.Shared.Interfaces;
-using Demo.Domain.User;
+using Demo.Domain.Role;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -12,15 +12,15 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Demo.Application.Users.Queries.SearchUsers
+namespace Demo.Application.Roles.Queries.SearchRoles
 {
-    public class SearchUsersQueryHandler : IRequestHandler<SearchUsersQuery, SearchUsersQueryResult>
+    public class SearchRolesQueryHandler : IRequestHandler<SearchRolesQuery, SearchRolesQueryResult>
     {
-        private readonly IDbQuery<User> _query;
+        private readonly IDbQuery<Role> _query;
         private readonly IMapper _mapper;
 
-        public SearchUsersQueryHandler(
-            IDbQuery<User> query,
+        public SearchRolesQueryHandler(
+            IDbQuery<Role> query,
             IMapper mapper
         )
         {
@@ -28,15 +28,14 @@ namespace Demo.Application.Users.Queries.SearchUsers
             _mapper = mapper;
         }
 
-        public async Task<SearchUsersQueryResult> Handle(SearchUsersQuery request, CancellationToken cancellationToken)
+        public async Task<SearchRolesQueryResult> Handle(SearchRolesQuery request, CancellationToken cancellationToken)
         {
             var query = _query.AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(request.SearchTerm))
             {
                 query = query.Where(x =>
-                    EF.Functions.Like(x.Fullname, $"%{request.SearchTerm}%")
-                    || EF.Functions.Like(x.Email, $"%{request.SearchTerm}%")
+                    EF.Functions.Like(x.Name, $"%{request.SearchTerm}%")
                 );
             }
 
@@ -46,24 +45,23 @@ namespace Demo.Application.Users.Queries.SearchUsers
 
             query = request.OrderBy switch
             {
-                SearchUserOrderByEnum.Fullname => query.OrderBy(x => x.Fullname, sortOrder),
-                SearchUserOrderByEnum.FamilyName => query.OrderBy(x => x.FamilyName, sortOrder),
+                SearchRoleOrderByEnum.Name => query.OrderBy(x => x.Name, sortOrder),
                 _ => throw new Exception($"OrderBy '{request.OrderBy}' not implemented.")
             };
 
-            var users = await query
+            var roles = await query
                 .Skip(request.PageSize * request.PageIndex)
                 .Take(request.PageSize)
-                .ProjectTo<SearchUserDto>(_mapper.ConfigurationProvider)
+                .ProjectTo<SearchRoleDto>(_mapper.ConfigurationProvider)
                 //.WriteQueryStringToOutputWindowIfInDebugMode()
                 .ToListAsync(cancellationToken);
 
-            return new SearchUsersQueryResult
+            return new SearchRolesQueryResult
             {
                 PageIndex = request.PageIndex,
                 PageSize = request.PageSize,
                 TotalItems = totalItems,
-                Users = users
+                Roles = roles
             };
         }
     }

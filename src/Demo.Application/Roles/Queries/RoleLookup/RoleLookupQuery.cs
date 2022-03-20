@@ -1,15 +1,17 @@
-using Demo.Application.Users.Queries.SearchUsers.Dtos;
+using Demo.Application.Roles.Queries.RoleLookup.Dtos;
 using MediatR;
+using System;
 
-namespace Demo.Application.Users.Queries.SearchUsers
+namespace Demo.Application.Roles.Queries.RoleLookup
 {
-    public class SearchUsersQuery : IRequest<SearchUsersQueryResult>
+    public class RoleLookupQuery : IRequest<RoleLookupQueryResult>
     {
-        public SearchUserOrderByEnum OrderBy { get; set; }
+        public RoleLookupOrderByEnum OrderBy { get; set; }
         public bool OrderByDescending { get; set; }
         public int PageIndex { get; set; } = 0;
         public int PageSize { get; set; } = 10;
         public string SearchTerm { get; set; }
+        public Guid[] Ids { get; set; }
 
         public override string ToString()
         {
@@ -25,6 +27,10 @@ namespace Demo.Application.Users.Queries.SearchUsers
             queryString.Add(nameof(PageIndex), PageIndex.ToString());
             queryString.Add(nameof(PageSize), PageSize.ToString());
             queryString.Add(nameof(SearchTerm), SearchTerm);
+            foreach (var id in Ids)
+            {
+                queryString.Add(nameof(Ids), id.ToString());
+            }
 
             return queryString.ToString();
         }

@@ -5,7 +5,7 @@ using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Demo.Application.Users.Messages.SynchronizeInvoicePdf
+namespace Demo.Application.Users.Messages.SyncEmailToAuth0User
 {
     public class SyncEmailToAuth0UserMessageHandler : IRequestHandler<SyncEmailToAuth0UserMessage, Unit>
     {

@@ -1,6 +1,6 @@
 ﻿using Demo.Application.Shared.Dtos;
 
-namespace Demo.Application.Users.Queries.SearchUsers.Dto
+namespace Demo.Application.Users.Queries.SearchUsers.Dtos
 {
     public class SearchUserDto : SoftDeleteEntityDto
     {

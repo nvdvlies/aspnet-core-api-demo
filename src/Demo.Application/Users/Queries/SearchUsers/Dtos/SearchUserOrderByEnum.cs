@@ -1,4 +1,4 @@
-﻿namespace Demo.Application.Users.Queries.SearchUsers.Dto
+﻿namespace Demo.Application.Users.Queries.SearchUsers.Dtos
 {
     public enum SearchUserOrderByEnum
     {

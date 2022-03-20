@@ -5,9 +5,9 @@ namespace Demo.Application.Roles.Events
 {
     public interface IRoleEventHub
     {
-        Task RoleCreated(Guid id, string createdBy);
-        Task RoleUpdated(Guid id, string updatedBy);
-        Task RoleDeleted(Guid id, string deletedBy);
+        Task RoleCreated(Guid id, Guid createdBy);
+        Task RoleUpdated(Guid id, Guid updatedBy);
+        Task RoleDeleted(Guid id, Guid deletedBy);
         // SCAFFOLD-MARKER: EVENTHUB
     }
 }

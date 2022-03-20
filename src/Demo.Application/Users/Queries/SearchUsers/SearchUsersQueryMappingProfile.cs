@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Demo.Application.Users.Queries.SearchUsers.Dto;
+using Demo.Application.Users.Queries.SearchUsers.Dtos;
 using Demo.Domain.User;
 
 namespace Demo.Application.Users.Queries.SearchUsers

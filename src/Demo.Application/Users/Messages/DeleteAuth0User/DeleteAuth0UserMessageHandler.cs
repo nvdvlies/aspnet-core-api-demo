@@ -5,7 +5,7 @@ using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Demo.Application.Users.Messages.SynchronizeInvoicePdf
+namespace Demo.Application.Users.Messages.DeleteAuth0User
 {
     public class DeleteAuth0UserMessageHandler : IRequestHandler<DeleteAuth0UserMessage, Unit>
     {

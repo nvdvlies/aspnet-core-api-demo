@@ -1,11 +1,11 @@
-using Demo.Application.Users.Queries.SearchUsers.Dtos;
+using Demo.Application.Roles.Queries.SearchRoles.Dtos;
 using MediatR;
 
-namespace Demo.Application.Users.Queries.SearchUsers
+namespace Demo.Application.Roles.Queries.SearchRoles
 {
-    public class SearchUsersQuery : IRequest<SearchUsersQueryResult>
+    public class SearchRolesQuery : IRequest<SearchRolesQueryResult>
     {
-        public SearchUserOrderByEnum OrderBy { get; set; }
+        public SearchRoleOrderByEnum OrderBy { get; set; }
         public bool OrderByDescending { get; set; }
         public int PageIndex { get; set; } = 0;
         public int PageSize { get; set; } = 10;
