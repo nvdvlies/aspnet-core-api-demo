@@ -32,7 +32,7 @@ Content-Type: application/json
 Authorization: Bearer {{access_token}}
 
 {
-  "email": "niels.vandervlies@gmail.com",
+  "email": "test@test.com",
   "familyName": "Administrator",
   "userRoles": [
       {
@@ -44,22 +44,26 @@ Authorization: Bearer {{access_token}}
 ###
 
 # @name getById
-GET {{baseUrl}}/api/users/d3381c3e-a43b-44d7-d397-08da09e1b47e 
+PUT {{createdLocation}}
 Accept: application/json
 Authorization: Bearer {{access_token}}
 
 ###
 
 # @name update
-//PUT {{createdLocation}}
-PUT {{baseUrl}}/api/users/d3381c3e-a43b-44d7-d397-08da09e1b47e 
+PUT {{createdLocation}}
 Content-Type: application/json
 Authorization: Bearer {{access_token}}
 
 {
-  "timestamp": "AAAAAAAACGA=",
-  "familyName": "Administrator2"  "timestamp": "AAAAAAAACGA=",
-  "familyName": "Administrator2"
+    "familyName": "Administrator",
+    "id": "d3381c3e-a43b-44d7-d397-08da09e1b47e",
+    "userRoles": [
+      {
+          "roleId": "7C20005D-D5F8-4079-AF26-434D69B43C82"
+      }
+    ],
+    "timestamp": "AAAAAAAAJxM="
 }
 
 ###
