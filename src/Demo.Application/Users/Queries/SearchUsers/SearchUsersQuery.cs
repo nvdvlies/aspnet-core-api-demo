@@ -1,9 +1,10 @@
+using Demo.Application.Shared.Interfaces;
 using Demo.Application.Users.Queries.SearchUsers.Dtos;
 using MediatR;
 
 namespace Demo.Application.Users.Queries.SearchUsers
 {
-    public class SearchUsersQuery : IRequest<SearchUsersQueryResult>
+    public class SearchUsersQuery : IQuery, IRequest<SearchUsersQueryResult>
     {
         public SearchUserOrderByEnum OrderBy { get; set; }
         public bool OrderByDescending { get; set; }

@@ -12,15 +12,12 @@ namespace Demo.Application.Shared.PipelineBehaviors
         where TRequest : IRequest<TResponse>
     {
         private readonly IEnumerable<IValidator<TRequest>> _validators;
-        private readonly ILogger<ValidationPipelineBehavior<TRequest, TResponse>> _logger;
 
         public ValidationPipelineBehavior(
-            IEnumerable<IValidator<TRequest>> validators,
-            ILogger<ValidationPipelineBehavior<TRequest, TResponse>> logger
+            IEnumerable<IValidator<TRequest>> validators
         )
         {
             _validators = validators;
-            _logger = logger;
         }
 
         public Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)

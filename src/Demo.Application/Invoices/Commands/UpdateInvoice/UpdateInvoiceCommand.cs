@@ -1,11 +1,12 @@
 using Demo.Application.Invoices.Commands.UpdateInvoice.Dtos;
+using Demo.Application.Shared.Interfaces;
 using MediatR;
 using System;
 using System.Collections.Generic;
 
 namespace Demo.Application.Invoices.Commands.UpdateInvoice
 {
-    public class UpdateInvoiceCommand : IRequest<Unit>
+    public class UpdateInvoiceCommand : ICommand, IRequest<Unit>
     {
         internal Guid Id { get; set; }
         public byte[] Timestamp { get; set; }

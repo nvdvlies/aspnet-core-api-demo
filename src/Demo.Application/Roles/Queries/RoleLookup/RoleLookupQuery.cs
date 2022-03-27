@@ -1,10 +1,11 @@
 using Demo.Application.Roles.Queries.RoleLookup.Dtos;
+using Demo.Application.Shared.Interfaces;
 using MediatR;
 using System;
 
 namespace Demo.Application.Roles.Queries.RoleLookup
 {
-    public class RoleLookupQuery : IRequest<RoleLookupQueryResult>
+    public class RoleLookupQuery : IQuery, IRequest<RoleLookupQueryResult>
     {
         public RoleLookupOrderByEnum OrderBy { get; set; }
         public bool OrderByDescending { get; set; }

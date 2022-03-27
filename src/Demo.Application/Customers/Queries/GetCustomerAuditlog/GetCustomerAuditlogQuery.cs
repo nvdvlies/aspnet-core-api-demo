@@ -1,9 +1,10 @@
+using Demo.Application.Shared.Interfaces;
 using MediatR;
 using System;
 
 namespace Demo.Application.Customers.Queries.GetCustomerAuditlog
 {
-    public class GetCustomerAuditlogQuery : IRequest<GetCustomerAuditlogQueryResult>
+    public class GetCustomerAuditlogQuery : IQuery, IRequest<GetCustomerAuditlogQueryResult>
     {
         internal Guid CustomerId { get; set; }
         public int PageIndex { get; set; } = 0;

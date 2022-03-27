@@ -1,9 +1,9 @@
-using Demo.Application.Roles.Queries.RoleLookup;
-using Demo.Application.Roles.Queries.GetRoleAuditlog;
+using Demo.Application.Roles.Commands.CreateRole;
 using Demo.Application.Roles.Commands.DeleteRole;
 using Demo.Application.Roles.Commands.UpdateRole;
-using Demo.Application.Roles.Commands.CreateRole;
+using Demo.Application.Roles.Queries.GetRoleAuditlog;
 using Demo.Application.Roles.Queries.GetRoleById;
+using Demo.Application.Roles.Queries.RoleLookup;
 using Demo.Application.Roles.Queries.SearchRoles;
 using Microsoft.AspNetCore.Mvc;
 using System;

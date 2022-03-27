@@ -90,7 +90,7 @@ namespace Demo.WebApi
 
             services.AddApplication();
             services.AddDomain();
-            services.AddInfrastructure(Configuration);
+            services.AddInfrastructure(Configuration, environmentSettings);
             services.AddCommon();
 
             services.AddSignalR();

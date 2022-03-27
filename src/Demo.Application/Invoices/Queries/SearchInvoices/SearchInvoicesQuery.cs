@@ -1,9 +1,10 @@
 using Demo.Application.Invoices.Queries.SearchInvoices.Dtos;
+using Demo.Application.Shared.Interfaces;
 using MediatR;
 
 namespace Demo.Application.Invoices.Queries.SearchInvoices
 {
-    public class SearchInvoicesQuery : IRequest<SearchInvoicesQueryResult>
+    public class SearchInvoicesQuery : IQuery, IRequest<SearchInvoicesQueryResult>
     {
         public SearchInvoicesOrderByEnum OrderBy { get; set; }
         public bool OrderByDescending { get; set; }

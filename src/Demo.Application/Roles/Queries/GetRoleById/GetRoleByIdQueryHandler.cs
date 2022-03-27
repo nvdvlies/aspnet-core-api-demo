@@ -1,8 +1,8 @@
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Demo.Application.Roles.Queries.GetRoleById.Dtos;
-using Demo.Domain.Shared.Interfaces;
 using Demo.Domain.Role;
+using Demo.Domain.Shared.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.Threading;

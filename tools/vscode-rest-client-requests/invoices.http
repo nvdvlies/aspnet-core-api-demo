@@ -35,7 +35,7 @@ Authorization: Bearer {{access_token}}
 Request-Id: 654321
 
 {
-  "customerId": "86f9deb5-dfd2-4415-e1e7-08d9fbb5df71",
+  "customerId": "c7d194f9-3303-4e7d-9353-08da09ab5151",
   "invoiceDate": "2021-04-24T00:00:00",
   "paymentTerm": 30,
   "orderReference": "test",

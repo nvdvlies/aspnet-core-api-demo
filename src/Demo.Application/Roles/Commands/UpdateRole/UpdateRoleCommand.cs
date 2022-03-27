@@ -1,9 +1,10 @@
+using Demo.Application.Shared.Interfaces;
 using MediatR;
 using System;
 
 namespace Demo.Application.Roles.Commands.UpdateRole
 {
-    public class UpdateRoleCommand : IRequest<Unit>
+    public class UpdateRoleCommand : ICommand, IRequest<Unit>
     {
         internal Guid Id { get; set; }
         public string Name { get; set; }

@@ -1,9 +1,10 @@
+using Demo.Application.Shared.Interfaces;
 using MediatR;
 using System;
 
 namespace Demo.Application.Invoices.Commands.MarkInvoiceAsCancelled
 {
-    public class MarkInvoiceAsCancelledCommand : IRequest<Unit>
+    public class MarkInvoiceAsCancelledCommand : ICommand, IRequest<Unit>
     {
         internal Guid Id { get; set; }
 

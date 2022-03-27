@@ -1,11 +1,12 @@
 using Demo.Application.Invoices.Commands.CreateInvoice.Dtos;
+using Demo.Application.Shared.Interfaces;
 using MediatR;
 using System;
 using System.Collections.Generic;
 
 namespace Demo.Application.Invoices.Commands.CreateInvoice
 {
-    public class CreateInvoiceCommand : IRequest<CreateInvoiceResponse>
+    public class CreateInvoiceCommand : ICommand, IRequest<CreateInvoiceResponse>
     {
         public Guid CustomerId { get; set; }
         public DateTime InvoiceDate { get; set; }

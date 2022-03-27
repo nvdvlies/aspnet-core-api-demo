@@ -1,9 +1,10 @@
 using Demo.Application.Roles.Queries.SearchRoles.Dtos;
+using Demo.Application.Shared.Interfaces;
 using MediatR;
 
 namespace Demo.Application.Roles.Queries.SearchRoles
 {
-    public class SearchRolesQuery : IRequest<SearchRolesQueryResult>
+    public class SearchRolesQuery : IQuery, IRequest<SearchRolesQueryResult>
     {
         public SearchRoleOrderByEnum OrderBy { get; set; }
         public bool OrderByDescending { get; set; }

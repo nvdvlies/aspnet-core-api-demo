@@ -32,13 +32,14 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint.OutputCollect
                     || commandEndpointType == CommandEndpointTypes.UpdateSubEndpoint
                     || commandEndpointType == CommandEndpointTypes.DeleteSubEndpoint
                     || commandEndpointType == CommandEndpointTypes.Update
-                    || commandEndpointType == CommandEndpointTypes.Delete ? @"
+                    || commandEndpointType == CommandEndpointTypes.Delete ?
+@"using Demo.Application.Shared.Interfaces;
 using MediatR;
 using System;
 
 namespace Demo.Application.%CONTROLLERNAME%.Commands.%COMMANDNAME%
 {
-    public class %COMMANDNAME%Command : IRequest<%RESPONSE%>
+    public class %COMMANDNAME%Command : ICommand, IRequest<%RESPONSE%>
     {
         internal Guid Id { get; set; }
 
@@ -55,7 +56,7 @@ using System;
 
 namespace Demo.Application.%CONTROLLERNAME%.Commands.%COMMANDNAME%
 {
-    public class %COMMANDNAME%Command : IRequest<%RESPONSE%>
+    public class %COMMANDNAME%Command : ICommand, IRequest<%RESPONSE%>
     {
     }
 }

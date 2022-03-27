@@ -1,7 +1,10 @@
 ﻿using Demo.Domain.ApplicationSettings;
 using Demo.Domain.ApplicationSettings.Interfaces;
+using Demo.Domain.Shared.Interfaces;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
 using System;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -11,15 +14,18 @@ namespace Demo.Infrastructure.Services
     {
         private const string CacheKey = "ApplicationSettings";
 
-        private readonly IMemoryCache _memoryCache;
+        private readonly IDistributedCache _cache;
+        private readonly IJsonService<ApplicationSettings> _jsonService;
         private readonly IApplicationSettingsDomainEntity _applicationSettingsDomainEntity;
 
         public ApplicationSettingsProvider(
-            IMemoryCache memoryCache,
+            IDistributedCache cache,
+            IJsonService<ApplicationSettings> jsonService,
             IApplicationSettingsDomainEntity applicationSettingsDomainEntity
         )
         {
-            _memoryCache = memoryCache;
+            _cache = cache;
+            _jsonService = jsonService;
             _applicationSettingsDomainEntity = applicationSettingsDomainEntity;
         }
 
@@ -30,19 +36,35 @@ namespace Demo.Infrastructure.Services
 
         public async Task<ApplicationSettings> GetAsync(bool refreshCache, CancellationToken cancellationToken = default)
         {
-            if (refreshCache || !_memoryCache.TryGetValue(CacheKey, out ApplicationSettings applicationSettings))
+            var cacheValue = await _cache.GetAsync(CacheKey, cancellationToken);
+
+            if (refreshCache || cacheValue == null)
             {
                 _applicationSettingsDomainEntity.WithOptions(x => x.AsNoTracking = true);
                 await _applicationSettingsDomainEntity.GetAsync(cancellationToken);
-                applicationSettings = _applicationSettingsDomainEntity.Entity;
 
-                var cacheEntryOptions = new MemoryCacheEntryOptions()
-                    .SetSlidingExpiration(TimeSpan.FromMinutes(5));
+                var applicationSettings = _applicationSettingsDomainEntity.Entity;
 
-                _memoryCache.Set(CacheKey, applicationSettings, cacheEntryOptions);
+                var cacheEntryOptions = new DistributedCacheEntryOptions()
+                    .SetSlidingExpiration(TimeSpan.FromMinutes(10));
+                await _cache.SetAsync(CacheKey, Encode(applicationSettings), cacheEntryOptions, cancellationToken);
+
+                return applicationSettings;
             }
+            else
+            {
+                return Decode(cacheValue);
+            }
+        }
 
-            return applicationSettings;
+        private ApplicationSettings Decode(byte[] value)
+        {
+            return _jsonService.FromJson(Encoding.UTF8.GetString(value));
+        }
+
+        private byte[] Encode(ApplicationSettings applicationSettings)
+        {
+            return Encoding.UTF8.GetBytes(_jsonService.ToJson(applicationSettings));
         }
     }
 }

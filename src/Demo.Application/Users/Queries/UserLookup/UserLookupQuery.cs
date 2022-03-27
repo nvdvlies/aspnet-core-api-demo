@@ -1,10 +1,11 @@
+using Demo.Application.Shared.Interfaces;
 using Demo.Application.Users.Queries.UserLookup.Dtos;
 using MediatR;
 using System;
 
 namespace Demo.Application.Users.Queries.UserLookup
 {
-    public class UserLookupQuery : IRequest<UserLookupQueryResult>
+    public class UserLookupQuery : IQuery, IRequest<UserLookupQueryResult>
     {
         public UserLookupOrderByEnum OrderBy { get; set; }
         public bool OrderByDescending { get; set; }

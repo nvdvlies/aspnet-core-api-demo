@@ -63,14 +63,14 @@ namespace Demo.Infrastructure.Auth0
             await client.Users.AssignRolesAsync(user.UserId, assignRolesRequest, cancellationToken);
         }
 
-        public async Task<string> GetSetPasswordUrl(Domain.User.User internalUser, CancellationToken cancellationToken = default)
+        public async Task<string> GetChangePasswordUrl(Domain.User.User internalUser, CancellationToken cancellationToken = default)
         {
             var client = await _auth0ManagementApiClientCreator.GetClient(cancellationToken);
             var passwordChangeTicketRequest = new PasswordChangeTicketRequest
             {
                 UserId = string.Concat("auth0|", internalUser.Id.ToString()),
                 MarkEmailAsVerified = true,
-                ResultUrl = "http://localhost:4401", // TODO: from config
+                ResultUrl = _environmentSettings.Auth0.RedirectUrl,
                 IncludeEmailInRedirect = true,
                 Ttl = 604800 // one week
             };

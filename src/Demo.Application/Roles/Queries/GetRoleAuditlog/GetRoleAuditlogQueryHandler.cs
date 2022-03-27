@@ -1,8 +1,8 @@
 using AutoMapper;
 using Demo.Application.Shared.Dtos;
 using Demo.Domain.Auditlog;
-using Demo.Domain.Shared.Interfaces;
 using Demo.Domain.Role;
+using Demo.Domain.Shared.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;

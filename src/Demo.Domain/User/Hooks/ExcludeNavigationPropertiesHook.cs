@@ -9,7 +9,8 @@ namespace Demo.Domain.User.Hooks
     {
         public Task ExecuteAsync(HookType type, IDomainEntityContext<User> context, CancellationToken cancellationToken)
         {
-            context.Entity.UserRoles?.ForEach(x => {
+            context.Entity.UserRoles?.ForEach(x =>
+            {
                 x.User = null;
                 x.Role = null;
             });

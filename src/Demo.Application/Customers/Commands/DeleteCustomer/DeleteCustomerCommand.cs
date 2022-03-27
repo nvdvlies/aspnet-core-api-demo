@@ -1,9 +1,10 @@
+using Demo.Application.Shared.Interfaces;
 using MediatR;
 using System;
 
 namespace Demo.Application.Customers.Commands.DeleteCustomer
 {
-    public class DeleteCustomerCommand : IRequest<Unit>
+    public class DeleteCustomerCommand : ICommand, IRequest<Unit>
     {
         internal Guid Id { get; set; }
 

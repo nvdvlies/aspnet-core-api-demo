@@ -1,3 +1,4 @@
+using Demo.Application.Shared.Interfaces;
 using Demo.Application.Users.Commands.UpdateUser.Dtos;
 using Demo.Application.Users.Queries.GetUserById.Dtos;
 using MediatR;
@@ -6,7 +7,7 @@ using System.Collections.Generic;
 
 namespace Demo.Application.Users.Commands.UpdateUser
 {
-    public class UpdateUserCommand : IRequest<Unit>
+    public class UpdateUserCommand : ICommand, IRequest<Unit>
     {
         internal Guid Id { get; set; }
         public string GivenName { get; set; }

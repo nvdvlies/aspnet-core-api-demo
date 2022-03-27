@@ -11,6 +11,7 @@ using Demo.Infrastructure.Events;
 using Demo.Infrastructure.Messages;
 using Demo.Infrastructure.Persistence;
 using Demo.Infrastructure.Services;
+using Demo.Infrastructure.Settings;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,7 +22,7 @@ namespace Demo.Infrastructure
 {
     public static class DependencyInjection
     {
-        public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration, EnvironmentSettings environmentSettings)
         {
             services.AddTransient<IDateTime, DateTimeProvider>();
             services.AddScoped(typeof(IJsonService<>), typeof(JsonService<>));
@@ -57,8 +58,14 @@ namespace Demo.Infrastructure
 
             services.AddAuditlogging();
 
-            services.AddMemoryCache();
-
+#if DEBUG
+            services.AddDistributedMemoryCache();
+#else
+            services.AddStackExchangeRedisCache(options =>  
+            {  
+                options.Configuration = environmentSettings.Redis.Connection;  
+            });  
+#endif
             services.AddSingleton<IManagementConnection, HttpClientManagementConnection>();
             services.AddScoped<IAuth0UserManagementClient, Auth0UserManagementClient>();
             services.AddScoped<IAuth0ManagementApiClientProvider, Auth0ManagementApiClientProvider>();

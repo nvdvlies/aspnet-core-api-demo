@@ -1,5 +1,7 @@
 ﻿using Demo.Application.Shared.Interfaces;
+using Demo.Messages;
 using MediatR;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -7,10 +9,10 @@ namespace Demo.Application.Shared.PipelineBehaviors
 {
     public class UnitOfWorkPipelineBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly Lazy<IUnitOfWork> _unitOfWork;
 
         public UnitOfWorkPipelineBehavior(
-            IUnitOfWork unitOfWork
+            Lazy<IUnitOfWork> unitOfWork
         )
         {
             _unitOfWork = unitOfWork;
@@ -20,7 +22,10 @@ namespace Demo.Application.Shared.PipelineBehaviors
         {
             var response = await next();
 
-            await _unitOfWork.CommitAsync(cancellationToken);
+            if (request is ICommand || request is IMessage)
+            {
+                await _unitOfWork.Value.CommitAsync(cancellationToken);
+            }
 
             return response;
         }

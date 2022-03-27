@@ -1,8 +1,10 @@
 ﻿using Demo.Domain.Shared.Interfaces;
 using Demo.Domain.User;
 using Demo.Domain.User.Interfaces;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
 using System;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -12,15 +14,18 @@ namespace Demo.Infrastructure.Services
     {
         private const string CacheKeyPrefix = "Users";
 
-        private readonly IMemoryCache _memoryCache;
+        private readonly IDistributedCache _cache;
+        private readonly IJsonService<User> _jsonService;
         private readonly IUserDomainEntity _userDomainEntity;
 
         public UserProvider(
-            IMemoryCache memoryCache,
+            IDistributedCache cache,
+            IJsonService<User> jsonService,
             IUserDomainEntity userDomainEntity
         )
         {
-            _memoryCache = memoryCache;
+            _cache = cache;
+            _jsonService = jsonService;
             _userDomainEntity = userDomainEntity;
         }
 
@@ -31,20 +36,38 @@ namespace Demo.Infrastructure.Services
 
         public async Task<User> GetAsync(Guid id, bool refreshCache, CancellationToken cancellationToken = default)
         {
-            if (refreshCache || !_memoryCache.TryGetValue($"{CacheKeyPrefix}/{id}", out User user))
+            var cacheKey = $"{CacheKeyPrefix}/{id}";
+            var cacheValue = await _cache.GetAsync(cacheKey, cancellationToken);
+
+            if (refreshCache || cacheValue == null)
             {
                 await _userDomainEntity
                     .WithOptions(x => x.AsNoTracking = true)
                     .GetAsync(id, cancellationToken);
-                user = _userDomainEntity.Entity;
 
-                var cacheEntryOptions = new MemoryCacheEntryOptions()
-                    .SetSlidingExpiration(TimeSpan.FromMinutes(5));
+                var user = _userDomainEntity.Entity;
 
-                _memoryCache.Set($"{CacheKeyPrefix}/{id}", user, cacheEntryOptions);
+                var cacheEntryOptions = new DistributedCacheEntryOptions()
+                    .SetSlidingExpiration(TimeSpan.FromMinutes(10));
+
+                await _cache.SetAsync(cacheKey, Encode(user), cacheEntryOptions, cancellationToken);
+
+                return user;
+            } 
+            else
+            {
+                return Decode(cacheValue);
             }
+        }
 
-            return user;
+        private User Decode(byte[] value)
+        {
+            return _jsonService.FromJson(Encoding.UTF8.GetString(value));
+        }
+
+        private byte[] Encode(User user)
+        {
+            return Encoding.UTF8.GetBytes(_jsonService.ToJson(user));
         }
     }
 }

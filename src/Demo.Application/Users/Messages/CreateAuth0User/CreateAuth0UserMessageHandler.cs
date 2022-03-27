@@ -29,6 +29,9 @@ namespace Demo.Application.Users.Messages.CreateAuth0User
 
             await _auth0UserManagementClient.CreateAsync(_userDomainEntity.Entity, cancellationToken);
 
+            var changePasswordUrl = await _auth0UserManagementClient.GetChangePasswordUrl(_userDomainEntity.Entity, cancellationToken);
+            // TODO: Send invitation email with changePasswordUrl
+
             return Unit.Value;
         }
     }

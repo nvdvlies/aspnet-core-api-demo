@@ -1,5 +1,4 @@
 ﻿using Demo.Application.Shared.Interfaces;
-using Demo.Domain.User.Interfaces;
 using Demo.Messages.User;
 using MediatR;
 using System.Threading;

@@ -92,7 +92,7 @@ namespace Demo.WebApi.Controllers
         [HttpGet("Lookup")]
         [ProducesResponseType(typeof(UserLookupQueryResult), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
-        public async Task<ActionResult<UserLookupQueryResult>> UserLookup([FromQuery] UserLookupQuery query, CancellationToken cancellationToken)
+        public async Task<ActionResult<UserLookupQueryResult>> Lookup([FromQuery] UserLookupQuery query, CancellationToken cancellationToken)
         {
             return await Mediator.Send(query, cancellationToken);
         }

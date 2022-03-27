@@ -8,7 +8,7 @@ namespace Demo.Application.Shared.Interfaces
     public interface IAuth0UserManagementClient
     {
         Task CreateAsync(User internalUser, CancellationToken cancellationToken = default);
-        Task<string> GetSetPasswordUrl(User internalUser, CancellationToken cancellationToken = default);
+        Task<string> GetChangePasswordUrl(User internalUser, CancellationToken cancellationToken = default);
         Task SyncEmailToAuth0Async(User internalUser, CancellationToken cancellationToken = default);
         Task SyncNameToAuth0Async(User internalUser, CancellationToken cancellationToken = default);
         Task SyncRolesToAuth0Async(User internalUser, CancellationToken cancellationToken = default);

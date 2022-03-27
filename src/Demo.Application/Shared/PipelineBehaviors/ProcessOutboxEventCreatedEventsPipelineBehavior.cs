@@ -2,8 +2,10 @@
 using Demo.Common.Interfaces;
 using Demo.Domain.Shared.Interfaces;
 using Demo.Events.OutboxEvent;
+using Demo.Messages;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -11,20 +13,17 @@ namespace Demo.Application.Shared.PipelineBehaviors
 {
     public class ProcessOutboxEventCreatedEventsPipelineBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     {
-        private readonly IOutboxEventCreatedEvents _outboxEventCreatedEvents;
-        private readonly ICorrelationIdProvider _correlationIdProvider;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly Lazy<IOutboxEventCreatedEvents> _outboxEventCreatedEvents;
+        private readonly Lazy<IEventPublisher> _eventPublisher;
         private readonly ILogger<ProcessOutboxEventCreatedEventsPipelineBehavior<TRequest, TResponse>> _logger;
 
         public ProcessOutboxEventCreatedEventsPipelineBehavior(
-            IOutboxEventCreatedEvents outboxEventCreatedEvents,
-            ICorrelationIdProvider correlationIdProvider,
-            IEventPublisher eventPublisher,
+            Lazy<IOutboxEventCreatedEvents> outboxEventCreatedEvents,
+            Lazy<IEventPublisher> eventPublisher,
             ILogger<ProcessOutboxEventCreatedEventsPipelineBehavior<TRequest, TResponse>> logger
         )
         {
             _outboxEventCreatedEvents = outboxEventCreatedEvents;
-            _correlationIdProvider = correlationIdProvider;
             _eventPublisher = eventPublisher;
             _logger = logger;
         }
@@ -33,16 +32,19 @@ namespace Demo.Application.Shared.PipelineBehaviors
         {
             var response = await next();
 
-            try
+            if (request is ICommand || request is IMessage)
             {
-                foreach (var outboxEventCreatedEvent in _outboxEventCreatedEvents)
+                try
                 {
-                    await _eventPublisher.PublishAsync(outboxEventCreatedEvent, cancellationToken);
+                    foreach (var outboxEventCreatedEvent in _outboxEventCreatedEvents.Value)
+                    {
+                        await _eventPublisher.Value.PublishAsync(outboxEventCreatedEvent, cancellationToken);
+                    }
                 }
-            }
-            catch (System.Exception ex)
-            {
-                _logger.LogError(ex, $"Failed to publish {nameof(OutboxEventCreatedEvent)} event(s). The affected event(s) will be processed later by the outbox monitoring service.");
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, $"Failed to publish {nameof(OutboxEventCreatedEvent)} event(s). The affected event(s) will be processed later by the outbox monitoring service.");
+                }
             }
 
             return response;

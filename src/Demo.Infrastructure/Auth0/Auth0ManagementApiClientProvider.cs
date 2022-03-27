@@ -58,8 +58,8 @@ namespace Demo.Infrastructure.Auth0
             {
                 var json = JObject.Parse(content);
                 return json["access_token"].Value<string>();
-            } 
-            else 
+            }
+            else
             {
                 throw new Exception($"Failed to retrieve access token for Auth0 Management Api. StatusCode: {response.StatusCode}. Content: {content}");
             }

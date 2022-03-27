@@ -17,7 +17,8 @@ namespace Demo.WebApi.Services
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public Guid Id {
+        public Guid Id
+        {
             get
             {
                 var auth0UserId = _httpContextAccessor.HttpContext.User?.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;

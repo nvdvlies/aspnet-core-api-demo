@@ -1,10 +1,10 @@
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Demo.Application.Roles.Queries.SearchRoles.Dtos;
 using Demo.Application.Shared.Extensions;
 using Demo.Application.Shared.Models;
-using Demo.Application.Roles.Queries.SearchRoles.Dtos;
-using Demo.Domain.Shared.Interfaces;
 using Demo.Domain.Role;
+using Demo.Domain.Shared.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;

@@ -1,9 +1,9 @@
+using Demo.Application.Shared.Interfaces;
 using MediatR;
-using System;
 
 namespace Demo.Application.Roles.Commands.CreateRole
 {
-    public class CreateRoleCommand : IRequest<CreateRoleResponse>
+    public class CreateRoleCommand : ICommand, IRequest<CreateRoleResponse>
     {
         public string Name { get; set; }
     }
