@@ -128,3 +128,43 @@ export class InvoiceEventsService {
     );
   }
 }
+
+export interface UserCreatedEvent {
+  id: string;
+  createdBy: string;
+}
+
+export interface UserUpdatedEvent {
+  id: string;
+  updatedBy: string;
+}
+
+export interface UserDeletedEvent {
+  id: string;
+  deletedBy: string;
+}
+
+@Injectable({
+  providedIn: 'root'
+})
+export class UserEventsService {
+  private userCreated = new Subject<UserCreatedEvent>();
+  private userUpdated = new Subject<UserUpdatedEvent>();
+  private userDeleted = new Subject<UserDeletedEvent>();
+
+  public userCreated$ = this.userCreated.asObservable();
+  public userUpdated$ = this.userUpdated.asObservable();
+  public userDeleted$ = this.userDeleted.asObservable();
+
+  constructor(private signalRService: SignalRService) {
+    this.signalRService.hubConnection.on('UserCreated', (id: string, createdBy: string) =>
+      this.userCreated.next({ id, createdBy })
+    );
+    this.signalRService.hubConnection.on('UserUpdated', (id: string, updatedBy: string) =>
+      this.userUpdated.next({ id, updatedBy })
+    );
+    this.signalRService.hubConnection.on('UserDeleted', (id: string, deletedBy: string) =>
+      this.userDeleted.next({ id, deletedBy })
+    );
+  }
+}

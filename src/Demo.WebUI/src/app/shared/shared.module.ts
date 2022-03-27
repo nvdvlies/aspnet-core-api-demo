@@ -10,9 +10,9 @@ import { DiscardUnsavedChangesModalComponent } from './modals/discard-unsaved-ch
 import { ProblemDetailsComponent } from './components/problem-details/problem-details.component';
 import { DomainEntityErrorMessageDirective } from './directives/domain-entity-error-message/domain-entity-error-message.directive';
 import { FocusDirective } from './directives/focus/focus.directive';
-import { CustomerAutocompleteComponent } from './components/autocomplete/customer-autocomplete/customer-autocomplete.component';
 import { CustomerIdToNamePipe } from './pipes/customer-id-to-name.pipe';
 import { CurrencyFormFieldControlComponent } from './components/currency-form-field-control/currency-form-field-control.component';
+import { CustomerAutocompleteFormFieldControlComponent } from './components/customer-autocomplete-form-field-control/customer-autocomplete-form-field-control.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +23,7 @@ import { CurrencyFormFieldControlComponent } from './components/currency-form-fi
     ProblemDetailsComponent,
     DomainEntityErrorMessageDirective,
     FocusDirective,
-    CustomerAutocompleteComponent,
+    CustomerAutocompleteFormFieldControlComponent,
     CustomerIdToNamePipe,
     CurrencyFormFieldControlComponent
   ],
@@ -40,7 +40,7 @@ import { CurrencyFormFieldControlComponent } from './components/currency-form-fi
     ProblemDetailsComponent,
     DomainEntityErrorMessageDirective,
     FocusDirective,
-    CustomerAutocompleteComponent,
+    CustomerAutocompleteFormFieldControlComponent,
     CustomerIdToNamePipe,
     CurrencyFormFieldControlComponent
   ]

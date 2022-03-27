@@ -6,7 +6,8 @@ import {
   SkipSelf,
   Self,
   Output,
-  EventEmitter
+  EventEmitter,
+  ViewChild
 } from '@angular/core';
 import { ControlContainer, FormControl, NgControl } from '@angular/forms';
 import { MatFormFieldControlBase } from './mat-form-field-control-base';
@@ -23,6 +24,7 @@ import {
   takeUntil
 } from 'rxjs';
 import { MatOptionSelectionChange } from '@angular/material/core';
+import { MatInput } from '@angular/material/input';
 
 export interface ViewModel {
   options: AutocompleteOption[];
@@ -42,6 +44,8 @@ export class AutocompleteOption implements IAutocompleteOption {
   template: ''
 })
 export abstract class AutocompleteMatFormFieldControlBase extends MatFormFieldControlBase<string> {
+  @ViewChild(MatInput) matInput!: MatInput;
+
   @Output()
   public optionSelected = new EventEmitter<IAutocompleteOption>();
 
@@ -112,7 +116,7 @@ export abstract class AutocompleteMatFormFieldControlBase extends MatFormFieldCo
       });
   }
 
-  private search(searchTerm: string | undefined): void {
+  public search(searchTerm: string | undefined): void {
     this.isSearching.next(true);
     this.searchFunction(searchTerm)
       .pipe(finalize(() => this.isSearching.next(false)))
@@ -169,6 +173,10 @@ export abstract class AutocompleteMatFormFieldControlBase extends MatFormFieldCo
   public clearSearchField(): void {
     this.selectedOption = undefined;
     this.value = null;
+  }
+
+  public focus(): void {
+    this.matInput.focus();
   }
 
   public override get shouldLabelFloat() {

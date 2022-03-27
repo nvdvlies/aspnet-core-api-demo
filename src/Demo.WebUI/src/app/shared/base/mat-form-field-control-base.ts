@@ -18,10 +18,9 @@ import {
   ControlContainer,
   FormGroupDirective,
   FormGroupName,
-  FormArrayName,
-  NgForm
+  FormArrayName
 } from '@angular/forms';
-import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
+import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { FocusMonitor } from '@angular/cdk/a11y';
 
@@ -54,15 +53,6 @@ export abstract class MatFormFieldControlBase<T>
 
   protected readonly onDestroy = new Subject<void>();
   protected onDestroy$ = this.onDestroy.asObservable();
-
-  @Input()
-  public get focus() {
-    return this._focus;
-  }
-  public set focus(value: BooleanInput) {
-    this._focus = coerceBooleanProperty(value);
-  }
-  private _focus = false;
 
   private formGroupDirective: FormGroupDirective | undefined;
 

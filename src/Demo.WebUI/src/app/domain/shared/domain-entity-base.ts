@@ -32,6 +32,7 @@ export interface IDomainEntityContext<T> {
   isDeleting: boolean;
   hasNewerVersionWithMergeConflict: boolean;
   problemDetails: ValidationProblemDetails | ProblemDetails | ApiException | undefined;
+  loadingEntityFailed: boolean;
 }
 
 export class DomainEntityContext<T> implements IDomainEntityContext<T> {
@@ -41,6 +42,7 @@ export class DomainEntityContext<T> implements IDomainEntityContext<T> {
     this.isSaving = false;
     this.isDeleting = false;
     this.hasNewerVersionWithMergeConflict = false;
+    this.loadingEntityFailed = false;
   }
 
   id: string | null;
@@ -51,6 +53,7 @@ export class DomainEntityContext<T> implements IDomainEntityContext<T> {
   isDeleting: boolean;
   hasNewerVersionWithMergeConflict: boolean;
   problemDetails: ValidationProblemDetails | ProblemDetails | ApiException | undefined;
+  loadingEntityFailed: boolean;
 }
 
 export interface IDomainEntity<T> {
@@ -90,6 +93,7 @@ export abstract class DomainEntityBase<T extends IDomainEntity<T>>
   protected readonly problemDetails = new BehaviorSubject<
     ValidationProblemDetails | ProblemDetails | ApiException | undefined
   >(undefined);
+  protected readonly loadingEntityFailed = new BehaviorSubject<boolean>(false);
   protected readonly onDestroy = new Subject<void>();
 
   protected id$ = this.id.asObservable();
@@ -101,6 +105,7 @@ export abstract class DomainEntityBase<T extends IDomainEntity<T>>
   protected hasNewerVersionWithMergeConflict$ =
     this.hasNewerVersionWithMergeConflict.asObservable();
   protected problemDetails$ = this.problemDetails.asObservable();
+  protected loadingEntityFailed$ = this.loadingEntityFailed.asObservable();
   protected onDestroy$ = this.onDestroy.asObservable();
 
   protected get readonlyFormState(): any {
@@ -115,7 +120,8 @@ export abstract class DomainEntityBase<T extends IDomainEntity<T>>
     this.isSaving$,
     this.isDeleting$,
     this.hasNewerVersionWithMergeConflict$,
-    this.problemDetails$
+    this.problemDetails$,
+    this.loadingEntityFailed$
   ]).pipe(
     debounceTime(0),
     map(
@@ -127,7 +133,8 @@ export abstract class DomainEntityBase<T extends IDomainEntity<T>>
         isSaving,
         isDeleting,
         hasNewerVersionWithMergeConflict,
-        problemDetails
+        problemDetails,
+        loadingEntityFailed
       ]) => {
         return {
           id,
@@ -137,7 +144,8 @@ export abstract class DomainEntityBase<T extends IDomainEntity<T>>
           isSaving,
           isDeleting,
           hasNewerVersionWithMergeConflict,
-          problemDetails
+          problemDetails,
+          loadingEntityFailed
         } as DomainEntityContext<T>;
       }
     )
@@ -175,12 +183,14 @@ export abstract class DomainEntityBase<T extends IDomainEntity<T>>
 
   protected getById(id: string, getByIdFunction?: (id: string) => Observable<T>): Observable<null> {
     this.problemDetails.next(undefined);
+    this.loadingEntityFailed.next(false);
     this.isLoading.next(true);
     getByIdFunction ??= this.getByIdFunction;
     return getByIdFunction(id).pipe(
-      catchError((error: ValidationProblemDetails | ProblemDetails | ApiException) =>
-        this.setProblemDetailsAndRethrow(error)
-      ),
+      catchError((error: ValidationProblemDetails | ProblemDetails | ApiException) => {
+        this.loadingEntityFailed.next(true);
+        return this.setProblemDetailsAndRethrow(error);
+      }),
       map((entity: T) => entity.clone()),
       tap((entity: T) => {
         this.id.next(entity.id);
@@ -402,6 +412,7 @@ export abstract class DomainEntityBase<T extends IDomainEntity<T>>
     this.isDeleting.next(false);
     this.hasNewerVersionWithMergeConflict.next(false);
     this.problemDetails.next(undefined);
+    this.loadingEntityFailed.next(false);
     this.form.reset();
   }
 

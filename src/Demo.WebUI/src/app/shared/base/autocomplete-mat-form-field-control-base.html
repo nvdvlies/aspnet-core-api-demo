@@ -1,5 +1,5 @@
 <ng-container *ngIf="vm$ | async as vm">
-  <input [formControl]="formControl" hidden="true" matInput #idInput />
+  <input [formControl]="formControl" hidden="true" #idInput />
   <input
     [hidden]="vm.isLookupOngoing"
     type="text"
@@ -7,7 +7,6 @@
     matInput
     [formControl]="searchFormControl"
     [matAutocomplete]="auto"
-    [appFocus]="focus"
     (focus)="onFocus()"
     (blur)="onBlur()"
     #searchInput

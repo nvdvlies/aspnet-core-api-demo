@@ -21,6 +21,7 @@ import {
 import { IHasForm } from '@shared/guards/unsaved-changes.guard';
 import { InvoiceDto } from '@api/api.generated.clients';
 import { InvoiceListRouteState } from '@invoices/pages/invoice-list/invoice-list.component';
+import { UserLookupService } from '@shared/services/user-lookup.service';
 
 interface ViewModel extends IInvoiceDomainEntityContext {
   createdByFullname: string | undefined;
@@ -70,7 +71,8 @@ export class InvoiceDetailsComponent implements OnInit, IHasForm {
 
   constructor(
     private readonly router: Router,
-    private readonly invoiceDomainEntityService: InvoiceDomainEntityService
+    private readonly invoiceDomainEntityService: InvoiceDomainEntityService,
+    private readonly userLookupService: UserLookupService
   ) {}
 
   public ngOnInit(): void {
@@ -79,19 +81,16 @@ export class InvoiceDetailsComponent implements OnInit, IHasForm {
 
   private loadAdditionalData(invoice: InvoiceDto): Observable<null> {
     return forkJoin([
-      of([
-        { id: invoice.createdBy, fullName: 'John Doe' },
-        { id: invoice.lastModifiedBy, fullName: 'Jane Doe' }
-      ]) // this.usersQuickSearch.getMultipleById([invoice.createdBy, invoice.lastModifiedBy])
+      this.userLookupService.getBatchById([invoice.createdBy!, invoice.lastModifiedBy!])
     ]).pipe(
       tap(([users]) => {
         this.createdByFullname.next(
-          users.find((x) => x.id?.toLowerCase() === invoice.createdBy?.toLowerCase())?.fullName ??
+          users.find((x) => x.id?.toLowerCase() === invoice.createdBy?.toLowerCase())?.fullname ??
             undefined
         );
         this.lastModifiedByFullname.next(
           users.find((x) => x.id?.toLowerCase() === invoice.lastModifiedBy?.toLowerCase())
-            ?.fullName ?? undefined
+            ?.fullname ?? undefined
         );
       }),
       switchMap(() => of(null))

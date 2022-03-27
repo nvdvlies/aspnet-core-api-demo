@@ -20,20 +20,20 @@ import { map } from 'rxjs';
 
 @Component({
   selector: 'app-customer-autocomplete-form-field-control',
-  templateUrl: '../../../base/autocomplete-mat-form-field-control-base.html',
+  templateUrl: '../../base/autocomplete-mat-form-field-control-base.html',
   styleUrls: [
-    '../../../base/autocomplete-mat-form-field-control-base.scss',
-    './customer-autocomplete.component.scss'
+    '../../base/autocomplete-mat-form-field-control-base.scss',
+    './customer-autocomplete-form-field-control.component.scss'
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {
       provide: MatFormFieldControl,
-      useExisting: CustomerAutocompleteComponent
+      useExisting: CustomerAutocompleteFormFieldControlComponent
     }
   ]
 })
-export class CustomerAutocompleteComponent extends AutocompleteMatFormFieldControlBase {
+export class CustomerAutocompleteFormFieldControlComponent extends AutocompleteMatFormFieldControlBase {
   constructor(
     @Optional() elementRef: ElementRef<HTMLElement>,
     @Optional() focusMonitor: FocusMonitor,

@@ -19,7 +19,15 @@ export class FocusDirective implements AfterContentInit {
   public ngAfterContentInit() {
     if (this.appFocus) {
       setTimeout(() => {
-        this.elementRef.nativeElement.focus();
+        if (this.elementRef.nativeElement.tagName === 'INPUT') {
+          this.elementRef.nativeElement.focus();
+        } else {
+          (
+            this.elementRef.nativeElement.querySelector(
+              'input:not([type=hidden]):not([hidden])'
+            ) as HTMLElement
+          )?.focus();
+        }
       }, 10);
     }
   }

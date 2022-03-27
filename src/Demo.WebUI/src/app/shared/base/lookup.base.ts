@@ -8,7 +8,7 @@ export interface ILookupEntity {
 @Injectable()
 export abstract class LookupBase<T extends ILookupEntity> implements OnInit, OnDestroy {
   protected abstract getByIdFunction: (id: string) => Observable<T | undefined>;
-  protected abstract getBatchByIdFunction: (ids: string[]) => Observable<T[] | undefined>;
+  protected abstract getBatchByIdFunction: (ids: string[]) => Observable<T[]>;
   protected abstract entityUpdatedEvent$: Observable<string>;
 
   protected readonly onDestroy = new Subject<void>();
@@ -77,7 +77,7 @@ export abstract class LookupBase<T extends ILookupEntity> implements OnInit, OnD
     }
   }
 
-  public getBatchById(ids: string[], skipCache: boolean = false): Observable<T[] | undefined> {
+  public getBatchById(ids: string[], skipCache: boolean = false): Observable<T[]> {
     const cachedItems = !skipCache
       ? this.cache.value.filter((x) => ids.some((id) => x.id?.toLowerCase() === id.toLowerCase()))
       : [];
