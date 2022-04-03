@@ -81,7 +81,7 @@ export class InvoiceDetailsComponent implements OnInit, IHasForm {
 
   private loadAdditionalData(invoice: InvoiceDto): Observable<null> {
     return forkJoin([
-      this.userLookupService.getBatchById([invoice.createdBy!, invoice.lastModifiedBy!])
+      this.userLookupService.getByIds([invoice.createdBy!, invoice.lastModifiedBy!])
     ]).pipe(
       tap(([users]) => {
         this.createdByFullname.next(

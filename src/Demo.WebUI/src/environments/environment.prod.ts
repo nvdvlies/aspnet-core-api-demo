@@ -1,3 +1,10 @@
 export const environment = {
-  production: true
+  production: true,
+  apiBaseUrl: '',
+  auth: {
+    domain: '',
+    clientId: '',
+    audience: '',
+    redirectUri: window.location.origin
+  }
 };
