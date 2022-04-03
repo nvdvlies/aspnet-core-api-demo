@@ -1,73 +1,43 @@
 import { Injectable, OnDestroy, OnInit } from '@angular/core';
-import { BehaviorSubject, Observable, of, Subject, takeUntil, tap } from 'rxjs';
+import { CacheBase } from '@shared/base/cache.base';
+import { map, Observable, of, Subject, takeUntil, tap } from 'rxjs';
 
-export interface ILookupEntity {
-  id?: string | undefined;
+export interface ILookupItem {
+  id: string;
 }
 
 @Injectable()
-export abstract class LookupBase<T extends ILookupEntity> implements OnInit, OnDestroy {
-  protected abstract getByIdFunction: (id: string) => Observable<T | undefined>;
-  protected abstract getBatchByIdFunction: (ids: string[]) => Observable<T[]>;
-  protected abstract entityUpdatedEvent$: Observable<string>;
+export abstract class LookupBase<T extends ILookupItem>
+  extends CacheBase<T>
+  implements OnInit, OnDestroy
+{
+  protected abstract lookupFunction: (ids: string[]) => Observable<T[]>;
+  protected abstract itemUpdatedEvent$: Observable<string>;
 
-  protected readonly onDestroy = new Subject<void>();
-  protected onDestroy$ = this.onDestroy.asObservable();
+  private readonly onDestroy = new Subject<void>();
+  private onDestroy$ = this.onDestroy.asObservable();
 
-  protected readonly cache = new BehaviorSubject<T[]>([]);
-
-  protected get items(): T[] {
-    return this.cache.getValue();
+  public ngOnInit(): void {
+    this.subscribeToItemUpdatedEvent();
   }
 
-  protected set items(value: T[]) {
-    this.cache.next(value);
-  }
-
-  private addToOrReplaceInCache(item: T): void {
-    if (this.existsInCache(item)) {
-      this.replaceInCache(item);
-    } else {
-      this.addToCache(item);
-    }
-  }
-
-  private addToCache(item: T): void {
-    this.items = [...this.items, item];
-  }
-
-  private replaceInCache(updatedItem: T): void {
-    this.items = this.items.map((item, _) => {
-      if (item.id !== updatedItem.id) {
-        return item;
-      }
-      return updatedItem;
+  private subscribeToItemUpdatedEvent(): void {
+    this.itemUpdatedEvent$.pipe(takeUntil(this.onDestroy$)).subscribe((id) => {
+      this.removeFromCache(id);
     });
   }
 
-  private existsInCache(item: T): boolean {
-    if (!item || !item.id) {
-      return false;
-    }
-    return this.cache.value.find((x) => x.id?.toLowerCase() === item?.id?.toLowerCase()) != null;
-  }
-
-  protected removeFromCache(id: string): void {
-    this.items = this.items.filter((x) => x.id !== id);
-  }
-
-  public ngOnInit(): void {
-    this.subscribeToEntityUpdatedEvent();
-  }
-
   public getById(id: string, skipCache: boolean = false): Observable<T | undefined> {
-    const cachedItem = !skipCache
-      ? this.cache.value.find((x) => x.id?.toLowerCase() === id.toLowerCase())
+    const itemInCache = !skipCache
+      ? this.cache.value.find(
+          (item) => item?.id != null && id != null && item.id.toLowerCase() === id.toLowerCase()
+        )
       : null;
-    if (cachedItem) {
-      return of(cachedItem);
+    if (itemInCache) {
+      return of(itemInCache);
     } else {
-      return this.getByIdFunction(id).pipe(
+      return this.lookupFunction([id]).pipe(
+        map((items) => items?.[0]),
         tap((item) => {
           if (item && item.id) {
             this.addToOrReplaceInCache(item);
@@ -77,14 +47,18 @@ export abstract class LookupBase<T extends ILookupEntity> implements OnInit, OnD
     }
   }
 
-  public getBatchById(ids: string[], skipCache: boolean = false): Observable<T[]> {
-    const cachedItems = !skipCache
-      ? this.cache.value.filter((x) => ids.some((id) => x.id?.toLowerCase() === id.toLowerCase()))
+  public getByIds(ids: string[], skipCache: boolean = false): Observable<T[]> {
+    const itemsInCache = !skipCache
+      ? this.cache.value.filter((item) =>
+          ids.some(
+            (id) => item?.id != null && id != null && item.id.toLowerCase() === id.toLowerCase()
+          )
+        )
       : [];
-    if (cachedItems.length === ids.length) {
-      return of(cachedItems);
+    if (itemsInCache.length === ids.length) {
+      return of(itemsInCache);
     } else {
-      return this.getBatchByIdFunction(ids).pipe(
+      return this.lookupFunction(ids).pipe(
         tap((items) => {
           if (items) {
             for (const item of items) {
@@ -96,12 +70,6 @@ export abstract class LookupBase<T extends ILookupEntity> implements OnInit, OnD
         })
       );
     }
-  }
-
-  private subscribeToEntityUpdatedEvent(): void {
-    this.entityUpdatedEvent$.pipe(takeUntil(this.onDestroy$)).subscribe((id) => {
-      this.removeFromCache(id);
-    });
   }
 
   public ngOnDestroy(): void {

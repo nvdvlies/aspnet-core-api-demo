@@ -1,4 +1,4 @@
-import { BehaviorSubject } from 'rxjs';
+import { CacheBase } from '@shared/base/cache.base';
 import { Observable, of, Subject } from 'rxjs';
 import { tap, map, switchMap, filter, finalize } from 'rxjs/operators';
 
@@ -18,9 +18,7 @@ export interface IEntityDeletedEvent {
   deletedBy: string;
 }
 
-export abstract class StoreBase<T extends IEntity<T>> {
-  protected readonly cache = new BehaviorSubject<T[]>([]);
-
+export abstract class StoreBase<T extends IEntity<T>> extends CacheBase<T> {
   protected abstract getByIdFunction: (id: string) => Observable<T>;
   protected abstract createFunction: (entity: T) => Observable<string>;
   protected abstract updateFunction: (entity: T) => Observable<void>;
@@ -34,15 +32,9 @@ export abstract class StoreBase<T extends IEntity<T>> {
 
   private updateLockEntityId: string | undefined;
 
-  private get items(): T[] {
-    return this.cache.getValue();
+  constructor() {
+    super();
   }
-
-  private set items(value: T[]) {
-    this.cache.next(value);
-  }
-
-  constructor() {}
 
   protected init(): void {
     this.subscribeToEvents();
@@ -65,6 +57,9 @@ export abstract class StoreBase<T extends IEntity<T>> {
     return getByIdFunction(id).pipe(
       map((entity) => {
         this.addToOrReplaceInCache(entity);
+        if (skipCache && entityFromCache != null) {
+          this.publishEntityUpdatedInStore(entity);
+        }
         return entity;
       })
     );
@@ -100,38 +95,6 @@ export abstract class StoreBase<T extends IEntity<T>> {
     );
   }
 
-  private addToCache(item: T): void {
-    this.items = [...this.items, item.clone()];
-  }
-
-  private addToOrReplaceInCache(updatedItem: T): void {
-    if (this.existsInCache(updatedItem.id)) {
-      this.replaceInCache(updatedItem);
-    } else {
-      this.addToCache(updatedItem);
-    }
-  }
-
-  private replaceInCache(updatedItem: T): void {
-    this.items = this.items.map((item, _) => {
-      if (item.id !== updatedItem.id) {
-        return item;
-      }
-      return updatedItem;
-    });
-    this.entityUpdatedInStore.next([
-      {
-        id: updatedItem.id,
-        updatedBy: updatedItem.lastModifiedBy
-      } as IEntityUpdatedEvent,
-      updatedItem
-    ]);
-  }
-
-  private removeFromCache(id: string): void {
-    this.items = this.items.filter((x) => x.id !== id);
-  }
-
   private subscribeToEvents(): void {
     this.subscribeToUpdatedEvent();
     this.subscribeToDeletedEvent();
@@ -146,6 +109,7 @@ export abstract class StoreBase<T extends IEntity<T>> {
       )
       .subscribe((entity) => {
         this.replaceInCache(entity);
+        this.publishEntityUpdatedInStore(entity);
       });
   }
 
@@ -158,7 +122,13 @@ export abstract class StoreBase<T extends IEntity<T>> {
       });
   }
 
-  private existsInCache(id: string): boolean {
-    return this.cache.value.find((x) => x.id.toLowerCase() === id.toLowerCase()) != null;
+  private publishEntityUpdatedInStore(entity: T): void {
+    this.entityUpdatedInStore.next([
+      {
+        id: entity.id,
+        updatedBy: entity.lastModifiedBy
+      } as IEntityUpdatedEvent,
+      entity
+    ]);
   }
 }
