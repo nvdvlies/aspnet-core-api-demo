@@ -20,6 +20,7 @@ import {
 import { IHasForm } from '@shared/guards/unsaved-changes.guard';
 import { CustomerDto } from '@api/api.generated.clients';
 import { CustomerListRouteState } from '@customers/pages/customer-list/customer-list.component';
+import { UserLookupService } from '@shared/services/user-lookup.service';
 
 interface ViewModel extends ICustomerDomainEntityContext {
   createdByFullname: string | undefined;
@@ -68,7 +69,8 @@ export class CustomerDetailsComponent implements OnInit, IHasForm {
 
   constructor(
     private readonly router: Router,
-    private readonly customerDomainEntityService: CustomerDomainEntityService
+    private readonly customerDomainEntityService: CustomerDomainEntityService,
+    private readonly userLookupService: UserLookupService
   ) {}
 
   public ngOnInit(): void {
@@ -89,19 +91,16 @@ export class CustomerDetailsComponent implements OnInit, IHasForm {
     return forkJoin([
       //of(null), // get invoices
       //of(null), // get contacts
-      of([
-        { id: customer.createdBy, fullName: 'John Doe' },
-        { id: customer.lastModifiedBy, fullName: 'Jane Doe' }
-      ]) // this.usersQuickSearch.getByIds([customer.createdBy, customer.lastModifiedBy])
+      this.userLookupService.getByIds([customer.createdBy!, customer.lastModifiedBy!])
     ]).pipe(
       tap(([users]) => {
         this.createdByFullname.next(
-          users.find((x) => x.id?.toLowerCase() === customer.createdBy?.toLowerCase())?.fullName ??
+          users.find((x) => x.id?.toLowerCase() === customer.createdBy?.toLowerCase())?.fullname ??
             undefined
         );
         this.lastModifiedByFullname.next(
           users.find((x) => x.id?.toLowerCase() === customer.lastModifiedBy?.toLowerCase())
-            ?.fullName ?? undefined
+            ?.fullname ?? undefined
         );
       }),
       switchMap(() => of(null))
