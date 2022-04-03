@@ -1,6 +1,3 @@
-@import '~@angular/material/theming';
-@import '../../../../../scss/theme.scss';
-
 table {
   width: 100%;
 }
@@ -12,7 +9,7 @@ table {
 
 @-webkit-keyframes target-fade {
   from {
-    background-color: mat-color($default-theme-accent);
+    background-color: var(--default-theme-accent-color);
   }
 
   to {
@@ -22,7 +19,7 @@ table {
 
 @keyframes target-fade {
   from {
-    background-color: mat-color($default-theme-accent);
+    background-color: var(--default-theme-accent-color);
   }
   to {
     background-color: transparent;

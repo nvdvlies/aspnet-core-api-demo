@@ -1,6 +1,3 @@
-@import '~@angular/material/theming';
-@import '../../../../scss/theme.scss';
-
 .page-header {
   display: flex;
   flex-direction: column;
@@ -15,16 +12,16 @@
   align-items: center;
   white-space: nowrap;
   height: 50px;
-  background-color: mat-color($default-theme-accent);
+  background-color: var(--default-theme-accent-color);
 
   .title {
     font-size: 16px;
-    color: mat-contrast($default-theme-accent, 900);
+    color: var(--default-theme-accent-contrast);
   }
 }
 
 :host ::ng-deep .mat-icon {
-  color: mat-contrast($default-theme-accent, 900);
+  color: var(--default-theme-accent-contrast);
 }
 
 .page-header-buttonbar {

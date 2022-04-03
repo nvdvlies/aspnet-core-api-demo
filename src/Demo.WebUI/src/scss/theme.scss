@@ -11,3 +11,8 @@ $default-theme: mat-light-theme($default-theme-primary, $default-theme-accent, $
 .default-theme {
   @include angular-material-theme($default-theme);
 }
+
+:root {
+  --default-theme-accent-color: mat-color($default-theme-accent)
+  --default-theme-accent-contrast: mat-contrast($default-theme-accent, 900)
+}
