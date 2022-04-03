@@ -12,9 +12,7 @@ import { map } from 'rxjs';
   providedIn: 'root'
 })
 export class CustomerLookupService extends LookupBase<CustomerLookupDto> {
-  protected entityUpdatedEvent$ = this.customerEventsService.customerUpdated$.pipe(
-    map((x) => x.id)
-  );
+  protected itemUpdatedEvent$ = this.customerEventsService.customerUpdated$.pipe(map((x) => x.id));
 
   constructor(
     private readonly apiCustomersClient: ApiCustomersClient,
@@ -23,15 +21,9 @@ export class CustomerLookupService extends LookupBase<CustomerLookupDto> {
     super();
   }
 
-  protected getByIdFunction = (id: string) => {
+  protected lookupFunction = (ids: string[]) => {
     return this.apiCustomersClient
-      .lookup(CustomerLookupOrderByEnum.Name, false, 0, 1, undefined, [id])
-      .pipe(map((response) => response.customers?.[0]));
-  };
-
-  protected getBatchByIdFunction = (ids: string[]) => {
-    return this.apiCustomersClient
-      .lookup(CustomerLookupOrderByEnum.Name, false, 0, 1, undefined, ids)
+      .lookup(CustomerLookupOrderByEnum.Name, false, 0, 999, undefined, ids)
       .pipe(map((response) => response.customers ?? []));
   };
 }
