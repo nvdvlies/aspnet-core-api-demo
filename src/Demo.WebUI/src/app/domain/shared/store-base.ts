@@ -57,7 +57,7 @@ export abstract class StoreBase<T extends IEntity<T>> extends CacheBase<T> {
     return getByIdFunction(id).pipe(
       map((entity) => {
         this.addToOrReplaceInCache(entity);
-        if (skipCache && entityFromCache != null) {
+        if (skipCache && this.existsInCache(id)) {
           this.publishEntityUpdatedInStore(entity);
         }
         return entity;
