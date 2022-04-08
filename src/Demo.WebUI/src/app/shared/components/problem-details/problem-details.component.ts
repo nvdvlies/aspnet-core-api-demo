@@ -1,5 +1,5 @@
-import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { Component, ChangeDetectionStrategy, Input, OnInit, Optional } from '@angular/core';
+import { ControlContainer, FormControl, FormGroup } from '@angular/forms';
 import { ApiException, ProblemDetails, ValidationProblemDetails } from '@api/api.generated.clients';
 
 @Component({
@@ -8,7 +8,7 @@ import { ApiException, ProblemDetails, ValidationProblemDetails } from '@api/api
   styleUrls: ['./problem-details.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ProblemDetailsComponent {
+export class ProblemDetailsComponent implements OnInit {
   private _problemDetails: ValidationProblemDetails | ProblemDetails | ApiException | undefined;
   public get problemDetails():
     | ValidationProblemDetails
@@ -24,12 +24,14 @@ export class ProblemDetailsComponent {
     this.setErrorMessage();
   }
 
-  @Input()
-  public formGroup: FormGroup | undefined;
-
   public errorMessages: string[] = [];
+  private form: FormGroup | undefined;
 
-  constructor() {}
+  constructor(@Optional() private readonly controlContainer: ControlContainer) {}
+
+  ngOnInit(): void {
+    this.form = this.controlContainer?.control as FormGroup;
+  }
 
   private setErrorMessage(): void {
     if (!this.problemDetails) {
@@ -41,7 +43,7 @@ export class ProblemDetailsComponent {
       if (this.problemDetails.errors) {
         for (const key in this.problemDetails.errors) {
           const path = this.getFormControlPath(key);
-          const formControl = this.formGroup?.get(path);
+          const formControl = this.form?.get(path);
           if (formControl && formControl instanceof FormControl && formControl.enabled) {
             formControl.setErrors({
               serverError: this.problemDetails.errors[key][0]

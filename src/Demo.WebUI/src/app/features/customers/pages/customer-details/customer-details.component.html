@@ -57,10 +57,7 @@
           </div>
         </app-page-header>
         <div class="content-container">
-          <app-problem-details
-            [problemDetails]="vm.problemDetails"
-            [formGroup]="form"
-          ></app-problem-details>
+          <app-problem-details [problemDetails]="vm.problemDetails"></app-problem-details>
           <app-message type="warning" *ngIf="vm.hasNewerVersionWithMergeConflict">
             This customer has just been modified by somebody else and that modification contains
             changes which conflict with your pending changes. Please click 'Refresh' to switch to
