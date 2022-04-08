@@ -164,7 +164,7 @@ export abstract class DomainEntityBase<T extends IDomainEntity<T>>
   }
 
   protected new(): Observable<null> {
-    this.problemDetails.next(undefined);
+    this.reset();
     this.isLoading.next(true);
     return this.instantiateNewEntity().pipe(
       map((entity: T) => {
@@ -179,8 +179,7 @@ export abstract class DomainEntityBase<T extends IDomainEntity<T>>
   }
 
   protected getById(id: string, getByIdFunction?: (id: string) => Observable<T>): Observable<null> {
-    this.problemDetails.next(undefined);
-    this.loadingEntityFailed.next(false);
+    this.reset();
     this.isLoading.next(true);
     getByIdFunction ??= this.getByIdFunction;
     return getByIdFunction(id).pipe(
