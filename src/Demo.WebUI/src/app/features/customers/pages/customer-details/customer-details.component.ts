@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { combineLatest, debounceTime, map, Observable } from 'rxjs';
+import { combineLatest, debounceTime, EMPTY, map, Observable, switchMap } from 'rxjs';
 import { BaseDomainEntityService } from '@domain/shared/domain-entity-base';
 import {
   CustomerDomainEntityService,
@@ -9,6 +9,8 @@ import {
 } from '@domain/customer/customer-domain-entity.service';
 import { IHasForm } from '@shared/guards/unsaved-changes.guard';
 import { CustomerListRouteState } from '@customers/pages/customer-list/customer-list.component';
+import { ConfirmDeleteModalComponent } from '@shared/modals/confirm-delete-modal/confirm-delete-modal.component';
+import { ModalService } from '@shared/services/modal.service';
 
 interface ViewModel extends ICustomerDomainEntityContext {}
 
@@ -40,7 +42,8 @@ export class CustomerDetailsComponent implements OnInit, IHasForm {
 
   constructor(
     private readonly router: Router,
-    private readonly customerDomainEntityService: CustomerDomainEntityService
+    private readonly customerDomainEntityService: CustomerDomainEntityService,
+    private readonly modalService: ModalService
   ) {}
 
   public ngOnInit(): void {}
@@ -58,9 +61,14 @@ export class CustomerDetailsComponent implements OnInit, IHasForm {
   }
 
   public delete(): void {
-    this.customerDomainEntityService.deleteWithConfirmation().subscribe(() => {
-      this.router.navigateByUrl('/customers');
-    });
+    this.modalService
+      .confirm(ConfirmDeleteModalComponent)
+      .pipe(
+        switchMap((confirmed) => (confirmed ? this.customerDomainEntityService.delete() : EMPTY))
+      )
+      .subscribe(() => {
+        this.router.navigateByUrl('/customers');
+      });
   }
 
   public resolveMergeConflictWithTakeTheirs(): void {

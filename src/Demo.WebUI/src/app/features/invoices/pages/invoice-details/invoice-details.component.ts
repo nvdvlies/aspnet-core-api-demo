@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { combineLatest, debounceTime, map, Observable } from 'rxjs';
+import { combineLatest, debounceTime, EMPTY, map, Observable, switchMap } from 'rxjs';
 import { BaseDomainEntityService } from '@domain/shared/domain-entity-base';
 import {
   InvoiceDomainEntityService,
@@ -10,6 +10,8 @@ import {
 } from '@domain/invoice/invoice-domain-entity.service';
 import { IHasForm } from '@shared/guards/unsaved-changes.guard';
 import { InvoiceListRouteState } from '@invoices/pages/invoice-list/invoice-list.component';
+import { ModalService } from '@shared/services/modal.service';
+import { ConfirmDeleteModalComponent } from '@shared/modals/confirm-delete-modal/confirm-delete-modal.component';
 
 interface ViewModel extends IInvoiceDomainEntityContext {}
 
@@ -44,7 +46,8 @@ export class InvoiceDetailsComponent implements OnInit, IHasForm {
 
   constructor(
     private readonly router: Router,
-    private readonly invoiceDomainEntityService: InvoiceDomainEntityService
+    private readonly invoiceDomainEntityService: InvoiceDomainEntityService,
+    private readonly modalService: ModalService
   ) {}
 
   public ngOnInit(): void {}
@@ -70,9 +73,14 @@ export class InvoiceDetailsComponent implements OnInit, IHasForm {
   }
 
   public delete(): void {
-    this.invoiceDomainEntityService.deleteWithConfirmation().subscribe(() => {
-      this.router.navigateByUrl('/invoices');
-    });
+    this.modalService
+      .confirm(ConfirmDeleteModalComponent)
+      .pipe(
+        switchMap((confirmed) => (confirmed ? this.invoiceDomainEntityService.delete() : EMPTY))
+      )
+      .subscribe(() => {
+        this.router.navigateByUrl('/invoices');
+      });
   }
 
   public resolveMergeConflictWithTakeTheirs(): void {

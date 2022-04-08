@@ -15,6 +15,7 @@ import { CurrencyFormFieldControlComponent } from '@shared/components/currency-f
 import { CustomerAutocompleteFormFieldControlComponent } from '@shared/components/customer-autocomplete-form-field-control/customer-autocomplete-form-field-control.component';
 import { UserIdToNamePipe } from '@shared/pipes/user-id-to-name.pipe';
 import { SelectOnFocusDirective } from '@shared/directives/select-on-focus.directive';
+import { ConfirmDeleteModalComponent } from '@shared/modals/confirm-delete-modal/confirm-delete-modal.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { SelectOnFocusDirective } from '@shared/directives/select-on-focus.direc
     CustomerIdToNamePipe,
     UserIdToNamePipe,
     CurrencyFormFieldControlComponent,
-    SelectOnFocusDirective
+    SelectOnFocusDirective,
+    ConfirmDeleteModalComponent
   ],
   imports: [CommonModule, ReactiveFormsModule, FormsModule, MaterialModule, FlexLayoutModule],
   exports: [
@@ -48,7 +50,8 @@ import { SelectOnFocusDirective } from '@shared/directives/select-on-focus.direc
     CustomerIdToNamePipe,
     UserIdToNamePipe,
     CurrencyFormFieldControlComponent,
-    SelectOnFocusDirective
+    SelectOnFocusDirective,
+    ConfirmDeleteModalComponent
   ]
 })
 export class SharedModule {}

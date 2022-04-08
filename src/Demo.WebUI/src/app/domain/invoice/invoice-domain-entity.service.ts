@@ -25,7 +25,6 @@ import {
   IDomainEntityContext,
   InitFromRouteOptions
 } from '@domain/shared/domain-entity-base';
-import { MatDialog } from '@angular/material/dialog';
 
 export interface IInvoiceDomainEntityContext extends IDomainEntityContext<InvoiceDto> {}
 
@@ -69,11 +68,10 @@ export class InvoiceDomainEntityService extends DomainEntityBase<InvoiceDto> imp
 
   constructor(
     route: ActivatedRoute,
-    matDialog: MatDialog,
     private readonly invoiceStoreService: InvoiceStoreService,
     private readonly apiInvoicesClient: ApiInvoicesClient
   ) {
-    super(route, matDialog);
+    super(route);
     super.init();
   }
 
@@ -193,10 +191,6 @@ export class InvoiceDomainEntityService extends DomainEntityBase<InvoiceDto> imp
     }
     const command = new CopyInvoiceCommand();
     return this.apiInvoicesClient.copy(this.id.value, command).pipe(map((x) => x.id));
-  }
-
-  public override deleteWithConfirmation(): Observable<void> {
-    return super.deleteWithConfirmation();
   }
 
   public override delete(): Observable<void> {

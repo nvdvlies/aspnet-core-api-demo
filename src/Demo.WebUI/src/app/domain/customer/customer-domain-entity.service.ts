@@ -11,7 +11,6 @@ import {
   IDomainEntityContext,
   InitFromRouteOptions
 } from '@domain/shared/domain-entity-base';
-import { MatDialog } from '@angular/material/dialog';
 
 export interface ICustomerDomainEntityContext extends IDomainEntityContext<CustomerDto> {}
 
@@ -47,12 +46,8 @@ export class CustomerDomainEntityService
     })
   ) as Observable<CustomerDomainEntityContext>;
 
-  constructor(
-    route: ActivatedRoute,
-    matDialog: MatDialog,
-    private readonly customerStoreService: CustomerStoreService
-  ) {
-    super(route, matDialog);
+  constructor(route: ActivatedRoute, private readonly customerStoreService: CustomerStoreService) {
+    super(route);
     super.init();
   }
 
@@ -113,10 +108,6 @@ export class CustomerDomainEntityService
 
   public override upsert(): Observable<CustomerDto> {
     return super.upsert();
-  }
-
-  public override deleteWithConfirmation(): Observable<void> {
-    return super.deleteWithConfirmation();
   }
 
   public override delete(): Observable<void> {

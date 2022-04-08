@@ -2,17 +2,8 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
-  template: `
-    <h1 mat-dialog-title>Delete?</h1>
-    <div mat-dialog-content>
-      <p>Are you sure you want to delete?</p>
-    </div>
-    <div mat-dialog-actions>
-      <button mat-button (click)="confirmDelete()" cdkFocusInitial>Proceed</button>
-      <button mat-button (click)="cancelDelete()">Cancel</button>
-    </div>
-  `,
-  styles: [],
+  templateUrl: './confirm-delete-modal.component.html',
+  styleUrls: ['./confirm-delete-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ConfirmDeleteModalComponent {
