@@ -61,6 +61,20 @@
             [problemDetails]="vm.problemDetails"
             [formGroup]="form"
           ></app-problem-details>
+          <app-message type="warning" *ngIf="!vm.hasNewerVersionWithMergeConflict">
+            This customer has just been modified by somebody else and that modification contains
+            changes which conflict with your pending changes. Please click 'Refresh' to switch to
+            the persisted version of the customer. Your pending changes will be lost.
+            <div>
+              <button
+                mat-stroked-button
+                (click)="resolveMergeConflictWithTakeTheirs()"
+                type="button"
+              >
+                Refresh
+              </button>
+            </div>
+          </app-message>
           <mat-card class="card">
             <mat-card-header>
               <mat-card-title>General</mat-card-title>
