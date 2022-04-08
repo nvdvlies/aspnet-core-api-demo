@@ -1,0 +1,31 @@
+.message {
+  padding: 10px;
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 4px;
+  margin-bottom: 5px;
+}
+
+.info {
+  color: #204a8e;
+  background: #c9ddff;
+  border-color: #4c699b;
+}
+
+.success {
+  color: #2b7515;
+  background: #ecffd6;
+  border-color: #617c42;
+}
+
+.warning {
+  color: #756e15;
+  background: #fffbd1;
+  border-color: #87803e;
+}
+
+.error {
+  color: #ba3939;
+  background: #ffe0e0;
+  border-color: #a33a3a;
+}
