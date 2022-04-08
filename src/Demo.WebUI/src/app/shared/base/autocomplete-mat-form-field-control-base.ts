@@ -10,7 +10,7 @@ import {
   ViewChild
 } from '@angular/core';
 import { ControlContainer, FormControl, NgControl } from '@angular/forms';
-import { MatFormFieldControlBase } from './mat-form-field-control-base';
+import { MatFormFieldControlBase } from '@shared/base/mat-form-field-control-base';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import {
   BehaviorSubject,

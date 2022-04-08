@@ -6,8 +6,8 @@ import {
   InvoiceTableDataContext,
   InvoiceTableDataService
 } from '@invoices/pages/invoice-list/invoice-table-data.service';
-import { TableFilterCriteria } from '@shared/directives/table-filter/table-filter-criteria';
 import { SearchInvoiceDto } from '@api/api.generated.clients';
+import { TableFilterCriteria } from '@shared/base/table-data-base';
 
 interface ViewModel extends InvoiceTableDataContext {}
 

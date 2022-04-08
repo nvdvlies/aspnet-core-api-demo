@@ -13,6 +13,6 @@ $default-theme: mat-light-theme($default-theme-primary, $default-theme-accent, $
 }
 
 :root {
-  --default-theme-accent-color: mat-color($default-theme-accent)
-  --default-theme-accent-contrast: mat-contrast($default-theme-accent, 900)
+  --default-theme-accent-color: #{mat-color($default-theme-accent)};
+  --default-theme-accent-contrast: #{mat-contrast($default-theme-accent, 900)};
 }

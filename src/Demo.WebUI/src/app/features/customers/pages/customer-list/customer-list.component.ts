@@ -6,8 +6,8 @@ import {
   CustomerTableDataContext,
   CustomerTableDataService
 } from '@customers/pages/customer-list/customer-table-data.service';
-import { TableFilterCriteria } from '@shared/directives/table-filter/table-filter-criteria';
 import { SearchCustomerDto } from '@api/api.generated.clients';
+import { TableFilterCriteria } from '@shared/base/table-data-base';
 
 interface ViewModel extends CustomerTableDataContext {}
 

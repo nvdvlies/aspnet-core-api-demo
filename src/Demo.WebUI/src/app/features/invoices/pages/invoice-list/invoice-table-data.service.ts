@@ -1,10 +1,8 @@
 import { Injectable } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { combineLatest, debounceTime, forkJoin, map, Observable, switchMap } from 'rxjs';
+import { combineLatest, debounceTime, map, Observable } from 'rxjs';
 import {
   ApiInvoicesClient,
-  CustomerLookupDto,
-  InvoiceDto,
   SearchInvoiceDto,
   SearchInvoicesOrderByEnum
 } from '@api/api.generated.clients';
@@ -12,12 +10,10 @@ import { InvoiceEventsService } from '@api/signalr.generated.services';
 import { InvoiceStoreService } from '@domain/invoice/invoice-store.service';
 import {
   ITableFilterCriteria,
-  TableFilterCriteria
-} from '@shared/directives/table-filter/table-filter-criteria';
-import {
   TableDataBase,
   TableDataContext,
-  TableDataSearchResult
+  TableDataSearchResult,
+  TableFilterCriteria
 } from '@shared/base/table-data-base';
 import { CustomerLookupService } from '@shared/services/customer-lookup.service';
 

@@ -41,12 +41,18 @@
           <button mat-raised-button routerLink="/customers" type="button">Close</button>
           <div class="auditlog" *ngIf="vm.id != null">
             <small
-              >Created by <a href="">{{ vm.createdByFullname }}</a> on
-              {{ vm.pristine?.createdOn | date: 'short' }}</small
+              >Created by
+              <a routerLink="/users/{{ vm.pristine?.createdBy }}">{{
+                vm.pristine?.createdBy | userIdToName | async
+              }}</a>
+              on {{ vm.pristine?.createdOn | date: 'short' }}</small
             >
             <small
-              >Last modified by <a href="">{{ vm.lastModifiedByFullname }}</a> on
-              {{ vm.pristine?.lastModifiedOn | date: 'short' }}</small
+              >Last modified by
+              <a routerLink="/users/{{ vm.pristine?.lastModifiedBy }}">{{
+                vm.pristine?.lastModifiedBy | userIdToName | async
+              }}</a>
+              on {{ vm.pristine?.lastModifiedOn | date: 'short' }}</small
             >
           </div>
         </app-page-header>
@@ -76,6 +82,7 @@
             </mat-card-content>
           </mat-card>
         </div>
+        {{ form.value | json }}
       </form>
     </ng-container>
   </ng-container>

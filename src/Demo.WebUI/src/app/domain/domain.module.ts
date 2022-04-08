@@ -1,6 +1,6 @@
 import { ModuleWithProviders, NgModule, Optional, SkipSelf } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ConfirmDeleteModalComponent } from './shared/confirm-delete-modal.component';
+import { ConfirmDeleteModalComponent } from '@domain/shared/confirm-delete-modal.component';
 import { SharedModule } from '@shared/shared.module';
 
 @NgModule({

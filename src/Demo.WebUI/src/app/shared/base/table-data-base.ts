@@ -1,10 +1,6 @@
 import { SortDirection } from '@angular/material/sort';
 import { ApiException, ProblemDetails } from '@api/api.generated.clients';
 import {
-  ITableFilterCriteria,
-  TableFilterCriteria
-} from '@shared/directives/table-filter/table-filter-criteria';
-import {
   BehaviorSubject,
   catchError,
   combineLatest,
@@ -15,6 +11,25 @@ import {
   Observable,
   of
 } from 'rxjs';
+
+export interface ITableFilterCriteria {
+  pageIndex: number;
+  pageSize: number;
+  sortColumn: any | undefined;
+  sortDirection: SortDirection | undefined;
+}
+
+export class TableFilterCriteria implements ITableFilterCriteria {
+  pageIndex: number;
+  pageSize: number;
+  sortColumn: string | undefined;
+  sortDirection: SortDirection | undefined;
+
+  constructor() {
+    this.pageIndex = 0;
+    this.pageSize = 10;
+  }
+}
 
 export interface TableDataSearchResult<T> {
   items: T[] | undefined;

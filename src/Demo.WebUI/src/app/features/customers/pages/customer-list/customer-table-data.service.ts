@@ -10,12 +10,10 @@ import { CustomerEventsService } from '@api/signalr.generated.services';
 import { CustomerStoreService } from '@domain/customer/customer-store.service';
 import {
   ITableFilterCriteria,
-  TableFilterCriteria
-} from '@shared/directives/table-filter/table-filter-criteria';
-import {
   TableDataBase,
   TableDataContext,
-  TableDataSearchResult
+  TableDataSearchResult,
+  TableFilterCriteria
 } from '@shared/base/table-data-base';
 
 export declare type CustomerSortColumn = 'code' | 'name' | undefined;

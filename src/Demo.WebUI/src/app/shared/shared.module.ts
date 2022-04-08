@@ -1,18 +1,20 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MaterialModule } from './material.module';
+import { MaterialModule } from '@shared/material.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { TableFilterContainerDirective } from './directives/table-filter/table-filter-container.directive';
-import { TableFilterDirective } from './directives/table-filter/table-filter.directive';
-import { PageHeaderComponent } from './components/page-header/page-header.component';
-import { DiscardUnsavedChangesModalComponent } from './modals/discard-unsaved-changes-modal/discard-unsaved-changes-modal.component';
-import { ProblemDetailsComponent } from './components/problem-details/problem-details.component';
-import { DomainEntityErrorMessageDirective } from './directives/domain-entity-error-message/domain-entity-error-message.directive';
-import { FocusDirective } from './directives/focus/focus.directive';
-import { CustomerIdToNamePipe } from './pipes/customer-id-to-name.pipe';
-import { CurrencyFormFieldControlComponent } from './components/currency-form-field-control/currency-form-field-control.component';
-import { CustomerAutocompleteFormFieldControlComponent } from './components/customer-autocomplete-form-field-control/customer-autocomplete-form-field-control.component';
+import { TableFilterContainerDirective } from '@shared/directives/table-filter-container.directive';
+import { TableFilterDirective } from '@shared/directives/table-filter.directive';
+import { PageHeaderComponent } from '@shared/components/page-header/page-header.component';
+import { DiscardUnsavedChangesModalComponent } from '@shared/modals/discard-unsaved-changes-modal/discard-unsaved-changes-modal.component';
+import { ProblemDetailsComponent } from '@shared/components/problem-details/problem-details.component';
+import { DomainEntityErrorMessageDirective } from '@shared/directives/domain-entity-error-message.directive';
+import { FocusDirective } from '@shared/directives/focus.directive';
+import { CustomerIdToNamePipe } from '@shared/pipes/customer-id-to-name.pipe';
+import { CurrencyFormFieldControlComponent } from '@shared/components/currency-form-field-control/currency-form-field-control.component';
+import { CustomerAutocompleteFormFieldControlComponent } from '@shared/components/customer-autocomplete-form-field-control/customer-autocomplete-form-field-control.component';
+import { UserIdToNamePipe } from '@shared/pipes/user-id-to-name.pipe';
+import { SelectOnFocusDirective } from '@shared/directives/select-on-focus.directive';
 
 @NgModule({
   declarations: [
@@ -25,7 +27,9 @@ import { CustomerAutocompleteFormFieldControlComponent } from './components/cust
     FocusDirective,
     CustomerAutocompleteFormFieldControlComponent,
     CustomerIdToNamePipe,
-    CurrencyFormFieldControlComponent
+    UserIdToNamePipe,
+    CurrencyFormFieldControlComponent,
+    SelectOnFocusDirective
   ],
   imports: [CommonModule, ReactiveFormsModule, FormsModule, MaterialModule, FlexLayoutModule],
   exports: [
@@ -42,7 +46,9 @@ import { CustomerAutocompleteFormFieldControlComponent } from './components/cust
     FocusDirective,
     CustomerAutocompleteFormFieldControlComponent,
     CustomerIdToNamePipe,
-    CurrencyFormFieldControlComponent
+    UserIdToNamePipe,
+    CurrencyFormFieldControlComponent,
+    SelectOnFocusDirective
   ]
 })
 export class SharedModule {}

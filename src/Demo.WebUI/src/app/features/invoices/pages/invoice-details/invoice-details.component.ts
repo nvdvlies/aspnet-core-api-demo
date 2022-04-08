@@ -1,16 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import {
-  BehaviorSubject,
-  combineLatest,
-  debounceTime,
-  forkJoin,
-  map,
-  Observable,
-  of,
-  switchMap,
-  tap
-} from 'rxjs';
+import { combineLatest, debounceTime, map, Observable } from 'rxjs';
 import { BaseDomainEntityService } from '@domain/shared/domain-entity-base';
 import {
   InvoiceDomainEntityService,
@@ -19,14 +9,9 @@ import {
   InvoiceLineFormArray
 } from '@domain/invoice/invoice-domain-entity.service';
 import { IHasForm } from '@shared/guards/unsaved-changes.guard';
-import { InvoiceDto } from '@api/api.generated.clients';
 import { InvoiceListRouteState } from '@invoices/pages/invoice-list/invoice-list.component';
-import { UserLookupService } from '@shared/services/user-lookup.service';
 
-interface ViewModel extends IInvoiceDomainEntityContext {
-  createdByFullname: string | undefined;
-  lastModifiedByFullname: string | undefined;
-}
+interface ViewModel extends IInvoiceDomainEntityContext {}
 
 @Component({
   templateUrl: './invoice-details.component.html',
@@ -43,23 +28,11 @@ interface ViewModel extends IInvoiceDomainEntityContext {
 export class InvoiceDetailsComponent implements OnInit, IHasForm {
   public initFromRoute$ = this.invoiceDomainEntityService.initFromRoute();
 
-  private readonly createdByFullname = new BehaviorSubject<string | undefined>(undefined);
-  private readonly lastModifiedByFullname = new BehaviorSubject<string | undefined>(undefined);
-
-  private createdByFullname$ = this.createdByFullname.asObservable();
-  private lastModifiedByFullname$ = this.lastModifiedByFullname.asObservable();
-
-  public vm$ = combineLatest([
-    this.invoiceDomainEntityService.observe$,
-    this.createdByFullname$,
-    this.lastModifiedByFullname$
-  ]).pipe(
+  public vm$ = combineLatest([this.invoiceDomainEntityService.observe$]).pipe(
     debounceTime(0),
-    map(([domainEntityContext, createdByFullname, lastModifiedByFullname]) => {
+    map(([domainEntityContext]) => {
       return {
-        ...domainEntityContext,
-        createdByFullname,
-        lastModifiedByFullname
+        ...domainEntityContext
       } as ViewModel;
     })
   ) as Observable<ViewModel>;
@@ -71,31 +44,10 @@ export class InvoiceDetailsComponent implements OnInit, IHasForm {
 
   constructor(
     private readonly router: Router,
-    private readonly invoiceDomainEntityService: InvoiceDomainEntityService,
-    private readonly userLookupService: UserLookupService
+    private readonly invoiceDomainEntityService: InvoiceDomainEntityService
   ) {}
 
-  public ngOnInit(): void {
-    this.invoiceDomainEntityService.afterGetByIdHook = this.loadAdditionalData.bind(this);
-  }
-
-  private loadAdditionalData(invoice: InvoiceDto): Observable<null> {
-    return forkJoin([
-      this.userLookupService.getByIds([invoice.createdBy!, invoice.lastModifiedBy!])
-    ]).pipe(
-      tap(([users]) => {
-        this.createdByFullname.next(
-          users.find((x) => x.id?.toLowerCase() === invoice.createdBy?.toLowerCase())?.fullname ??
-            undefined
-        );
-        this.lastModifiedByFullname.next(
-          users.find((x) => x.id?.toLowerCase() === invoice.lastModifiedBy?.toLowerCase())
-            ?.fullname ?? undefined
-        );
-      }),
-      switchMap(() => of(null))
-    );
-  }
+  public ngOnInit(): void {}
 
   public save(): void {
     if (!this.form.valid) {

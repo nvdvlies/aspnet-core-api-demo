@@ -11,11 +11,8 @@ import {
 } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import {
-  ITableFilterCriteria,
-  TableFilterCriteria
-} from '@shared/directives/table-filter/table-filter-criteria';
-import { TableFilterDirective } from '@shared/directives/table-filter/table-filter.directive';
+import { ITableFilterCriteria, TableFilterCriteria } from '@shared/base/table-data-base';
+import { TableFilterDirective } from '@shared/directives/table-filter.directive';
 import { Subscription } from 'rxjs';
 
 @Directive({
