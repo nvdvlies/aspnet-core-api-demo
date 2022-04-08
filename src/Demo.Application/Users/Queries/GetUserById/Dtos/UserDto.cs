@@ -6,6 +6,7 @@ namespace Demo.Application.Users.Queries.GetUserById.Dtos
 {
     public class UserDto : SoftDeleteEntityDto
     {
+        public string ExternalId { get; set; }
         public string Fullname { get; set; }
         public string GivenName { get; set; }
         public string FamilyName { get; set; }

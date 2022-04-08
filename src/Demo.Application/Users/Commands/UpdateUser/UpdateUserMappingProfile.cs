@@ -9,6 +9,7 @@ namespace Demo.Application.Users.Commands.UpdateUser
         public UpdateUserMappingProfile()
         {
             CreateMap<UpdateUserCommand, User>()
+                .ForMember(x => x.ExternalId, opt => opt.Ignore())
                 .ForMember(x => x.Deleted, opt => opt.Ignore())
                 .ForMember(x => x.DeletedBy, opt => opt.Ignore())
                 .ForMember(x => x.DeletedOn, opt => opt.Ignore())

@@ -27,6 +27,7 @@ namespace Demo.Infrastructure
             services.AddTransient<IDateTime, DateTimeProvider>();
             services.AddScoped(typeof(IJsonService<>), typeof(JsonService<>));
             services.AddScoped<IApplicationSettingsProvider, ApplicationSettingsProvider>();
+            services.AddScoped<IUserIdProvider, UserIdProvider>();
             services.AddScoped<IUserProvider, UserProvider>();
             services.AddScoped<IOutboxEventCreator, OutboxEventCreator>();
             services.AddScoped<IOutboxMessageCreator, OutboxMessageCreator>();

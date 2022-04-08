@@ -31,6 +31,7 @@ namespace Demo.Infrastructure.Auth0
             try
             {
                 user = await client.Users.GetAsync(string.Concat("auth0|", internalUser.Id.ToString()), cancellationToken: cancellationToken);
+                // we're likely in a retry for an exception that occured after the user was successfully created in auth0.
             }
             catch (ErrorApiException ex) when (ex.ApiError?.ErrorCode == "inexistent_user")
             {

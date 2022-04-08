@@ -42,5 +42,9 @@
       <_Parameter1>Demo.WebApi.Tests</_Parameter1>
     </AssemblyAttribute>
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Persistence\Migrations\" />
+  </ItemGroup>
   
 </Project>

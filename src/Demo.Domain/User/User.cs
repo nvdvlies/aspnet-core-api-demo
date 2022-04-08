@@ -7,6 +7,7 @@ namespace Demo.Domain.User
 {
     public partial class User : SoftDeleteEntity, IQueryableEntity
     {
+        public string ExternalId { get; set; }
         public string Fullname { get; set; }
         public string GivenName { get; set; }
         public string FamilyName { get; set; }

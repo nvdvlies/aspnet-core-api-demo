@@ -1,5 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
-using System;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Demo.Infrastructure.Persistence.Migrations
 {
@@ -145,6 +145,7 @@ namespace Demo.Infrastructure.Persistence.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ExternalId = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     Fullname = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
                     GivenName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     FamilyName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
@@ -304,14 +305,14 @@ namespace Demo.Infrastructure.Persistence.Migrations
             migrationBuilder.InsertData(
                 schema: "demo",
                 table: "User",
-                columns: new[] { "Id", "BirthDate", "CreatedBy", "CreatedOn", "DeletedBy", "DeletedOn", "Email", "FamilyName", "Fullname", "Gender", "GivenName", "LastModifiedBy", "LastModifiedOn", "Locale", "MiddleName", "ZoneInfo" },
-                values: new object[] { new Guid("3d223f4c-9578-4930-9034-830d1c923ef4"), null, new Guid("00000000-0000-0000-0000-000000000000"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("00000000-0000-0000-0000-000000000000"), null, "admin@xxxx.xxxx", "Administrator", "Administrator", null, null, new Guid("00000000-0000-0000-0000-000000000000"), null, null, null, null });
+                columns: new[] { "Id", "BirthDate", "CreatedBy", "CreatedOn", "DeletedBy", "DeletedOn", "Email", "ExternalId", "FamilyName", "Fullname", "Gender", "GivenName", "LastModifiedBy", "LastModifiedOn", "Locale", "MiddleName", "ZoneInfo" },
+                values: new object[] { new Guid("08463267-7065-4631-9944-08da09d992d6"), null, new Guid("00000000-0000-0000-0000-000000000000"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("00000000-0000-0000-0000-000000000000"), null, "admin@xxxx.xxxx", "auth0|61dd930bd188d8006ea494f5", "Administrator", "Administrator", null, null, new Guid("00000000-0000-0000-0000-000000000000"), null, null, null, null });
 
             migrationBuilder.InsertData(
                 schema: "demo",
                 table: "UserRole",
                 columns: new[] { "RoleId", "UserId" },
-                values: new object[] { new Guid("7c20005d-d5f8-4079-af26-434d69b43c82"), new Guid("3d223f4c-9578-4930-9034-830d1c923ef4") });
+                values: new object[] { new Guid("7c20005d-d5f8-4079-af26-434d69b43c82"), new Guid("08463267-7065-4631-9944-08da09d992d6") });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Auditlog_EntityId",

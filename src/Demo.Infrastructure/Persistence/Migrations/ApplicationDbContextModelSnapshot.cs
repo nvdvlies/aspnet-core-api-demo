@@ -506,6 +506,10 @@ namespace Demo.Infrastructure.Persistence.Migrations
                         .HasMaxLength(320)
                         .HasColumnType("nvarchar(320)");
 
+                    b.Property<string>("ExternalId")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
                     b.Property<string>("FamilyName")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -558,12 +562,13 @@ namespace Demo.Infrastructure.Persistence.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("3d223f4c-9578-4930-9034-830d1c923ef4"),
+                            Id = new Guid("08463267-7065-4631-9944-08da09d992d6"),
                             CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Deleted = false,
                             DeletedBy = new Guid("00000000-0000-0000-0000-000000000000"),
                             Email = "admin@xxxx.xxxx",
+                            ExternalId = "auth0|61dd930bd188d8006ea494f5",
                             FamilyName = "Administrator",
                             Fullname = "Administrator",
                             LastModifiedBy = new Guid("00000000-0000-0000-0000-000000000000")
@@ -587,7 +592,7 @@ namespace Demo.Infrastructure.Persistence.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = new Guid("3d223f4c-9578-4930-9034-830d1c923ef4"),
+                            UserId = new Guid("08463267-7065-4631-9944-08da09d992d6"),
                             RoleId = new Guid("7c20005d-d5f8-4079-af26-434d69b43c82")
                         });
                 });

@@ -8,11 +8,15 @@ namespace Demo.Infrastructure.Persistence.Configuration
     public class UserEntityTypeConfiguration : IEntityTypeConfiguration<User>
     {
         public static readonly Guid AdministratorUserId = Guid.Parse("08463267-7065-4631-9944-08DA09D992D6");
+        public static readonly string AdministratorExternalId = "auth0|61dd930bd188d8006ea494f5";
 
         public void Configure(EntityTypeBuilder<User> builder)
         {
             builder.ToTable(nameof(User))
                 .HasKey(x => x.Id);
+
+            builder.Property(x => x.ExternalId)
+                .HasMaxLength(50);
 
             builder.HasIndex(x => x.Email).IsUnique();
             builder.HasIndex(x => x.Fullname);
@@ -59,6 +63,7 @@ namespace Demo.Infrastructure.Persistence.Configuration
             builder.HasData(new User
             {
                 Id = AdministratorUserId,
+                ExternalId = AdministratorExternalId,
                 FamilyName = "Administrator",
                 Fullname = "Administrator",
                 Email = "admin@xxxx.xxxx"
