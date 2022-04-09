@@ -49,21 +49,20 @@ namespace Demo.Domain.%ENTITY%.Hooks
             _correlationIdProvider = correlationIdProvider;
         }
 
-        public Task ExecuteAsync(HookType type, IDomainEntityContext<%ENTITY%> context, CancellationToken cancellationToken)
+        public async Task ExecuteAsync(HookType type, IDomainEntityContext<%ENTITY%> context, CancellationToken cancellationToken)
         {
             switch (context.EditMode)
             {
                 case EditMode.Create:
-                    context.AddEventAsync(%ENTITY%CreatedEvent.Create(_correlationIdProvider.Id, context.Entity.Id, _currentUser.Id), cancellationToken);
+                    await context.AddEventAsync(%ENTITY%CreatedEvent.Create(_correlationIdProvider.Id, context.Entity.Id, _currentUser.Id), cancellationToken);
                     break;
                 case EditMode.Update:
-                    context.AddEventAsync(%ENTITY%UpdatedEvent.Create(_correlationIdProvider.Id, context.Entity.Id, _currentUser.Id), cancellationToken);
+                    await context.AddEventAsync(%ENTITY%UpdatedEvent.Create(_correlationIdProvider.Id, context.Entity.Id, _currentUser.Id), cancellationToken);
                     break;
                 case EditMode.Delete:
-                    context.AddEventAsync(%ENTITY%DeletedEvent.Create(_correlationIdProvider.Id, context.Entity.Id, _currentUser.Id), cancellationToken);
+                    await context.AddEventAsync(%ENTITY%DeletedEvent.Create(_correlationIdProvider.Id, context.Entity.Id, _currentUser.Id), cancellationToken);
                     break;
             }
-            return Task.CompletedTask;
         }
     }
 }";

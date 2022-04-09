@@ -27,11 +27,11 @@ namespace Demo.Domain.OutboxEvent
             Lazy<IEnumerable<IAfterUpdate<OutboxEvent>>> afterUpdateHooks,
             Lazy<IEnumerable<IBeforeDelete<OutboxEvent>>> beforeDeleteHooks,
             Lazy<IEnumerable<IAfterDelete<OutboxEvent>>> afterDeleteHooks,
-            Lazy<IOutboxEventCreator> outboxEventProcessor,
-            Lazy<IOutboxMessageCreator> outboxMessageProcessor,
+            Lazy<IOutboxEventCreator> outboxEventCreator,
+            Lazy<IOutboxMessageCreator> outboxMessageCreatorr,
             Lazy<IJsonService<OutboxEvent>> jsonService
         )
-            : base(logger, currentUser, dateTime, dbCommand, defaultValuesSetters, validators, beforeCreateHooks, afterCreateHooks, beforeUpdateHooks, afterUpdateHooks, beforeDeleteHooks, afterDeleteHooks, outboxEventProcessor, outboxMessageProcessor, jsonService, null)
+            : base(logger, currentUser, dateTime, dbCommand, defaultValuesSetters, validators, beforeCreateHooks, afterCreateHooks, beforeUpdateHooks, afterUpdateHooks, beforeDeleteHooks, afterDeleteHooks, outboxEventCreator, outboxMessageCreatorr, jsonService, null)
         {
         }
 

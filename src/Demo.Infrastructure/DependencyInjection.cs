@@ -3,6 +3,7 @@ using Demo.Application.Shared.Interfaces;
 using Demo.Common.Helpers;
 using Demo.Common.Interfaces;
 using Demo.Domain.ApplicationSettings.Interfaces;
+using Demo.Domain.FeatureFlagSettings.Interfaces;
 using Demo.Domain.Shared.Entities;
 using Demo.Domain.Shared.Interfaces;
 using Demo.Infrastructure.Auditlogging;
@@ -27,6 +28,7 @@ namespace Demo.Infrastructure
             services.AddTransient<IDateTime, DateTimeProvider>();
             services.AddScoped(typeof(IJsonService<>), typeof(JsonService<>));
             services.AddScoped<IApplicationSettingsProvider, ApplicationSettingsProvider>();
+            services.AddScoped<IFeatureFlagSettingsProvider, FeatureFlagSettingsProvider>();
             services.AddScoped<IUserIdProvider, UserIdProvider>();
             services.AddScoped<IUserProvider, UserProvider>();
             services.AddScoped<IOutboxEventCreator, OutboxEventCreator>();

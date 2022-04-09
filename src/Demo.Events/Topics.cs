@@ -8,6 +8,7 @@
         User,
         Role,
         OutboxEvent,
-        OutboxMessage
+        OutboxMessage,
+        FeatureFlagSettings
     }
 }

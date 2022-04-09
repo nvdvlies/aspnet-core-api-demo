@@ -12,17 +12,18 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.DomainEntity.OutputCol
             var changes = new List<IChange>();
 
             var entityName = context.Variables.Get<string>(Constants.EntityName);
+            var enableSoftDelete = context.Variables.Get<bool>(Constants.EnableSoftDelete);
 
             changes.Add(new CreateNewClass(
                 directory: context.GetEntityTypeConfigurationDirectory(),
                 fileName: $"{entityName}EntityTypeConfiguration.cs",
-                content: GetTemplate(entityName)
+                content: GetTemplate(entityName, enableSoftDelete)
             ));
 
             return changes;
         }
 
-        private static string GetTemplate(string entityName)
+        private static string GetTemplate(string entityName, bool enableSoftDelete)
         {
             var code = @"
 using Demo.Domain.%ENTITY%;
@@ -43,14 +44,15 @@ namespace Demo.Infrastructure.Persistence.Configuration
             builder.Property(p => p.CreatedBy).IsRequired();
             builder.Property(p => p.LastModifiedBy);
             builder.Property(p => p.LastModifiedOn);
-            builder.Property(p => p.Deleted).HasDefaultValue(false);
-            builder.Property(p => p.DeletedBy);
-            builder.Property(p => p.DeletedOn);
+            %SOFT_DELETE_PROPERTIES%
         }
     }
 }
 ";
             code = code.Replace("%ENTITY%", entityName);
+            code = code.Replace("%SOFT_DELETE_PROPERTIES%", enableSoftDelete ? @"builder.Property(p => p.Deleted).HasDefaultValue(false);
+            builder.Property(p => p.DeletedBy);
+            builder.Property(p => p.DeletedOn);" : null);
             return code;
         }
     }

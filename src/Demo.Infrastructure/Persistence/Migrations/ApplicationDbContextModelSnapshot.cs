@@ -204,6 +204,37 @@ namespace Demo.Infrastructure.Persistence.Migrations
                     b.ToTable("Customer");
                 });
 
+            modelBuilder.Entity("Demo.Domain.FeatureFlagSettings.FeatureFlagSettings", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("FeatureFlags")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("LastModifiedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("LastModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<byte[]>("Timestamp")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("FeatureFlagSettings");
+                });
+
             modelBuilder.Entity("Demo.Domain.Invoice.Invoice", b =>
                 {
                     b.Property<Guid>("Id")
@@ -568,7 +599,7 @@ namespace Demo.Infrastructure.Persistence.Migrations
                             Deleted = false,
                             DeletedBy = new Guid("00000000-0000-0000-0000-000000000000"),
                             Email = "admin@xxxx.xxxx",
-                            ExternalId = "auth0|61dd930bd188d8006ea494f5",
+                            ExternalId = "auth0|08463267-7065-4631-9944-08da09d992d6",
                             FamilyName = "Administrator",
                             Fullname = "Administrator",
                             LastModifiedBy = new Guid("00000000-0000-0000-0000-000000000000")

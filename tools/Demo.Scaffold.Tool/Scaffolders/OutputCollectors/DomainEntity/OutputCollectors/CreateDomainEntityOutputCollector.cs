@@ -50,12 +50,12 @@ namespace Demo.Domain.%ENTITY%
             Lazy<IEnumerable<IAfterUpdate<%ENTITY%>>> afterUpdateHooks,
             Lazy<IEnumerable<IBeforeDelete<%ENTITY%>>> beforeDeleteHooks,
             Lazy<IEnumerable<IAfterDelete<%ENTITY%>>> afterDeleteHooks,
-            Lazy<IOutboxEventProcessor> outboxEventProcessor,
-            Lazy<IOutboxMessageProcessor> outboxMessageProcessor,
+            Lazy<IOutboxEventCreator> outboxEventCreator,
+            Lazy<IOutboxMessageCreator> outboxMessageCreator,
             Lazy<IJsonService<%ENTITY%>> jsonService,
             Lazy<IAuditlogger<%ENTITY%>> auditlogger
         ) 
-            : base(logger, currentUser, dateTime, dbCommand, defaultValuesSetters, validators, beforeCreateHooks, afterCreateHooks, beforeUpdateHooks, afterUpdateHooks, beforeDeleteHooks, afterDeleteHooks, outboxEventProcessor, outboxMessageProcessor, jsonService, auditlogger)
+            : base(logger, currentUser, dateTime, dbCommand, defaultValuesSetters, validators, beforeCreateHooks, afterCreateHooks, beforeUpdateHooks, afterUpdateHooks, beforeDeleteHooks, afterDeleteHooks, outboxEventCreator, outboxMessageCreator, jsonService, auditlogger)
         {
         }
     }

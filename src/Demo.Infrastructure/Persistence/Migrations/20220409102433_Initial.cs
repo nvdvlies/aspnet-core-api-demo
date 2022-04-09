@@ -83,6 +83,24 @@ namespace Demo.Infrastructure.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "FeatureFlagSettings",
+                schema: "demo",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    FeatureFlags = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Timestamp = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: true),
+                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LastModifiedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    LastModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FeatureFlagSettings", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "OutboxEvent",
                 schema: "demo",
                 columns: table => new
@@ -306,7 +324,7 @@ namespace Demo.Infrastructure.Persistence.Migrations
                 schema: "demo",
                 table: "User",
                 columns: new[] { "Id", "BirthDate", "CreatedBy", "CreatedOn", "DeletedBy", "DeletedOn", "Email", "ExternalId", "FamilyName", "Fullname", "Gender", "GivenName", "LastModifiedBy", "LastModifiedOn", "Locale", "MiddleName", "ZoneInfo" },
-                values: new object[] { new Guid("08463267-7065-4631-9944-08da09d992d6"), null, new Guid("00000000-0000-0000-0000-000000000000"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("00000000-0000-0000-0000-000000000000"), null, "admin@xxxx.xxxx", "auth0|61dd930bd188d8006ea494f5", "Administrator", "Administrator", null, null, new Guid("00000000-0000-0000-0000-000000000000"), null, null, null, null });
+                values: new object[] { new Guid("08463267-7065-4631-9944-08da09d992d6"), null, new Guid("00000000-0000-0000-0000-000000000000"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("00000000-0000-0000-0000-000000000000"), null, "admin@xxxx.xxxx", "auth0|08463267-7065-4631-9944-08da09d992d6", "Administrator", "Administrator", null, null, new Guid("00000000-0000-0000-0000-000000000000"), null, null, null, null });
 
             migrationBuilder.InsertData(
                 schema: "demo",
@@ -453,6 +471,10 @@ namespace Demo.Infrastructure.Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "AuditlogItem",
+                schema: "demo");
+
+            migrationBuilder.DropTable(
+                name: "FeatureFlagSettings",
                 schema: "demo");
 
             migrationBuilder.DropTable(
