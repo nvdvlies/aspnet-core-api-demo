@@ -29,6 +29,7 @@ namespace Demo.Infrastructure
             services.AddScoped(typeof(IJsonService<>), typeof(JsonService<>));
             services.AddScoped<IApplicationSettingsProvider, ApplicationSettingsProvider>();
             services.AddScoped<IFeatureFlagSettingsProvider, FeatureFlagSettingsProvider>();
+            services.AddScoped<IFeatureFlagChecker, FeatureFlagChecker>();
             services.AddScoped<IUserIdProvider, UserIdProvider>();
             services.AddScoped<IUserProvider, UserProvider>();
             services.AddScoped<IOutboxEventCreator, OutboxEventCreator>();

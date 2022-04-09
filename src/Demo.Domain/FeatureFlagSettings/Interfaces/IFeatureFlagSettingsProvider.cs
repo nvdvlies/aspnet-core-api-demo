@@ -5,7 +5,7 @@ namespace Demo.Domain.FeatureFlagSettings.Interfaces
 {
     public interface IFeatureFlagSettingsProvider
     {
-        Task<FeatureFlagSettings> GetAsync(CancellationToken cancellationToken);
-        Task<FeatureFlagSettings> GetAsync(bool refreshCache, CancellationToken cancellationToken);
+        Task<FeatureFlagSettings> GetAsync(CancellationToken cancellationToken = default);
+        Task<FeatureFlagSettings> GetAsync(bool refreshCache, CancellationToken cancellationToken = default);
     }
 }
