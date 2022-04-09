@@ -31,7 +31,7 @@ namespace Demo.WebApi.Controllers
         [ProducesResponseType(typeof(GetInvoiceByIdQueryResult), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(void), (int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
-        public async Task<ActionResult<GetInvoiceByIdQueryResult>> GetInvoiceById(Guid id, CancellationToken cancellationToken)
+        public async Task<ActionResult<GetInvoiceByIdQueryResult>> GetInvoiceById([FromRoute] Guid id, CancellationToken cancellationToken)
         {
             var query = new GetInvoiceByIdQuery { Id = id };
             var result = await Mediator.Send(query, cancellationToken);

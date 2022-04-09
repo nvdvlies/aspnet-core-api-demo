@@ -69,7 +69,7 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint.OutputCollect
         [ProducesResponseType(typeof(%QUERYNAME%QueryResult), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
-        public async Task<ActionResult<%QUERYNAME%QueryResult>> %QUERYNAME%(Guid id, CancellationToken cancellationToken)
+        public async Task<ActionResult<%QUERYNAME%QueryResult>> %QUERYNAME%([FromRoute] Guid id, CancellationToken cancellationToken)
         {
             var query = new %QUERYNAME%Query { Id = id };
             var result = await Mediator.Send(query, cancellationToken);

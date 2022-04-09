@@ -30,7 +30,7 @@ namespace Demo.WebApi.Controllers
         [ProducesResponseType(typeof(GetUserByIdQueryResult), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
-        public async Task<ActionResult<GetUserByIdQueryResult>> GetUserById(Guid id, CancellationToken cancellationToken)
+        public async Task<ActionResult<GetUserByIdQueryResult>> GetUserById([FromRoute] Guid id, CancellationToken cancellationToken)
         {
             var query = new GetUserByIdQuery { Id = id };
             var result = await Mediator.Send(query, cancellationToken);

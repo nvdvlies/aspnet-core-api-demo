@@ -30,7 +30,7 @@ namespace Demo.WebApi.Controllers
         [ProducesResponseType(typeof(GetRoleByIdQueryResult), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
-        public async Task<ActionResult<GetRoleByIdQueryResult>> GetRoleById(Guid id, CancellationToken cancellationToken)
+        public async Task<ActionResult<GetRoleByIdQueryResult>> GetRoleById([FromRoute] Guid id, CancellationToken cancellationToken)
         {
             var query = new GetRoleByIdQuery { Id = id };
             var result = await Mediator.Send(query, cancellationToken);

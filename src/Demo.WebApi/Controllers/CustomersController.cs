@@ -27,7 +27,7 @@ namespace Demo.WebApi.Controllers
         [ProducesResponseType(typeof(GetCustomerByIdQueryResult), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(void), (int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
-        public async Task<ActionResult<GetCustomerByIdQueryResult>> GetCustomerById(Guid id, CancellationToken cancellationToken)
+        public async Task<ActionResult<GetCustomerByIdQueryResult>> GetCustomerById([FromRoute] Guid id, CancellationToken cancellationToken)
         {
             var query = new GetCustomerByIdQuery { Id = id };
             var result = await Mediator.Send(query, cancellationToken);
