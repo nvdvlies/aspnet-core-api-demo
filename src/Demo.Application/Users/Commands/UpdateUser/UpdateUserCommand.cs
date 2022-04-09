@@ -18,7 +18,7 @@ namespace Demo.Application.Users.Commands.UpdateUser
         public DateTime? BirthDate { get; set; }
         public string ZoneInfo { get; set; }
         public string Locale { get; set; }
-        public List<UpdateUserCommandUserRole> UserRoles { get; set; }
+        public List<UpdateUserCommandUserRoleDto> UserRoles { get; set; }
 
         public void SetUserId(Guid id)
         {

@@ -2,7 +2,7 @@
 
 namespace Demo.Application.Users.Commands.UpdateUser.Dtos
 {
-    public class UpdateUserCommandUserRole
+    public class UpdateUserCommandUserRoleDto
     {
         public Guid RoleId { get; set; }
     }

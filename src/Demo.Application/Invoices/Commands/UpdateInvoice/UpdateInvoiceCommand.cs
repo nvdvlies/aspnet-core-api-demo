@@ -14,7 +14,7 @@ namespace Demo.Application.Invoices.Commands.UpdateInvoice
         public DateTime InvoiceDate { get; set; }
         public int PaymentTerm { get; set; }
         public string OrderReference { get; set; }
-        public List<UpdateInvoiceCommandInvoiceLine> InvoiceLines { get; set; }
+        public List<UpdateInvoiceCommandInvoiceLineDto> InvoiceLines { get; set; }
 
         public void SetInvoiceId(Guid id)
         {

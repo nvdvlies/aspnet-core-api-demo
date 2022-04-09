@@ -9,21 +9,21 @@ namespace Demo.Application.FeatureFlagSettings.Queries.GetFeatureFlagSettings
 {
     public class GetFeatureFlagSettingsQueryHandler : IRequestHandler<GetFeatureFlagSettingsQuery, GetFeatureFlagSettingsQueryResult>
     {
-        private readonly IFeatureFlagSettingsProvider _FeatureFlagSettingsProvider;
+        private readonly IFeatureFlagSettingsProvider _featureFlagSettingsProvider;
         private readonly IMapper _mapper;
 
         public GetFeatureFlagSettingsQueryHandler(
-            IFeatureFlagSettingsProvider FeatureFlagSettingsProvider,
+            IFeatureFlagSettingsProvider featureFlagSettingsProvider,
             IMapper mapper
         )
         {
-            _FeatureFlagSettingsProvider = FeatureFlagSettingsProvider;
+            _featureFlagSettingsProvider = featureFlagSettingsProvider;
             _mapper = mapper;
         }
 
         public async Task<GetFeatureFlagSettingsQueryResult> Handle(GetFeatureFlagSettingsQuery request, CancellationToken cancellationToken)
         {
-            var FeatureFlagSettings = await _FeatureFlagSettingsProvider.GetAsync(cancellationToken);
+            var FeatureFlagSettings = await _featureFlagSettingsProvider.GetAsync(cancellationToken);
 
             var FeatureFlagSettingsDto = _mapper.Map<FeatureFlagSettingsDto>(FeatureFlagSettings);
 

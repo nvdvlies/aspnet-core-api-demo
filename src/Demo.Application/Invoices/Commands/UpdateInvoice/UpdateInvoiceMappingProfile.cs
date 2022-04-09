@@ -10,7 +10,7 @@ namespace Demo.Application.Invoices.Commands.UpdateInvoice
     {
         public UpdateInvoiceMappingProfile()
         {
-            CreateMap<UpdateInvoiceCommandInvoiceLine, InvoiceLine>()
+            CreateMap<UpdateInvoiceCommandInvoiceLineDto, InvoiceLine>()
                 .ForMember(x => x.LineNumber, opt => opt.Ignore())
                 .ForMember(x => x.InvoiceId, opt => opt.Ignore())
                 .ForMember(x => x.Invoice, opt => opt.Ignore())
@@ -19,7 +19,7 @@ namespace Demo.Application.Invoices.Commands.UpdateInvoice
 
             CreateMap<UpdateInvoiceCommand, Invoice>()
                 .ForMember(dest => dest.InvoiceLines,
-                    opt => opt.MapFrom<TrackedChildCollectionValueResolver<UpdateInvoiceCommand, Invoice, UpdateInvoiceCommandInvoiceLine, InvoiceLine>, List<UpdateInvoiceCommandInvoiceLine>>(src => src.InvoiceLines)
+                    opt => opt.MapFrom<TrackedChildCollectionValueResolver<UpdateInvoiceCommand, Invoice, UpdateInvoiceCommandInvoiceLineDto, InvoiceLine>, List<UpdateInvoiceCommandInvoiceLineDto>>(src => src.InvoiceLines)
                 )
                 .ForMember(x => x.Id, opt => opt.Ignore())
                 .ForMember(x => x.InvoiceNumber, opt => opt.Ignore())

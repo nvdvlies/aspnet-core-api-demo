@@ -21,7 +21,7 @@ namespace Demo.Application.Users.Commands.UpdateUser
                 .WithMessage(x => "UserRoles cannot contain duplicate roles");
         }
 
-        private static bool HasUniqueRoles(IEnumerable<UpdateUserCommandUserRole> userRoles)
+        private static bool HasUniqueRoles(IEnumerable<UpdateUserCommandUserRoleDto> userRoles)
         {
             return userRoles.GroupBy(x => x.RoleId).Count() == userRoles.Count();
         }
