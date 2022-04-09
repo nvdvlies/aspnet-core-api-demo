@@ -6,6 +6,8 @@ using System;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Demo.WebApi.Auth;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Demo.WebApi.Controllers
 {
@@ -19,6 +21,7 @@ namespace Demo.WebApi.Controllers
             return await Mediator.Send(query, cancellationToken);
         }
 
+        [Authorize(nameof(Policies.Admin))]
         [HttpPut("{id}")]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]

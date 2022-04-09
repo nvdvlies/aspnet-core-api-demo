@@ -5,6 +5,8 @@ using Demo.Application.Users.Queries.GetUserAuditlog;
 using Demo.Application.Users.Queries.GetUserById;
 using Demo.Application.Users.Queries.SearchUsers;
 using Demo.Application.Users.Queries.UserLookup;
+using Demo.WebApi.Auth;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Net;
@@ -13,6 +15,7 @@ using System.Threading.Tasks;
 
 namespace Demo.WebApi.Controllers
 {
+    [Authorize(nameof(Policies.Admin))]
     public class UsersController : ApiControllerBase
     {
         [HttpGet]

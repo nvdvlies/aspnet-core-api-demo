@@ -5,6 +5,8 @@ using Demo.Application.Roles.Queries.GetRoleAuditlog;
 using Demo.Application.Roles.Queries.GetRoleById;
 using Demo.Application.Roles.Queries.RoleLookup;
 using Demo.Application.Roles.Queries.SearchRoles;
+using Demo.WebApi.Auth;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Net;
@@ -13,6 +15,7 @@ using System.Threading.Tasks;
 
 namespace Demo.WebApi.Controllers
 {
+    [Authorize(nameof(Policies.Admin))]
     public class RolesController : ApiControllerBase
     {
         [HttpGet]

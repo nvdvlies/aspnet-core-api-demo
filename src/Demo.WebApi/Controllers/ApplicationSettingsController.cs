@@ -1,6 +1,8 @@
 using Demo.Application.ApplicationSettings.Commands.SaveApplicationSettings;
 using Demo.Application.ApplicationSettings.Queries.GetApplicationSettings;
 using Demo.Application.ApplicationSettings.Queries.GetApplicationSettingsAuditlog;
+using Demo.WebApi.Auth;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Threading;
@@ -18,6 +20,7 @@ namespace Demo.WebApi.Controllers
             return await Mediator.Send(query, cancellationToken);
         }
 
+        [Authorize(nameof(Policies.Admin))]
         [HttpPut]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
