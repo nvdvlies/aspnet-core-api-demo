@@ -49,6 +49,7 @@ namespace Demo.Application.%CONTROLLERNAME%.Queries.%QUERYNAME%
 }
 " :
 @"
+using Demo.Application.Shared.Interfaces;
 using MediatR;
 using System;
 
