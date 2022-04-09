@@ -1,3 +1,4 @@
+using Demo.Application.CurrentUser.Queries.GetCurrentUserFeatureFlags;
 using Demo.Application.Users.Queries.GetUserById;
 using Demo.Domain.Shared.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -23,7 +24,7 @@ namespace Demo.WebApi.Controllers
         [ProducesResponseType(typeof(GetUserByIdQueryResult), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
-        public async Task<ActionResult<GetUserByIdQueryResult>> GetCurrentUserDetails( CancellationToken cancellationToken)
+        public async Task<ActionResult<GetUserByIdQueryResult>> GetCurrentUserDetails(CancellationToken cancellationToken)
         {
             var query = new GetUserByIdQuery { Id = _currentUser.Id };
             var result = await Mediator.Send(query, cancellationToken);
@@ -34,6 +35,14 @@ namespace Demo.WebApi.Controllers
             }
 
             return Ok(result);
+        }
+
+        [HttpGet("FeatureFlags")]
+        [ProducesResponseType(typeof(GetCurrentUserFeatureFlagsQueryResult), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
+        public async Task<ActionResult<GetCurrentUserFeatureFlagsQueryResult>> GetCurrentUserFeatureFlags([FromQuery] GetCurrentUserFeatureFlagsQuery query, CancellationToken cancellationToken)
+        {
+            return await Mediator.Send(query, cancellationToken);
         }
 
         // SCAFFOLD-MARKER: ENDPOINT
