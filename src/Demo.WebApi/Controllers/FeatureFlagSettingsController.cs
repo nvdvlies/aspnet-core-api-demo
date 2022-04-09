@@ -1,3 +1,4 @@
+using Demo.Application.FeatureFlagSettings.Queries.GetFeatureFlagSettingsAuditlog;
 using Demo.Application.FeatureFlagSettings.Commands.SaveFeatureFlagSettings;
 using Demo.Application.FeatureFlagSettings.Queries.GetFeatureFlagSettings;
 using Microsoft.AspNetCore.Mvc;
@@ -18,7 +19,6 @@ namespace Demo.WebApi.Controllers
             return await Mediator.Send(query, cancellationToken);
         }
 
-
         [HttpPut("{id}")]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
@@ -28,6 +28,14 @@ namespace Demo.WebApi.Controllers
             await Mediator.Send(command, cancellationToken);
 
             return NoContent();
+        }
+
+        [HttpGet("{id}/Auditlog")]
+        [ProducesResponseType(typeof(GetFeatureFlagSettingsAuditlogQueryResult), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
+        public async Task<ActionResult<GetFeatureFlagSettingsAuditlogQueryResult>> GetFeatureFlagSettingsAuditlog([FromQuery] GetFeatureFlagSettingsAuditlogQuery query, CancellationToken cancellationToken)
+        {
+            return await Mediator.Send(query, cancellationToken);
         }
 
         // SCAFFOLD-MARKER: ENDPOINT
