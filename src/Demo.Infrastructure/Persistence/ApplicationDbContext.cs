@@ -1,7 +1,7 @@
-using Demo.Domain.FeatureFlagSettings;
 using Demo.Domain.ApplicationSettings;
 using Demo.Domain.Auditlog;
 using Demo.Domain.Customer;
+using Demo.Domain.FeatureFlagSettings;
 using Demo.Domain.Invoice;
 using Demo.Domain.OutboxEvent;
 using Demo.Domain.OutboxMessage;
@@ -29,7 +29,7 @@ namespace Demo.Infrastructure.Persistence
         public DbSet<Invoice> Invoices { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
-       public DbSet<FeatureFlagSettings> FeatureFlagSettings { get; set; }
+        public DbSet<FeatureFlagSettings> FeatureFlagSettings { get; set; }
         // SCAFFOLD-MARKER: DBSET
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())

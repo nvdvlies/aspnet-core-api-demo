@@ -2,7 +2,6 @@ using Demo.Application.CurrentUser.Queries.GetCurrentUserFeatureFlags;
 using Demo.Application.Users.Queries.GetUserById;
 using Demo.Domain.Shared.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;

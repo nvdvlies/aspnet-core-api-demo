@@ -53,7 +53,7 @@ namespace Demo.Infrastructure.Services
                 await _cache.SetAsync(cacheKey, Encode(user), cacheEntryOptions, cancellationToken);
 
                 return user;
-            } 
+            }
             else
             {
                 return Decode(cacheValue);

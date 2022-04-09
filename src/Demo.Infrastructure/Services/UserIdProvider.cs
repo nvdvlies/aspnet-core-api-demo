@@ -40,8 +40,8 @@ namespace Demo.Infrastructure.Services
                     .AsQueryable()
                     .Where(x => x.ExternalId == externalId)
                     .Select(x => x.Id)
-                    .FirstOrDefault(); 
-   
+                    .FirstOrDefault();
+
                 var cacheEntryOptions = new DistributedCacheEntryOptions()
                     .SetSlidingExpiration(TimeSpan.FromMinutes(10));
 

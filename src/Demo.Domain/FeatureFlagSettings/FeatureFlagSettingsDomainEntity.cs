@@ -1,13 +1,13 @@
-using System;
 using Demo.Common.Interfaces;
-using Demo.Domain.Shared.DomainEntity;
 using Demo.Domain.FeatureFlagSettings.Interfaces;
+using Demo.Domain.Shared.DomainEntity;
+using Demo.Domain.Shared.Exceptions;
 using Demo.Domain.Shared.Interfaces;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Threading;
-using Demo.Domain.Shared.Exceptions;
+using System.Threading.Tasks;
 
 namespace Demo.Domain.FeatureFlagSettings
 {
@@ -19,10 +19,10 @@ namespace Demo.Domain.FeatureFlagSettings
             ILogger<FeatureFlagSettingsDomainEntity> logger,
             ICurrentUser currentUser,
             IDateTime dateTime,
-            IDbCommandForTableWithSingleRecord<FeatureFlagSettings> dbCommand, 
-            Lazy<IEnumerable<IDefaultValuesSetter<FeatureFlagSettings>>> defaultValuesSetters, 
-            Lazy<IEnumerable<IValidator<FeatureFlagSettings>>> validators, 
-            Lazy<IEnumerable<IBeforeCreate<FeatureFlagSettings>>> beforeCreateHooks, 
+            IDbCommandForTableWithSingleRecord<FeatureFlagSettings> dbCommand,
+            Lazy<IEnumerable<IDefaultValuesSetter<FeatureFlagSettings>>> defaultValuesSetters,
+            Lazy<IEnumerable<IValidator<FeatureFlagSettings>>> validators,
+            Lazy<IEnumerable<IBeforeCreate<FeatureFlagSettings>>> beforeCreateHooks,
             Lazy<IEnumerable<IAfterCreate<FeatureFlagSettings>>> afterCreateHooks,
             Lazy<IEnumerable<IBeforeUpdate<FeatureFlagSettings>>> beforeUpdateHooks,
             Lazy<IEnumerable<IAfterUpdate<FeatureFlagSettings>>> afterUpdateHooks,
@@ -32,7 +32,7 @@ namespace Demo.Domain.FeatureFlagSettings
             Lazy<IOutboxMessageCreator> outboxMessageCreator,
             Lazy<IJsonService<FeatureFlagSettings>> jsonService,
             Lazy<IAuditlogger<FeatureFlagSettings>> auditlogger
-        ) 
+        )
             : base(logger, currentUser, dateTime, dbCommand, defaultValuesSetters, validators, beforeCreateHooks, afterCreateHooks, beforeUpdateHooks, afterUpdateHooks, beforeDeleteHooks, afterDeleteHooks, outboxEventCreator, outboxMessageCreator, jsonService, auditlogger)
         {
             _dbCommand = dbCommand;

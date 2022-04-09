@@ -1,5 +1,4 @@
 ﻿using Demo.Application.Shared.Interfaces;
-using Demo.Common.Interfaces;
 using Demo.Domain.Shared.Interfaces;
 using Demo.Events.OutboxEvent;
 using Demo.Messages;

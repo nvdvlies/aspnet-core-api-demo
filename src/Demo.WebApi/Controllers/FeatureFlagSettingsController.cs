@@ -1,13 +1,12 @@
-using Demo.Application.FeatureFlagSettings.Queries.GetFeatureFlagSettingsAuditlog;
 using Demo.Application.FeatureFlagSettings.Commands.SaveFeatureFlagSettings;
 using Demo.Application.FeatureFlagSettings.Queries.GetFeatureFlagSettings;
+using Demo.Application.FeatureFlagSettings.Queries.GetFeatureFlagSettingsAuditlog;
+using Demo.WebApi.Auth;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using Demo.WebApi.Auth;
-using Microsoft.AspNetCore.Authorization;
 
 namespace Demo.WebApi.Controllers
 {

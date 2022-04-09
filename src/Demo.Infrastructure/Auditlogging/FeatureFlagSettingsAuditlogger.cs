@@ -10,15 +10,15 @@ namespace Demo.Infrastructure.Auditlogging
 {
     internal class FeatureFlagSettingsAuditlogger : AuditloggerBase<FeatureFlagSettings>, IAuditlogger<FeatureFlagSettings>
     {
-        public FeatureFlagSettingsAuditlogger(            
-            ICurrentUser currentUser, 
+        public FeatureFlagSettingsAuditlogger(
+            ICurrentUser currentUser,
             IDateTime dateTime,
             IAuditlogDomainEntity auditlogDomainEntity
         ) : base(currentUser, dateTime, auditlogDomainEntity)
         {
         }
 
-        protected override List<AuditlogItem> AuditlogItems(FeatureFlagSettings current, FeatureFlagSettings previous) => 
+        protected override List<AuditlogItem> AuditlogItems(FeatureFlagSettings current, FeatureFlagSettings previous) =>
             new AuditlogBuilder<FeatureFlagSettings>()
                 .WithChildEntityCollection(c => c.FeatureFlags, c => c.Name, new AuditlogBuilder<FeatureFlag>()
                     .WithProperty(c => c.EnabledForAll)
