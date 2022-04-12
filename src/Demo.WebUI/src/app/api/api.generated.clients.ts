@@ -214,6 +214,139 @@ export class ApiApplicationSettingsClient {
 @Injectable({
     providedIn: 'root'
 })
+export class ApiCurrentUserClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    getCurrentUserDetails(): Observable<GetUserByIdQueryResult> {
+        let url_ = this.baseUrl + "/api/CurrentUser";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetCurrentUserDetails(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetCurrentUserDetails(<any>response_);
+                } catch (e) {
+                    return <Observable<GetUserByIdQueryResult>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<GetUserByIdQueryResult>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetCurrentUserDetails(response: HttpResponseBase): Observable<GetUserByIdQueryResult> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = GetUserByIdQueryResult.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 404) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result404: any = null;
+            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result404 = ProblemDetails.fromJS(resultData404);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result404);
+            }));
+        } else if (status === 500) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result500: any = null;
+            let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result500 = ProblemDetails.fromJS(resultData500);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result500);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<GetUserByIdQueryResult>(<any>null);
+    }
+
+    getCurrentUserFeatureFlags(query?: GetCurrentUserFeatureFlagsQuery | null | undefined): Observable<GetCurrentUserFeatureFlagsQueryResult> {
+        let url_ = this.baseUrl + "/api/CurrentUser/FeatureFlags?";
+        if (query !== undefined && query !== null)
+            url_ += "query=" + encodeURIComponent("" + query) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetCurrentUserFeatureFlags(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetCurrentUserFeatureFlags(<any>response_);
+                } catch (e) {
+                    return <Observable<GetCurrentUserFeatureFlagsQueryResult>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<GetCurrentUserFeatureFlagsQueryResult>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetCurrentUserFeatureFlags(response: HttpResponseBase): Observable<GetCurrentUserFeatureFlagsQueryResult> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = GetCurrentUserFeatureFlagsQueryResult.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 500) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result500: any = null;
+            let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result500 = ProblemDetails.fromJS(resultData500);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result500);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<GetCurrentUserFeatureFlagsQueryResult>(<any>null);
+    }
+}
+
+@Injectable({
+    providedIn: 'root'
+})
 export class ApiCustomersClient {
     private http: HttpClient;
     private baseUrl: string;
@@ -780,6 +913,208 @@ export class ApiEventsClient {
             }));
         }
         return _observableOf<void>(<any>null);
+    }
+}
+
+@Injectable({
+    providedIn: 'root'
+})
+export class ApiFeatureFlagSettingsClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    get(query?: GetFeatureFlagSettingsQuery | null | undefined): Observable<GetFeatureFlagSettingsQueryResult> {
+        let url_ = this.baseUrl + "/api/FeatureFlagSettings?";
+        if (query !== undefined && query !== null)
+            url_ += "query=" + encodeURIComponent("" + query) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGet(<any>response_);
+                } catch (e) {
+                    return <Observable<GetFeatureFlagSettingsQueryResult>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<GetFeatureFlagSettingsQueryResult>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGet(response: HttpResponseBase): Observable<GetFeatureFlagSettingsQueryResult> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = GetFeatureFlagSettingsQueryResult.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 500) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result500: any = null;
+            let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result500 = ProblemDetails.fromJS(resultData500);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result500);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<GetFeatureFlagSettingsQueryResult>(<any>null);
+    }
+
+    save(command: SaveFeatureFlagSettingsCommand, id: string): Observable<void> {
+        let url_ = this.baseUrl + "/api/FeatureFlagSettings/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSave(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSave(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processSave(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ValidationProblemDetails.fromJS(resultData400);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status === 500) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result500: any = null;
+            let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result500 = ProblemDetails.fromJS(resultData500);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result500);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    getFeatureFlagSettingsAuditlog(id: string, pageIndex?: number | undefined, pageSize?: number | undefined): Observable<GetFeatureFlagSettingsAuditlogQueryResult> {
+        let url_ = this.baseUrl + "/api/FeatureFlagSettings/{id}/Auditlog?";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        if (pageIndex === null)
+            throw new Error("The parameter 'pageIndex' cannot be null.");
+        else if (pageIndex !== undefined)
+            url_ += "PageIndex=" + encodeURIComponent("" + pageIndex) + "&";
+        if (pageSize === null)
+            throw new Error("The parameter 'pageSize' cannot be null.");
+        else if (pageSize !== undefined)
+            url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetFeatureFlagSettingsAuditlog(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetFeatureFlagSettingsAuditlog(<any>response_);
+                } catch (e) {
+                    return <Observable<GetFeatureFlagSettingsAuditlogQueryResult>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<GetFeatureFlagSettingsAuditlogQueryResult>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetFeatureFlagSettingsAuditlog(response: HttpResponseBase): Observable<GetFeatureFlagSettingsAuditlogQueryResult> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = GetFeatureFlagSettingsAuditlogQueryResult.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 500) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result500: any = null;
+            let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result500 = ProblemDetails.fromJS(resultData500);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result500);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<GetFeatureFlagSettingsAuditlogQueryResult>(<any>null);
     }
 }
 
@@ -1637,6 +1972,495 @@ export class ApiMessagesClient {
 @Injectable({
     providedIn: 'root'
 })
+export class ApiRolesClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    search(orderBy?: SearchRoleOrderByEnum | undefined, orderByDescending?: boolean | undefined, pageIndex?: number | undefined, pageSize?: number | undefined, searchTerm?: string | null | undefined): Observable<SearchRolesQueryResult> {
+        let url_ = this.baseUrl + "/api/Roles?";
+        if (orderBy === null)
+            throw new Error("The parameter 'orderBy' cannot be null.");
+        else if (orderBy !== undefined)
+            url_ += "OrderBy=" + encodeURIComponent("" + orderBy) + "&";
+        if (orderByDescending === null)
+            throw new Error("The parameter 'orderByDescending' cannot be null.");
+        else if (orderByDescending !== undefined)
+            url_ += "OrderByDescending=" + encodeURIComponent("" + orderByDescending) + "&";
+        if (pageIndex === null)
+            throw new Error("The parameter 'pageIndex' cannot be null.");
+        else if (pageIndex !== undefined)
+            url_ += "PageIndex=" + encodeURIComponent("" + pageIndex) + "&";
+        if (pageSize === null)
+            throw new Error("The parameter 'pageSize' cannot be null.");
+        else if (pageSize !== undefined)
+            url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
+        if (searchTerm !== undefined && searchTerm !== null)
+            url_ += "SearchTerm=" + encodeURIComponent("" + searchTerm) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSearch(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSearch(<any>response_);
+                } catch (e) {
+                    return <Observable<SearchRolesQueryResult>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<SearchRolesQueryResult>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processSearch(response: HttpResponseBase): Observable<SearchRolesQueryResult> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = SearchRolesQueryResult.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 500) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result500: any = null;
+            let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result500 = ProblemDetails.fromJS(resultData500);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result500);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<SearchRolesQueryResult>(<any>null);
+    }
+
+    create(command: CreateRoleCommand): Observable<CreateRoleResponse> {
+        let url_ = this.baseUrl + "/api/Roles";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreate(<any>response_);
+                } catch (e) {
+                    return <Observable<CreateRoleResponse>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<CreateRoleResponse>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCreate(response: HttpResponseBase): Observable<CreateRoleResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 201) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result201: any = null;
+            let resultData201 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result201 = CreateRoleResponse.fromJS(resultData201);
+            return _observableOf(result201);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ValidationProblemDetails.fromJS(resultData400);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status === 500) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result500: any = null;
+            let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result500 = ProblemDetails.fromJS(resultData500);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result500);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<CreateRoleResponse>(<any>null);
+    }
+
+    getRoleById(id: string): Observable<GetRoleByIdQueryResult> {
+        let url_ = this.baseUrl + "/api/Roles/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetRoleById(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetRoleById(<any>response_);
+                } catch (e) {
+                    return <Observable<GetRoleByIdQueryResult>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<GetRoleByIdQueryResult>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetRoleById(response: HttpResponseBase): Observable<GetRoleByIdQueryResult> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = GetRoleByIdQueryResult.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 404) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result404: any = null;
+            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result404 = ProblemDetails.fromJS(resultData404);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result404);
+            }));
+        } else if (status === 500) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result500: any = null;
+            let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result500 = ProblemDetails.fromJS(resultData500);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result500);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<GetRoleByIdQueryResult>(<any>null);
+    }
+
+    update(id: string, command: UpdateRoleCommand): Observable<void> {
+        let url_ = this.baseUrl + "/api/Roles/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdate(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpdate(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ValidationProblemDetails.fromJS(resultData400);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status === 500) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result500: any = null;
+            let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result500 = ProblemDetails.fromJS(resultData500);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result500);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    delete(id: string, command: DeleteRoleCommand): Observable<void> {
+        let url_ = this.baseUrl + "/api/Roles/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDelete(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDelete(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processDelete(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ValidationProblemDetails.fromJS(resultData400);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status === 500) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result500: any = null;
+            let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result500 = ProblemDetails.fromJS(resultData500);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result500);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    getRoleAuditlog(id: string, pageIndex?: number | undefined, pageSize?: number | undefined): Observable<GetRoleAuditlogQueryResult> {
+        let url_ = this.baseUrl + "/api/Roles/{id}/Auditlog?";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        if (pageIndex === null)
+            throw new Error("The parameter 'pageIndex' cannot be null.");
+        else if (pageIndex !== undefined)
+            url_ += "PageIndex=" + encodeURIComponent("" + pageIndex) + "&";
+        if (pageSize === null)
+            throw new Error("The parameter 'pageSize' cannot be null.");
+        else if (pageSize !== undefined)
+            url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetRoleAuditlog(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetRoleAuditlog(<any>response_);
+                } catch (e) {
+                    return <Observable<GetRoleAuditlogQueryResult>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<GetRoleAuditlogQueryResult>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetRoleAuditlog(response: HttpResponseBase): Observable<GetRoleAuditlogQueryResult> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = GetRoleAuditlogQueryResult.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 500) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result500: any = null;
+            let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result500 = ProblemDetails.fromJS(resultData500);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result500);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<GetRoleAuditlogQueryResult>(<any>null);
+    }
+
+    lookup(orderBy?: RoleLookupOrderByEnum | undefined, orderByDescending?: boolean | undefined, pageIndex?: number | undefined, pageSize?: number | undefined, searchTerm?: string | null | undefined, ids?: string[] | null | undefined): Observable<RoleLookupQueryResult> {
+        let url_ = this.baseUrl + "/api/Roles/Lookup?";
+        if (orderBy === null)
+            throw new Error("The parameter 'orderBy' cannot be null.");
+        else if (orderBy !== undefined)
+            url_ += "OrderBy=" + encodeURIComponent("" + orderBy) + "&";
+        if (orderByDescending === null)
+            throw new Error("The parameter 'orderByDescending' cannot be null.");
+        else if (orderByDescending !== undefined)
+            url_ += "OrderByDescending=" + encodeURIComponent("" + orderByDescending) + "&";
+        if (pageIndex === null)
+            throw new Error("The parameter 'pageIndex' cannot be null.");
+        else if (pageIndex !== undefined)
+            url_ += "PageIndex=" + encodeURIComponent("" + pageIndex) + "&";
+        if (pageSize === null)
+            throw new Error("The parameter 'pageSize' cannot be null.");
+        else if (pageSize !== undefined)
+            url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
+        if (searchTerm !== undefined && searchTerm !== null)
+            url_ += "SearchTerm=" + encodeURIComponent("" + searchTerm) + "&";
+        if (ids !== undefined && ids !== null)
+            ids && ids.forEach(item => { url_ += "Ids=" + encodeURIComponent("" + item) + "&"; });
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processLookup(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processLookup(<any>response_);
+                } catch (e) {
+                    return <Observable<RoleLookupQueryResult>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<RoleLookupQueryResult>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processLookup(response: HttpResponseBase): Observable<RoleLookupQueryResult> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = RoleLookupQueryResult.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 500) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result500: any = null;
+            let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result500 = ProblemDetails.fromJS(resultData500);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result500);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<RoleLookupQueryResult>(<any>null);
+    }
+}
+
+@Injectable({
+    providedIn: 'root'
+})
 export class ApiUsersClient {
     private http: HttpClient;
     private baseUrl: string;
@@ -2047,7 +2871,7 @@ export class ApiUsersClient {
         return _observableOf<GetUserAuditlogQueryResult>(<any>null);
     }
 
-    userLookup(orderBy?: UserLookupOrderByEnum | undefined, orderByDescending?: boolean | undefined, pageIndex?: number | undefined, pageSize?: number | undefined, searchTerm?: string | null | undefined, ids?: string[] | null | undefined): Observable<UserLookupQueryResult> {
+    lookup(orderBy?: UserLookupOrderByEnum | undefined, orderByDescending?: boolean | undefined, pageIndex?: number | undefined, pageSize?: number | undefined, searchTerm?: string | null | undefined, ids?: string[] | null | undefined): Observable<UserLookupQueryResult> {
         let url_ = this.baseUrl + "/api/Users/Lookup?";
         if (orderBy === null)
             throw new Error("The parameter 'orderBy' cannot be null.");
@@ -2080,11 +2904,11 @@ export class ApiUsersClient {
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processUserLookup(response_);
+            return this.processLookup(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processUserLookup(<any>response_);
+                    return this.processLookup(<any>response_);
                 } catch (e) {
                     return <Observable<UserLookupQueryResult>><any>_observableThrow(e);
                 }
@@ -2093,7 +2917,7 @@ export class ApiUsersClient {
         }));
     }
 
-    protected processUserLookup(response: HttpResponseBase): Observable<UserLookupQueryResult> {
+    protected processLookup(response: HttpResponseBase): Observable<UserLookupQueryResult> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -2899,6 +3723,321 @@ export enum AuditlogTypeEnum {
     YesNo = 9,
 }
 
+export class GetUserByIdQueryResult implements IGetUserByIdQueryResult {
+    user?: UserDto | undefined;
+
+    constructor(data?: IGetUserByIdQueryResult) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.user = _data["user"] ? UserDto.fromJS(_data["user"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): GetUserByIdQueryResult {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetUserByIdQueryResult();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["user"] = this.user ? this.user.toJSON() : <any>undefined;
+        return data; 
+    }
+
+    clone(): GetUserByIdQueryResult {
+        const json = this.toJSON();
+        let result = new GetUserByIdQueryResult();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IGetUserByIdQueryResult {
+    user?: UserDto | undefined;
+}
+
+export class SoftDeleteEntityDto extends AuditableEntityDto implements ISoftDeleteEntityDto {
+    deleted!: boolean;
+    deletedBy?: string | undefined;
+    deletedOn?: Date | undefined;
+
+    constructor(data?: ISoftDeleteEntityDto) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.deleted = _data["deleted"];
+            this.deletedBy = _data["deletedBy"];
+            this.deletedOn = _data["deletedOn"] ? new Date(_data["deletedOn"].toString()) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): SoftDeleteEntityDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new SoftDeleteEntityDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["deleted"] = this.deleted;
+        data["deletedBy"] = this.deletedBy;
+        data["deletedOn"] = this.deletedOn ? this.deletedOn.toISOString() : <any>undefined;
+        super.toJSON(data);
+        return data; 
+    }
+
+    clone(): SoftDeleteEntityDto {
+        const json = this.toJSON();
+        let result = new SoftDeleteEntityDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ISoftDeleteEntityDto extends IAuditableEntityDto {
+    deleted: boolean;
+    deletedBy?: string | undefined;
+    deletedOn?: Date | undefined;
+}
+
+export class UserDto extends SoftDeleteEntityDto implements IUserDto {
+    externalId?: string | undefined;
+    fullname?: string | undefined;
+    givenName?: string | undefined;
+    familyName?: string | undefined;
+    middleName?: string | undefined;
+    email?: string | undefined;
+    gender?: GenderEnum | undefined;
+    birthDate?: Date | undefined;
+    zoneInfo?: string | undefined;
+    locale?: string | undefined;
+    userRoles?: UserRoleDto[] | undefined;
+
+    constructor(data?: IUserDto) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.externalId = _data["externalId"];
+            this.fullname = _data["fullname"];
+            this.givenName = _data["givenName"];
+            this.familyName = _data["familyName"];
+            this.middleName = _data["middleName"];
+            this.email = _data["email"];
+            this.gender = _data["gender"];
+            this.birthDate = _data["birthDate"] ? new Date(_data["birthDate"].toString()) : <any>undefined;
+            this.zoneInfo = _data["zoneInfo"];
+            this.locale = _data["locale"];
+            if (Array.isArray(_data["userRoles"])) {
+                this.userRoles = [] as any;
+                for (let item of _data["userRoles"])
+                    this.userRoles!.push(UserRoleDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): UserDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["externalId"] = this.externalId;
+        data["fullname"] = this.fullname;
+        data["givenName"] = this.givenName;
+        data["familyName"] = this.familyName;
+        data["middleName"] = this.middleName;
+        data["email"] = this.email;
+        data["gender"] = this.gender;
+        data["birthDate"] = this.birthDate ? this.birthDate.toISOString() : <any>undefined;
+        data["zoneInfo"] = this.zoneInfo;
+        data["locale"] = this.locale;
+        if (Array.isArray(this.userRoles)) {
+            data["userRoles"] = [];
+            for (let item of this.userRoles)
+                data["userRoles"].push(item.toJSON());
+        }
+        super.toJSON(data);
+        return data; 
+    }
+
+    clone(): UserDto {
+        const json = this.toJSON();
+        let result = new UserDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUserDto extends ISoftDeleteEntityDto {
+    externalId?: string | undefined;
+    fullname?: string | undefined;
+    givenName?: string | undefined;
+    familyName?: string | undefined;
+    middleName?: string | undefined;
+    email?: string | undefined;
+    gender?: GenderEnum | undefined;
+    birthDate?: Date | undefined;
+    zoneInfo?: string | undefined;
+    locale?: string | undefined;
+    userRoles?: UserRoleDto[] | undefined;
+}
+
+export enum GenderEnum {
+    Male = 1,
+    Female = 2,
+}
+
+export class UserRoleDto implements IUserRoleDto {
+    roleId!: string;
+
+    constructor(data?: IUserRoleDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.roleId = _data["roleId"];
+        }
+    }
+
+    static fromJS(data: any): UserRoleDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserRoleDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["roleId"] = this.roleId;
+        return data; 
+    }
+
+    clone(): UserRoleDto {
+        const json = this.toJSON();
+        let result = new UserRoleDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUserRoleDto {
+    roleId: string;
+}
+
+export class GetCurrentUserFeatureFlagsQueryResult implements IGetCurrentUserFeatureFlagsQueryResult {
+    featureFlags?: string[] | undefined;
+
+    constructor(data?: IGetCurrentUserFeatureFlagsQueryResult) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["featureFlags"])) {
+                this.featureFlags = [] as any;
+                for (let item of _data["featureFlags"])
+                    this.featureFlags!.push(item);
+            }
+        }
+    }
+
+    static fromJS(data: any): GetCurrentUserFeatureFlagsQueryResult {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetCurrentUserFeatureFlagsQueryResult();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.featureFlags)) {
+            data["featureFlags"] = [];
+            for (let item of this.featureFlags)
+                data["featureFlags"].push(item);
+        }
+        return data; 
+    }
+
+    clone(): GetCurrentUserFeatureFlagsQueryResult {
+        const json = this.toJSON();
+        let result = new GetCurrentUserFeatureFlagsQueryResult();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IGetCurrentUserFeatureFlagsQueryResult {
+    featureFlags?: string[] | undefined;
+}
+
+export class GetCurrentUserFeatureFlagsQuery implements IGetCurrentUserFeatureFlagsQuery {
+
+    constructor(data?: IGetCurrentUserFeatureFlagsQuery) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+    }
+
+    static fromJS(data: any): GetCurrentUserFeatureFlagsQuery {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetCurrentUserFeatureFlagsQuery();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        return data; 
+    }
+
+    clone(): GetCurrentUserFeatureFlagsQuery {
+        const json = this.toJSON();
+        let result = new GetCurrentUserFeatureFlagsQuery();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IGetCurrentUserFeatureFlagsQuery {
+}
+
 export class SearchCustomersQueryResult extends BasePaginatedResult implements ISearchCustomersQueryResult {
     customers?: SearchCustomerDto[] | undefined;
 
@@ -3044,54 +4183,6 @@ export class GetCustomerByIdQueryResult implements IGetCustomerByIdQueryResult {
 
 export interface IGetCustomerByIdQueryResult {
     customer?: CustomerDto | undefined;
-}
-
-export class SoftDeleteEntityDto extends AuditableEntityDto implements ISoftDeleteEntityDto {
-    deleted!: boolean;
-    deletedBy?: string | undefined;
-    deletedOn?: Date | undefined;
-
-    constructor(data?: ISoftDeleteEntityDto) {
-        super(data);
-    }
-
-    init(_data?: any) {
-        super.init(_data);
-        if (_data) {
-            this.deleted = _data["deleted"];
-            this.deletedBy = _data["deletedBy"];
-            this.deletedOn = _data["deletedOn"] ? new Date(_data["deletedOn"].toString()) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): SoftDeleteEntityDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new SoftDeleteEntityDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["deleted"] = this.deleted;
-        data["deletedBy"] = this.deletedBy;
-        data["deletedOn"] = this.deletedOn ? this.deletedOn.toISOString() : <any>undefined;
-        super.toJSON(data);
-        return data; 
-    }
-
-    clone(): SoftDeleteEntityDto {
-        const json = this.toJSON();
-        let result = new SoftDeleteEntityDto();
-        result.init(json);
-        return result;
-    }
-}
-
-export interface ISoftDeleteEntityDto extends IAuditableEntityDto {
-    deleted: boolean;
-    deletedBy?: string | undefined;
-    deletedOn?: Date | undefined;
 }
 
 export class CustomerDto extends SoftDeleteEntityDto implements ICustomerDto {
@@ -3592,6 +4683,360 @@ export class BinaryData implements IBinaryData {
 export interface IBinaryData {
 }
 
+export class GetFeatureFlagSettingsQueryResult implements IGetFeatureFlagSettingsQueryResult {
+    featureFlagSettings?: FeatureFlagSettingsDto | undefined;
+
+    constructor(data?: IGetFeatureFlagSettingsQueryResult) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.featureFlagSettings = _data["featureFlagSettings"] ? FeatureFlagSettingsDto.fromJS(_data["featureFlagSettings"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): GetFeatureFlagSettingsQueryResult {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetFeatureFlagSettingsQueryResult();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["featureFlagSettings"] = this.featureFlagSettings ? this.featureFlagSettings.toJSON() : <any>undefined;
+        return data; 
+    }
+
+    clone(): GetFeatureFlagSettingsQueryResult {
+        const json = this.toJSON();
+        let result = new GetFeatureFlagSettingsQueryResult();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IGetFeatureFlagSettingsQueryResult {
+    featureFlagSettings?: FeatureFlagSettingsDto | undefined;
+}
+
+export class FeatureFlagSettingsDto extends AuditableEntityDto implements IFeatureFlagSettingsDto {
+    featureFlags?: FeatureFlagDto[] | undefined;
+
+    constructor(data?: IFeatureFlagSettingsDto) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            if (Array.isArray(_data["featureFlags"])) {
+                this.featureFlags = [] as any;
+                for (let item of _data["featureFlags"])
+                    this.featureFlags!.push(FeatureFlagDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): FeatureFlagSettingsDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new FeatureFlagSettingsDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.featureFlags)) {
+            data["featureFlags"] = [];
+            for (let item of this.featureFlags)
+                data["featureFlags"].push(item.toJSON());
+        }
+        super.toJSON(data);
+        return data; 
+    }
+
+    clone(): FeatureFlagSettingsDto {
+        const json = this.toJSON();
+        let result = new FeatureFlagSettingsDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IFeatureFlagSettingsDto extends IAuditableEntityDto {
+    featureFlags?: FeatureFlagDto[] | undefined;
+}
+
+export class FeatureFlagDto extends EntityDto implements IFeatureFlagDto {
+    name?: string | undefined;
+    description?: string | undefined;
+    enabledForAll!: boolean;
+    enabledForUsers?: string[] | undefined;
+
+    constructor(data?: IFeatureFlagDto) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.name = _data["name"];
+            this.description = _data["description"];
+            this.enabledForAll = _data["enabledForAll"];
+            if (Array.isArray(_data["enabledForUsers"])) {
+                this.enabledForUsers = [] as any;
+                for (let item of _data["enabledForUsers"])
+                    this.enabledForUsers!.push(item);
+            }
+        }
+    }
+
+    static fromJS(data: any): FeatureFlagDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new FeatureFlagDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["description"] = this.description;
+        data["enabledForAll"] = this.enabledForAll;
+        if (Array.isArray(this.enabledForUsers)) {
+            data["enabledForUsers"] = [];
+            for (let item of this.enabledForUsers)
+                data["enabledForUsers"].push(item);
+        }
+        super.toJSON(data);
+        return data; 
+    }
+
+    clone(): FeatureFlagDto {
+        const json = this.toJSON();
+        let result = new FeatureFlagDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IFeatureFlagDto extends IEntityDto {
+    name?: string | undefined;
+    description?: string | undefined;
+    enabledForAll: boolean;
+    enabledForUsers?: string[] | undefined;
+}
+
+export class GetFeatureFlagSettingsQuery implements IGetFeatureFlagSettingsQuery {
+
+    constructor(data?: IGetFeatureFlagSettingsQuery) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+    }
+
+    static fromJS(data: any): GetFeatureFlagSettingsQuery {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetFeatureFlagSettingsQuery();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        return data; 
+    }
+
+    clone(): GetFeatureFlagSettingsQuery {
+        const json = this.toJSON();
+        let result = new GetFeatureFlagSettingsQuery();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IGetFeatureFlagSettingsQuery {
+}
+
+export class SaveFeatureFlagSettingsCommand implements ISaveFeatureFlagSettingsCommand {
+    timestamp?: string | undefined;
+    featureFlags?: SaveFeatureFlagSettingsCommandFeatureFlagDto[] | undefined;
+
+    constructor(data?: ISaveFeatureFlagSettingsCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.timestamp = _data["timestamp"];
+            if (Array.isArray(_data["featureFlags"])) {
+                this.featureFlags = [] as any;
+                for (let item of _data["featureFlags"])
+                    this.featureFlags!.push(SaveFeatureFlagSettingsCommandFeatureFlagDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): SaveFeatureFlagSettingsCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new SaveFeatureFlagSettingsCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["timestamp"] = this.timestamp;
+        if (Array.isArray(this.featureFlags)) {
+            data["featureFlags"] = [];
+            for (let item of this.featureFlags)
+                data["featureFlags"].push(item.toJSON());
+        }
+        return data; 
+    }
+
+    clone(): SaveFeatureFlagSettingsCommand {
+        const json = this.toJSON();
+        let result = new SaveFeatureFlagSettingsCommand();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ISaveFeatureFlagSettingsCommand {
+    timestamp?: string | undefined;
+    featureFlags?: SaveFeatureFlagSettingsCommandFeatureFlagDto[] | undefined;
+}
+
+export class SaveFeatureFlagSettingsCommandFeatureFlagDto implements ISaveFeatureFlagSettingsCommandFeatureFlagDto {
+    id!: string;
+    name?: string | undefined;
+    enabledForAll!: boolean;
+    enabledForUsers?: string[] | undefined;
+
+    constructor(data?: ISaveFeatureFlagSettingsCommandFeatureFlagDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.enabledForAll = _data["enabledForAll"];
+            if (Array.isArray(_data["enabledForUsers"])) {
+                this.enabledForUsers = [] as any;
+                for (let item of _data["enabledForUsers"])
+                    this.enabledForUsers!.push(item);
+            }
+        }
+    }
+
+    static fromJS(data: any): SaveFeatureFlagSettingsCommandFeatureFlagDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new SaveFeatureFlagSettingsCommandFeatureFlagDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["enabledForAll"] = this.enabledForAll;
+        if (Array.isArray(this.enabledForUsers)) {
+            data["enabledForUsers"] = [];
+            for (let item of this.enabledForUsers)
+                data["enabledForUsers"].push(item);
+        }
+        return data; 
+    }
+
+    clone(): SaveFeatureFlagSettingsCommandFeatureFlagDto {
+        const json = this.toJSON();
+        let result = new SaveFeatureFlagSettingsCommandFeatureFlagDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ISaveFeatureFlagSettingsCommandFeatureFlagDto {
+    id: string;
+    name?: string | undefined;
+    enabledForAll: boolean;
+    enabledForUsers?: string[] | undefined;
+}
+
+export class GetFeatureFlagSettingsAuditlogQueryResult extends BasePaginatedResult implements IGetFeatureFlagSettingsAuditlogQueryResult {
+    auditlogs?: AuditlogDto[] | undefined;
+
+    constructor(data?: IGetFeatureFlagSettingsAuditlogQueryResult) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            if (Array.isArray(_data["auditlogs"])) {
+                this.auditlogs = [] as any;
+                for (let item of _data["auditlogs"])
+                    this.auditlogs!.push(AuditlogDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): GetFeatureFlagSettingsAuditlogQueryResult {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetFeatureFlagSettingsAuditlogQueryResult();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.auditlogs)) {
+            data["auditlogs"] = [];
+            for (let item of this.auditlogs)
+                data["auditlogs"].push(item.toJSON());
+        }
+        super.toJSON(data);
+        return data; 
+    }
+
+    clone(): GetFeatureFlagSettingsAuditlogQueryResult {
+        const json = this.toJSON();
+        let result = new GetFeatureFlagSettingsAuditlogQueryResult();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IGetFeatureFlagSettingsAuditlogQueryResult extends IBasePaginatedResult {
+    auditlogs?: AuditlogDto[] | undefined;
+}
+
 export class SearchInvoicesQueryResult extends BasePaginatedResult implements ISearchInvoicesQueryResult {
     invoices?: SearchInvoiceDto[] | undefined;
 
@@ -4058,7 +5503,7 @@ export class UpdateInvoiceCommand implements IUpdateInvoiceCommand {
     invoiceDate!: Date;
     paymentTerm!: number;
     orderReference?: string | undefined;
-    invoiceLines?: UpdateInvoiceCommandInvoiceLine[] | undefined;
+    invoiceLines?: UpdateInvoiceCommandInvoiceLineDto[] | undefined;
 
     constructor(data?: IUpdateInvoiceCommand) {
         if (data) {
@@ -4079,7 +5524,7 @@ export class UpdateInvoiceCommand implements IUpdateInvoiceCommand {
             if (Array.isArray(_data["invoiceLines"])) {
                 this.invoiceLines = [] as any;
                 for (let item of _data["invoiceLines"])
-                    this.invoiceLines!.push(UpdateInvoiceCommandInvoiceLine.fromJS(item));
+                    this.invoiceLines!.push(UpdateInvoiceCommandInvoiceLineDto.fromJS(item));
             }
         }
     }
@@ -4120,16 +5565,16 @@ export interface IUpdateInvoiceCommand {
     invoiceDate: Date;
     paymentTerm: number;
     orderReference?: string | undefined;
-    invoiceLines?: UpdateInvoiceCommandInvoiceLine[] | undefined;
+    invoiceLines?: UpdateInvoiceCommandInvoiceLineDto[] | undefined;
 }
 
-export class UpdateInvoiceCommandInvoiceLine implements IUpdateInvoiceCommandInvoiceLine {
+export class UpdateInvoiceCommandInvoiceLineDto implements IUpdateInvoiceCommandInvoiceLineDto {
     id?: string | undefined;
     quantity!: number;
     description?: string | undefined;
     sellingPrice!: number;
 
-    constructor(data?: IUpdateInvoiceCommandInvoiceLine) {
+    constructor(data?: IUpdateInvoiceCommandInvoiceLineDto) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -4147,9 +5592,9 @@ export class UpdateInvoiceCommandInvoiceLine implements IUpdateInvoiceCommandInv
         }
     }
 
-    static fromJS(data: any): UpdateInvoiceCommandInvoiceLine {
+    static fromJS(data: any): UpdateInvoiceCommandInvoiceLineDto {
         data = typeof data === 'object' ? data : {};
-        let result = new UpdateInvoiceCommandInvoiceLine();
+        let result = new UpdateInvoiceCommandInvoiceLineDto();
         result.init(data);
         return result;
     }
@@ -4163,15 +5608,15 @@ export class UpdateInvoiceCommandInvoiceLine implements IUpdateInvoiceCommandInv
         return data; 
     }
 
-    clone(): UpdateInvoiceCommandInvoiceLine {
+    clone(): UpdateInvoiceCommandInvoiceLineDto {
         const json = this.toJSON();
-        let result = new UpdateInvoiceCommandInvoiceLine();
+        let result = new UpdateInvoiceCommandInvoiceLineDto();
         result.init(json);
         return result;
     }
 }
 
-export interface IUpdateInvoiceCommandInvoiceLine {
+export interface IUpdateInvoiceCommandInvoiceLineDto {
     id?: string | undefined;
     quantity: number;
     description?: string | undefined;
@@ -4677,6 +6122,498 @@ property returns the time in UTC; when setting the property, the supplied DateTi
     applicationProperties?: { [key: string]: any; } | undefined;
 }
 
+export class SearchRolesQueryResult extends BasePaginatedResult implements ISearchRolesQueryResult {
+    roles?: SearchRoleDto[] | undefined;
+
+    constructor(data?: ISearchRolesQueryResult) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            if (Array.isArray(_data["roles"])) {
+                this.roles = [] as any;
+                for (let item of _data["roles"])
+                    this.roles!.push(SearchRoleDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): SearchRolesQueryResult {
+        data = typeof data === 'object' ? data : {};
+        let result = new SearchRolesQueryResult();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.roles)) {
+            data["roles"] = [];
+            for (let item of this.roles)
+                data["roles"].push(item.toJSON());
+        }
+        super.toJSON(data);
+        return data; 
+    }
+
+    clone(): SearchRolesQueryResult {
+        const json = this.toJSON();
+        let result = new SearchRolesQueryResult();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ISearchRolesQueryResult extends IBasePaginatedResult {
+    roles?: SearchRoleDto[] | undefined;
+}
+
+export class SearchRoleDto extends SoftDeleteEntityDto implements ISearchRoleDto {
+    name?: string | undefined;
+
+    constructor(data?: ISearchRoleDto) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.name = _data["name"];
+        }
+    }
+
+    static fromJS(data: any): SearchRoleDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new SearchRoleDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        super.toJSON(data);
+        return data; 
+    }
+
+    clone(): SearchRoleDto {
+        const json = this.toJSON();
+        let result = new SearchRoleDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ISearchRoleDto extends ISoftDeleteEntityDto {
+    name?: string | undefined;
+}
+
+export enum SearchRoleOrderByEnum {
+    Name = 0,
+}
+
+export class GetRoleByIdQueryResult implements IGetRoleByIdQueryResult {
+    role?: RoleDto | undefined;
+
+    constructor(data?: IGetRoleByIdQueryResult) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.role = _data["role"] ? RoleDto.fromJS(_data["role"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): GetRoleByIdQueryResult {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetRoleByIdQueryResult();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["role"] = this.role ? this.role.toJSON() : <any>undefined;
+        return data; 
+    }
+
+    clone(): GetRoleByIdQueryResult {
+        const json = this.toJSON();
+        let result = new GetRoleByIdQueryResult();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IGetRoleByIdQueryResult {
+    role?: RoleDto | undefined;
+}
+
+export class RoleDto extends SoftDeleteEntityDto implements IRoleDto {
+    name?: string | undefined;
+
+    constructor(data?: IRoleDto) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.name = _data["name"];
+        }
+    }
+
+    static fromJS(data: any): RoleDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new RoleDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        super.toJSON(data);
+        return data; 
+    }
+
+    clone(): RoleDto {
+        const json = this.toJSON();
+        let result = new RoleDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IRoleDto extends ISoftDeleteEntityDto {
+    name?: string | undefined;
+}
+
+export class CreateRoleResponse implements ICreateRoleResponse {
+    id!: string;
+
+    constructor(data?: ICreateRoleResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+        }
+    }
+
+    static fromJS(data: any): CreateRoleResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateRoleResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        return data; 
+    }
+
+    clone(): CreateRoleResponse {
+        const json = this.toJSON();
+        let result = new CreateRoleResponse();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICreateRoleResponse {
+    id: string;
+}
+
+export class CreateRoleCommand implements ICreateRoleCommand {
+    name?: string | undefined;
+
+    constructor(data?: ICreateRoleCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"];
+        }
+    }
+
+    static fromJS(data: any): CreateRoleCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateRoleCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        return data; 
+    }
+
+    clone(): CreateRoleCommand {
+        const json = this.toJSON();
+        let result = new CreateRoleCommand();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICreateRoleCommand {
+    name?: string | undefined;
+}
+
+export class UpdateRoleCommand implements IUpdateRoleCommand {
+    name?: string | undefined;
+
+    constructor(data?: IUpdateRoleCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"];
+        }
+    }
+
+    static fromJS(data: any): UpdateRoleCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateRoleCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        return data; 
+    }
+
+    clone(): UpdateRoleCommand {
+        const json = this.toJSON();
+        let result = new UpdateRoleCommand();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUpdateRoleCommand {
+    name?: string | undefined;
+}
+
+export class DeleteRoleCommand implements IDeleteRoleCommand {
+
+    constructor(data?: IDeleteRoleCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+    }
+
+    static fromJS(data: any): DeleteRoleCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new DeleteRoleCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        return data; 
+    }
+
+    clone(): DeleteRoleCommand {
+        const json = this.toJSON();
+        let result = new DeleteRoleCommand();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IDeleteRoleCommand {
+}
+
+export class GetRoleAuditlogQueryResult extends BasePaginatedResult implements IGetRoleAuditlogQueryResult {
+    roleId!: string;
+    auditlogs?: AuditlogDto[] | undefined;
+
+    constructor(data?: IGetRoleAuditlogQueryResult) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.roleId = _data["roleId"];
+            if (Array.isArray(_data["auditlogs"])) {
+                this.auditlogs = [] as any;
+                for (let item of _data["auditlogs"])
+                    this.auditlogs!.push(AuditlogDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): GetRoleAuditlogQueryResult {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetRoleAuditlogQueryResult();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["roleId"] = this.roleId;
+        if (Array.isArray(this.auditlogs)) {
+            data["auditlogs"] = [];
+            for (let item of this.auditlogs)
+                data["auditlogs"].push(item.toJSON());
+        }
+        super.toJSON(data);
+        return data; 
+    }
+
+    clone(): GetRoleAuditlogQueryResult {
+        const json = this.toJSON();
+        let result = new GetRoleAuditlogQueryResult();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IGetRoleAuditlogQueryResult extends IBasePaginatedResult {
+    roleId: string;
+    auditlogs?: AuditlogDto[] | undefined;
+}
+
+export class RoleLookupQueryResult extends BasePaginatedResult implements IRoleLookupQueryResult {
+    roles?: RoleLookupDto[] | undefined;
+
+    constructor(data?: IRoleLookupQueryResult) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            if (Array.isArray(_data["roles"])) {
+                this.roles = [] as any;
+                for (let item of _data["roles"])
+                    this.roles!.push(RoleLookupDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): RoleLookupQueryResult {
+        data = typeof data === 'object' ? data : {};
+        let result = new RoleLookupQueryResult();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.roles)) {
+            data["roles"] = [];
+            for (let item of this.roles)
+                data["roles"].push(item.toJSON());
+        }
+        super.toJSON(data);
+        return data; 
+    }
+
+    clone(): RoleLookupQueryResult {
+        const json = this.toJSON();
+        let result = new RoleLookupQueryResult();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IRoleLookupQueryResult extends IBasePaginatedResult {
+    roles?: RoleLookupDto[] | undefined;
+}
+
+export class RoleLookupDto implements IRoleLookupDto {
+    id!: string;
+    name?: string | undefined;
+
+    constructor(data?: IRoleLookupDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+        }
+    }
+
+    static fromJS(data: any): RoleLookupDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new RoleLookupDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        return data; 
+    }
+
+    clone(): RoleLookupDto {
+        const json = this.toJSON();
+        let result = new RoleLookupDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IRoleLookupDto {
+    id: string;
+    name?: string | undefined;
+}
+
+export enum RoleLookupOrderByEnum {
+    Name = 0,
+}
+
 export class SearchUsersQueryResult extends BasePaginatedResult implements ISearchUsersQueryResult {
     users?: SearchUserDto[] | undefined;
 
@@ -4772,181 +6709,6 @@ export interface ISearchUserDto extends ISoftDeleteEntityDto {
 export enum SearchUserOrderByEnum {
     FamilyName = 0,
     Fullname = 1,
-}
-
-export class GetUserByIdQueryResult implements IGetUserByIdQueryResult {
-    user?: UserDto | undefined;
-
-    constructor(data?: IGetUserByIdQueryResult) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.user = _data["user"] ? UserDto.fromJS(_data["user"]) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): GetUserByIdQueryResult {
-        data = typeof data === 'object' ? data : {};
-        let result = new GetUserByIdQueryResult();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["user"] = this.user ? this.user.toJSON() : <any>undefined;
-        return data; 
-    }
-
-    clone(): GetUserByIdQueryResult {
-        const json = this.toJSON();
-        let result = new GetUserByIdQueryResult();
-        result.init(json);
-        return result;
-    }
-}
-
-export interface IGetUserByIdQueryResult {
-    user?: UserDto | undefined;
-}
-
-export class UserDto extends SoftDeleteEntityDto implements IUserDto {
-    fullname?: string | undefined;
-    givenName?: string | undefined;
-    familyName?: string | undefined;
-    middleName?: string | undefined;
-    email?: string | undefined;
-    gender?: GenderEnum | undefined;
-    birthDate?: Date | undefined;
-    zoneInfo?: string | undefined;
-    locale?: string | undefined;
-    userRoles?: UserRoleDto[] | undefined;
-
-    constructor(data?: IUserDto) {
-        super(data);
-    }
-
-    init(_data?: any) {
-        super.init(_data);
-        if (_data) {
-            this.fullname = _data["fullname"];
-            this.givenName = _data["givenName"];
-            this.familyName = _data["familyName"];
-            this.middleName = _data["middleName"];
-            this.email = _data["email"];
-            this.gender = _data["gender"];
-            this.birthDate = _data["birthDate"] ? new Date(_data["birthDate"].toString()) : <any>undefined;
-            this.zoneInfo = _data["zoneInfo"];
-            this.locale = _data["locale"];
-            if (Array.isArray(_data["userRoles"])) {
-                this.userRoles = [] as any;
-                for (let item of _data["userRoles"])
-                    this.userRoles!.push(UserRoleDto.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): UserDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new UserDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["fullname"] = this.fullname;
-        data["givenName"] = this.givenName;
-        data["familyName"] = this.familyName;
-        data["middleName"] = this.middleName;
-        data["email"] = this.email;
-        data["gender"] = this.gender;
-        data["birthDate"] = this.birthDate ? this.birthDate.toISOString() : <any>undefined;
-        data["zoneInfo"] = this.zoneInfo;
-        data["locale"] = this.locale;
-        if (Array.isArray(this.userRoles)) {
-            data["userRoles"] = [];
-            for (let item of this.userRoles)
-                data["userRoles"].push(item.toJSON());
-        }
-        super.toJSON(data);
-        return data; 
-    }
-
-    clone(): UserDto {
-        const json = this.toJSON();
-        let result = new UserDto();
-        result.init(json);
-        return result;
-    }
-}
-
-export interface IUserDto extends ISoftDeleteEntityDto {
-    fullname?: string | undefined;
-    givenName?: string | undefined;
-    familyName?: string | undefined;
-    middleName?: string | undefined;
-    email?: string | undefined;
-    gender?: GenderEnum | undefined;
-    birthDate?: Date | undefined;
-    zoneInfo?: string | undefined;
-    locale?: string | undefined;
-    userRoles?: UserRoleDto[] | undefined;
-}
-
-export enum GenderEnum {
-    Male = 1,
-    Female = 2,
-}
-
-export class UserRoleDto implements IUserRoleDto {
-    roleId!: string;
-
-    constructor(data?: IUserRoleDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.roleId = _data["roleId"];
-        }
-    }
-
-    static fromJS(data: any): UserRoleDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new UserRoleDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["roleId"] = this.roleId;
-        return data; 
-    }
-
-    clone(): UserRoleDto {
-        const json = this.toJSON();
-        let result = new UserRoleDto();
-        result.init(json);
-        return result;
-    }
-}
-
-export interface IUserRoleDto {
-    roleId: string;
 }
 
 export class CreateUserResponse implements ICreateUserResponse {
@@ -5127,7 +6889,7 @@ export class UpdateUserCommand implements IUpdateUserCommand {
     birthDate?: Date | undefined;
     zoneInfo?: string | undefined;
     locale?: string | undefined;
-    userRoles?: UpdateUserCommandUserRole[] | undefined;
+    userRoles?: UpdateUserCommandUserRoleDto[] | undefined;
 
     constructor(data?: IUpdateUserCommand) {
         if (data) {
@@ -5151,7 +6913,7 @@ export class UpdateUserCommand implements IUpdateUserCommand {
             if (Array.isArray(_data["userRoles"])) {
                 this.userRoles = [] as any;
                 for (let item of _data["userRoles"])
-                    this.userRoles!.push(UpdateUserCommandUserRole.fromJS(item));
+                    this.userRoles!.push(UpdateUserCommandUserRoleDto.fromJS(item));
             }
         }
     }
@@ -5198,13 +6960,13 @@ export interface IUpdateUserCommand {
     birthDate?: Date | undefined;
     zoneInfo?: string | undefined;
     locale?: string | undefined;
-    userRoles?: UpdateUserCommandUserRole[] | undefined;
+    userRoles?: UpdateUserCommandUserRoleDto[] | undefined;
 }
 
-export class UpdateUserCommandUserRole implements IUpdateUserCommandUserRole {
+export class UpdateUserCommandUserRoleDto implements IUpdateUserCommandUserRoleDto {
     roleId!: string;
 
-    constructor(data?: IUpdateUserCommandUserRole) {
+    constructor(data?: IUpdateUserCommandUserRoleDto) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -5219,9 +6981,9 @@ export class UpdateUserCommandUserRole implements IUpdateUserCommandUserRole {
         }
     }
 
-    static fromJS(data: any): UpdateUserCommandUserRole {
+    static fromJS(data: any): UpdateUserCommandUserRoleDto {
         data = typeof data === 'object' ? data : {};
-        let result = new UpdateUserCommandUserRole();
+        let result = new UpdateUserCommandUserRoleDto();
         result.init(data);
         return result;
     }
@@ -5232,15 +6994,15 @@ export class UpdateUserCommandUserRole implements IUpdateUserCommandUserRole {
         return data; 
     }
 
-    clone(): UpdateUserCommandUserRole {
+    clone(): UpdateUserCommandUserRoleDto {
         const json = this.toJSON();
-        let result = new UpdateUserCommandUserRole();
+        let result = new UpdateUserCommandUserRoleDto();
         result.init(json);
         return result;
     }
 }
 
-export interface IUpdateUserCommandUserRole {
+export interface IUpdateUserCommandUserRoleDto {
     roleId: string;
 }
 

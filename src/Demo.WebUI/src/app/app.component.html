@@ -1,1 +1,7 @@
+<ng-container *ngIf="isLoading">
+  <div class="spinner-container">
+    <mat-spinner [diameter]="50"></mat-spinner>
+  </div>
+</ng-container>
+
 <router-outlet></router-outlet>

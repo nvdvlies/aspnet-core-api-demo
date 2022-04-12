@@ -12,4 +12,6 @@ export class CurrentUserService {
       this.id = user?.sub;
     });
   }
+
+  public isAuthenticated$ = this.authService.isAuthenticated$;
 }

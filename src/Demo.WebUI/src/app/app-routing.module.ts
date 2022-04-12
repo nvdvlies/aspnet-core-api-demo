@@ -1,13 +1,28 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { Route, RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from '@auth0/auth0-angular';
 import { DefaultTemplateComponent } from '@layout/default-template/default-template.component';
+import { FeatureFlag } from '@shared/enums/feature-flag.enum';
+import { FeatureFlagResolver } from '@shared/resolvers/feature-flag.resolver';
 
-const routes: Routes = [
+export type RouteData = {
+  featureFlag?: keyof typeof FeatureFlag;
+};
+
+export type AppRoute = Route & {
+  data?: RouteData;
+};
+
+export declare type AppRoutes = AppRoute[];
+
+const routes: AppRoutes = [
   {
     path: '',
     component: DefaultTemplateComponent,
     canActivate: [AuthGuard],
+    resolve: {
+      featureFlagsInitialized: FeatureFlagResolver
+    },
     children: [
       {
         path: '',
