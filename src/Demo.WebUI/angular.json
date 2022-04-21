@@ -105,6 +105,7 @@
   },
   "defaultProject": "Demo.WebUI",
   "cli": {
+    "analytics": false,
     "defaultCollection": "@angular-eslint/schematics"
   }
 }

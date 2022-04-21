@@ -19,7 +19,7 @@ export class UserLookupService extends LookupBase<UserLookupDto> {
 
   protected lookupFunction = (ids: string[]) => {
     return this.apiUsersClient
-      .userLookup(UserLookupOrderByEnum.FamilyName, false, 0, 999, undefined, ids)
+      .lookup(UserLookupOrderByEnum.FamilyName, false, 0, 999, undefined, ids)
       .pipe(map((response) => response.users ?? []));
   };
 }
