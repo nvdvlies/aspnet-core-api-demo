@@ -43,13 +43,14 @@ namespace Demo.WebApi.Tests.Controllers.Customers
             };
 
             // Act
-            var response = await _client.CustomersController().CreateAsync(command);
+            var response = await Client.CustomersController().CreateAsync(command);
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.Created);
 
             var content = await response.Content.ReadFromJsonAsync<CreateCustomerResponse>();
-            content.Id.Should().NotBeEmpty();
+            content.Should().NotBeNull();
+            content!.Id.Should().NotBeEmpty();
         }
 
         [Fact]
@@ -62,13 +63,14 @@ namespace Demo.WebApi.Tests.Controllers.Customers
             };
 
             // Act
-            var response = await _client.CustomersController().CreateAsync(command);
+            var response = await Client.CustomersController().CreateAsync(command);
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.Created);
 
             var content = await response.Content.ReadFromJsonAsync<CreateCustomerResponse>();
-            content.Id.Should().NotBeEmpty();
+            content.Should().NotBeNull();
+            content!.Id.Should().NotBeEmpty();
 
             var createdCustomerEntity = await FindExistingEntityAsync<Customer>(x => x.Id == content.Id);
             createdCustomerEntity.Should().NotBeNull();
@@ -84,20 +86,21 @@ namespace Demo.WebApi.Tests.Controllers.Customers
                 Name = "Test"
             };
 
-            Guid idFromEvent = Guid.Empty;
-            using var subscription = _hubConnection.On(nameof(ICustomerEventHub.CustomerCreated), (Guid id, string createdBy) =>
+            var idFromEvent = Guid.Empty;
+            using var subscription = HubConnection.On(nameof(ICustomerEventHub.CustomerCreated), (Guid id, string _) =>
             {
                 idFromEvent = id;
             });
 
             // Act
-            var response = await _client.CustomersController().CreateAsync(command);
+            var response = await Client.CustomersController().CreateAsync(command);
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.Created);
 
             var content = await response.Content.ReadFromJsonAsync<CreateCustomerResponse>();
-            content.Id.Should().NotBeEmpty();
+            content.Should().NotBeNull();
+            content!.Id.Should().NotBeEmpty();
 
             WithRetry(() => idFromEvent.Should().Be(content.Id), 1.Seconds(), 10.Milliseconds(), $"Didnt receive {nameof(ICustomerEventHub.CustomerCreated)} event for created entity");
         }
@@ -125,20 +128,21 @@ namespace Demo.WebApi.Tests.Controllers.Customers
             };
 
             // Act
-            var response = await _client.CustomersController().CreateAsync(command);
+            var response = await Client.CustomersController().CreateAsync(command);
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
 
             var content = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
-            content.Type.Should().Be(nameof(ValidationException));
-            content.Detail.Should().Contain("'Name' must not be empty");
+            content.Should().NotBeNull();
+            content!.Type.Should().Be(nameof(ValidationException));
+            content!.Detail.Should().Contain("'Name' must not be empty");
         }
 
         [Fact]
         public async Task CreateCustomer_When_a_domainentity_validator_throws_a_DomainValidationException_It_should_return_statuscode_BadRequest()
         {
-            var client = _factory
+            var client = Factory
                 .WithWebHostBuilder(builder =>
                 {
                     builder.ConfigureTestServices(services =>
@@ -164,14 +168,15 @@ namespace Demo.WebApi.Tests.Controllers.Customers
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
 
             var content = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
-            content.Type.Should().Be(nameof(DomainValidationException));
-            content.Title.Should().Be("TestMessage");
+            content.Should().NotBeNull();
+            content!.Type.Should().Be(nameof(DomainValidationException));
+            content!.Title.Should().Be("TestMessage");
         }
 
         [Fact]
         public async Task CreateCustomer_When_a_domainentity_hook_throws_a_DomainException_It_should_return_statuscode_BadRequest()
         {
-            var client = _factory
+            var client = Factory
                 .WithWebHostBuilder(builder =>
                 {
                     builder.ConfigureTestServices(services =>
@@ -197,15 +202,16 @@ namespace Demo.WebApi.Tests.Controllers.Customers
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
 
             var content = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
-            content.Type.Should().Be(nameof(DomainException));
-            content.Title.Should().Be("TestMessage");
+            content.Should().NotBeNull();
+            content!.Type.Should().Be(nameof(DomainException));
+            content!.Title.Should().Be("TestMessage");
         }
 
         [Fact]
         public async Task CreateCustomer_When_an_unhandled_exception_occurs_It_should_return_statuscode_InternalServerError()
         {
             // Arrange
-            var client = _factory
+            var client = Factory
                 .WithWebHostBuilder(builder =>
                 {
                     builder.ConfigureTestServices(services =>
@@ -231,15 +237,16 @@ namespace Demo.WebApi.Tests.Controllers.Customers
             response.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
 
             var content = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
-            content.Type.Should().Be(nameof(ArgumentException));
-            content.Title.Should().Be("TestException");
+            content.Should().NotBeNull();
+            content!.Type.Should().Be(nameof(ArgumentException));
+            content!.Title.Should().Be("TestException");
         }
 
         [Fact]
         public async Task CreateCustomer_When_request_is_not_authenticated_It_should_return_statuscode_Unauthorized()
         {
             // Arrange
-            var client = _factory
+            var client = Factory
                 .WithWebHostBuilder(builder =>
                 {
                     builder.ConfigureTestServices(services =>

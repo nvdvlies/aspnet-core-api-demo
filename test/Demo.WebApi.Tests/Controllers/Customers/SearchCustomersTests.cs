@@ -30,13 +30,14 @@ namespace Demo.WebApi.Tests.Controllers.Customers
             var query = new SearchCustomersQuery();
 
             // Act
-            var response = await _client.CustomersController().SearchAsync(query);
+            var response = await Client.CustomersController().SearchAsync(query);
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
 
             var content = await response.Content.ReadFromJsonAsync<SearchCustomersQueryResult>();
-            content.Customers.Should().BeEmpty();
+            content.Should().NotBeNull();
+            content!.Customers.Should().BeEmpty();
 
             content.PageIndex.Should().Be(query.PageIndex);
             content.PageSize.Should().Be(query.PageSize);
@@ -58,13 +59,14 @@ namespace Demo.WebApi.Tests.Controllers.Customers
             var query = new SearchCustomersQuery();
 
             // Act
-            var response = await _client.CustomersController().SearchAsync(query);
+            var response = await Client.CustomersController().SearchAsync(query);
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
 
             var content = await response.Content.ReadFromJsonAsync<SearchCustomersQueryResult>();
-            content.Customers.Should().NotBeEmpty();
+            content.Should().NotBeNull();
+            content!.Customers.Should().NotBeEmpty();
             content.Customers.Should().HaveCount(1);
 
             content.PageIndex.Should().Be(query.PageIndex);
@@ -97,13 +99,14 @@ namespace Demo.WebApi.Tests.Controllers.Customers
             };
 
             // Act
-            var response = await _client.CustomersController().SearchAsync(query);
+            var response = await Client.CustomersController().SearchAsync(query);
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
 
             var content = await response.Content.ReadFromJsonAsync<SearchCustomersQueryResult>();
-            content.Customers.Should().NotBeEmpty();
+            content.Should().NotBeNull();
+            content!.Customers.Should().NotBeEmpty();
             content.Customers.Should().HaveCount(2);
 
             content.PageIndex.Should().Be(query.PageIndex);
@@ -127,7 +130,7 @@ namespace Demo.WebApi.Tests.Controllers.Customers
             await ResetDatabaseAsync();
 
             var numberOfExistingCustomers = 18;
-            var existingCustomers = _autoFixture.CreateMany<Customer>(numberOfExistingCustomers);
+            var existingCustomers = AutoFixture.CreateMany<Customer>(numberOfExistingCustomers);
             await AddAsExistingEntitiesAsync(existingCustomers);
 
             var query = new SearchCustomersQuery
@@ -136,13 +139,14 @@ namespace Demo.WebApi.Tests.Controllers.Customers
             };
 
             // Act
-            var response = await _client.CustomersController().SearchAsync(query);
+            var response = await Client.CustomersController().SearchAsync(query);
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
 
             var content = await response.Content.ReadFromJsonAsync<SearchCustomersQueryResult>();
-            content.Customers.Should().NotBeEmpty();
+            content.Should().NotBeNull();
+            content!.Customers.Should().NotBeEmpty();
             content.Customers.Should().HaveCount(query.PageSize);
 
             content.PageIndex.Should().Be(query.PageIndex);
@@ -161,7 +165,7 @@ namespace Demo.WebApi.Tests.Controllers.Customers
 
             var numberOfExistingCustomers = 18;
 
-            var existingCustomers = _autoFixture.CreateMany<Customer>(numberOfExistingCustomers);
+            var existingCustomers = AutoFixture.CreateMany<Customer>(numberOfExistingCustomers);
             await AddAsExistingEntitiesAsync(existingCustomers);
 
             var query = new SearchCustomersQuery
@@ -171,13 +175,14 @@ namespace Demo.WebApi.Tests.Controllers.Customers
             };
 
             // Act
-            var response = await _client.CustomersController().SearchAsync(query);
+            var response = await Client.CustomersController().SearchAsync(query);
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
 
             var content = await response.Content.ReadFromJsonAsync<SearchCustomersQueryResult>();
-            content.Customers.Should().NotBeEmpty();
+            content.Should().NotBeNull();
+            content!.Customers.Should().NotBeEmpty();
             content.Customers.Should().HaveCount(8);
 
             content.PageIndex.Should().Be(query.PageIndex);
@@ -195,7 +200,7 @@ namespace Demo.WebApi.Tests.Controllers.Customers
             await ResetDatabaseAsync();
 
             var numberOfExistingCustomers = 28;
-            var existingCustomers = _autoFixture.CreateMany<Customer>(numberOfExistingCustomers);
+            var existingCustomers = AutoFixture.CreateMany<Customer>(numberOfExistingCustomers);
             await AddAsExistingEntitiesAsync(existingCustomers);
 
             var query = new SearchCustomersQuery
@@ -205,13 +210,14 @@ namespace Demo.WebApi.Tests.Controllers.Customers
             };
 
             // Act
-            var response = await _client.CustomersController().SearchAsync(query);
+            var response = await Client.CustomersController().SearchAsync(query);
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
 
             var content = await response.Content.ReadFromJsonAsync<SearchCustomersQueryResult>();
-            content.Customers.Should().NotBeEmpty();
+            content.Should().NotBeNull();
+            content!.Customers.Should().NotBeEmpty();
             content.Customers.Should().HaveCount(10);
 
             content.PageIndex.Should().Be(query.PageIndex);
@@ -241,13 +247,14 @@ namespace Demo.WebApi.Tests.Controllers.Customers
             };
 
             // Act
-            var response = await _client.CustomersController().SearchAsync(query);
+            var response = await Client.CustomersController().SearchAsync(query);
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
 
             var content = await response.Content.ReadFromJsonAsync<SearchCustomersQueryResult>();
-            content.Customers.Should().NotBeEmpty();
+            content.Should().NotBeNull();
+            content!.Customers.Should().NotBeEmpty();
             content.Customers.Should().HaveCount(2);
 
             content.Customers.First().Id.Should().Be(existingCustomer2.Id);
@@ -273,13 +280,14 @@ namespace Demo.WebApi.Tests.Controllers.Customers
             };
 
             // Act
-            var response = await _client.CustomersController().SearchAsync(query);
+            var response = await Client.CustomersController().SearchAsync(query);
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
 
             var content = await response.Content.ReadFromJsonAsync<SearchCustomersQueryResult>();
-            content.Customers.Should().NotBeEmpty();
+            content.Should().NotBeNull();
+            content!.Customers.Should().NotBeEmpty();
             content.Customers.Should().HaveCount(2);
 
             content.Customers.First().Id.Should().Be(existingCustomer1.Id);
@@ -305,13 +313,14 @@ namespace Demo.WebApi.Tests.Controllers.Customers
             };
 
             // Act
-            var response = await _client.CustomersController().SearchAsync(query);
+            var response = await Client.CustomersController().SearchAsync(query);
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
 
             var content = await response.Content.ReadFromJsonAsync<SearchCustomersQueryResult>();
-            content.Customers.Should().NotBeEmpty();
+            content.Should().NotBeNull();
+            content!.Customers.Should().NotBeEmpty();
             content.Customers.Should().HaveCount(2);
 
             content.Customers.First().Id.Should().Be(existingCustomer2.Id);
@@ -337,13 +346,14 @@ namespace Demo.WebApi.Tests.Controllers.Customers
             };
 
             // Act
-            var response = await _client.CustomersController().SearchAsync(query);
+            var response = await Client.CustomersController().SearchAsync(query);
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
 
             var content = await response.Content.ReadFromJsonAsync<SearchCustomersQueryResult>();
-            content.Customers.Should().NotBeEmpty();
+            content.Should().NotBeNull();
+            content!.Customers.Should().NotBeEmpty();
             content.Customers.Should().HaveCount(2);
 
             content.Customers.First().Id.Should().Be(existingCustomer1.Id);
@@ -368,13 +378,14 @@ namespace Demo.WebApi.Tests.Controllers.Customers
             };
 
             // Act
-            var response = await _client.CustomersController().SearchAsync(query);
+            var response = await Client.CustomersController().SearchAsync(query);
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
 
             var content = await response.Content.ReadFromJsonAsync<SearchCustomersQueryResult>();
-            content.Customers.Should().NotBeEmpty();
+            content.Should().NotBeNull();
+            content!.Customers.Should().NotBeEmpty();
             content.Customers.Should().HaveCount(1);
 
             content.Customers.First().Id.Should().Be(existingCustomer1.Id);

@@ -21,30 +21,26 @@ namespace Demo.WebApi.Tests.Helpers
 
         public async Task SendAsync(IMessage message, CancellationToken cancellationToken)
         {
-            using (var scope = _serviceProvider.CreateScope())
-            {
-                var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+            using var scope = _serviceProvider.CreateScope();
+            var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
 
-                var eventGridEvent = message.ToServiceBusMessage();
-                var message2 = eventGridEvent.ToMessage();
+            var eventGridEvent = message.ToServiceBusMessage();
+            var message2 = eventGridEvent.ToMessage();
 
-                await mediator.Send(message2, cancellationToken);
-            }
+            await mediator.Send(message2, cancellationToken);
         }
 
         public async Task SendAsync(IEnumerable<IMessage> messages, CancellationToken cancellationToken)
         {
-            using (var scope = _serviceProvider.CreateScope())
+            using var scope = _serviceProvider.CreateScope();
+            var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+
+            foreach (var message in messages)
             {
-                var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+                var eventGridEvent = message.ToServiceBusMessage();
+                var message2 = eventGridEvent.ToMessage();
 
-                foreach (var message in messages)
-                {
-                    var eventGridEvent = message.ToServiceBusMessage();
-                    var message2 = eventGridEvent.ToMessage();
-
-                    await mediator.Send(message2, cancellationToken);
-                }
+                await mediator.Send(message2, cancellationToken);
             }
         }
     }

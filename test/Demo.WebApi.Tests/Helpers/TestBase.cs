@@ -19,19 +19,19 @@ namespace Demo.WebApi.Tests.Helpers
     {
         private readonly SharedFixture _fixture;
 
-        protected readonly CustomWebApplicationFactory _factory;
-        protected readonly HttpClient _client;
-        protected readonly HubConnection _hubConnection;
-        protected readonly Fixture _autoFixture;
+        protected readonly CustomWebApplicationFactory Factory;
+        protected readonly HttpClient Client;
+        protected readonly HubConnection HubConnection;
+        protected readonly Fixture AutoFixture;
 
         public TestBase(SharedFixture fixture)
         {
             _fixture = fixture;
 
-            _factory = _fixture.Factory;
-            _client = _fixture.Client;
-            _hubConnection = _fixture.HubConnection;
-            _autoFixture = AutoFixtureFactory.CreateAutofixtureWithDefaultConfiguration();
+            Factory = _fixture.Factory;
+            Client = _fixture.Client;
+            HubConnection = _fixture.HubConnection;
+            AutoFixture = AutoFixtureFactory.CreateAutofixtureWithDefaultConfiguration();
 
             ResetDatabaseAsync().Wait();
         }
@@ -46,7 +46,7 @@ namespace Demo.WebApi.Tests.Helpers
         protected async Task AddAsExistingEntityAsync<TEntity>(TEntity entity) where TEntity : class
         {
             using var scope = _fixture.Factory.Services.CreateScope();
-            using var applicationDbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+            await using var applicationDbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
             applicationDbContext.Set<TEntity>().Add(entity);
             await applicationDbContext.SaveChangesAsync();
         }
@@ -54,7 +54,7 @@ namespace Demo.WebApi.Tests.Helpers
         protected async Task AddAsExistingEntitiesAsync<TEntity>(IEnumerable<TEntity> entities) where TEntity : class
         {
             using var scope = _fixture.Factory.Services.CreateScope();
-            using var applicationDbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+            await using var applicationDbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
             applicationDbContext.Set<TEntity>().AddRange(entities);
             await applicationDbContext.SaveChangesAsync();
         }
@@ -67,7 +67,7 @@ namespace Demo.WebApi.Tests.Helpers
         protected async Task<IEnumerable<TEntity>> FindExistingEntitiesAsync<TEntity>(Expression<Func<TEntity, bool>> predicate) where TEntity : class
         {
             using var scope = _fixture.Factory.Services.CreateScope();
-            using var applicationDbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+            await using var applicationDbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
             return await applicationDbContext
                 .Set<TEntity>()
                 .AsQueryable()

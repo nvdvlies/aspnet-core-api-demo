@@ -28,13 +28,14 @@ namespace Demo.WebApi.Tests.Controllers.Customers
             await AddAsExistingEntityAsync(existingCustomer);
 
             // Act
-            var response = await _client.CustomersController().GetById(existingCustomer.Id);
+            var response = await Client.CustomersController().GetById(existingCustomer.Id);
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
 
             var content = await response.Content.ReadFromJsonAsync<GetCustomerByIdQueryResult>();
-            content.Customer.Should().NotBeNull();
+            content.Should().NotBeNull();
+            content!.Customer.Should().NotBeNull();
             content.Customer.Id.Should().Be(existingCustomer.Id);
             content.Customer.Name.Should().Be(existingCustomer.Name);
         }
@@ -48,7 +49,7 @@ namespace Demo.WebApi.Tests.Controllers.Customers
             var customerId = Guid.NewGuid();
 
             // Act
-            var response = await _client.CustomersController().GetById(customerId);
+            var response = await Client.CustomersController().GetById(customerId);
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.NotFound);

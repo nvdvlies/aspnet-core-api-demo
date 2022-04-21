@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Demo.WebApi.Tests.Helpers
 {
-    internal class AutoFixtureFactory
+    internal static class AutoFixtureFactory
     {
         public static Fixture CreateAutofixtureWithDefaultConfiguration()
         {
