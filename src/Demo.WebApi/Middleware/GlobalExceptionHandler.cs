@@ -33,7 +33,7 @@ namespace Demo.WebApi.Middleware
                     Status = (int)statusCode,
                     Title = exception.Message,
                     Detail = includeDetailsInResponse ? exception.ToString() : null,
-                    Type = exception.GetType().Name ?? string.Empty
+                    Type = exception.GetType().Name
                 };
 
                 switch (exception)

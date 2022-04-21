@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System;
+using Microsoft.AspNetCore.Authorization;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -13,7 +14,7 @@ namespace Demo.WebApi.Auth
                 return Task.CompletedTask;
             }
 
-            var scopes = context.User.FindFirst(c => c.Type == "scope" && c.Issuer == requirement.Issuer).Value.Split(' ');
+            var scopes = context.User.FindFirst(c => c.Type == "scope" && c.Issuer == requirement.Issuer)?.Value.Split(' ') ?? Array.Empty<string>();
 
             if (scopes.Any(s => s == requirement.Role))
             {

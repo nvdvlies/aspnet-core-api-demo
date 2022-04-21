@@ -10,7 +10,7 @@ namespace Demo.WebApi.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [Authorize(nameof(Policies.User))]
-    [EnableCors()]
+    [EnableCors]
     public abstract class ApiControllerBase : ControllerBase
     {
         private IMediator _mediator;

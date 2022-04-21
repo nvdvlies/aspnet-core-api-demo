@@ -19,7 +19,7 @@ namespace Demo.WebApi.Helpers
             {
                 logger.LogInformation("Retrieving pending database migrations.");
 
-                var pendingMigrations = appContext.Database.GetPendingMigrations();
+                var pendingMigrations = appContext.Database.GetPendingMigrations().ToList();
 
                 if (pendingMigrations.Any())
                 {

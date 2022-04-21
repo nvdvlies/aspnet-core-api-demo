@@ -9,20 +9,17 @@ namespace Demo.WebApi.Services
 {
     public class CurrentUserService : ICurrentUser
     {
-        private readonly Guid _id;
-        private readonly string _externalId;
-
         public CurrentUserService(
             IHttpContextAccessor httpContextAccessor,
             IUserIdProvider userIdProvider)
         {
-            _externalId = httpContextAccessor.HttpContext.User?.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
-            _id = userIdProvider.Get(ExternalId);
+            ExternalId = httpContextAccessor.HttpContext?.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+            Id = userIdProvider.Get(ExternalId);
         }
 
-        public Guid Id => _id;
+        public Guid Id { get; }
 
-        public string ExternalId => _externalId;
+        public string ExternalId { get; }
 
         public TimeZoneInfo TimeZone => TimeZoneInfo.FindSystemTimeZoneById("W. Europe Standard Time"); // linux: Europe/Amsterdam
 

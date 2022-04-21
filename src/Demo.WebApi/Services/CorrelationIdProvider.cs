@@ -18,7 +18,7 @@ namespace Demo.WebApi.Services
             get
             {
                 var operation = _httpContextAccessor.HttpContext?.Features.Get<RequestTelemetry>()?.Context?.Operation;
-                return !string.IsNullOrEmpty(operation.ParentId) ? operation.ParentId : operation.Id;
+                return !string.IsNullOrEmpty(operation?.ParentId) ? operation.ParentId : operation!.Id;
             }
         }
     }
