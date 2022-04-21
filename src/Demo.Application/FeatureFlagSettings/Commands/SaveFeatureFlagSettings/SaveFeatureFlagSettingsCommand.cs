@@ -8,6 +8,6 @@ namespace Demo.Application.FeatureFlagSettings.Commands.SaveFeatureFlagSettings
     public class SaveFeatureFlagSettingsCommand : ICommand, IRequest<Unit>
     {
         public byte[] Timestamp { get; set; }
-        public List<SaveFeatureFlagSettingsCommandFeatureFlagDto> FeatureFlags { get; set; }
+        public SaveFeatureFlagSettingsCommandSettingsDto Settings { get; set; }
     }
 }

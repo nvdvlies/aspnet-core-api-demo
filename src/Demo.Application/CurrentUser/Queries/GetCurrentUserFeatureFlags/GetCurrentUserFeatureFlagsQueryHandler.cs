@@ -25,7 +25,7 @@ namespace Demo.Application.CurrentUser.Queries.GetCurrentUserFeatureFlags
         {
             var featureFlagSettings = await _featureFlagSettingsProvider.GetAsync(cancellationToken);
 
-            var userFeatureflags = featureFlagSettings.FeatureFlags
+            var userFeatureflags = featureFlagSettings.Settings.FeatureFlags
                     .Where(x => x.EnabledForAll || x.EnabledForUsers.Contains(_currentUser.Id))
                     .Select(x => x.Name)
                     .ToList();

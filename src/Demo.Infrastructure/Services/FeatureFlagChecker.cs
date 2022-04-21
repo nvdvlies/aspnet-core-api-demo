@@ -23,7 +23,7 @@ namespace Demo.Infrastructure.Services
         public async Task<bool> IsEnabledAsync(string name, CancellationToken cancellationToken = default)
         {
             var featureFlagSettings = await _featureFlagSettingsProvider.GetAsync(cancellationToken);
-            return featureFlagSettings.FeatureFlags.Any(x => x.Name == name && (x.EnabledForAll || x.EnabledForUsers.Contains(_currentUser.Id)));
+            return featureFlagSettings.Settings.FeatureFlags.Any(x => x.Name == name && (x.EnabledForAll || x.EnabledForUsers.Contains(_currentUser.Id)));
         }
     }
 }

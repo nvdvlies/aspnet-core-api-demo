@@ -1,5 +1,5 @@
 using Demo.Domain.Shared.Entities;
-using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Demo.Domain.FeatureFlagSettings
 {
@@ -7,9 +7,10 @@ namespace Demo.Domain.FeatureFlagSettings
     {
         public FeatureFlagSettings()
         {
-            FeatureFlags = new List<FeatureFlag>();
+            Settings = new FeatureFlagSettingsSettings();
         }
 
-        public List<FeatureFlag> FeatureFlags { get; set; }
+        [JsonInclude]
+        public FeatureFlagSettingsSettings Settings { get; internal set; }
     }
 }

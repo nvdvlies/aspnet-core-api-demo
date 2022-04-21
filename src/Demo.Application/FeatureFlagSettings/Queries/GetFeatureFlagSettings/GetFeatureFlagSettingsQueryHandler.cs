@@ -23,13 +23,13 @@ namespace Demo.Application.FeatureFlagSettings.Queries.GetFeatureFlagSettings
 
         public async Task<GetFeatureFlagSettingsQueryResult> Handle(GetFeatureFlagSettingsQuery request, CancellationToken cancellationToken)
         {
-            var FeatureFlagSettings = await _featureFlagSettingsProvider.GetAsync(cancellationToken);
+            var featureFlagSettings = await _featureFlagSettingsProvider.GetAsync(cancellationToken);
 
-            var FeatureFlagSettingsDto = _mapper.Map<FeatureFlagSettingsDto>(FeatureFlagSettings);
+            var featureFlagSettingsDto = _mapper.Map<FeatureFlagSettingsDto>(featureFlagSettings);
 
             return new GetFeatureFlagSettingsQueryResult
             {
-                FeatureFlagSettings = FeatureFlagSettingsDto
+                FeatureFlagSettings = featureFlagSettingsDto
             };
         }
     }

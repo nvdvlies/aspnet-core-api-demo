@@ -13,16 +13,13 @@ namespace Demo.Infrastructure.Persistence.Configuration
             builder.ToTable(nameof(FeatureFlagSettings))
                 .HasKey(x => x.Id);
 
-            builder.Property(x => x.FeatureFlags)
+            builder.Property(x => x.Settings)
                 .HasConversion(
                     x => JsonSerializer.Serialize(x, new JsonSerializerOptions
                     {
                         WriteIndented = true
                     }),
-                    x => JsonSerializer.Deserialize<List<FeatureFlag>>(x, new JsonSerializerOptions
-                    {
-
-                    })
+                    x => JsonSerializer.Deserialize<FeatureFlagSettingsSettings>(x, new JsonSerializerOptions())
                 );
 
             builder.Property(p => p.Timestamp).IsRowVersion();

@@ -14,7 +14,9 @@ namespace Demo.Application.FeatureFlagSettings.Commands.SaveFeatureFlagSettings
                 .ForMember(x => x.LastModifiedOn, opt => opt.Ignore())
                 .ForMember(x => x.Id, opt => opt.Ignore());
 
-            CreateMap<SaveFeatureFlagSettingsCommandFeatureFlagDto, Domain.FeatureFlagSettings.FeatureFlag>()
+            CreateMap<SaveFeatureFlagSettingsCommandSettingsDto, Domain.FeatureFlagSettings.FeatureFlagSettingsSettings>();
+            
+            CreateMap<SaveFeatureFlagSettingsCommandSettingsFeatureFlagDto, Domain.FeatureFlagSettings.FeatureFlag>()
                 .ForMember(x => x.Timestamp, opt => opt.Ignore());
         }
     }

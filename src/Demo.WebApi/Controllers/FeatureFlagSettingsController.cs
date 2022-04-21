@@ -21,7 +21,7 @@ namespace Demo.WebApi.Controllers
         }
 
         [Authorize(nameof(Policies.Admin))]
-        [HttpPut("{id}")]
+        [HttpPut]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
@@ -32,7 +32,7 @@ namespace Demo.WebApi.Controllers
             return NoContent();
         }
 
-        [HttpGet("{id}/Auditlog")]
+        [HttpGet("Auditlog")]
         [ProducesResponseType(typeof(GetFeatureFlagSettingsAuditlogQueryResult), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
         public async Task<ActionResult<GetFeatureFlagSettingsAuditlogQueryResult>> GetFeatureFlagSettingsAuditlog([FromQuery] GetFeatureFlagSettingsAuditlogQuery query, CancellationToken cancellationToken)

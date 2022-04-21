@@ -21,8 +21,8 @@ namespace Demo.Infrastructure.Auditlogging
 
         protected override List<AuditlogItem> AuditlogItems(FeatureFlagSettings current, FeatureFlagSettings previous) =>
             new AuditlogBuilder<FeatureFlagSettings>()
-                .WithProperty(c => c.FeatureFlags.Select(x => x.Name).ToList(), nameof(FeatureFlagSettings.FeatureFlags))
-                .WithChildEntityCollection(c => c.FeatureFlags, c => c.Name, new AuditlogBuilder<FeatureFlag>()
+                .WithProperty(c => c.Settings.FeatureFlags.Select(x => x.Name).ToList(), nameof(FeatureFlagSettings.Settings.FeatureFlags))
+                .WithChildEntityCollection(c => c.Settings.FeatureFlags, c => c.Name, new AuditlogBuilder<FeatureFlag>()
                     .WithProperty(c => c.EnabledForAll)
                     .WithProperty(c => c.EnabledForUsers)
                 )

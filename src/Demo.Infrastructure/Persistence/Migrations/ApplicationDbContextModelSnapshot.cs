@@ -216,7 +216,7 @@ namespace Demo.Infrastructure.Persistence.Migrations
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("FeatureFlags")
+                    b.Property<string>("Settings")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("LastModifiedBy")

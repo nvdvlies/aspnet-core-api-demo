@@ -8,6 +8,7 @@ namespace Demo.Application.FeatureFlagSettings.Queries.GetFeatureFlagSettings
         public GetFeatureFlagSettingsMappingProfile()
         {
             CreateMap<Domain.FeatureFlagSettings.FeatureFlagSettings, FeatureFlagSettingsDto>();
+            CreateMap<Domain.FeatureFlagSettings.FeatureFlagSettingsSettings, FeatureFlagSettingsSettingsDto>();
             CreateMap<Domain.FeatureFlagSettings.FeatureFlag, FeatureFlagDto>();
         }
     }
