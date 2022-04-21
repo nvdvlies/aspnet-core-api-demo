@@ -349,6 +349,8 @@ MigrationBackup/
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
 
+.idea/*
+
 # Custom
 /tools/Demo.Scaffold.Tool/appsettings.user.json
 src/Demo.WebUI/package-lock.json
