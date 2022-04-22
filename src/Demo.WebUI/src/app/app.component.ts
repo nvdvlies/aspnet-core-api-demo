@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '@auth0/auth0-angular';
+import { ApplicationSettingsService } from '@shared/services/application-settings.service';
 import { FeatureFlagService } from '@shared/services/feature-flag.service';
 import { combineLatest } from 'rxjs';
 
@@ -13,10 +14,16 @@ export class AppComponent implements OnInit {
 
   constructor(
     public readonly authService: AuthService,
-    public readonly featureFlagService: FeatureFlagService
+    public readonly featureFlagService: FeatureFlagService,
+    public readonly applicationSettingsService: ApplicationSettingsService
   ) {
-    combineLatest([this.featureFlagService.isInitialized$]).subscribe(
-      ([featureFlagsAreInitialized]) => (this.resolversAreInitialized = featureFlagsAreInitialized)
+    combineLatest([
+      this.featureFlagService.isInitialized$,
+      this.applicationSettingsService.isInitialized$
+    ]).subscribe(
+      ([featureFlagsAreInitialized, applicationSettingsAreInitialized]) =>
+        (this.resolversAreInitialized =
+          featureFlagsAreInitialized && applicationSettingsAreInitialized)
     );
   }
 

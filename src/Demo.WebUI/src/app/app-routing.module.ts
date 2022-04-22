@@ -3,6 +3,7 @@ import { Route, RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from '@auth0/auth0-angular';
 import { DefaultTemplateComponent } from '@layout/default-template/default-template.component';
 import { FeatureFlag } from '@shared/enums/feature-flag.enum';
+import { ApplicationSettingsResolver } from '@shared/resolvers/application-settings.resolver';
 import { FeatureFlagResolver } from '@shared/resolvers/feature-flag.resolver';
 
 export type RouteData = {
@@ -21,7 +22,8 @@ const routes: AppRoutes = [
     component: DefaultTemplateComponent,
     canActivate: [AuthGuard],
     resolve: {
-      featureFlagsInitialized: FeatureFlagResolver
+      featureFlagsInitialized: FeatureFlagResolver,
+      applicationSettingsInitialized: ApplicationSettingsResolver
     },
     children: [
       {
