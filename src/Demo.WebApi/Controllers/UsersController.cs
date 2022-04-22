@@ -15,9 +15,9 @@ using System.Threading.Tasks;
 
 namespace Demo.WebApi.Controllers
 {
-    [Authorize(nameof(Policies.Admin))]
     public class UsersController : ApiControllerBase
     {
+        [Authorize(nameof(Policies.Admin))]
         [HttpGet]
         [ProducesResponseType(typeof(SearchUsersQueryResult), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
@@ -26,6 +26,7 @@ namespace Demo.WebApi.Controllers
             return await Mediator.Send(query, cancellationToken);
         }
 
+        [Authorize(nameof(Policies.Admin))]
         [HttpGet("{id}", Name = nameof(GetUserById))]
         [ProducesResponseType(typeof(GetUserByIdQueryResult), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
@@ -43,6 +44,7 @@ namespace Demo.WebApi.Controllers
             return Ok(result);
         }
 
+        [Authorize(nameof(Policies.Admin))]
         [HttpPost]
         [ProducesResponseType(typeof(CreateUserResponse), (int)HttpStatusCode.Created)]
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
@@ -54,6 +56,7 @@ namespace Demo.WebApi.Controllers
             return CreatedAtRoute(routeName: nameof(GetUserById), routeValues: new { id = result.Id }, result);
         }
 
+        [Authorize(nameof(Policies.Admin))]
         [HttpPut("{id}")]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
@@ -67,6 +70,7 @@ namespace Demo.WebApi.Controllers
             return NoContent();
         }
 
+        [Authorize(nameof(Policies.Admin))]
         [HttpDelete("{id}")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
@@ -79,8 +83,8 @@ namespace Demo.WebApi.Controllers
 
             return Ok();
         }
-
-
+        
+        [Authorize(nameof(Policies.Admin))]
         [HttpGet("{id}/Auditlog")]
         [ProducesResponseType(typeof(GetUserAuditlogQueryResult), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
