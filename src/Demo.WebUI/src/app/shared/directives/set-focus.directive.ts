@@ -2,22 +2,22 @@ import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 import { AfterContentInit, Directive, ElementRef, Input } from '@angular/core';
 
 @Directive({
-  selector: '[appFocus]'
+  selector: '[appSetFocus]'
 })
-export class FocusDirective implements AfterContentInit {
+export class SetFocusDirective implements AfterContentInit {
   @Input()
-  get appFocus() {
-    return this._appFocus;
+  get appSetFocus() {
+    return this._appSetFocus;
   }
-  set appFocus(value: BooleanInput) {
-    this._appFocus = coerceBooleanProperty(value);
+  set appSetFocus(value: BooleanInput) {
+    this._appSetFocus = coerceBooleanProperty(value);
   }
-  private _appFocus = false;
+  private _appSetFocus = false;
 
   public constructor(private elementRef: ElementRef) {}
 
   public ngAfterContentInit() {
-    if (this.appFocus) {
+    if (this.appSetFocus) {
       setTimeout(() => {
         if (this.elementRef.nativeElement.tagName === 'INPUT') {
           this.elementRef.nativeElement.focus();

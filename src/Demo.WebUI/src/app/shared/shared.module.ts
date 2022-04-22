@@ -9,7 +9,7 @@ import { PageHeaderComponent } from '@shared/components/page-header/page-header.
 import { DiscardUnsavedChangesModalComponent } from '@shared/modals/discard-unsaved-changes-modal/discard-unsaved-changes-modal.component';
 import { ProblemDetailsComponent } from '@shared/components/problem-details/problem-details.component';
 import { DomainEntityErrorMessageDirective } from '@shared/directives/domain-entity-error-message.directive';
-import { FocusDirective } from '@shared/directives/focus.directive';
+import { SetFocusDirective } from '@shared/directives/set-focus.directive';
 import { CustomerIdToNamePipe } from '@shared/pipes/customer-id-to-name.pipe';
 import { CurrencyFormFieldControlComponent } from '@shared/components/currency-form-field-control/currency-form-field-control.component';
 import { CustomerAutocompleteFormFieldControlComponent } from '@shared/components/customer-autocomplete-form-field-control/customer-autocomplete-form-field-control.component';
@@ -29,7 +29,7 @@ import { SpinnerComponent } from './components/spinner/spinner.component';
     DiscardUnsavedChangesModalComponent,
     ProblemDetailsComponent,
     DomainEntityErrorMessageDirective,
-    FocusDirective,
+    SetFocusDirective,
     CustomerAutocompleteFormFieldControlComponent,
     CustomerIdToNamePipe,
     UserIdToNamePipe,
@@ -53,7 +53,7 @@ import { SpinnerComponent } from './components/spinner/spinner.component';
     DiscardUnsavedChangesModalComponent,
     ProblemDetailsComponent,
     DomainEntityErrorMessageDirective,
-    FocusDirective,
+    SetFocusDirective,
     CustomerAutocompleteFormFieldControlComponent,
     CustomerIdToNamePipe,
     UserIdToNamePipe,
