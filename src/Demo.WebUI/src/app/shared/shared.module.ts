@@ -19,6 +19,7 @@ import { ConfirmDeleteModalComponent } from '@shared/modals/confirm-delete-modal
 import { MessageComponent } from './components/message/message.component';
 import { IfFeatureFlagEnabledDirective } from './directives/if-feature-flag-enabled.directive';
 import { IfFeatureFlagDisabledDirective } from './directives/if-feature-flag-disabled.directive';
+import { SpinnerComponent } from './components/spinner/spinner.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import { IfFeatureFlagDisabledDirective } from './directives/if-feature-flag-dis
     ConfirmDeleteModalComponent,
     MessageComponent,
     IfFeatureFlagEnabledDirective,
-    IfFeatureFlagDisabledDirective
+    IfFeatureFlagDisabledDirective,
+    SpinnerComponent
   ],
   imports: [CommonModule, ReactiveFormsModule, FormsModule, MaterialModule, FlexLayoutModule],
   exports: [
@@ -60,7 +62,8 @@ import { IfFeatureFlagDisabledDirective } from './directives/if-feature-flag-dis
     ConfirmDeleteModalComponent,
     MessageComponent,
     IfFeatureFlagEnabledDirective,
-    IfFeatureFlagDisabledDirective
+    IfFeatureFlagDisabledDirective,
+    SpinnerComponent
   ]
 })
 export class SharedModule {}

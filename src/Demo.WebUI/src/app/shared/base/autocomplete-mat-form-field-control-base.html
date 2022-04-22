@@ -13,7 +13,7 @@
   />
   <mat-autocomplete #auto="matAutocomplete" autoActiveFirstOption>
     <mat-option disabled class="loading" *ngIf="vm.isSearching">
-      <mat-spinner diameter="20"></mat-spinner>
+      <app-spinner diameter="20"></app-spinner>
     </mat-option>
 
     <mat-option
@@ -34,6 +34,6 @@
     </ng-container>
   </mat-autocomplete>
   <div class="spinner-wrapper" *ngIf="vm.isLookupOngoing">
-    <mat-spinner diameter="13"></mat-spinner>
+    <app-spinner diameter="13"></app-spinner>
   </div>
 </ng-container>

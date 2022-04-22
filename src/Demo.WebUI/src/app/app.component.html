@@ -1,7 +1,3 @@
 <router-outlet></router-outlet>
 
-<ng-container *ngIf="!resolversAreInitialized">
-  <div class="spinner-container">
-    <mat-spinner [diameter]="50"></mat-spinner>
-  </div>
-</ng-container>
+<app-spinner *ngIf="!resolversAreInitialized" diameter="50"></app-spinner>

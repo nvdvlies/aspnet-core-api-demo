@@ -55,7 +55,7 @@
           </table>
         </div>
         <ng-container *ngIf="vm.isLoading">
-          <mat-spinner [diameter]="50"></mat-spinner>
+          <app-spinner diameter="50"></app-spinner>
         </ng-container>
 
         <mat-paginator
@@ -71,7 +71,5 @@
 </ng-container>
 
 <ng-template #loading>
-  <div class="spinner-container">
-    <mat-spinner [diameter]="50"></mat-spinner>
-  </div>
+  <app-spinner diameter="50"></app-spinner>
 </ng-template>
