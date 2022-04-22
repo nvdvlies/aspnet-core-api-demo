@@ -27,7 +27,10 @@ export class FeatureFlagService {
     if (skipCache || this.featureFlags == undefined) {
       return this.apiCurrentUserClient.getCurrentUserFeatureFlags().pipe(
         tap((response) => (this.featureFlags = response.featureFlags ?? [])),
-        tap(() => this.isInitialized$.next()),
+        tap(() => {
+          this.isInitialized$.next();
+          this.isInitialized$.complete();
+        }),
         switchMap(() => of(true))
       );
     } else {
