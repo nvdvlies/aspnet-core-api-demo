@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '@auth0/auth0-angular';
+import { FeatureFlagService } from '@shared/services/feature-flag.service';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -7,7 +9,15 @@ import { AuthService } from '@auth0/auth0-angular';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  constructor(public readonly authService: AuthService) {
+  public resolversAreInitialized = false;
+
+  constructor(
+    public readonly authService: AuthService,
+    public readonly featureFlagService: FeatureFlagService
+  ) {
+    forkJoin([this.featureFlagService.isInitialized$]).subscribe(
+      () => (this.resolversAreInitialized = true)
+    );
   }
 
   public ngOnInit(): void {
