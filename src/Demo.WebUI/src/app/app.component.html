@@ -1,3 +1,13 @@
-<router-outlet></router-outlet>
+<ng-container *ngIf="vm$ | async as vm; else loading">
+  <ng-container *ngIf="vm.resolversAreInitialized || vm.resolverProblemDetails; else loading">
+    <app-problem-details
+      *ngIf="vm.resolverProblemDetails"
+      [problemDetails]="vm.resolverProblemDetails"
+    ></app-problem-details>
+    <router-outlet></router-outlet>
+  </ng-container>
+</ng-container>
 
-<app-spinner *ngIf="!resolversAreInitialized" diameter="50"></app-spinner>
+<ng-template #loading>
+  <app-spinner diameter="50"></app-spinner>
+</ng-template>
