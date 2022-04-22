@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ApiCurrentUserClient } from '@api/api.generated.clients';
 import { CurrentUserService } from '@core/services/current-user.service';
 import { FeatureFlag } from '@shared/enums/feature-flag.enum';
-import { Observable, of, Subject, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, Observable, of, switchMap, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +10,7 @@ import { Observable, of, Subject, switchMap, tap } from 'rxjs';
 export class FeatureFlagService {
   private featureFlags: string[] | undefined;
 
-  public isInitialized$ = new Subject<void>();
+  public isInitialized$ = new BehaviorSubject<boolean>(false);
 
   constructor(
     private readonly apiCurrentUserClient: ApiCurrentUserClient,
@@ -27,10 +27,7 @@ export class FeatureFlagService {
     if (skipCache || this.featureFlags == undefined) {
       return this.apiCurrentUserClient.getCurrentUserFeatureFlags().pipe(
         tap((response) => (this.featureFlags = response.featureFlags ?? [])),
-        tap(() => {
-          this.isInitialized$.next();
-          this.isInitialized$.complete();
-        }),
+        tap(() => this.isInitialized$.next(true)),
         switchMap(() => of(true))
       );
     } else {

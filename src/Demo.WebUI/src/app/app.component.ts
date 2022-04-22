@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '@auth0/auth0-angular';
 import { FeatureFlagService } from '@shared/services/feature-flag.service';
-import { forkJoin } from 'rxjs';
+import { combineLatest } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -15,8 +15,8 @@ export class AppComponent implements OnInit {
     public readonly authService: AuthService,
     public readonly featureFlagService: FeatureFlagService
   ) {
-    forkJoin([this.featureFlagService.isInitialized$]).subscribe(
-      () => (this.resolversAreInitialized = true)
+    combineLatest([this.featureFlagService.isInitialized$]).subscribe(
+      ([featureFlagsAreInitialized]) => (this.resolversAreInitialized = featureFlagsAreInitialized)
     );
   }
 
