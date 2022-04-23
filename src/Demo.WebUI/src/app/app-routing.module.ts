@@ -6,6 +6,7 @@ import { FeatureFlag } from '@shared/enums/feature-flag.enum';
 import { ApplicationSettingsResolver } from '@shared/resolvers/application-settings.resolver';
 import { CurrentUserResolver } from '@shared/resolvers/current-user.resolver';
 import { FeatureFlagResolver } from '@shared/resolvers/feature-flag.resolver';
+import { UserPreferencesResolver } from '@shared/resolvers/user-preferences.resolver';
 
 export type RouteData = {
   featureFlag?: keyof typeof FeatureFlag;
@@ -25,7 +26,8 @@ const routes: AppRoutes = [
     resolve: {
       featureFlagsInitialized: FeatureFlagResolver,
       applicationSettingsInitialized: ApplicationSettingsResolver,
-      currentUserInitialized: CurrentUserResolver
+      currentUserInitialized: CurrentUserResolver,
+      userPreferencesInitialized: UserPreferencesResolver
     },
     children: [
       {

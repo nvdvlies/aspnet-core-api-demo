@@ -2455,6 +2455,202 @@ export class ApiRolesClient {
 @Injectable({
     providedIn: 'root'
 })
+export class ApiUserPreferencesClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    get(query?: GetUserPreferencesQuery | null | undefined): Observable<GetUserPreferencesQueryResult> {
+        let url_ = this.baseUrl + "/api/UserPreferences?";
+        if (query !== undefined && query !== null)
+            url_ += "query=" + encodeURIComponent("" + query) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGet(<any>response_);
+                } catch (e) {
+                    return <Observable<GetUserPreferencesQueryResult>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<GetUserPreferencesQueryResult>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGet(response: HttpResponseBase): Observable<GetUserPreferencesQueryResult> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = GetUserPreferencesQueryResult.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 500) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result500: any = null;
+            let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result500 = ProblemDetails.fromJS(resultData500);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result500);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<GetUserPreferencesQueryResult>(<any>null);
+    }
+
+    save(command: SaveUserPreferencesCommand): Observable<void> {
+        let url_ = this.baseUrl + "/api/UserPreferences";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSave(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSave(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processSave(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ValidationProblemDetails.fromJS(resultData400);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status === 500) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result500: any = null;
+            let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result500 = ProblemDetails.fromJS(resultData500);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result500);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    getUserPreferencesAuditlog(pageIndex?: number | undefined, pageSize?: number | undefined): Observable<GetUserPreferencesAuditlogQueryResult> {
+        let url_ = this.baseUrl + "/api/UserPreferences/Auditlog?";
+        if (pageIndex === null)
+            throw new Error("The parameter 'pageIndex' cannot be null.");
+        else if (pageIndex !== undefined)
+            url_ += "PageIndex=" + encodeURIComponent("" + pageIndex) + "&";
+        if (pageSize === null)
+            throw new Error("The parameter 'pageSize' cannot be null.");
+        else if (pageSize !== undefined)
+            url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetUserPreferencesAuditlog(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetUserPreferencesAuditlog(<any>response_);
+                } catch (e) {
+                    return <Observable<GetUserPreferencesAuditlogQueryResult>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<GetUserPreferencesAuditlogQueryResult>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetUserPreferencesAuditlog(response: HttpResponseBase): Observable<GetUserPreferencesAuditlogQueryResult> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = GetUserPreferencesAuditlogQueryResult.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 500) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result500: any = null;
+            let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result500 = ProblemDetails.fromJS(resultData500);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result500);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<GetUserPreferencesAuditlogQueryResult>(<any>null);
+    }
+}
+
+@Injectable({
+    providedIn: 'root'
+})
 export class ApiUsersClient {
     private http: HttpClient;
     private baseUrl: string;
@@ -6670,6 +6866,339 @@ export interface IRoleLookupDto {
 
 export enum RoleLookupOrderByEnum {
     Name = 0,
+}
+
+export class GetUserPreferencesQueryResult implements IGetUserPreferencesQueryResult {
+    userPreferences?: UserPreferencesDto | undefined;
+
+    constructor(data?: IGetUserPreferencesQueryResult) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.userPreferences = _data["userPreferences"] ? UserPreferencesDto.fromJS(_data["userPreferences"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): GetUserPreferencesQueryResult {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetUserPreferencesQueryResult();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["userPreferences"] = this.userPreferences ? this.userPreferences.toJSON() : <any>undefined;
+        return data;
+    }
+
+    clone(): GetUserPreferencesQueryResult {
+        const json = this.toJSON();
+        let result = new GetUserPreferencesQueryResult();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IGetUserPreferencesQueryResult {
+    userPreferences?: UserPreferencesDto | undefined;
+}
+
+export class UserPreferencesDto extends AuditableEntityDto implements IUserPreferencesDto {
+    preferences?: UserPreferencesPreferencesDto | undefined;
+
+    constructor(data?: IUserPreferencesDto) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.preferences = _data["preferences"] ? UserPreferencesPreferencesDto.fromJS(_data["preferences"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): UserPreferencesDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserPreferencesDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["preferences"] = this.preferences ? this.preferences.toJSON() : <any>undefined;
+        super.toJSON(data);
+        return data;
+    }
+
+    clone(): UserPreferencesDto {
+        const json = this.toJSON();
+        let result = new UserPreferencesDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUserPreferencesDto extends IAuditableEntityDto {
+    preferences?: UserPreferencesPreferencesDto | undefined;
+}
+
+export class UserPreferencesPreferencesDto implements IUserPreferencesPreferencesDto {
+    setting1!: boolean;
+    setting2?: string | undefined;
+    setting3!: Date;
+    setting4!: string;
+    setting5!: number;
+
+    constructor(data?: IUserPreferencesPreferencesDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.setting1 = _data["setting1"];
+            this.setting2 = _data["setting2"];
+            this.setting3 = _data["setting3"] ? new Date(_data["setting3"].toString()) : <any>undefined;
+            this.setting4 = _data["setting4"];
+            this.setting5 = _data["setting5"];
+        }
+    }
+
+    static fromJS(data: any): UserPreferencesPreferencesDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserPreferencesPreferencesDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["setting1"] = this.setting1;
+        data["setting2"] = this.setting2;
+        data["setting3"] = this.setting3 ? this.setting3.toISOString() : <any>undefined;
+        data["setting4"] = this.setting4;
+        data["setting5"] = this.setting5;
+        return data;
+    }
+
+    clone(): UserPreferencesPreferencesDto {
+        const json = this.toJSON();
+        let result = new UserPreferencesPreferencesDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUserPreferencesPreferencesDto {
+    setting1: boolean;
+    setting2?: string | undefined;
+    setting3: Date;
+    setting4: string;
+    setting5: number;
+}
+
+export class GetUserPreferencesQuery implements IGetUserPreferencesQuery {
+
+    constructor(data?: IGetUserPreferencesQuery) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+    }
+
+    static fromJS(data: any): GetUserPreferencesQuery {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetUserPreferencesQuery();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        return data;
+    }
+
+    clone(): GetUserPreferencesQuery {
+        const json = this.toJSON();
+        let result = new GetUserPreferencesQuery();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IGetUserPreferencesQuery {
+}
+
+export class SaveUserPreferencesCommand implements ISaveUserPreferencesCommand {
+    timestamp?: string | undefined;
+    preferences?: SaveUserPreferencesPreferencesDto | undefined;
+
+    constructor(data?: ISaveUserPreferencesCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.timestamp = _data["timestamp"];
+            this.preferences = _data["preferences"] ? SaveUserPreferencesPreferencesDto.fromJS(_data["preferences"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): SaveUserPreferencesCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new SaveUserPreferencesCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["timestamp"] = this.timestamp;
+        data["preferences"] = this.preferences ? this.preferences.toJSON() : <any>undefined;
+        return data;
+    }
+
+    clone(): SaveUserPreferencesCommand {
+        const json = this.toJSON();
+        let result = new SaveUserPreferencesCommand();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ISaveUserPreferencesCommand {
+    timestamp?: string | undefined;
+    preferences?: SaveUserPreferencesPreferencesDto | undefined;
+}
+
+export class SaveUserPreferencesPreferencesDto implements ISaveUserPreferencesPreferencesDto {
+    setting1!: boolean;
+    setting2?: string | undefined;
+    setting3!: Date;
+    setting4!: string;
+    setting5!: number;
+
+    constructor(data?: ISaveUserPreferencesPreferencesDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.setting1 = _data["setting1"];
+            this.setting2 = _data["setting2"];
+            this.setting3 = _data["setting3"] ? new Date(_data["setting3"].toString()) : <any>undefined;
+            this.setting4 = _data["setting4"];
+            this.setting5 = _data["setting5"];
+        }
+    }
+
+    static fromJS(data: any): SaveUserPreferencesPreferencesDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new SaveUserPreferencesPreferencesDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["setting1"] = this.setting1;
+        data["setting2"] = this.setting2;
+        data["setting3"] = this.setting3 ? this.setting3.toISOString() : <any>undefined;
+        data["setting4"] = this.setting4;
+        data["setting5"] = this.setting5;
+        return data;
+    }
+
+    clone(): SaveUserPreferencesPreferencesDto {
+        const json = this.toJSON();
+        let result = new SaveUserPreferencesPreferencesDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ISaveUserPreferencesPreferencesDto {
+    setting1: boolean;
+    setting2?: string | undefined;
+    setting3: Date;
+    setting4: string;
+    setting5: number;
+}
+
+export class GetUserPreferencesAuditlogQueryResult extends BasePaginatedResult implements IGetUserPreferencesAuditlogQueryResult {
+    auditlogs?: AuditlogDto[] | undefined;
+
+    constructor(data?: IGetUserPreferencesAuditlogQueryResult) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            if (Array.isArray(_data["auditlogs"])) {
+                this.auditlogs = [] as any;
+                for (let item of _data["auditlogs"])
+                    this.auditlogs!.push(AuditlogDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): GetUserPreferencesAuditlogQueryResult {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetUserPreferencesAuditlogQueryResult();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.auditlogs)) {
+            data["auditlogs"] = [];
+            for (let item of this.auditlogs)
+                data["auditlogs"].push(item.toJSON());
+        }
+        super.toJSON(data);
+        return data;
+    }
+
+    clone(): GetUserPreferencesAuditlogQueryResult {
+        const json = this.toJSON();
+        let result = new GetUserPreferencesAuditlogQueryResult();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IGetUserPreferencesAuditlogQueryResult extends IBasePaginatedResult {
+    auditlogs?: AuditlogDto[] | undefined;
 }
 
 export class SearchUsersQueryResult extends BasePaginatedResult implements ISearchUsersQueryResult {

@@ -5,6 +5,7 @@ import { CurrentUserService } from '@shared/services/current-user.service';
 import { ApplicationSettingsService } from '@shared/services/application-settings.service';
 import { FeatureFlagService } from '@shared/services/feature-flag.service';
 import { BehaviorSubject, combineLatest, map, Observable } from 'rxjs';
+import { UserPreferencesService } from '@shared/services/user-preferences.service';
 
 interface ViewModel {
   resolversAreInitialized: boolean;
@@ -39,7 +40,8 @@ export class AppComponent implements OnInit {
     public readonly authService: AuthService,
     public readonly featureFlagService: FeatureFlagService,
     public readonly applicationSettingsService: ApplicationSettingsService,
-    public readonly currentUserService: CurrentUserService
+    public readonly currentUserService: CurrentUserService,
+    public readonly userPreferencesService: UserPreferencesService
   ) {}
 
   public ngOnInit(): void {
@@ -52,17 +54,23 @@ export class AppComponent implements OnInit {
     combineLatest([
       this.featureFlagService.isInitialized$,
       this.applicationSettingsService.isInitialized$,
-      this.currentUserService.isInitialized$
-    ]).subscribe(([featureFlags, applicationSettings, currentUser]) =>
-      this.resolversAreInitialized.next(featureFlags && applicationSettings && currentUser)
+      this.currentUserService.isInitialized$,
+      this.userPreferencesService.isInitialized$
+    ]).subscribe(([featureFlags, applicationSettings, currentUser, userPreferences]) =>
+      this.resolversAreInitialized.next(
+        featureFlags && applicationSettings && currentUser && userPreferences
+      )
     );
 
     combineLatest([
       this.featureFlagService.initializationProblemDetails$,
       this.applicationSettingsService.initializationProblemDetails$,
-      this.currentUserService.initializationProblemDetails$
-    ]).subscribe(([featureFlags, applicationSettings, currentUser]) =>
-      this.resolverProblemDetails.next(featureFlags ?? applicationSettings ?? currentUser)
+      this.currentUserService.initializationProblemDetails$,
+      this.userPreferencesService.initializationProblemDetails$
+    ]).subscribe(([featureFlags, applicationSettings, currentUser, userPreferences]) =>
+      this.resolverProblemDetails.next(
+        featureFlags ?? applicationSettings ?? currentUser ?? userPreferences
+      )
     );
   }
 }
