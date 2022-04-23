@@ -9,6 +9,7 @@
         Role,
         OutboxEvent,
         OutboxMessage,
-        FeatureFlagSettings
+        FeatureFlagSettings,
+        UserPreferences
     }
 }

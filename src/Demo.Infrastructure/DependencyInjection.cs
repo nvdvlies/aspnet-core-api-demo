@@ -18,6 +18,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
 using System.Reflection;
+using Demo.Domain.UserPreferences.Interfaces;
 
 namespace Demo.Infrastructure
 {
@@ -28,6 +29,7 @@ namespace Demo.Infrastructure
             services.AddTransient<IDateTime, DateTimeProvider>();
             services.AddScoped(typeof(IJsonService<>), typeof(JsonService<>));
             services.AddScoped<IApplicationSettingsProvider, ApplicationSettingsProvider>();
+            services.AddScoped<IUserPreferencesProvider, UserPreferencesProvider>();
             services.AddScoped<IFeatureFlagSettingsProvider, FeatureFlagSettingsProvider>();
             services.AddScoped<IFeatureFlagChecker, FeatureFlagChecker>();
             services.AddScoped<IUserIdProvider, UserIdProvider>();
