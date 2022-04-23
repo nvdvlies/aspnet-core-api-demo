@@ -9,7 +9,8 @@
     "test": "ng test",
     "lint": "ng lint",
     "prettier-check": "npx prettier --check .",
-    "prettier-write": "npx prettier --write ."
+    "prettier-write": "npx prettier --write .",
+    "generate-api-clients": "@powershell -NoProfile -ExecutionPolicy Unrestricted -Command ../../tools/nswag/nswag.ps1"
   },
   "private": true,
   "dependencies": {
