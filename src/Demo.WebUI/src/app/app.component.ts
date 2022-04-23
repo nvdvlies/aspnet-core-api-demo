@@ -4,7 +4,7 @@ import { AuthService } from '@auth0/auth0-angular';
 import { CurrentUserService } from '@shared/services/current-user.service';
 import { ApplicationSettingsService } from '@shared/services/application-settings.service';
 import { FeatureFlagService } from '@shared/services/feature-flag.service';
-import { BehaviorSubject, combineLatest, map, merge, Observable } from 'rxjs';
+import { BehaviorSubject, combineLatest, map, Observable } from 'rxjs';
 
 interface ViewModel {
   resolversAreInitialized: boolean;
@@ -57,10 +57,12 @@ export class AppComponent implements OnInit {
       this.resolversAreInitialized.next(featureFlags && applicationSettings && currentUser)
     );
 
-    merge(
+    combineLatest([
       this.featureFlagService.initializationProblemDetails$,
       this.applicationSettingsService.initializationProblemDetails$,
       this.currentUserService.initializationProblemDetails$
-    ).subscribe((problemDetails) => this.resolverProblemDetails.next(problemDetails));
+    ]).subscribe(([featureFlags, applicationSettings, currentUser]) =>
+      this.resolverProblemDetails.next(featureFlags ?? applicationSettings ?? currentUser)
+    );
   }
 }
