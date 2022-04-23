@@ -26,8 +26,6 @@ namespace Demo.Domain.UserPreferences.Hooks
             switch (context.EditMode)
             {
                 case EditMode.Create:
-                    await context.AddEventAsync(UserPreferencesCreatedEvent.Create(_correlationIdProvider.Id, context.Entity.Id, _currentUser.Id), cancellationToken);
-                    break;
                 case EditMode.Update:
                     await context.AddEventAsync(UserPreferencesUpdatedEvent.Create(_correlationIdProvider.Id, context.Entity.Id, _currentUser.Id), cancellationToken);
                     break;
