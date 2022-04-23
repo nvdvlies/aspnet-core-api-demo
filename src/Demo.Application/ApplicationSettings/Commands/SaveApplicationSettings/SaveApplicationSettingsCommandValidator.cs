@@ -6,6 +6,7 @@ namespace Demo.Application.ApplicationSettings.Commands.SaveApplicationSettings
     {
         public SaveApplicationSettingsCommandValidator()
         {
+            RuleFor(x => x.Settings).NotNull();
         }
     }
 }

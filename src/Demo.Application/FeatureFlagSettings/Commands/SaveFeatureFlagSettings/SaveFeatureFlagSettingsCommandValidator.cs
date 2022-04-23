@@ -6,6 +6,7 @@ namespace Demo.Application.FeatureFlagSettings.Commands.SaveFeatureFlagSettings
     {
         public SaveFeatureFlagSettingsCommandValidator()
         {
+            RuleFor(x => x.Settings).NotNull();
         }
     }
 }
