@@ -15,7 +15,7 @@ namespace Demo.Application.Shared.Interfaces
         IUserEventHub,
         IRoleEventHub,
         IFeatureFlagSettingsEventHub,
-        IUserPreferencesEventHub
+        IUserPreferencesEventHub// SCAFFOLD-MARKER: EVENTHUB_INTERFACE
     {
     }
 }

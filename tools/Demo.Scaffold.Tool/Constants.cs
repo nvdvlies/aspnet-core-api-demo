@@ -8,6 +8,7 @@
         public const string ScaffoldMarkerEndpoint = "// SCAFFOLD-MARKER: ENDPOINT";
         public const string ScaffoldMarkerDbSet = "// SCAFFOLD-MARKER: DBSET";
         public const string ScaffoldMarkerEventHub = "// SCAFFOLD-MARKER: EVENTHUB";
+        public const string ScaffoldMarkerEventHubInterface = "// SCAFFOLD-MARKER: EVENTHUB_INTERFACE";
 
         public const string WebApiPath = "src\\Demo.WebApi";
         public const string ApplicationPath = "src\\Demo.Application";

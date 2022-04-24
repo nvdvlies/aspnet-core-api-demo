@@ -29,7 +29,11 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.DomainEntity
             new EntityUpdatedEventOutputCollector(),
             new EntityDeletedEventOutputCollector(),
             new EventHookOutputCollector(),
-            new EventHubOutputCollector()
+            new EventHubOutputCollector(),
+            new AddEventHubToIEventHubOutputCollector(),
+            new EntityCreatedEventHandlerOutputCollector(),
+            new EntityUpdatedEventHandlerOutputCollector(),
+            new EntityDeletedEventHandlerOutputCollector()
         };
 
         public IEnumerable<IChange> CollectChanges(ScaffolderContext context)
