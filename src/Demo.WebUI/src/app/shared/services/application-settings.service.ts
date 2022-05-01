@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import {
-  ApiApplicationSettingsClient,
   ApiException,
+  ProblemDetails,
   ApplicationSettingsDto,
-  ProblemDetails
+  ApplicationSettingsSettingsDto
 } from '@api/api.generated.clients';
 import { AuthService } from '@auth0/auth0-angular';
+import { ApplicationSettingsStoreService } from '@domain/application-settings/application-settings-store.service';
 import { BehaviorSubject, catchError, Observable, of, switchMap, tap, throwError } from 'rxjs';
 
 @Injectable({
@@ -23,27 +24,38 @@ export class ApplicationSettingsService {
   public initializationProblemDetails$ = this.initializationProblemDetails.asObservable();
 
   constructor(
-    private readonly apiApplicationSettingsClient: ApiApplicationSettingsClient,
+    private readonly applicationSettingsStoreService: ApplicationSettingsStoreService,
     private readonly authService: AuthService
   ) {
     this.authService.isAuthenticated$.subscribe((isAuthenticated) => {
       if (!isAuthenticated) {
         this.applicationSettings = undefined;
-        this.isInitialized.next(false);
+        if (this.isInitialized.value) {
+          this.isInitialized.next(false);
+        }
       }
     });
+
+    this.applicationSettingsStoreService.applicationSettingsUpdatedInStore$.subscribe(
+      ([_, applicationSettings]) => {
+        this.applicationSettings = applicationSettings;
+        if (!this.isInitialized.value) {
+          this.isInitialized.next(true);
+        }
+      }
+    );
   }
 
   public init(skipCache: boolean = false): Observable<boolean> {
-    if (skipCache || this.applicationSettings == undefined) {
-      return this.apiApplicationSettingsClient.get().pipe(
+    if (skipCache || !this.isInitialized.value) {
+      return this.applicationSettingsStoreService.get().pipe(
         catchError((error: ProblemDetails | ApiException) => {
           this.initializationProblemDetails.next(error);
           return throwError(
-            () => new Error('An error occured while initializing applicationsettings')
+            () => new Error('An error occured while initializing application settings')
           );
         }),
-        tap((response) => (this.applicationSettings = response.applicationSettings)),
+        tap((applicationSettings) => (this.applicationSettings = applicationSettings)),
         tap(() => this.isInitialized.next(true)),
         switchMap(() => of(true))
       );
@@ -52,7 +64,7 @@ export class ApplicationSettingsService {
     }
   }
 
-  public get setting1(): boolean {
-    return this.applicationSettings?.settings?.setting1 ?? false;
+  public get settings(): ApplicationSettingsSettingsDto {
+    return this.applicationSettings!.settings!;
   }
 }

@@ -6,7 +6,7 @@ import {
   UserPreferencesPreferencesDto
 } from '@api/api.generated.clients';
 import { AuthService } from '@auth0/auth0-angular';
-import { UserPreferencesStoreService } from '@domain/userpreferences/user-preferences-store.service';
+import { UserPreferencesStoreService } from '@domain/user-preferences/user-preferences-store.service';
 import { BehaviorSubject, catchError, Observable, of, switchMap, tap, throwError } from 'rxjs';
 
 @Injectable({

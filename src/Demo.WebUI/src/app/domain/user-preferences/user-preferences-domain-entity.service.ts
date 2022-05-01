@@ -8,7 +8,7 @@ import {
   IUserPreferencesDto,
   IUserPreferencesPreferencesDto
 } from '@api/api.generated.clients';
-import { UserPreferencesStoreService } from '@domain/userpreferences/user-preferences-store.service';
+import { UserPreferencesStoreService } from '@domain/user-preferences/user-preferences-store.service';
 import {
   DomainEntityBase,
   DomainEntityContext,
@@ -86,8 +86,7 @@ export class UserPreferencesDomainEntityService
         setting2: new FormControl(null),
         setting3: new FormControl(null),
         setting4: new FormControl(null),
-        setting5: new FormControl(null),
-        setting6: new FormControl(null)
+        setting5: new FormControl(null)
       } as UserPreferencesPreferencesControls) as UserPreferencesPreferencesFormGroup,
       deleted: new FormControl(super.readonlyFormState),
       deletedBy: new FormControl(super.readonlyFormState),
