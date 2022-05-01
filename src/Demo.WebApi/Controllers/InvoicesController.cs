@@ -27,7 +27,7 @@ namespace Demo.WebApi.Controllers
             return await Mediator.Send(query, cancellationToken);
         }
 
-        [HttpGet("{id}", Name = nameof(GetInvoiceById))]
+        [HttpGet("{id:guid}", Name = nameof(GetInvoiceById))]
         [ProducesResponseType(typeof(GetInvoiceByIdQueryResult), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(void), (int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
@@ -55,7 +55,7 @@ namespace Demo.WebApi.Controllers
             return CreatedAtRoute(routeName: nameof(GetInvoiceById), routeValues: new { id = result.Id }, result);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id:guid}")]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.NotFound)]
@@ -69,7 +69,7 @@ namespace Demo.WebApi.Controllers
             return NoContent();
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:guid}")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.NotFound)]
@@ -83,7 +83,7 @@ namespace Demo.WebApi.Controllers
             return Ok();
         }
 
-        [HttpPut("{id}/MarkAsSent")]
+        [HttpPut("{id:guid}/MarkAsSent")]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.NotFound)]
@@ -97,7 +97,7 @@ namespace Demo.WebApi.Controllers
             return NoContent();
         }
 
-        [HttpPut("{id}/MarkAsPaid")]
+        [HttpPut("{id:guid}/MarkAsPaid")]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.NotFound)]
@@ -111,7 +111,7 @@ namespace Demo.WebApi.Controllers
             return NoContent();
         }
 
-        [HttpPut("{id}/MarkAsCancelled")]
+        [HttpPut("{id:guid}/MarkAsCancelled")]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.NotFound)]
@@ -125,7 +125,7 @@ namespace Demo.WebApi.Controllers
             return NoContent();
         }
 
-        [HttpGet("{id}/Auditlog")]
+        [HttpGet("{id:guid}/Auditlog")]
         [ProducesResponseType(typeof(GetInvoiceAuditlogQueryResult), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
         public async Task<ActionResult<GetInvoiceAuditlogQueryResult>> GetInvoiceAuditlog([FromRoute] Guid id, [FromQuery] GetInvoiceAuditlogQuery query, CancellationToken cancellationToken)
@@ -135,7 +135,7 @@ namespace Demo.WebApi.Controllers
             return await Mediator.Send(query, cancellationToken);
         }
 
-        [HttpPost("{id}/Copy")]
+        [HttpPost("{id:guid}/Copy")]
         [ProducesResponseType(typeof(CopyInvoiceResponse), (int)HttpStatusCode.Created)]
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
@@ -148,7 +148,7 @@ namespace Demo.WebApi.Controllers
             return CreatedAtRoute(routeName: nameof(GetInvoiceById), routeValues: new { id = result.Id }, result);
         }
 
-        [HttpPost("{id}/Credit")]
+        [HttpPost("{id:guid}/Credit")]
         [ProducesResponseType(typeof(CreditInvoiceResponse), (int)HttpStatusCode.Created)]
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]

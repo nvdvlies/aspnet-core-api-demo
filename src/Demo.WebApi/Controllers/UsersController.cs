@@ -27,7 +27,7 @@ namespace Demo.WebApi.Controllers
         }
 
         [Authorize(nameof(Policies.Admin))]
-        [HttpGet("{id}", Name = nameof(GetUserById))]
+        [HttpGet("{id:guid}", Name = nameof(GetUserById))]
         [ProducesResponseType(typeof(GetUserByIdQueryResult), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
@@ -57,7 +57,7 @@ namespace Demo.WebApi.Controllers
         }
 
         [Authorize(nameof(Policies.Admin))]
-        [HttpPut("{id}")]
+        [HttpPut("{id:guid}")]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
@@ -71,7 +71,7 @@ namespace Demo.WebApi.Controllers
         }
 
         [Authorize(nameof(Policies.Admin))]
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:guid}")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
@@ -85,7 +85,7 @@ namespace Demo.WebApi.Controllers
         }
         
         [Authorize(nameof(Policies.Admin))]
-        [HttpGet("{id}/Auditlog")]
+        [HttpGet("{id:guid}/Auditlog")]
         [ProducesResponseType(typeof(GetUserAuditlogQueryResult), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
         public async Task<ActionResult<GetUserAuditlogQueryResult>> GetUserAuditlog([FromRoute] Guid id, [FromQuery] GetUserAuditlogQuery query, CancellationToken cancellationToken)

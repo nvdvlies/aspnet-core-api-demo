@@ -65,7 +65,7 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint.OutputCollect
         private static string GetGetByIdTemplate(string queryName)
         {
             var code = @"
-        [HttpGet(""{id}"", Name = nameof(%QUERYNAME%))]
+        [HttpGet(""{id:guid}"", Name = nameof(%QUERYNAME%))]
         [ProducesResponseType(typeof(%QUERYNAME%QueryResult), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
@@ -89,7 +89,7 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint.OutputCollect
         private static string GetSubEndpointTemplate(string queryName, string entityName)
         {
             var code = @"
-        [HttpGet(""{id}/%ROUTE%"")]
+        [HttpGet(""{id:guid}/%ROUTE%"")]
         [ProducesResponseType(typeof(%QUERYNAME%QueryResult), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
         public async Task<ActionResult<%QUERYNAME%QueryResult>> %QUERYNAME%([FromRoute] Guid id, [FromQuery] %QUERYNAME%Query query, CancellationToken cancellationToken)

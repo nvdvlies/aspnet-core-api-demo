@@ -23,7 +23,7 @@ namespace Demo.WebApi.Controllers
             return await Mediator.Send(query, cancellationToken);
         }
 
-        [HttpGet("{id}", Name = nameof(GetCustomerById))]
+        [HttpGet("{id:guid}", Name = nameof(GetCustomerById))]
         [ProducesResponseType(typeof(GetCustomerByIdQueryResult), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(void), (int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
@@ -51,7 +51,7 @@ namespace Demo.WebApi.Controllers
             return CreatedAtRoute(routeName: nameof(GetCustomerById), routeValues: new { id = result.Id }, result);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id:guid}")]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.NotFound)]
@@ -65,7 +65,7 @@ namespace Demo.WebApi.Controllers
             return NoContent();
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:guid}")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.NotFound)]
@@ -79,7 +79,7 @@ namespace Demo.WebApi.Controllers
             return Ok();
         }
 
-        [HttpGet("{id}/Auditlog")]
+        [HttpGet("{id:guid}/Auditlog")]
         [ProducesResponseType(typeof(GetCustomerAuditlogQueryResult), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
         public async Task<ActionResult<GetCustomerAuditlogQueryResult>> GetCustomerAuditlog([FromRoute] Guid id, [FromQuery] GetCustomerAuditlogQuery query, CancellationToken cancellationToken)

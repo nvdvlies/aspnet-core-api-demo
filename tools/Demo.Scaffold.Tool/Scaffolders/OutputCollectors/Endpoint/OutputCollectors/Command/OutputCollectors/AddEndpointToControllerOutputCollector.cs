@@ -74,7 +74,7 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint.OutputCollect
         private static string GetPutTemplate(string entityName, string commandName, string endpointName)
         {
             var code = @"
-        [HttpPut(""{id}"")]
+        [HttpPut(""{id:guid}"")]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
@@ -96,7 +96,7 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint.OutputCollect
         private static string GetDeleteTemplate(string entityName, string commandName, string endpointName)
         {
             var code = @"
-        [HttpDelete(""{id}"")]
+        [HttpDelete(""{id:guid}"")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
@@ -118,7 +118,7 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint.OutputCollect
         private static string GetPostSubEndpointTemplate(string entityName, string commandName, string endpointName)
         {
             var code = @"
-        [HttpPost(""{id}/%ENDPOINTNAME%"")]
+        [HttpPost(""{id:guid}/%ENDPOINTNAME%"")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
@@ -140,7 +140,7 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint.OutputCollect
         private static string GetUpdateSubEndpointTemplate(string entityName, string commandName, string endpointName)
         {
             var code = @"
-        [HttpPut(""{id}/%ENDPOINTNAME%"")]
+        [HttpPut(""{id:guid}/%ENDPOINTNAME%"")]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
@@ -162,7 +162,7 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint.OutputCollect
         private static string GetDeleteSubEndpointTemplate(string entityName, string commandName, string endpointName)
         {
             var code = @"
-        [HttpDelete(""{id}/%ENDPOINTNAME%"")]
+        [HttpDelete(""{id:guid}/%ENDPOINTNAME%"")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
