@@ -131,7 +131,7 @@ export class FeatureFlagSettingsDomainEntityService
     this.featureFlagFormArray.push(newInvoiceLineFormGroup);
   }
 
-  public removeInvoiceLine(index: number): void {
+  public removeFeatureFlag(index: number): void {
     if (this.featureFlagFormArray.length > 1) {
       this.featureFlagFormArray.removeAt(index);
     }
