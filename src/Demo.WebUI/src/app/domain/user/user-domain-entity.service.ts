@@ -1,5 +1,13 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { AbstractControl, FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  AsyncValidatorFn,
+  FormArray,
+  FormControl,
+  FormGroup,
+  ValidationErrors,
+  Validators
+} from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { combineLatest, Observable, of } from 'rxjs';
 import { debounceTime, map } from 'rxjs/operators';
@@ -69,32 +77,35 @@ export class UserDomainEntityService extends DomainEntityBase<UserDto> implement
   }
 
   private buildUserFormGroup(): UserFormGroup {
-    return new FormGroup({
-      id: new FormControl(super.readonlyFormState),
-      externalId: new FormControl(super.readonlyFormState),
-      fullname: new FormControl(super.readonlyFormState),
-      givenName: new FormControl(null),
-      familyName: new FormControl(null, [Validators.required], []),
-      middleName: new FormControl(null),
-      email: new FormControl(null, [Validators.required], []),
-      gender: new FormControl(null),
-      birthDate: new FormControl(null),
-      zoneInfo: new FormControl(null),
-      locale: new FormControl(null),
-      userRoles: new FormArray(
-        [] as UserRoleFormGroup[],
-        [Validators.required],
-        []
-      ) as UserRoleFormArray,
-      deleted: new FormControl(super.readonlyFormState),
-      deletedBy: new FormControl(super.readonlyFormState),
-      deletedOn: new FormControl(super.readonlyFormState),
-      createdBy: new FormControl(super.readonlyFormState),
-      createdOn: new FormControl(super.readonlyFormState),
-      lastModifiedBy: new FormControl(super.readonlyFormState),
-      lastModifiedOn: new FormControl(super.readonlyFormState),
-      timestamp: new FormControl(super.readonlyFormState)
-    } as UserControls) as UserFormGroup;
+    return new FormGroup(
+      {
+        id: new FormControl(super.readonlyFormState),
+        externalId: new FormControl(super.readonlyFormState),
+        fullname: new FormControl(super.readonlyFormState),
+        givenName: new FormControl(null),
+        familyName: new FormControl(null, [Validators.required], []),
+        middleName: new FormControl(null),
+        email: new FormControl(null, [Validators.required], [this.emailValidator()]),
+        gender: new FormControl(null),
+        birthDate: new FormControl(null),
+        zoneInfo: new FormControl(null),
+        locale: new FormControl(null),
+        userRoles: new FormArray(
+          [] as UserRoleFormGroup[],
+          [Validators.required],
+          []
+        ) as UserRoleFormArray,
+        deleted: new FormControl(super.readonlyFormState),
+        deletedBy: new FormControl(super.readonlyFormState),
+        deletedOn: new FormControl(super.readonlyFormState),
+        createdBy: new FormControl(super.readonlyFormState),
+        createdOn: new FormControl(super.readonlyFormState),
+        lastModifiedBy: new FormControl(super.readonlyFormState),
+        lastModifiedOn: new FormControl(super.readonlyFormState),
+        timestamp: new FormControl(super.readonlyFormState)
+      } as UserControls,
+      { updateOn: 'blur' }
+    ) as UserFormGroup;
   }
 
   private buildUserRoleFormGroup(): UserRoleFormGroup {
@@ -168,6 +179,26 @@ export class UserDomainEntityService extends DomainEntityBase<UserDto> implement
       userRoleFormGroup.patchValue({ ...userRole });
       this.userRoleFormArray.push(userRoleFormGroup);
     });
+  }
+
+  private emailValidator(): AsyncValidatorFn {
+    return (control: AbstractControl): Observable<ValidationErrors | null> => {
+      return of(false).pipe(
+        // TODO
+        map((isTaken: boolean) => {
+          return isTaken ? { emailTaken: true } : null;
+        })
+      );
+    };
+  }
+
+  public override getErrorMessage(errorKey: string, errorValue: any): string | undefined {
+    switch (errorKey) {
+      case 'emailTaken':
+        return 'This e-mail address is already taken.';
+      default:
+        return super.getErrorMessage(errorKey, errorValue);
+    }
   }
 
   public override reset(): void {
