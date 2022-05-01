@@ -149,6 +149,20 @@ export class FeatureFlagSettingsDomainEntityService
     return super.upsert();
   }
 
+  protected override afterPatchEntityToFormHook(featureFlagSettings: FeatureFlagSettingsDto): void {
+    // form.patchValue doesnt modify FormArray structure, so we need to do this manually afterwards.
+    this.patchFeatureFlagsToForm(featureFlagSettings);
+  }
+
+  private patchFeatureFlagsToForm(featureFlagSettings: FeatureFlagSettingsDto): void {
+    this.featureFlagFormArray.clear();
+    featureFlagSettings.settings?.featureFlags?.forEach((featureFlag) => {
+      const featureFlagFormGroup = this.buildFeatureFlagFormGroup();
+      featureFlagFormGroup.patchValue({ ...featureFlag });
+      this.featureFlagFormArray.push(featureFlagFormGroup);
+    });
+  }
+
   public override reset(): void {
     super.reset();
   }
