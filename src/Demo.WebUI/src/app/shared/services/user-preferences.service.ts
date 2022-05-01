@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import {
   ApiException,
-  ApiUserPreferencesClient,
   ProblemDetails,
-  UserPreferencesDto
+  UserPreferencesDto,
+  UserPreferencesPreferencesDto
 } from '@api/api.generated.clients';
 import { AuthService } from '@auth0/auth0-angular';
+import { UserPreferencesStoreService } from '@domain/userpreferences/user-preferences-store.service';
 import { BehaviorSubject, catchError, Observable, of, switchMap, tap, throwError } from 'rxjs';
 
 @Injectable({
@@ -23,27 +24,38 @@ export class UserPreferencesService {
   public initializationProblemDetails$ = this.initializationProblemDetails.asObservable();
 
   constructor(
-    private readonly apiUserPreferencesClient: ApiUserPreferencesClient,
+    private readonly userPreferencesStoreService: UserPreferencesStoreService,
     private readonly authService: AuthService
   ) {
     this.authService.isAuthenticated$.subscribe((isAuthenticated) => {
       if (!isAuthenticated) {
         this.userPreferences = undefined;
-        this.isInitialized.next(false);
+        if (this.isInitialized.value) {
+          this.isInitialized.next(false);
+        }
       }
     });
+
+    this.userPreferencesStoreService.userPreferencesUpdatedInStore$.subscribe(
+      ([_, userPreferences]) => {
+        this.userPreferences = userPreferences;
+        if (!this.isInitialized.value) {
+          this.isInitialized.next(true);
+        }
+      }
+    );
   }
 
   public init(skipCache: boolean = false): Observable<boolean> {
-    if (skipCache || this.userPreferences == undefined) {
-      return this.apiUserPreferencesClient.get().pipe(
+    if (skipCache || !this.isInitialized.value) {
+      return this.userPreferencesStoreService.get().pipe(
         catchError((error: ProblemDetails | ApiException) => {
           this.initializationProblemDetails.next(error);
           return throwError(
             () => new Error('An error occured while initializing user preferences')
           );
         }),
-        tap((response) => (this.userPreferences = response.userPreferences)),
+        tap((userPreferences) => (this.userPreferences = userPreferences)),
         tap(() => this.isInitialized.next(true)),
         switchMap(() => of(true))
       );
@@ -52,7 +64,7 @@ export class UserPreferencesService {
     }
   }
 
-  public get setting1(): boolean {
-    return this.userPreferences?.preferences?.setting1 ?? false;
+  public get preferences(): UserPreferencesPreferencesDto {
+    return this.userPreferences!.preferences!;
   }
 }

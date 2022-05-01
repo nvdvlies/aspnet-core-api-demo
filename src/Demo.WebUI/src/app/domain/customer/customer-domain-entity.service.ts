@@ -31,10 +31,10 @@ export class CustomerDomainEntityService
   extends DomainEntityBase<CustomerDto>
   implements OnDestroy
 {
-  protected getByIdFunction = (id: string) => this.customerStoreService.getById(id);
   protected createFunction = (customer: CustomerDto) => this.customerStoreService.create(customer);
+  protected readFunction = (id?: string) => this.customerStoreService.getById(id!);
   protected updateFunction = (customer: CustomerDto) => this.customerStoreService.update(customer);
-  protected deleteFunction = (id: string) => this.customerStoreService.delete(id);
+  protected deleteFunction = (id?: string) => this.customerStoreService.delete(id!);
   protected entityUpdatedEvent$ = this.customerStoreService.customerUpdatedInStore$;
 
   public observe$ = combineLatest([this.observeInternal$]).pipe(
@@ -59,10 +59,10 @@ export class CustomerDomainEntityService
   }
 
   protected instantiateForm(): void {
-    this.form = this.buildInvoiceFormGroup();
+    this.form = this.buildFormGroup();
   }
 
-  private buildInvoiceFormGroup(): CustomerFormGroup {
+  private buildFormGroup(): CustomerFormGroup {
     return new FormGroup({
       id: new FormControl(super.readonlyFormState),
       code: new FormControl(super.readonlyFormState),
@@ -90,8 +90,8 @@ export class CustomerDomainEntityService
     return super.new();
   }
 
-  public override getById(id: string): Observable<null> {
-    return super.getById(id);
+  public override read(id: string): Observable<null> {
+    return super.read(id);
   }
 
   public override initFromRoute(options?: InitFromRouteOptions | undefined): Observable<null> {
@@ -114,14 +114,14 @@ export class CustomerDomainEntityService
     return super.delete();
   }
 
-  public override getErrorMessage(errorKey: string, errorValue: any): string | undefined {
-    switch (errorKey) {
-      case 'some_custom_error_key':
-        return 'Some custom error description';
-      default:
-        return super.getErrorMessage(errorKey, errorValue);
-    }
-  }
+  // public override getErrorMessage(errorKey: string, errorValue: any): string | undefined {
+  //   switch (errorKey) {
+  //     case 'some_custom_error_key':
+  //       return 'Some custom error description';
+  //     default:
+  //       return super.getErrorMessage(errorKey, errorValue);
+  //   }
+  // }
 
   public override reset(): void {
     super.reset();

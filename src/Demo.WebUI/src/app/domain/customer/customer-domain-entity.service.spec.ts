@@ -146,7 +146,7 @@ describe('CustomerDomainEntityService', () => {
 
       // Act
       subject
-        .getById(customerId)
+        .read(customerId)
         .pipe(
           tap(() => {
             subject.form.controls.name!.setValue(newCustomerName);
@@ -208,7 +208,7 @@ describe('CustomerDomainEntityService', () => {
 
       // Act
       subject
-        .getById(customerId)
+        .read(customerId)
         .pipe(
           tap(() => {
             subject.form.controls.name!.setValue(newCustomerName);
@@ -241,7 +241,7 @@ describe('CustomerDomainEntityService', () => {
 
       // Act
       subject
-        .getById(customerId)
+        .read(customerId)
         .pipe(switchMap(() => subject.delete()))
         .subscribe((_) => {
           // Assert

@@ -71,13 +71,13 @@ export abstract class DomainEntityBase<T extends IDomainEntity<T>>
 {
   protected abstract instantiateForm(): void;
   protected abstract instantiateNewEntity(): Observable<T>;
-  protected abstract getByIdFunction: (id: string) => Observable<T>;
   protected abstract createFunction: (entity: T) => Observable<T>;
+  protected abstract readFunction: (id?: string) => Observable<T>;
   protected abstract updateFunction: (entity: T) => Observable<T>;
-  protected abstract deleteFunction: (id: string) => Observable<void>;
+  protected abstract deleteFunction: (id?: string) => Observable<void>;
   protected afterPatchEntityToFormHook?(entity: T): void;
   public afterNewHook?: (entity: T) => Observable<null>;
-  public afterGetByIdHook?: (entity: T) => Observable<null>;
+  public afterReadHook?: (entity: T) => Observable<null>;
   protected abstract entityUpdatedEvent$: Observable<[any, T]>;
 
   protected readonly id = new BehaviorSubject<string | undefined>(undefined);
@@ -178,11 +178,11 @@ export abstract class DomainEntityBase<T extends IDomainEntity<T>>
     );
   }
 
-  protected getById(id: string, getByIdFunction?: (id: string) => Observable<T>): Observable<null> {
+  protected read(id?: string, readFunction?: (id?: string) => Observable<T>): Observable<null> {
     this.reset();
     this.isLoading.next(true);
-    getByIdFunction ??= this.getByIdFunction;
-    return getByIdFunction(id).pipe(
+    readFunction ??= this.readFunction;
+    return readFunction(id).pipe(
       catchError((error: ValidationProblemDetails | ProblemDetails | ApiException) => {
         this.loadingEntityFailed.next(true);
         return this.setProblemDetailsAndRethrow(error);
@@ -195,7 +195,7 @@ export abstract class DomainEntityBase<T extends IDomainEntity<T>>
         this.pristine.next(entity.clone());
       }),
       switchMap(
-        (entity: T) => this.afterGetByIdHook?.(entity).pipe(map(() => null)) ?? of<null>(null)
+        (entity: T) => this.afterReadHook?.(entity).pipe(map(() => null)) ?? of<null>(null)
       ),
       finalize(() => this.isLoading.next(false))
     );
@@ -203,7 +203,7 @@ export abstract class DomainEntityBase<T extends IDomainEntity<T>>
 
   protected initFromRoute(
     options: InitFromRouteOptions | undefined,
-    getByIdFunction?: (id: string) => Observable<T>
+    readFunction?: (id?: string) => Observable<T>
   ): Observable<null> {
     this.problemDetails.next(undefined);
     options ??= new InitFromRouteOptions();
@@ -218,8 +218,8 @@ export abstract class DomainEntityBase<T extends IDomainEntity<T>>
     if (id === options!.newValue) {
       return this.new();
     } else {
-      getByIdFunction ??= this.getByIdFunction;
-      return this.getById(id, getByIdFunction);
+      readFunction ??= this.readFunction;
+      return this.read(id, readFunction);
     }
   }
 

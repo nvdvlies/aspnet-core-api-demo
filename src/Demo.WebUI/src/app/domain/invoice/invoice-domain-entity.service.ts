@@ -51,10 +51,10 @@ export type InvoiceLineFormArray = FormArray & {
 
 @Injectable()
 export class InvoiceDomainEntityService extends DomainEntityBase<InvoiceDto> implements OnDestroy {
-  protected getByIdFunction = (id: string) => this.invoiceStoreService.getById(id);
   protected createFunction = (invoice: InvoiceDto) => this.invoiceStoreService.create(invoice);
+  protected readFunction = (id?: string) => this.invoiceStoreService.getById(id!);
   protected updateFunction = (invoice: InvoiceDto) => this.invoiceStoreService.update(invoice);
-  protected deleteFunction = (id: string) => this.invoiceStoreService.delete(id);
+  protected deleteFunction = (id?: string) => this.invoiceStoreService.delete(id!);
   protected entityUpdatedEvent$ = this.invoiceStoreService.invoiceUpdatedInStore$;
 
   public observe$ = combineLatest([this.observeInternal$]).pipe(
@@ -130,20 +130,16 @@ export class InvoiceDomainEntityService extends DomainEntityBase<InvoiceDto> imp
   }
 
   public removeInvoiceLine(index: number): void {
-    //if (this.invoiceLineFormArray.length > 1) {
-    this.invoiceLineFormArray.removeAt(index);
-    //}
+    if (this.invoiceLineFormArray.length > 1) {
+      this.invoiceLineFormArray.removeAt(index);
+    }
   }
 
   protected instantiateNewEntity(): Observable<InvoiceDto> {
     const invoice = new InvoiceDto();
     invoice.invoiceDate = new Date();
     invoice.paymentTerm = 30;
-    //invoice.orderReference = '';
     const invoiceLine = new InvoiceLineDto();
-    invoiceLine.quantity = 1;
-    invoiceLine.description = 'test1';
-    invoiceLine.sellingPrice = 1;
     invoice.invoiceLines = [invoiceLine];
     return of(invoice);
   }
@@ -161,8 +157,8 @@ export class InvoiceDomainEntityService extends DomainEntityBase<InvoiceDto> imp
     return super.new();
   }
 
-  public override getById(id: string): Observable<null> {
-    return super.getById(id);
+  public override read(id: string): Observable<null> {
+    return super.read(id);
   }
 
   public override initFromRoute(options?: InitFromRouteOptions | undefined): Observable<null> {
