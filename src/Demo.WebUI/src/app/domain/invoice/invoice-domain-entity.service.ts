@@ -145,8 +145,7 @@ export class InvoiceDomainEntityService extends DomainEntityBase<InvoiceDto> imp
   }
 
   public get invoiceLines(): InvoiceLineFormGroup[] {
-    return (this.form.controls.invoiceLines as InvoiceLineFormArray)
-      .controls as InvoiceLineFormGroup[];
+    return this.invoiceLineFormArray.controls as InvoiceLineFormGroup[];
   }
 
   private get invoiceLineFormArray(): FormArray {
