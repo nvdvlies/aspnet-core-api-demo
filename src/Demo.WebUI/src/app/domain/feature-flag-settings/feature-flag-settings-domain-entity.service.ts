@@ -159,6 +159,7 @@ export class FeatureFlagSettingsDomainEntityService
     featureFlagSettings.settings?.featureFlags?.forEach((featureFlag) => {
       const featureFlagFormGroup = this.buildFeatureFlagFormGroup();
       featureFlagFormGroup.patchValue({ ...featureFlag });
+      (featureFlagFormGroup.controls.enabledForUsers as FormArray).clear();
       featureFlag.enabledForUsers?.forEach((enabledForUser) => {
         (featureFlagFormGroup.controls.enabledForUsers as FormArray).push(
           new FormControl(enabledForUser)
