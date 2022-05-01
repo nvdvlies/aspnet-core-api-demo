@@ -7,7 +7,9 @@ import {
   CreateInvoiceCommand,
   UpdateInvoiceCommand,
   DeleteInvoiceCommand,
-  MarkInvoiceAsPaidCommand
+  MarkInvoiceAsPaidCommand,
+  MarkInvoiceAsCancelledCommand,
+  MarkInvoiceAsSentCommand
 } from '@api/api.generated.clients';
 import {
   InvoiceUpdatedEvent,
@@ -66,10 +68,24 @@ export class InvoiceStoreService extends StoreBase<InvoiceDto> {
     return super.update(invoice);
   }
 
+  public markAsSent(invoice: InvoiceDto): Observable<InvoiceDto> {
+    const command = new MarkInvoiceAsSentCommand();
+    return super.update(invoice, (invoice: InvoiceDto) =>
+      this.apiInvoicesClient.markAsSent(invoice.id, command)
+    );
+  }
+
   public markAsPaid(invoice: InvoiceDto): Observable<InvoiceDto> {
     const command = new MarkInvoiceAsPaidCommand();
     return super.update(invoice, (invoice: InvoiceDto) =>
       this.apiInvoicesClient.markAsPaid(invoice.id, command)
+    );
+  }
+
+  public markAsCancelled(invoice: InvoiceDto): Observable<InvoiceDto> {
+    const command = new MarkInvoiceAsCancelledCommand();
+    return super.update(invoice, (invoice: InvoiceDto) =>
+      this.apiInvoicesClient.markAsCancelled(invoice.id, command)
     );
   }
 

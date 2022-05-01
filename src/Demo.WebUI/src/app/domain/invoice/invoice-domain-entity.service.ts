@@ -176,8 +176,16 @@ export class InvoiceDomainEntityService extends DomainEntityBase<InvoiceDto> imp
     return super.upsert();
   }
 
+  public markAsSent(): Observable<InvoiceDto> {
+    return super.update(this.invoiceStoreService.markAsSent);
+  }
+
   public markAsPaid(): Observable<InvoiceDto> {
     return super.update(this.invoiceStoreService.markAsPaid);
+  }
+
+  public markAsCancelled(): Observable<InvoiceDto> {
+    return super.update(this.invoiceStoreService.markAsCancelled);
   }
 
   public copy(): Observable<string> {
