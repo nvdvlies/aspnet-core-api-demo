@@ -22,12 +22,12 @@ const routes: AppRoutes = [
       {
         path: ':id',
         component: CustomerDetailsComponent,
-        canActivate: [FeatureFlagGuard, RoleGuard],
-        canDeactivate: [UnsavedChangesGuard],
-        data: {
-          featureFlag: FeatureFlag.FeatureFlagX,
-          roleNames: [Role.Administrator]
-        } as RouteData
+        // canActivate: [FeatureFlagGuard, RoleGuard],
+        canDeactivate: [UnsavedChangesGuard]
+        // data: {
+        //   featureFlag: FeatureFlag.FeatureFlagX,
+        //   roleNames: [Role.Administrator]
+        // } as RouteData
       }
     ] as AppRoutes
   }

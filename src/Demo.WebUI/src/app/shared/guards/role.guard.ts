@@ -19,7 +19,7 @@ export class RoleGuard implements CanActivate {
       return this.currentUserService.hasAnyRole(roleNames);
     } else {
       console.warn(
-        `Route '${state.url}' has a 'RoleGuard' but is missing a required 'roleName' property in the route data.`
+        `Route '${state.url}' has a 'RoleGuard' but is missing a required 'roleNames' property in the route data.`
       );
       return false;
     }
