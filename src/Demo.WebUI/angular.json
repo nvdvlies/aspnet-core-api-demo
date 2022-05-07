@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "Demo.WebUI": {
+    "DemoWebUI": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -20,7 +20,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/demo.web-ui",
+            "outputPath": "dist/demo-web-ui",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -67,10 +67,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "Demo.WebUI:build:production"
+              "browserTarget": "DemoWebUI:build:production"
             },
             "development": {
-              "browserTarget": "Demo.WebUI:build:development"
+              "browserTarget": "DemoWebUI:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -78,7 +78,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "Demo.WebUI:build"
+            "browserTarget": "DemoWebUI:build"
           }
         },
         "test": {
@@ -103,7 +103,7 @@
       }
     }
   },
-  "defaultProject": "Demo.WebUI",
+  "defaultProject": "DemoWebUI",
   "cli": {
     "analytics": false,
     "defaultCollection": "@angular-eslint/schematics"
