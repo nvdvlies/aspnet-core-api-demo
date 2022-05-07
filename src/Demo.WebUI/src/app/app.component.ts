@@ -6,6 +6,7 @@ import { ApplicationSettingsService } from '@shared/services/application-setting
 import { FeatureFlagService } from '@shared/services/feature-flag.service';
 import { BehaviorSubject, combineLatest, map, Observable } from 'rxjs';
 import { UserPreferencesService } from '@shared/services/user-preferences.service';
+import { RoleService } from '@shared/services/role.service';
 
 interface ViewModel {
   resolversAreInitialized: boolean;
@@ -41,7 +42,8 @@ export class AppComponent implements OnInit {
     public readonly featureFlagService: FeatureFlagService,
     public readonly applicationSettingsService: ApplicationSettingsService,
     public readonly currentUserService: CurrentUserService,
-    public readonly userPreferencesService: UserPreferencesService
+    public readonly userPreferencesService: UserPreferencesService,
+    public readonly roleService: RoleService
   ) {}
 
   public ngOnInit(): void {
@@ -55,10 +57,11 @@ export class AppComponent implements OnInit {
       this.featureFlagService.isInitialized$,
       this.applicationSettingsService.isInitialized$,
       this.currentUserService.isInitialized$,
-      this.userPreferencesService.isInitialized$
-    ]).subscribe(([featureFlags, applicationSettings, currentUser, userPreferences]) =>
+      this.userPreferencesService.isInitialized$,
+      this.roleService.isInitialized$
+    ]).subscribe(([featureFlags, applicationSettings, currentUser, userPreferences, roles]) =>
       this.resolversAreInitialized.next(
-        featureFlags && applicationSettings && currentUser && userPreferences
+        featureFlags && applicationSettings && currentUser && userPreferences && roles
       )
     );
 
@@ -66,10 +69,11 @@ export class AppComponent implements OnInit {
       this.featureFlagService.initializationProblemDetails$,
       this.applicationSettingsService.initializationProblemDetails$,
       this.currentUserService.initializationProblemDetails$,
-      this.userPreferencesService.initializationProblemDetails$
-    ]).subscribe(([featureFlags, applicationSettings, currentUser, userPreferences]) =>
+      this.userPreferencesService.initializationProblemDetails$,
+      this.roleService.initializationProblemDetails$
+    ]).subscribe(([featureFlags, applicationSettings, currentUser, userPreferences, roles]) =>
       this.resolverProblemDetails.next(
-        featureFlags ?? applicationSettings ?? currentUser ?? userPreferences
+        featureFlags ?? applicationSettings ?? currentUser ?? userPreferences ?? roles
       )
     );
   }

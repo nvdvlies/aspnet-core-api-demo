@@ -4,8 +4,9 @@ import { AuthGuard } from '@auth0/auth0-angular';
 import { InvoiceDetailsComponent } from '@invoices/pages/invoice-details/invoice-details.component';
 import { InvoiceListComponent } from '@invoices/pages/invoice-list/invoice-list.component';
 import { UnsavedChangesGuard } from '@shared/guards/unsaved-changes.guard';
+import { AppRoutes } from 'src/app/app-routing.module';
 
-const routes: Routes = [
+const routes: AppRoutes = [
   {
     path: '',
     canActivateChild: [AuthGuard],
@@ -19,7 +20,7 @@ const routes: Routes = [
         component: InvoiceDetailsComponent,
         canDeactivate: [UnsavedChangesGuard]
       }
-    ]
+    ] as AppRoutes
   }
 ];
 

@@ -3,13 +3,16 @@ import { Route, RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from '@auth0/auth0-angular';
 import { DefaultTemplateComponent } from '@layout/default-template/default-template.component';
 import { FeatureFlag } from '@shared/enums/feature-flag.enum';
+import { Role } from '@shared/enums/role.enum';
 import { ApplicationSettingsResolver } from '@shared/resolvers/application-settings.resolver';
 import { CurrentUserResolver } from '@shared/resolvers/current-user.resolver';
 import { FeatureFlagResolver } from '@shared/resolvers/feature-flag.resolver';
+import { RolesResolver } from '@shared/resolvers/roles.resolver';
 import { UserPreferencesResolver } from '@shared/resolvers/user-preferences.resolver';
 
 export type RouteData = {
-  featureFlag?: keyof typeof FeatureFlag;
+  featureFlag?: FeatureFlag;
+  roleNames?: Array<keyof typeof Role>;
 };
 
 export type AppRoute = Route & {
@@ -27,7 +30,8 @@ const routes: AppRoutes = [
       featureFlagsInitialized: FeatureFlagResolver,
       applicationSettingsInitialized: ApplicationSettingsResolver,
       currentUserInitialized: CurrentUserResolver,
-      userPreferencesInitialized: UserPreferencesResolver
+      userPreferencesInitialized: UserPreferencesResolver,
+      rolesInitialized: RolesResolver
     },
     children: [
       {
@@ -47,7 +51,7 @@ const routes: AppRoutes = [
           import('./features/invoices/invoices.module').then((m) => m.InvoicesModule),
         canActivate: [AuthGuard]
       }
-    ]
+    ] as AppRoutes
   }
 ];
 

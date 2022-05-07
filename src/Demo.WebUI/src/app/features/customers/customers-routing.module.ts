@@ -1,11 +1,16 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { AuthGuard } from '@auth0/auth0-angular';
 import { CustomerDetailsComponent } from '@customers/pages/customer-details/customer-details.component';
 import { CustomerListComponent } from '@customers/pages/customer-list/customer-list.component';
+import { FeatureFlag } from '@shared/enums/feature-flag.enum';
+import { Role } from '@shared/enums/role.enum';
+import { FeatureFlagGuard } from '@shared/guards/feature-flag.guard';
+import { RoleGuard } from '@shared/guards/role.guard';
 import { UnsavedChangesGuard } from '@shared/guards/unsaved-changes.guard';
+import { AppRoutes, RouteData } from 'src/app/app-routing.module';
 
-const routes: Routes = [
+const routes: AppRoutes = [
   {
     path: '',
     canActivateChild: [AuthGuard],
@@ -17,9 +22,14 @@ const routes: Routes = [
       {
         path: ':id',
         component: CustomerDetailsComponent,
-        canDeactivate: [UnsavedChangesGuard]
+        canActivate: [FeatureFlagGuard, RoleGuard],
+        canDeactivate: [UnsavedChangesGuard],
+        data: {
+          featureFlag: FeatureFlag.FeatureFlagX,
+          roleNames: [Role.Administrator]
+        } as RouteData
       }
-    ]
+    ] as AppRoutes
   }
 ];
 
