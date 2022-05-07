@@ -8,7 +8,7 @@ namespace Demo.Infrastructure.Persistence
         public ApplicationDbContext CreateDbContext(string[] args)
         {
             var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
-            var connectionString = "Data Source=(localdb)\\MsSqlLocalDb;initial catalog=Demo;Integrated Security=True; MultipleActiveResultSets=True";
+            var connectionString = "Data Source=localhost;initial catalog=Demo;Integrated Security=True; MultipleActiveResultSets=True";
             optionsBuilder.UseSqlServer(connectionString, b => b.MigrationsAssembly("Demo.Infrastructure"));
 
             return new ApplicationDbContext(optionsBuilder.Options);
