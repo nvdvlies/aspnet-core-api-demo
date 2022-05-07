@@ -13,11 +13,11 @@ namespace Demo.WebApi.Controllers
     [ApiController]
     public class MessagesController : ApiControllerBase
     {
-        [Authorize(nameof(Policies.Machine))]
         [HttpPost]
+        [Authorize(nameof(Policies.Machine))]
+        [Authorize(nameof(Policies.Machine))]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
-        [Authorize(nameof(Policies.Machine))]
         public async Task<ActionResult> Post([FromBody] ServiceBusMessage serviceBusMessage, CancellationToken cancellationToken)
         {
             var message = serviceBusMessage.ToMessage();

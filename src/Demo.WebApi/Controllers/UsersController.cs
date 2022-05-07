@@ -17,17 +17,17 @@ namespace Demo.WebApi.Controllers
 {
     public class UsersController : ApiControllerBase
     {
-        [Authorize(nameof(Policies.Admin))]
         [HttpGet]
+        [Authorize(nameof(Policies.Admin))]
         [ProducesResponseType(typeof(SearchUsersQueryResult), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
         public async Task<ActionResult<SearchUsersQueryResult>> Search([FromQuery] SearchUsersQuery query, CancellationToken cancellationToken)
         {
             return await Mediator.Send(query, cancellationToken);
         }
-
-        [Authorize(nameof(Policies.Admin))]
+        
         [HttpGet("{id:guid}", Name = nameof(GetUserById))]
+        [Authorize(nameof(Policies.Admin))]
         [ProducesResponseType(typeof(GetUserByIdQueryResult), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
@@ -43,9 +43,9 @@ namespace Demo.WebApi.Controllers
 
             return Ok(result);
         }
-
-        [Authorize(nameof(Policies.Admin))]
+        
         [HttpPost]
+        [Authorize(nameof(Policies.Admin))]
         [ProducesResponseType(typeof(CreateUserResponse), (int)HttpStatusCode.Created)]
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
@@ -55,9 +55,9 @@ namespace Demo.WebApi.Controllers
 
             return CreatedAtRoute(routeName: nameof(GetUserById), routeValues: new { id = result.Id }, result);
         }
-
-        [Authorize(nameof(Policies.Admin))]
+        
         [HttpPut("{id:guid}")]
+        [Authorize(nameof(Policies.Admin))]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
@@ -69,9 +69,9 @@ namespace Demo.WebApi.Controllers
 
             return NoContent();
         }
-
-        [Authorize(nameof(Policies.Admin))]
+        
         [HttpDelete("{id:guid}")]
+        [Authorize(nameof(Policies.Admin))]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
@@ -84,8 +84,8 @@ namespace Demo.WebApi.Controllers
             return Ok();
         }
         
-        [Authorize(nameof(Policies.Admin))]
         [HttpGet("{id:guid}/Auditlog")]
+        [Authorize(nameof(Policies.Admin))]
         [ProducesResponseType(typeof(GetUserAuditlogQueryResult), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
         public async Task<ActionResult<GetUserAuditlogQueryResult>> GetUserAuditlog([FromRoute] Guid id, [FromQuery] GetUserAuditlogQuery query, CancellationToken cancellationToken)

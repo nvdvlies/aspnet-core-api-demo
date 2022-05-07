@@ -15,7 +15,6 @@ using System.Threading.Tasks;
 
 namespace Demo.WebApi.Controllers
 {
-    [Authorize(nameof(Policies.Admin))]
     public class RolesController : ApiControllerBase
     {
         [HttpGet]
@@ -25,7 +24,7 @@ namespace Demo.WebApi.Controllers
         {
             return await Mediator.Send(query, cancellationToken);
         }
-
+        
         [HttpGet("{id:guid}", Name = nameof(GetRoleById))]
         [ProducesResponseType(typeof(GetRoleByIdQueryResult), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
@@ -42,8 +41,9 @@ namespace Demo.WebApi.Controllers
 
             return Ok(result);
         }
-
+        
         [HttpPost]
+        [Authorize(nameof(Policies.Admin))]
         [ProducesResponseType(typeof(CreateRoleResponse), (int)HttpStatusCode.Created)]
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
@@ -53,8 +53,9 @@ namespace Demo.WebApi.Controllers
 
             return CreatedAtRoute(routeName: nameof(GetRoleById), routeValues: new { id = result.Id }, result);
         }
-
+        
         [HttpPut("{id:guid}")]
+        [Authorize(nameof(Policies.Admin))]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
@@ -66,8 +67,9 @@ namespace Demo.WebApi.Controllers
 
             return NoContent();
         }
-
+        
         [HttpDelete("{id:guid}")]
+        [Authorize(nameof(Policies.Admin))]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
@@ -79,8 +81,9 @@ namespace Demo.WebApi.Controllers
 
             return Ok();
         }
-
+        
         [HttpGet("{id:guid}/Auditlog")]
+        [Authorize(nameof(Policies.Admin))]
         [ProducesResponseType(typeof(GetRoleAuditlogQueryResult), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
         public async Task<ActionResult<GetRoleAuditlogQueryResult>> GetRoleAuditlog([FromRoute] Guid id, [FromQuery] GetRoleAuditlogQuery query, CancellationToken cancellationToken)

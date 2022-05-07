@@ -19,9 +19,9 @@ namespace Demo.WebApi.Controllers
         {
             return await Mediator.Send(query, cancellationToken);
         }
-
-        [Authorize(nameof(Policies.Admin))]
+        
         [HttpPut]
+        [Authorize(nameof(Policies.Admin))]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]

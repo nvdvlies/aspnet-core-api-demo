@@ -14,8 +14,8 @@ namespace Demo.WebApi.Controllers
     [ApiController]
     public class EventsController : ApiControllerBase
     {
-        [Authorize(nameof(Policies.Machine))]
         [HttpPost]
+        [Authorize(nameof(Policies.Machine))]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
         [Authorize(nameof(Policies.Machine))]
