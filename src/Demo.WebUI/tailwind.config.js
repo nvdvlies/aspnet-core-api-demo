@@ -9,5 +9,11 @@ module.exports = {
   variants: {
     extend: {}
   },
-  plugins: [require('@tailwindcss/forms'), require('@tailwindcss/typography')]
+  corePlugins: {
+    preflight: false
+  },
+  plugins: [
+    require('@tailwindcss/forms')({ strategy: 'class' }),
+    require('@tailwindcss/typography')
+  ]
 };
