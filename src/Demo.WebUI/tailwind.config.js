@@ -1,9 +1,7 @@
 module.exports = {
   important: true,
   prefix: '',
-  content: {
-    content: ['./src/**/*.{html,ts}']
-  },
+  content: ['./src/**/*.{html,ts}'],
   darkMode: 'class',
   theme: {
     extend: {}
