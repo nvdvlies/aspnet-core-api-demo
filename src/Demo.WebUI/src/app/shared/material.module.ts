@@ -20,6 +20,7 @@ import {
   MatMomentDateModule,
   MAT_MOMENT_DATE_ADAPTER_OPTIONS
 } from '@angular/material-moment-adapter';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [],
@@ -41,7 +42,8 @@ import {
     MatDialogModule,
     MatAutocompleteModule,
     MatDatepickerModule,
-    MatMomentDateModule
+    MatMomentDateModule,
+    MatTooltipModule
   ],
   providers: [{ provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } }]
 })

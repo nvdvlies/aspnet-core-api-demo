@@ -6,8 +6,9 @@
       <mat-icon>account_circle</mat-icon>
     </button>
     <mat-menu #accountMenu [overlapTrigger]="false" yPosition="below">
+      <button mat-menu-item routerLink="#"><mat-icon>person</mat-icon><span>Account</span></button>
       <button mat-menu-item routerLink="#">
-        <mat-icon>person</mat-icon><span>My Account</span>
+        <mat-icon>settings</mat-icon><span>Preferences</span>
       </button>
       <mat-divider></mat-divider>
       <button mat-menu-item (click)="logout()"><mat-icon>logout</mat-icon>Logout</button>

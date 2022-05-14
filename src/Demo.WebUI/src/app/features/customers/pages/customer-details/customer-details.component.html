@@ -16,7 +16,13 @@
               : 'New customer'
           }}"
         >
-          <button mat-icon-button type="button" *ngIf="vm.id != null" routerLink="auditlog">
+          <button
+            mat-icon-button
+            type="button"
+            *ngIf="vm.id != null"
+            routerLink="auditlog"
+            matTooltip="Audit log"
+          >
             <mat-icon>history</mat-icon>
           </button>
           <button
