@@ -365,9 +365,9 @@ export abstract class DomainEntityBase<T extends IDomainEntity<T>>
       case 'required':
         return 'Field is required.';
       case 'maxlength':
-        return `Field must be ${errorValue.requiredLength} characters or fewer. You entered ${errorValue.actualLength} characters.`;
+        return `Field must be ${errorValue.requiredLength} characters or fewer. You entered ${errorValue.actualLength} character(s).`;
       case 'minlength':
-        return `Field must be at least ${errorValue.requiredLength} characters. You entered ${errorValue.actualLength} characters.`;
+        return `Field must be at least ${errorValue.requiredLength} characters. You entered ${errorValue.actualLength} character(s).`;
       case 'min':
         return `Field must be greater than or equal to ${errorValue.min}`;
       case 'max':
