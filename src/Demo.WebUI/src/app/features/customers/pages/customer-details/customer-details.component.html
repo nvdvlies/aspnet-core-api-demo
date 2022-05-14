@@ -48,16 +48,12 @@
           <div class="auditlog" *ngIf="vm.id != null">
             <small
               >Created by
-              <a routerLink="/users/{{ vm.pristine?.createdBy }}">{{
-                vm.pristine?.createdBy | userIdToName | async
-              }}</a>
+              {{ vm.pristine?.createdBy | userIdToName | async }}
               on {{ vm.pristine?.createdOn | date: 'short' }}</small
             >
             <small
               >Last modified by
-              <a routerLink="/users/{{ vm.pristine?.lastModifiedBy }}">{{
-                vm.pristine?.lastModifiedBy | userIdToName | async
-              }}</a>
+              {{ vm.pristine?.lastModifiedBy | userIdToName | async }}
               on {{ vm.pristine?.lastModifiedOn | date: 'short' }}</small
             >
           </div>
