@@ -72,19 +72,21 @@
               </button>
             </div>
           </app-message>
-          <mat-card class="card">
+          <mat-card class="card shadow-lg bg-white mt-2">
             <mat-card-header>
               <mat-card-title>General</mat-card-title>
             </mat-card-header>
             <mat-card-content>
               <div class="row">
                 <div class="col">
-                  <mat-form-field class="full-width">
+                  <mat-form-field appearance="fill" class="full-width">
+                    <mat-label>Name</mat-label>
                     <input
                       matInput
                       [appSetFocus]="vm.id == null"
                       placeholder="Name"
                       formControlName="name"
+                      type="text"
                     />
                     <mat-error appDomainEntityErrorMessage></mat-error>
                   </mat-form-field>
@@ -93,7 +95,7 @@
             </mat-card-content>
           </mat-card>
         </div>
-        {{ form.value | json }}
+        <!-- {{ form.value | json }} -->
       </form>
     </ng-container>
   </ng-container>

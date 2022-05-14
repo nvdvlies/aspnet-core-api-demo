@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
-import { combineLatest, map, Observable } from 'rxjs';
+import { combineLatest, map, Observable, tap } from 'rxjs';
 import { InvoiceTableDataSource } from '@invoices/pages/invoice-list/invoice-table-datasource';
 import {
   InvoiceTableDataContext,
@@ -25,12 +25,15 @@ export class InvoiceListComponent implements OnInit, OnDestroy {
   public dataSource!: InvoiceTableDataSource;
   public searchTerm = this.invoiceTableDataService.searchTerm;
 
+  private vm: Readonly<ViewModel> | undefined;
+
   public vm$ = combineLatest([this.invoiceTableDataService.observe$]).pipe(
     map(([context]) => {
       return {
         ...context
       } as ViewModel;
-    })
+    }),
+    tap((vm) => (this.vm = vm))
   ) as Observable<ViewModel>;
 
   constructor(

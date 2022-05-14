@@ -1,9 +1,8 @@
 <ng-container *ngIf="vm$ | async as vm; else loading">
   <ng-container *ngIf="vm.resolversAreInitialized || vm.resolverProblemDetails; else loading">
-    <app-problem-details
-      *ngIf="vm.resolverProblemDetails"
-      [problemDetails]="vm.resolverProblemDetails"
-    ></app-problem-details>
+    <div *ngIf="vm.resolverProblemDetails" class="p-4">
+      <app-problem-details [problemDetails]="vm.resolverProblemDetails"></app-problem-details>
+    </div>
     <router-outlet></router-outlet>
   </ng-container>
 </ng-container>

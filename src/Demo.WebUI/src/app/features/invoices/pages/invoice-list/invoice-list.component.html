@@ -7,24 +7,38 @@
     <div class="content-container">
       <app-problem-details [problemDetails]="vm.problemDetails"></app-problem-details>
 
-      <div appTableFilterContainer [filterCriteria]="vm.criteria" (filterChange)="search($event)">
-        <mat-form-field>
-          <input
-            appTableFilter
-            debounceTime="350"
-            matInput
-            placeholder="Search..."
-            [formControl]="searchTerm"
-          />
-        </mat-form-field>
-        <div class="content-container">
+      <mat-card class="p-5 shadow-lg mt-2 bg-white">
+        <div appTableFilterContainer [filterCriteria]="vm.criteria" (filterChange)="search($event)">
+          <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Search</mat-label>
+            <input
+              appTableFilter
+              debounceTime="350"
+              matInput
+              placeholder="Search..."
+              [formControl]="searchTerm"
+              appSetFocus="true"
+              autocomplete="off"
+              type="text"
+            />
+            <button
+              *ngIf="searchTerm.value"
+              matSuffix
+              mat-icon-button
+              aria-label="Clear"
+              (click)="searchTerm.setValue(null)"
+            >
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+
           <table
             mat-table
             matSort
             [matSortActive]="vm.criteria?.sortColumn ?? 'InvoiceNumber'"
             matSortDisableClear
             [matSortDirection]="vm.criteria?.sortDirection ?? 'desc'"
-            class="mat-elevation-z1"
+            class="w-full bg-inherit"
             [dataSource]="dataSource"
             [trackBy]="trackById"
           >
@@ -53,18 +67,20 @@
               [ngClass]="{ 'spotlight-row': row.id === vm.spotlightIdentifier }"
             ></tr>
           </table>
-        </div>
-        <ng-container *ngIf="vm.isLoading">
-          <app-spinner diameter="50"></app-spinner>
-        </ng-container>
 
-        <mat-paginator
-          [length]="vm.totalItems ?? 0"
-          [pageIndex]="vm.pageIndex ?? 0"
-          [pageSize]="vm.pageSize"
-          [pageSizeOptions]="[5, 10, 25]"
-        ></mat-paginator>
-      </div>
+          <ng-container *ngIf="vm.isLoading">
+            <app-spinner diameter="50"></app-spinner>
+          </ng-container>
+
+          <mat-paginator
+            [length]="vm.totalItems ?? 0"
+            [pageIndex]="vm.pageIndex ?? 0"
+            [pageSize]="vm.pageSize"
+            [pageSizeOptions]="[5, 10, 25]"
+            class="bg-inherit"
+          ></mat-paginator>
+        </div>
+      </mat-card>
     </div>
   </ng-container>
   <!-- {{ vm | json }} -->

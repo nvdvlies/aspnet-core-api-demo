@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { combineLatest, debounceTime, EMPTY, map, Observable, switchMap } from 'rxjs';
+import { combineLatest, debounceTime, EMPTY, map, Observable, switchMap, tap } from 'rxjs';
 import { BaseDomainEntityService } from '@domain/shared/domain-entity-base';
 import {
   InvoiceDomainEntityService,
@@ -30,13 +30,16 @@ interface ViewModel extends IInvoiceDomainEntityContext {}
 export class InvoiceDetailsComponent implements OnInit, IHasForm {
   public initFromRoute$ = this.invoiceDomainEntityService.initFromRoute();
 
+  private vm: Readonly<ViewModel> | undefined;
+
   public vm$ = combineLatest([this.invoiceDomainEntityService.observe$]).pipe(
     debounceTime(0),
     map(([domainEntityContext]) => {
       return {
         ...domainEntityContext
       } as ViewModel;
-    })
+    }),
+    tap((vm) => (this.vm = vm))
   ) as Observable<ViewModel>;
 
   public form: InvoiceFormGroup = this.invoiceDomainEntityService.form;

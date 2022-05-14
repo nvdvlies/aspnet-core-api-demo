@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
-import { combineLatest, map, Observable } from 'rxjs';
+import { combineLatest, map, Observable, tap } from 'rxjs';
 import { CustomerTableDataSource } from '@customers/pages/customer-list/customer-table-datasource';
 import {
   CustomerTableDataContext,
@@ -25,12 +25,15 @@ export class CustomerListComponent implements OnInit, OnDestroy {
   public dataSource!: CustomerTableDataSource;
   public searchTerm = this.customerTableDataService.searchTerm;
 
+  private vm: Readonly<ViewModel> | undefined;
+
   public vm$ = combineLatest([this.customerTableDataService.observe$]).pipe(
     map(([context]) => {
       return {
         ...context
       } as ViewModel;
-    })
+    }),
+    tap((vm) => (this.vm = vm))
   ) as Observable<ViewModel>;
 
   constructor(
