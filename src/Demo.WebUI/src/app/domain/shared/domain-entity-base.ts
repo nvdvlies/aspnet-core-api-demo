@@ -15,6 +15,18 @@ import {
 import { ApiException, ProblemDetails, ValidationProblemDetails } from '@api/api.generated.clients';
 import { MergeUtil } from '@domain/shared/merge.util';
 
+export class ProblemDetailsError extends Error {
+  public problemDetails: ValidationProblemDetails | ProblemDetails | ApiException;
+
+  constructor(
+    message: string,
+    problemDetails: ValidationProblemDetails | ProblemDetails | ApiException
+  ) {
+    super(message);
+    this.problemDetails = problemDetails;
+  }
+}
+
 export class InitFromRouteOptions {
   parameterName: string = 'id';
   newValue: string = 'new';
@@ -329,7 +341,11 @@ export abstract class DomainEntityBase<T extends IDomainEntity<T>>
   ): Observable<never> {
     this.problemDetails.next(problemDetails);
     return throwError(
-      () => new Error("An error occured. See 'problemDetails' for more information")
+      () =>
+        new ProblemDetailsError(
+          "An error occured. See 'problemDetails' for more information",
+          problemDetails
+        )
     );
   }
 
