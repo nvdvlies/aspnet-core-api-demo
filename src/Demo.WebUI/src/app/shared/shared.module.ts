@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MaterialModule } from '@shared/material.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { FlexLayoutModule } from '@angular/flex-layout';
 import { TableFilterContainerDirective } from '@shared/directives/table-filter-container.directive';
 import { TableFilterDirective } from '@shared/directives/table-filter.directive';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header.component';
@@ -41,12 +40,11 @@ import { SpinnerComponent } from './components/spinner/spinner.component';
     IfFeatureFlagDisabledDirective,
     SpinnerComponent
   ],
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, MaterialModule, FlexLayoutModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, MaterialModule],
   exports: [
     ReactiveFormsModule,
     FormsModule,
     MaterialModule,
-    FlexLayoutModule,
     TableFilterContainerDirective,
     TableFilterDirective,
     PageHeaderComponent,
