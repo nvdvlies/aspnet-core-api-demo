@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { forkJoin, Observable, of, Subject } from 'rxjs';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { filter, finalize, map, switchMap, tap } from 'rxjs/operators';
 import {
   FeatureFlagSettingsDto,
   ApiFeatureFlagSettingsClient,
@@ -17,6 +17,8 @@ import {
 export class FeatureFlagSettingsStoreService {
   private featureFlagSettings: FeatureFlagSettingsDto | undefined;
 
+  private updateLock: boolean = false;
+
   private readonly featureFlagSettingsUpdatedInStore = new Subject<
     [FeatureFlagSettingsUpdatedEvent, FeatureFlagSettingsDto]
   >();
@@ -32,6 +34,7 @@ export class FeatureFlagSettingsStoreService {
   ) {
     this.featureFlagSettingsEventsService.featureFlagSettingsUpdated$
       .pipe(
+        filter(() => !this.updateLock),
         switchMap((event) => {
           return forkJoin([of(event), this.get(true)]);
         })
@@ -55,6 +58,10 @@ export class FeatureFlagSettingsStoreService {
   public save(featureFlagSettings: FeatureFlagSettingsDto): Observable<FeatureFlagSettingsDto> {
     const command = new SaveFeatureFlagSettingsCommand();
     command.init({ ...featureFlagSettings });
-    return this.apiFeatureFlagSettingsClient.save(command).pipe(switchMap(() => this.get(true)));
+    this.updateLock = true;
+    return this.apiFeatureFlagSettingsClient.save(command).pipe(
+      switchMap(() => this.get(true)),
+      finalize(() => (this.updateLock = false))
+    );
   }
 }

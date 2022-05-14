@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { forkJoin, Observable, of, Subject } from 'rxjs';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { filter, finalize, map, switchMap, tap } from 'rxjs/operators';
 import {
   UserPreferencesDto,
   ApiUserPreferencesClient,
@@ -17,6 +17,8 @@ import {
 export class UserPreferencesStoreService {
   private userPreferences: UserPreferencesDto | undefined;
 
+  private updateLock: boolean = false;
+
   private readonly userPreferencesUpdatedInStore = new Subject<
     [UserPreferencesUpdatedEvent, UserPreferencesDto]
   >();
@@ -32,6 +34,7 @@ export class UserPreferencesStoreService {
   ) {
     this.userPreferencesEventsService.userPreferencesUpdated$
       .pipe(
+        filter(() => !this.updateLock),
         switchMap((event) => {
           return forkJoin([of(event), this.get(true)]);
         })
@@ -55,6 +58,10 @@ export class UserPreferencesStoreService {
   public save(userPreferences: UserPreferencesDto): Observable<UserPreferencesDto> {
     const command = new SaveUserPreferencesCommand();
     command.init({ ...userPreferences });
-    return this.apiUserPreferencesClient.save(command).pipe(switchMap(() => this.get(true)));
+    this.updateLock = true;
+    return this.apiUserPreferencesClient.save(command).pipe(
+      switchMap(() => this.get(true)),
+      finalize(() => (this.updateLock = false))
+    );
   }
 }

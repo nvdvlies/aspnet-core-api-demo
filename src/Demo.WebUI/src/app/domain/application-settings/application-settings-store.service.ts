@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { forkJoin, Observable, of, Subject } from 'rxjs';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { filter, finalize, map, switchMap, tap } from 'rxjs/operators';
 import {
   ApplicationSettingsDto,
   ApiApplicationSettingsClient,
@@ -17,6 +17,8 @@ import {
 export class ApplicationSettingsStoreService {
   private applicationSettings: ApplicationSettingsDto | undefined;
 
+  private updateLock: boolean = false;
+
   private readonly applicationSettingsUpdatedInStore = new Subject<
     [ApplicationSettingsUpdatedEvent, ApplicationSettingsDto]
   >();
@@ -32,6 +34,7 @@ export class ApplicationSettingsStoreService {
   ) {
     this.applicationSettingsEventsService.applicationSettingsUpdated$
       .pipe(
+        filter(() => !this.updateLock),
         switchMap((event) => {
           return forkJoin([of(event), this.get(true)]);
         })
@@ -55,6 +58,10 @@ export class ApplicationSettingsStoreService {
   public save(applicationSettings: ApplicationSettingsDto): Observable<ApplicationSettingsDto> {
     const command = new SaveApplicationSettingsCommand();
     command.init({ ...applicationSettings });
-    return this.apiApplicationSettingsClient.save(command).pipe(switchMap(() => this.get(true)));
+    this.updateLock = true;
+    return this.apiApplicationSettingsClient.save(command).pipe(
+      switchMap(() => this.get(true)),
+      finalize(() => (this.updateLock = false))
+    );
   }
 }
