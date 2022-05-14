@@ -132,6 +132,9 @@ export class InvoiceDomainEntityService extends DomainEntityBase<InvoiceDto> imp
   public removeInvoiceLine(index: number): void {
     if (this.invoiceLineFormArray.length > 1) {
       this.invoiceLineFormArray.removeAt(index);
+      if (!this.form.dirty) {
+        this.form.markAsDirty();
+      }
     }
   }
 
