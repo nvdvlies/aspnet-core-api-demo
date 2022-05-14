@@ -8,7 +8,7 @@ import {
   Validators
 } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { combineLatest, Observable, of, throwError } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable, of, throwError } from 'rxjs';
 import { debounceTime, map } from 'rxjs/operators';
 import {
   InvoiceDto,
@@ -16,7 +16,8 @@ import {
   IInvoiceLineDto,
   InvoiceLineDto,
   ApiInvoicesClient,
-  CopyInvoiceCommand
+  CopyInvoiceCommand,
+  InvoiceStatusEnum
 } from '@api/api.generated.clients';
 import { InvoiceStoreService } from '@domain/invoice/invoice-store.service';
 import {
@@ -26,12 +27,16 @@ import {
   InitFromRouteOptions
 } from '@domain/shared/domain-entity-base';
 
-export interface IInvoiceDomainEntityContext extends IDomainEntityContext<InvoiceDto> {}
+export interface IInvoiceDomainEntityContext extends IDomainEntityContext<InvoiceDto> {
+  canEditInvoiceContent: boolean;
+}
 
 export class InvoiceDomainEntityContext
   extends DomainEntityContext<InvoiceDto>
   implements IInvoiceDomainEntityContext
 {
+  public canEditInvoiceContent: boolean = true;
+
   constructor() {
     super();
   }
@@ -57,11 +62,16 @@ export class InvoiceDomainEntityService extends DomainEntityBase<InvoiceDto> imp
   protected deleteFunction = (id?: string) => this.invoiceStoreService.delete(id!);
   protected entityUpdatedEvent$ = this.invoiceStoreService.invoiceUpdatedInStore$;
 
-  public observe$ = combineLatest([this.observeInternal$]).pipe(
+  protected readonly canEditInvoiceContent = new BehaviorSubject<boolean>(true);
+
+  protected canEditInvoiceContent$ = this.canEditInvoiceContent.asObservable();
+
+  public observe$ = combineLatest([this.observeInternal$, this.canEditInvoiceContent$]).pipe(
     debounceTime(0),
-    map(([context]) => {
+    map(([context, canEditInvoiceContent]) => {
       return {
-        ...context
+        ...context,
+        canEditInvoiceContent
       } as InvoiceDomainEntityContext;
     })
   ) as Observable<InvoiceDomainEntityContext>;
@@ -140,6 +150,7 @@ export class InvoiceDomainEntityService extends DomainEntityBase<InvoiceDto> imp
 
   protected instantiateNewEntity(): Observable<InvoiceDto> {
     const invoice = new InvoiceDto();
+    invoice.status = InvoiceStatusEnum.Draft;
     invoice.invoiceDate = new Date();
     invoice.paymentTerm = 30;
     const invoiceLine = new InvoiceLineDto();
@@ -206,6 +217,12 @@ export class InvoiceDomainEntityService extends DomainEntityBase<InvoiceDto> imp
   protected override afterPatchEntityToFormHook(invoice: InvoiceDto): void {
     // form.patchValue doesnt modify FormArray structure, so we need to do this manually afterwards.
     this.patchInvoiceLinesToForm(invoice);
+
+    const canEditInvoiceContent = invoice.status === InvoiceStatusEnum.Draft;
+    if (!canEditInvoiceContent) {
+      this.disableInvoiceContentControls();
+    }
+    this.canEditInvoiceContent.next(canEditInvoiceContent);
   }
 
   private patchInvoiceLinesToForm(invoice: InvoiceDto): void {
@@ -214,6 +231,17 @@ export class InvoiceDomainEntityService extends DomainEntityBase<InvoiceDto> imp
       const invoiceLineFormGroup = this.buildInvoiceLineFormGroup();
       invoiceLineFormGroup.patchValue({ ...invoiceLine });
       this.invoiceLineFormArray.push(invoiceLineFormGroup);
+    });
+  }
+
+  private disableInvoiceContentControls(): void {
+    this.form.controls.invoiceDate?.disable();
+    this.form.controls.customerId?.disable();
+    this.form.controls.orderReference?.disable();
+    this.invoiceLines.forEach((invoiceLine) => {
+      invoiceLine.controls.quantity.disable();
+      invoiceLine.controls.description?.disable();
+      invoiceLine.controls.sellingPrice.disable();
     });
   }
 

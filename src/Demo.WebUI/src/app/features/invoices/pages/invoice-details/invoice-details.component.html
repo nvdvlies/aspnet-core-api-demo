@@ -28,7 +28,7 @@
             mat-raised-button
             (click)="delete()"
             type="button"
-            *ngIf="vm.id != null"
+            *ngIf="vm.id != null && vm.entity?.status === InvoiceStatusEnum.Draft"
             [disabled]="vm.isDeleting"
             [class.button-spinner]="vm.isDeleting"
           >
@@ -118,6 +118,7 @@
                       mat-icon-button
                       matSuffix
                       (click)="customerAutocomplete.clearSearchField()"
+                      [disabled]="customerAutocomplete.disabled"
                     >
                       <mat-icon>close</mat-icon>
                     </button>
@@ -203,7 +204,12 @@
                           </mat-form-field>
                         </td>
                         <td class="mat-cell cdk-cell w-0 border-0 pr-0 pb-4 whitespace-nowrap">
-                          <button mat-icon-button type="button" (click)="removeInvoiceLine(i)">
+                          <button
+                            mat-icon-button
+                            type="button"
+                            (click)="removeInvoiceLine(i)"
+                            [disabled]="!vm.canEditInvoiceContent"
+                          >
                             <mat-icon>delete</mat-icon>
                           </button>
                         </td>
@@ -212,7 +218,12 @@
                   </tbody>
                 </table>
               </ng-container>
-              <button mat-raised-button type="button" (click)="addInvoiceLine()">
+              <button
+                mat-raised-button
+                type="button"
+                (click)="addInvoiceLine()"
+                [disabled]="!vm.canEditInvoiceContent"
+              >
                 <mat-icon>add</mat-icon> Add line
               </button>
             </mat-card-content>

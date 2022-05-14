@@ -180,9 +180,7 @@ export abstract class DomainEntityBase<T extends IDomainEntity<T>>
     this.isLoading.next(true);
     return this.instantiateNewEntity().pipe(
       map((entity: T) => {
-        this.entity.next(entity);
-        this.patchEntityToForm(entity);
-        this.pristine.next(entity.clone());
+        this.setEntity(entity);
         return entity;
       }),
       switchMap((entity: T) => this.afterNewHook?.(entity).pipe(map(() => null)) ?? of<null>(null)),
@@ -201,10 +199,7 @@ export abstract class DomainEntityBase<T extends IDomainEntity<T>>
       }),
       map((entity: T) => entity.clone()),
       tap((entity: T) => {
-        this.id.next(entity.id);
-        this.entity.next(entity);
-        this.patchEntityToForm(entity);
-        this.pristine.next(entity.clone());
+        this.setEntity(entity);
       }),
       switchMap(
         (entity: T) => this.afterReadHook?.(entity).pipe(map(() => null)) ?? of<null>(null)
@@ -249,9 +244,7 @@ export abstract class DomainEntityBase<T extends IDomainEntity<T>>
       ),
       map((entity: T) => entity.clone()),
       tap((entity) => {
-        this.entity.next(entity);
-        this.patchEntityToForm(entity);
-        this.pristine.next(entity.clone());
+        this.setEntity(entity);
       }),
       finalize(() => this.isSaving.next(false))
     );
@@ -271,9 +264,7 @@ export abstract class DomainEntityBase<T extends IDomainEntity<T>>
       ),
       map((entity: T) => entity.clone()),
       tap((entity) => {
-        this.entity.next(entity);
-        this.patchEntityToForm(entity);
-        this.pristine.next(entity.clone());
+        this.setEntity(entity);
       }),
       finalize(() => this.isSaving.next(false))
     );
@@ -315,6 +306,13 @@ export abstract class DomainEntityBase<T extends IDomainEntity<T>>
 
   public hasErrors(): boolean {
     return this.problemDetails.value != null;
+  }
+
+  protected setEntity(entity: T): void {
+    this.id.next(entity.id);
+    this.entity.next(entity);
+    this.patchEntityToForm(entity);
+    this.pristine.next(entity.clone());
   }
 
   protected patchEntityToForm(entity: T): void {

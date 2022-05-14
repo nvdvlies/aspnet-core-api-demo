@@ -169,12 +169,16 @@ export abstract class MatFormFieldControlBase<T>
   }
 
   public get disabled() {
+    if (this.formControl) {
+      return this.formControl.disabled;
+    }
     return this._disabled;
   }
 
   @Input()
   public set disabled(value: boolean) {
     this._disabled = coerceBooleanProperty(value);
+    this._disabled ? this.formControl.disable() : this.formControl.enable();
     this.stateChanges.next();
   }
 

@@ -44,6 +44,17 @@ export class CurrencyFormFieldControlComponent extends MatFormFieldControlBase<s
     super(elementRef, focusMonitor, controlContainer, ngControl);
   }
 
+  public override ngOnInit(): void {
+    super.ngOnInit();
+
+    this.formControl.status === 'DISABLED'
+      ? this.inputFormControl.disable()
+      : this.inputFormControl.enable();
+    this.formControl.statusChanges.subscribe((status) => {
+      status === 'DISABLED' ? this.inputFormControl.disable() : this.inputFormControl.enable();
+    });
+  }
+
   public onFocus(): void {
     this.inputFormControl.setValue(CurrencyUtils.parse(this.value)?.toString());
     this.inputElementRef.nativeElement.select();

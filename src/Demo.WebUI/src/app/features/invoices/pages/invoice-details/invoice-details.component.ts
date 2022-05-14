@@ -12,6 +12,7 @@ import { IHasForm } from '@shared/guards/unsaved-changes.guard';
 import { InvoiceListRouteState } from '@invoices/pages/invoice-list/invoice-list.component';
 import { ModalService } from '@shared/services/modal.service';
 import { ConfirmDeleteModalComponent } from '@shared/modals/confirm-delete-modal/confirm-delete-modal.component';
+import { InvoiceStatusEnum } from '@api/api.generated.clients';
 
 interface ViewModel extends IInvoiceDomainEntityContext {}
 
@@ -29,6 +30,8 @@ interface ViewModel extends IInvoiceDomainEntityContext {}
 })
 export class InvoiceDetailsComponent implements OnInit, IHasForm {
   public initFromRoute$ = this.invoiceDomainEntityService.initFromRoute();
+
+  public InvoiceStatusEnum = InvoiceStatusEnum;
 
   private vm: Readonly<ViewModel> | undefined;
 

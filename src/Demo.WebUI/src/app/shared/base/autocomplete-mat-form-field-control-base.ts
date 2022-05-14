@@ -95,6 +95,13 @@ export abstract class AutocompleteMatFormFieldControlBase extends MatFormFieldCo
   public override ngOnInit(): void {
     super.ngOnInit();
 
+    this.formControl.status === 'DISABLED'
+      ? this.searchFormControl.disable()
+      : this.searchFormControl.enable();
+    this.formControl.statusChanges.subscribe((status) => {
+      status === 'DISABLED' ? this.searchFormControl.disable() : this.searchFormControl.enable();
+    });
+
     this.formControl.valueChanges
       .pipe(takeUntil(this.onDestroy$))
       .subscribe((value: string | null) => {
