@@ -68,6 +68,7 @@ export abstract class MatFormFieldControlBase<T>
 
     focusMonitor.monitor(elementRef.nativeElement, true).subscribe((origin) => {
       this.focused = !!origin;
+      this.touched = !origin;
       this.stateChanges.next();
     });
   }
