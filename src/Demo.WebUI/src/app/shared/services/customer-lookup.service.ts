@@ -5,7 +5,7 @@ import {
   CustomerLookupOrderByEnum
 } from '@api/api.generated.clients';
 import { CustomerEventsService } from '@api/signalr.generated.services';
-import { LookupBase } from '@shared/base/lookup.base';
+import { LookupBase } from '@shared/base/lookup-base';
 import { map } from 'rxjs';
 
 @Injectable({

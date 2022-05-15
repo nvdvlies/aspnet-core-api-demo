@@ -73,13 +73,13 @@ export interface IDomainEntity<T> {
 }
 
 @Injectable()
-export abstract class BaseDomainEntityService {
+export abstract class DomainEntityService {
   public abstract getErrorMessage(errorKey: string, errorValue: any): string | undefined;
 }
 
 @Injectable()
 export abstract class DomainEntityBase<T extends IDomainEntity<T>>
-  implements BaseDomainEntityService, OnDestroy
+  implements DomainEntityService, OnDestroy
 {
   protected abstract instantiateForm(): void;
   protected abstract instantiateNewEntity(): Observable<T>;

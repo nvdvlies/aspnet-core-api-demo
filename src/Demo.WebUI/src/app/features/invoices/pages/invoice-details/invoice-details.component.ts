@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { combineLatest, debounceTime, EMPTY, map, Observable, switchMap, tap } from 'rxjs';
-import { BaseDomainEntityService } from '@domain/shared/domain-entity-base';
+import { DomainEntityService } from '@domain/shared/domain-entity-base';
 import {
   InvoiceDomainEntityService,
   InvoiceFormGroup,
@@ -22,7 +22,7 @@ interface ViewModel extends IInvoiceDomainEntityContext {}
   providers: [
     InvoiceDomainEntityService,
     {
-      provide: BaseDomainEntityService,
+      provide: DomainEntityService,
       useExisting: InvoiceDomainEntityService
     }
   ],

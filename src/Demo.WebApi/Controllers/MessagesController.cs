@@ -9,12 +9,9 @@ using System.Threading.Tasks;
 
 namespace Demo.WebApi.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
     public class MessagesController : ApiControllerBase
     {
         [HttpPost]
-        [Authorize(nameof(Policies.Machine))]
         [Authorize(nameof(Policies.Machine))]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]

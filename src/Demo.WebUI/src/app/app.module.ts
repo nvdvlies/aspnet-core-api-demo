@@ -15,6 +15,8 @@ import { AppComponent } from './app.component';
 
 import locale from '@angular/common/locales/nl';
 import { registerLocaleData } from '@angular/common';
+import { LoggerService } from '@shared/services/logger.service';
+import { ApiLoggerService } from '@shared/services/api-logger.service';
 
 registerLocaleData(locale, 'nl');
 
@@ -56,7 +58,8 @@ registerLocaleData(locale, 'nl');
     {
       provide: DEFAULT_CURRENCY_CODE,
       useValue: 'EUR'
-    }
+    },
+    { provide: LoggerService, useClass: ApiLoggerService }
   ],
   bootstrap: [AppComponent]
 })

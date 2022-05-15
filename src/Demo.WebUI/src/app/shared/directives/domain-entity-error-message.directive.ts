@@ -1,6 +1,6 @@
 import { AfterViewInit, Directive, ElementRef } from '@angular/core';
 import { MatFormField } from '@angular/material/form-field';
-import { BaseDomainEntityService } from '@domain/shared/domain-entity-base';
+import { DomainEntityService } from '@domain/shared/domain-entity-base';
 
 @Directive({
   selector: '[appDomainEntityErrorMessage]'
@@ -9,7 +9,7 @@ export class DomainEntityErrorMessageDirective implements AfterViewInit {
   constructor(
     private readonly elementRef: ElementRef,
     private readonly formField: MatFormField,
-    private readonly domainEntityService: BaseDomainEntityService
+    private readonly domainEntityService: DomainEntityService
   ) {}
 
   public ngAfterViewInit() {

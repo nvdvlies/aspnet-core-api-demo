@@ -2,10 +2,11 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ErrorHandler, Injectable } from '@angular/core';
 import { ValidationProblemDetails } from '@api/api.generated.clients';
 import { ProblemDetailsError } from '@domain/shared/domain-entity-base';
+import { LoggerService } from '@shared/services/logger.service';
 
 @Injectable()
 export class GlobalErrorHandlerService implements ErrorHandler {
-  constructor() {}
+  constructor(private readonly loggerService: LoggerService) {}
 
   public handleError(error: Error | HttpErrorResponse) {
     if (
@@ -14,7 +15,7 @@ export class GlobalErrorHandlerService implements ErrorHandler {
     ) {
       return;
     }
-    // TODO: log
+    this.loggerService.logError('An unhandled exception occured.', undefined, error);
     console.error(error);
   }
 }

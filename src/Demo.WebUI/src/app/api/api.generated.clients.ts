@@ -1897,6 +1897,75 @@ export class ApiInvoicesClient {
 @Injectable({
     providedIn: 'root'
 })
+export class ApiLogClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    post(logMessages: LogMessage[]): Observable<void> {
+        let url_ = this.baseUrl + "/api/Log";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(logMessages);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processPost(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processPost(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processPost(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status === 500) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result500: any = null;
+            let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result500 = ProblemDetails.fromJS(resultData500);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result500);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+}
+
+@Injectable({
+    providedIn: 'root'
+})
 export class ApiMessagesClient {
     private http: HttpClient;
     private baseUrl: string;
@@ -6235,6 +6304,72 @@ export class CreditInvoiceCommand implements ICreditInvoiceCommand {
 }
 
 export interface ICreditInvoiceCommand {
+}
+
+export class LogMessage implements ILogMessage {
+    logLevel!: LogLevel;
+    eventId!: number;
+    message?: string | undefined;
+    exceptionMessage?: string | undefined;
+
+    constructor(data?: ILogMessage) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.logLevel = _data["logLevel"];
+            this.eventId = _data["eventId"];
+            this.message = _data["message"];
+            this.exceptionMessage = _data["exceptionMessage"];
+        }
+    }
+
+    static fromJS(data: any): LogMessage {
+        data = typeof data === 'object' ? data : {};
+        let result = new LogMessage();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["logLevel"] = this.logLevel;
+        data["eventId"] = this.eventId;
+        data["message"] = this.message;
+        data["exceptionMessage"] = this.exceptionMessage;
+        return data;
+    }
+
+    clone(): LogMessage {
+        const json = this.toJSON();
+        let result = new LogMessage();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ILogMessage {
+    logLevel: LogLevel;
+    eventId: number;
+    message?: string | undefined;
+    exceptionMessage?: string | undefined;
+}
+
+/** Defines logging severity levels. */
+export enum LogLevel {
+    Trace = 0,
+    Debug = 1,
+    Information = 2,
+    Warning = 3,
+    Error = 4,
+    Critical = 5,
+    None = 6,
 }
 
 /** The ServiceBusMessage is used to send data to Service Bus Queues and Topics. When receiving messages, the ServiceBusReceivedMessage is used. */

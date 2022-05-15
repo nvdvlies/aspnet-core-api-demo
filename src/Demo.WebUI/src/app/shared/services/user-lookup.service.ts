@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ApiUsersClient, UserLookupDto, UserLookupOrderByEnum } from '@api/api.generated.clients';
 import { UserEventsService } from '@api/signalr.generated.services';
-import { LookupBase } from '@shared/base/lookup.base';
+import { LookupBase } from '@shared/base/lookup-base';
 import { map } from 'rxjs';
 
 @Injectable({

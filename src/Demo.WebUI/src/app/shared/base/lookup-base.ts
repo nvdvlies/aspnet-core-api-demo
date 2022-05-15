@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy, OnInit } from '@angular/core';
-import { CacheBase } from '@shared/base/cache.base';
+import { CacheBase } from '@shared/base/cache-base';
 import { map, Observable, of, Subject, takeUntil, tap } from 'rxjs';
 
 export interface ILookupItem {

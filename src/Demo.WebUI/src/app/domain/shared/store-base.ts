@@ -1,4 +1,4 @@
-import { CacheBase } from '@shared/base/cache.base';
+import { CacheBase } from '@shared/base/cache-base';
 import { Observable, of, Subject } from 'rxjs';
 import { tap, map, switchMap, filter, finalize } from 'rxjs/operators';
 
