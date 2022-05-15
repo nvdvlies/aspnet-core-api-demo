@@ -1,4 +1,7 @@
 <mat-toolbar color="primary">
+  <button mat-icon-button (click)="sidenav.toggle()">
+    <mat-icon>menu</mat-icon>
+  </button>
   AppName
   <span style="flex: 1 1 auto"></span>
   <div>
@@ -18,11 +21,25 @@
 <mat-sidenav-container style="height: calc(100% - 64px); margin: 0">
   <mat-sidenav #sidenav opened mode="side" class="mat-elevation-z1" style="width: 220px">
     <mat-nav-list>
-      <mat-list-item routerLink="/customers" [routerLinkActive]="['active']"
-        >Customers</mat-list-item
+      <mat-list-item routerLink="/customers" [routerLinkActive]="['active']" class="text-gray-900">
+        Customers</mat-list-item
       >
       <mat-list-item routerLink="/invoices" [routerLinkActive]="['active']">Invoices</mat-list-item>
     </mat-nav-list>
+    <mat-expansion-panel class="mat-elevation-z0">
+      <mat-expansion-panel-header class="pl-[16px]" expandedHeight="48px"
+        >System</mat-expansion-panel-header
+      >
+      <mat-nav-list>
+        <mat-list-item routerLink="/invoices" [routerLinkActive]="['active']"
+          >Applicationsettings</mat-list-item
+        >
+        <mat-list-item routerLink="/invoices" [routerLinkActive]="['active']"
+          >Feature flags</mat-list-item
+        >
+        <mat-list-item routerLink="/invoices" [routerLinkActive]="['active']">Users</mat-list-item>
+      </mat-nav-list>
+    </mat-expansion-panel>
   </mat-sidenav>
   <mat-sidenav-content>
     <router-outlet></router-outlet>
