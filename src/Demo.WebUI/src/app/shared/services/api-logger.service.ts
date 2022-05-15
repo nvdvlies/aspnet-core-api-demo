@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ApiLogClient, LogLevel, LogMessage } from '@api/api.generated.clients';
-import { bufferTime, filter, Subject, switchMap } from 'rxjs';
+import { bufferTime, catchError, EMPTY, filter, Subject, switchMap } from 'rxjs';
 import { LoggerService } from './logger.service';
 
 @Injectable({
@@ -14,7 +14,11 @@ export class ApiLoggerService implements LoggerService {
       .pipe(
         bufferTime(5000, null, 5),
         filter((buffer) => buffer.length > 0),
-        switchMap((logMessages) => this.apiLogClient.post(logMessages))
+        switchMap((logMessages) => this.apiLogClient.post(logMessages)),
+        catchError((error) => {
+          console.error(error);
+          return EMPTY;
+        })
       )
       .subscribe();
   }
