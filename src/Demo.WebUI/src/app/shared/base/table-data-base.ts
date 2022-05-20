@@ -212,6 +212,7 @@ export abstract class TableDataBase<T extends ITableDataSearchResultItem> {
           };
           this.searchResult.next(result);
         }
+        this.selectedItemIndex = 0;
         this.setSpotlightIdentifier(id);
       });
     } else {

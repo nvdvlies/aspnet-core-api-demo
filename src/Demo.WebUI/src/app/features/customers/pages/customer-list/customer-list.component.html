@@ -22,9 +22,9 @@
               type="text"
               (focus)="searchInputFocused.next(true)"
               (blur)="searchInputFocused.next(false)"
-              (keyup.enter)="onSearchInputEnter()"
-              (keyup.arrowup)="onSearchInputArrowUp()"
-              (keyup.arrowdown)="onSearchInputArrowDown()"
+              (keydown.enter)="onSearchInputEnter()"
+              (keydown.arrowup)="onSearchInputArrowUp()"
+              (keydown.arrowdown)="onSearchInputArrowDown()"
             />
             <button
               *ngIf="searchTerm.value"

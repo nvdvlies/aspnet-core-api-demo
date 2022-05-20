@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostListener, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { combineLatest, debounceTime, EMPTY, map, Observable, switchMap, tap } from 'rxjs';
 import { DomainEntityService } from '@domain/shared/domain-entity-base';
@@ -77,5 +77,26 @@ export class CustomerDetailsComponent implements OnInit, IHasForm {
 
   public resolveMergeConflictWithTakeTheirs(): void {
     this.customerDomainEntityService.resolveMergeConflictWithTakeTheirs();
+  }
+
+  @HostListener('document:keydown.shift.alt.s', ['$event'])
+  public saveShortcut(event: KeyboardEvent) {
+    this.save();
+    event.preventDefault();
+  }
+
+  @HostListener('document:keydown.shift.alt.d', ['$event'])
+  public deleteShortcut(event: KeyboardEvent) {
+    if (!this.vm?.id) {
+      return;
+    }
+    this.delete();
+    event.preventDefault();
+  }
+
+  @HostListener('document:keydown.shift.alt.c', ['$event'])
+  public closeShortcut(event: KeyboardEvent) {
+    this.router.navigateByUrl('/customers');
+    event.preventDefault();
   }
 }

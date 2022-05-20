@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { BehaviorSubject, combineLatest, map, Observable, tap } from 'rxjs';
 import { CustomerTableDataSource } from '@customers/pages/customer-list/customer-table-datasource';
@@ -84,6 +84,12 @@ export class CustomerListComponent implements OnInit, OnDestroy {
 
   public onSearchInputArrowDown(): void {
     this.customerTableDataService.selectedItemIndex += 1;
+  }
+
+  @HostListener('document:keydown.shift.alt.n', ['$event'])
+  public newCustomerShortcut(event: KeyboardEvent) {
+    this.router.navigateByUrl('/customers/new');
+    event.preventDefault();
   }
 
   public ngOnDestroy(): void {

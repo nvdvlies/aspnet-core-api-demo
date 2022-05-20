@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { BehaviorSubject, combineLatest, map, Observable, tap } from 'rxjs';
 import { InvoiceTableDataSource } from '@invoices/pages/invoice-list/invoice-table-datasource';
@@ -87,6 +87,12 @@ export class InvoiceListComponent implements OnInit, OnDestroy {
 
   public onSearchInputArrowDown(): void {
     this.invoiceTableDataService.selectedItemIndex += 1;
+  }
+
+  @HostListener('document:keydown.shift.alt.n', ['$event'])
+  public newInvoiceShortcut(event: KeyboardEvent) {
+    this.router.navigateByUrl('/invoices/new');
+    event.preventDefault();
   }
 
   public ngOnDestroy(): void {
