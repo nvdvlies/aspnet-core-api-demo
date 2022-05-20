@@ -28,17 +28,17 @@ export class FeatureFlagSettingsDomainEntityContext
   }
 }
 
-type FeatureFlagSettingsControls = { [key in keyof IFeatureFlagSettingsDto]: AbstractControl };
+type FeatureFlagSettingsControls = { [key in keyof IFeatureFlagSettingsDto]-?: AbstractControl };
 export type FeatureFlagSettingsFormGroup = FormGroup & { controls: FeatureFlagSettingsControls };
 
 type FeatureFlagSettingsSettingsControls = {
-  [key in keyof IFeatureFlagSettingsSettingsDto]: AbstractControl;
+  [key in keyof IFeatureFlagSettingsSettingsDto]-?: AbstractControl;
 };
 export type FeatureFlagSettingsSettingsFormGroup = FormGroup & {
   controls: FeatureFlagSettingsSettingsControls;
 };
 
-type FeatureFlagControls = { [key in keyof IFeatureFlagDto]: AbstractControl };
+type FeatureFlagControls = { [key in keyof IFeatureFlagDto]-?: AbstractControl };
 export type FeatureFlagFormGroup = FormGroup & {
   controls: FeatureFlagControls;
 };
@@ -61,14 +61,17 @@ export class FeatureFlagSettingsDomainEntityService
   protected entityUpdatedEvent$ =
     this.featureFlagSettingsStoreService.featureFlagSettingsUpdatedInStore$;
 
-  public observe$ = combineLatest([this.observeInternal$]).pipe(
+  public observe$: Observable<FeatureFlagSettingsDomainEntityContext> = combineLatest([
+    this.observeInternal$
+  ]).pipe(
     debounceTime(0),
-    map(([context]) => {
-      return {
-        ...context
-      } as FeatureFlagSettingsDomainEntityContext;
+    map(([baseContext]) => {
+      const context: FeatureFlagSettingsDomainEntityContext = {
+        ...baseContext
+      };
+      return context;
     })
-  ) as Observable<FeatureFlagSettingsDomainEntityContext>;
+  );
 
   constructor(
     route: ActivatedRoute,
@@ -99,31 +102,30 @@ export class FeatureFlagSettingsDomainEntityService
   }
 
   private buildFormGroup(): FeatureFlagSettingsFormGroup {
-    return new FormGroup({
+    const controls: FeatureFlagSettingsControls = {
       id: new FormControl(super.readonlyFormState),
       settings: new FormGroup({
         featureFlags: new FormArray([] as FeatureFlagFormGroup[]) as FeatureFlagFormArray
       } as FeatureFlagSettingsSettingsControls) as FeatureFlagSettingsSettingsFormGroup,
-      deleted: new FormControl(super.readonlyFormState),
-      deletedBy: new FormControl(super.readonlyFormState),
-      deletedOn: new FormControl(super.readonlyFormState),
       createdBy: new FormControl(super.readonlyFormState),
       createdOn: new FormControl(super.readonlyFormState),
       lastModifiedBy: new FormControl(super.readonlyFormState),
       lastModifiedOn: new FormControl(super.readonlyFormState),
       timestamp: new FormControl(super.readonlyFormState)
-    } as FeatureFlagSettingsControls) as FeatureFlagSettingsFormGroup;
+    };
+    return new FormGroup(controls) as FeatureFlagSettingsFormGroup;
   }
 
   private buildFeatureFlagFormGroup(): FeatureFlagFormGroup {
-    return new FormGroup({
+    const controls: FeatureFlagControls = {
       id: new FormControl(super.readonlyFormState),
       name: new FormControl(null, [Validators.required], []),
       description: new FormControl(null, [Validators.required], []),
       enabledForAll: new FormControl(null),
       enabledForUsers: new FormArray([]),
       timestamp: new FormControl(super.readonlyFormState)
-    } as FeatureFlagControls) as FeatureFlagFormGroup;
+    };
+    return new FormGroup(controls) as FeatureFlagFormGroup;
   }
 
   public addFeatureFlag(): void {

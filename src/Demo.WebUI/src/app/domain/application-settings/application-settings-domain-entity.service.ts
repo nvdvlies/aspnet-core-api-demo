@@ -27,11 +27,11 @@ export class ApplicationSettingsDomainEntityContext
   }
 }
 
-type ApplicationSettingsControls = { [key in keyof IApplicationSettingsDto]: AbstractControl };
+type ApplicationSettingsControls = { [key in keyof IApplicationSettingsDto]-?: AbstractControl };
 export type ApplicationSettingsFormGroup = FormGroup & { controls: ApplicationSettingsControls };
 
 type ApplicationSettingsSettingsControls = {
-  [key in keyof IApplicationSettingsSettingsDto]: AbstractControl;
+  [key in keyof IApplicationSettingsSettingsDto]-?: AbstractControl;
 };
 export type ApplicationSettingsSettingsFormGroup = FormGroup & {
   controls: ApplicationSettingsSettingsControls;
@@ -51,14 +51,17 @@ export class ApplicationSettingsDomainEntityService
   protected entityUpdatedEvent$ =
     this.applicationSettingsStoreService.applicationSettingsUpdatedInStore$;
 
-  public observe$ = combineLatest([this.observeInternal$]).pipe(
+  public observe$: Observable<ApplicationSettingsDomainEntityContext> = combineLatest([
+    this.observeInternal$
+  ]).pipe(
     debounceTime(0),
-    map(([context]) => {
-      return {
-        ...context
-      } as ApplicationSettingsDomainEntityContext;
+    map(([baseContext]) => {
+      const context: ApplicationSettingsDomainEntityContext = {
+        ...baseContext
+      };
+      return context;
     })
-  ) as Observable<ApplicationSettingsDomainEntityContext>;
+  );
 
   constructor(
     route: ActivatedRoute,
@@ -80,24 +83,22 @@ export class ApplicationSettingsDomainEntityService
   }
 
   private buildFormGroup(): ApplicationSettingsFormGroup {
-    return new FormGroup({
+    const controls: ApplicationSettingsControls = {
       id: new FormControl(super.readonlyFormState),
-      preferences: new FormGroup({
+      settings: new FormGroup({
         setting1: new FormControl(null),
         setting2: new FormControl(null),
         setting3: new FormControl(null),
         setting4: new FormControl(null),
         setting5: new FormControl(null)
       } as ApplicationSettingsSettingsControls) as ApplicationSettingsSettingsFormGroup,
-      deleted: new FormControl(super.readonlyFormState),
-      deletedBy: new FormControl(super.readonlyFormState),
-      deletedOn: new FormControl(super.readonlyFormState),
       createdBy: new FormControl(super.readonlyFormState),
       createdOn: new FormControl(super.readonlyFormState),
       lastModifiedBy: new FormControl(super.readonlyFormState),
       lastModifiedOn: new FormControl(super.readonlyFormState),
       timestamp: new FormControl(super.readonlyFormState)
-    } as ApplicationSettingsControls) as ApplicationSettingsFormGroup;
+    };
+    return new FormGroup(controls) as ApplicationSettingsFormGroup;
   }
 
   protected instantiateNewEntity(): Observable<ApplicationSettingsDto> {

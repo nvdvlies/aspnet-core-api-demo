@@ -34,9 +34,10 @@ export class CustomerDetailsComponent implements OnInit, IHasForm {
   public vm$ = combineLatest([this.customerDomainEntityService.observe$]).pipe(
     debounceTime(0),
     map(([domainEntityContext]) => {
-      return {
+      const vm: ViewModel = {
         ...domainEntityContext
-      } as ViewModel;
+      };
+      return vm;
     }),
     tap((vm) => (this.vm = vm))
   ) as Observable<ViewModel>;

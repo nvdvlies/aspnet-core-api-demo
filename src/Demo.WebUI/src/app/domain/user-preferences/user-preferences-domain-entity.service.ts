@@ -27,11 +27,11 @@ export class UserPreferencesDomainEntityContext
   }
 }
 
-type UserPreferencesControls = { [key in keyof IUserPreferencesDto]: AbstractControl };
+type UserPreferencesControls = { [key in keyof IUserPreferencesDto]-?: AbstractControl };
 export type UserPreferencesFormGroup = FormGroup & { controls: UserPreferencesControls };
 
 type UserPreferencesPreferencesControls = {
-  [key in keyof IUserPreferencesPreferencesDto]: AbstractControl;
+  [key in keyof IUserPreferencesPreferencesDto]-?: AbstractControl;
 };
 export type UserPreferencesPreferencesFormGroup = FormGroup & {
   controls: UserPreferencesPreferencesControls;
@@ -50,14 +50,17 @@ export class UserPreferencesDomainEntityService
   protected deleteFunction = (id?: string) => of(void 0);
   protected entityUpdatedEvent$ = this.userPreferencesStoreService.userPreferencesUpdatedInStore$;
 
-  public observe$ = combineLatest([this.observeInternal$]).pipe(
+  public observe$: Observable<UserPreferencesDomainEntityContext> = combineLatest([
+    this.observeInternal$
+  ]).pipe(
     debounceTime(0),
-    map(([context]) => {
-      return {
-        ...context
-      } as UserPreferencesDomainEntityContext;
+    map(([baseContext]) => {
+      const context: UserPreferencesDomainEntityContext = {
+        ...baseContext
+      };
+      return context;
     })
-  ) as Observable<UserPreferencesDomainEntityContext>;
+  );
 
   constructor(
     route: ActivatedRoute,
@@ -79,7 +82,7 @@ export class UserPreferencesDomainEntityService
   }
 
   private buildFormGroup(): UserPreferencesFormGroup {
-    return new FormGroup({
+    const controls: UserPreferencesControls = {
       id: new FormControl(super.readonlyFormState),
       preferences: new FormGroup({
         setting1: new FormControl(null),
@@ -88,15 +91,13 @@ export class UserPreferencesDomainEntityService
         setting4: new FormControl(null),
         setting5: new FormControl(null)
       } as UserPreferencesPreferencesControls) as UserPreferencesPreferencesFormGroup,
-      deleted: new FormControl(super.readonlyFormState),
-      deletedBy: new FormControl(super.readonlyFormState),
-      deletedOn: new FormControl(super.readonlyFormState),
       createdBy: new FormControl(super.readonlyFormState),
       createdOn: new FormControl(super.readonlyFormState),
       lastModifiedBy: new FormControl(super.readonlyFormState),
       lastModifiedOn: new FormControl(super.readonlyFormState),
       timestamp: new FormControl(super.readonlyFormState)
-    } as UserPreferencesControls) as UserPreferencesFormGroup;
+    };
+    return new FormGroup(controls) as UserPreferencesFormGroup;
   }
 
   protected instantiateNewEntity(): Observable<UserPreferencesDto> {

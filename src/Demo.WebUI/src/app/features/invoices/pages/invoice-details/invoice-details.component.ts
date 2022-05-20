@@ -35,15 +35,18 @@ export class InvoiceDetailsComponent implements OnInit, IHasForm {
 
   private vm: Readonly<ViewModel> | undefined;
 
-  public vm$ = combineLatest([this.invoiceDomainEntityService.observe$]).pipe(
+  public vm$: Observable<ViewModel> = combineLatest([
+    this.invoiceDomainEntityService.observe$
+  ]).pipe(
     debounceTime(0),
     map(([domainEntityContext]) => {
-      return {
+      const context: ViewModel = {
         ...domainEntityContext
-      } as ViewModel;
+      };
+      return context;
     }),
     tap((vm) => (this.vm = vm))
-  ) as Observable<ViewModel>;
+  );
 
   public form: InvoiceFormGroup = this.invoiceDomainEntityService.form;
   public get invoiceLines(): InvoiceLineFormArray {

@@ -27,14 +27,15 @@ export class CustomerListComponent implements OnInit, OnDestroy {
 
   private vm: Readonly<ViewModel> | undefined;
 
-  public vm$ = combineLatest([this.customerTableDataService.observe$]).pipe(
+  public vm$: Observable<ViewModel> = combineLatest([this.customerTableDataService.observe$]).pipe(
     map(([context]) => {
-      return {
+      const vm: ViewModel = {
         ...context
-      } as ViewModel;
+      };
+      return vm;
     }),
     tap((vm) => (this.vm = vm))
-  ) as Observable<ViewModel>;
+  );
 
   constructor(
     private readonly location: Location,

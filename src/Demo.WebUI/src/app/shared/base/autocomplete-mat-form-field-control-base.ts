@@ -62,16 +62,21 @@ export abstract class AutocompleteMatFormFieldControlBase extends MatFormFieldCo
   public isLookupOngoing$ = this.isLookupOngoing.asObservable();
   public isSearching$ = this.isSearching.asObservable();
 
-  public vm$ = combineLatest([this.options$, this.isLookupOngoing$, this.isSearching$]).pipe(
+  public vm$: Observable<ViewModel> = combineLatest([
+    this.options$,
+    this.isLookupOngoing$,
+    this.isSearching$
+  ]).pipe(
     debounceTime(0),
     map(([options, isLookupOngoing, isSearching]) => {
-      return {
+      const vm: ViewModel = {
         options,
         isLookupOngoing,
         isSearching
-      } as ViewModel;
+      };
+      return vm;
     })
-  ) as Observable<ViewModel>;
+  );
 
   public searchFormControl = new FormControl(null);
 

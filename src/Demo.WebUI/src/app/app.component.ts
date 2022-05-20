@@ -28,14 +28,18 @@ export class AppComponent implements OnInit {
   protected resolversAreInitialized$ = this.resolversAreInitialized.asObservable();
   protected resolverProblemDetails$ = this.resolverProblemDetails.asObservable();
 
-  public vm$ = combineLatest([this.resolversAreInitialized$, this.resolverProblemDetails$]).pipe(
+  public vm$: Observable<ViewModel> = combineLatest([
+    this.resolversAreInitialized$,
+    this.resolverProblemDetails$
+  ]).pipe(
     map(([resolversAreInitialized, resolverProblemDetails]) => {
-      return {
+      const vm: ViewModel = {
         resolversAreInitialized,
         resolverProblemDetails
-      } as ViewModel;
+      };
+      return vm;
     })
-  ) as Observable<ViewModel>;
+  );
 
   constructor(
     public readonly authService: AuthService,

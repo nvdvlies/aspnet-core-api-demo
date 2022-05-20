@@ -27,14 +27,15 @@ export class InvoiceListComponent implements OnInit, OnDestroy {
 
   private vm: Readonly<ViewModel> | undefined;
 
-  public vm$ = combineLatest([this.invoiceTableDataService.observe$]).pipe(
-    map(([context]) => {
-      return {
-        ...context
-      } as ViewModel;
+  public vm$: Observable<ViewModel> = combineLatest([this.invoiceTableDataService.observe$]).pipe(
+    map(([baseContext]) => {
+      const context: ViewModel = {
+        ...baseContext
+      };
+      return context;
     }),
     tap((vm) => (this.vm = vm))
-  ) as Observable<ViewModel>;
+  );
 
   constructor(
     private readonly location: Location,

@@ -211,7 +211,9 @@
                             type="button"
                             (click)="removeInvoiceLine(i)"
                             matTooltip="Remove line"
-                            [disabled]="!vm.canEditInvoiceContent"
+                            [disabled]="
+                              !vm.canEditInvoiceContent || invoiceLines.controls.length === 1
+                            "
                           >
                             <mat-icon>delete</mat-icon>
                           </button>

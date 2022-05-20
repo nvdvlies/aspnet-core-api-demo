@@ -121,7 +121,7 @@ export abstract class DomainEntityBase<T extends IDomainEntity<T>>
     return { value: null, disabled: true };
   }
 
-  protected observeInternal$ = combineLatest([
+  protected observeInternal$: Observable<DomainEntityContext<T>> = combineLatest([
     this.id$,
     this.entity$,
     this.pristine$,
@@ -145,8 +145,8 @@ export abstract class DomainEntityBase<T extends IDomainEntity<T>>
         problemDetails,
         loadingEntityFailed
       ]) => {
-        return {
-          id,
+        const context: DomainEntityContext<T> = {
+          id: id ?? null,
           entity,
           pristine,
           isLoading,
@@ -155,10 +155,11 @@ export abstract class DomainEntityBase<T extends IDomainEntity<T>>
           hasNewerVersionWithMergeConflict,
           problemDetails,
           loadingEntityFailed
-        } as DomainEntityContext<T>;
+        };
+        return context;
       }
     )
-  ) as Observable<DomainEntityContext<T>>;
+  );
 
   private _form: FormGroup | undefined;
   protected get form(): FormGroup {

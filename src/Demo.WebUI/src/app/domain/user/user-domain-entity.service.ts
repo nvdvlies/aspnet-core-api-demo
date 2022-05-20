@@ -31,10 +31,10 @@ export class UserDomainEntityContext
   }
 }
 
-type UserControls = { [key in keyof IUserDto]: AbstractControl };
+type UserControls = { [key in keyof IUserDto]-?: AbstractControl };
 export type UserFormGroup = FormGroup & { controls: UserControls };
 
-type UserRoleControls = { [key in keyof IUserRoleDto]: AbstractControl };
+type UserRoleControls = { [key in keyof IUserRoleDto]-?: AbstractControl };
 export type UserRoleFormGroup = FormGroup & {
   controls: UserRoleControls;
 };
@@ -51,14 +51,17 @@ export class UserDomainEntityService extends DomainEntityBase<UserDto> implement
   protected deleteFunction = (id?: string) => this.userStoreService.delete(id!);
   protected entityUpdatedEvent$ = this.userStoreService.userUpdatedInStore$;
 
-  public observe$ = combineLatest([this.observeInternal$]).pipe(
+  public observe$: Observable<UserDomainEntityContext> = combineLatest([
+    this.observeInternal$
+  ]).pipe(
     debounceTime(0),
-    map(([context]) => {
-      return {
-        ...context
-      } as UserDomainEntityContext;
+    map(([baseContext]) => {
+      const context: UserDomainEntityContext = {
+        ...baseContext
+      };
+      return context;
     })
-  ) as Observable<UserDomainEntityContext>;
+  );
 
   constructor(route: ActivatedRoute, private readonly userStoreService: UserStoreService) {
     super(route);
@@ -77,41 +80,40 @@ export class UserDomainEntityService extends DomainEntityBase<UserDto> implement
   }
 
   private buildUserFormGroup(): UserFormGroup {
-    return new FormGroup(
-      {
-        id: new FormControl(super.readonlyFormState),
-        externalId: new FormControl(super.readonlyFormState),
-        fullname: new FormControl(super.readonlyFormState),
-        givenName: new FormControl(null),
-        familyName: new FormControl(null, [Validators.required], []),
-        middleName: new FormControl(null),
-        email: new FormControl(null, [Validators.required], [this.emailValidator()]),
-        gender: new FormControl(null),
-        birthDate: new FormControl(null),
-        zoneInfo: new FormControl(null),
-        locale: new FormControl(null),
-        userRoles: new FormArray(
-          [] as UserRoleFormGroup[],
-          [Validators.required],
-          []
-        ) as UserRoleFormArray,
-        deleted: new FormControl(super.readonlyFormState),
-        deletedBy: new FormControl(super.readonlyFormState),
-        deletedOn: new FormControl(super.readonlyFormState),
-        createdBy: new FormControl(super.readonlyFormState),
-        createdOn: new FormControl(super.readonlyFormState),
-        lastModifiedBy: new FormControl(super.readonlyFormState),
-        lastModifiedOn: new FormControl(super.readonlyFormState),
-        timestamp: new FormControl(super.readonlyFormState)
-      } as UserControls,
-      { updateOn: 'blur' }
-    ) as UserFormGroup;
+    const controls: UserControls = {
+      id: new FormControl(super.readonlyFormState),
+      externalId: new FormControl(super.readonlyFormState),
+      fullname: new FormControl(super.readonlyFormState),
+      givenName: new FormControl(null),
+      familyName: new FormControl(null, [Validators.required], []),
+      middleName: new FormControl(null),
+      email: new FormControl(null, [Validators.required], [this.emailValidator()]),
+      gender: new FormControl(null),
+      birthDate: new FormControl(null),
+      zoneInfo: new FormControl(null),
+      locale: new FormControl(null),
+      userRoles: new FormArray(
+        [] as UserRoleFormGroup[],
+        [Validators.required],
+        []
+      ) as UserRoleFormArray,
+      deleted: new FormControl(super.readonlyFormState),
+      deletedBy: new FormControl(super.readonlyFormState),
+      deletedOn: new FormControl(super.readonlyFormState),
+      createdBy: new FormControl(super.readonlyFormState),
+      createdOn: new FormControl(super.readonlyFormState),
+      lastModifiedBy: new FormControl(super.readonlyFormState),
+      lastModifiedOn: new FormControl(super.readonlyFormState),
+      timestamp: new FormControl(super.readonlyFormState)
+    };
+    return new FormGroup(controls, { updateOn: 'blur' }) as UserFormGroup;
   }
 
   private buildUserRoleFormGroup(): UserRoleFormGroup {
-    return new FormGroup({
+    const controls: UserRoleControls = {
       roleId: new FormControl(null, [Validators.required], [])
-    } as UserRoleControls) as UserRoleFormGroup;
+    };
+    return new FormGroup(controls) as UserRoleFormGroup;
   }
 
   public addUserRole(): void {

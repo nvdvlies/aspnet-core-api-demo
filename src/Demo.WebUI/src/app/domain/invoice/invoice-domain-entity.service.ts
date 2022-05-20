@@ -1,12 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import {
-  AbstractControl,
-  FormArray,
-  FormControl,
-  FormGroup,
-  ValidatorFn,
-  Validators
-} from '@angular/forms';
+import { AbstractControl, FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject, combineLatest, Observable, of, throwError } from 'rxjs';
 import { debounceTime, map } from 'rxjs/operators';
@@ -42,10 +35,10 @@ export class InvoiceDomainEntityContext
   }
 }
 
-type InvoiceControls = { [key in keyof IInvoiceDto]: AbstractControl };
+type InvoiceControls = { [key in keyof IInvoiceDto]-?: AbstractControl };
 export type InvoiceFormGroup = FormGroup & { controls: InvoiceControls };
 
-type InvoiceLineControls = { [key in keyof IInvoiceLineDto]: AbstractControl };
+type InvoiceLineControls = { [key in keyof IInvoiceLineDto]-?: AbstractControl };
 export type InvoiceLineFormGroup = FormGroup & {
   controls: InvoiceLineControls;
 };
@@ -66,15 +59,19 @@ export class InvoiceDomainEntityService extends DomainEntityBase<InvoiceDto> imp
 
   protected canEditInvoiceContent$ = this.canEditInvoiceContent.asObservable();
 
-  public observe$ = combineLatest([this.observeInternal$, this.canEditInvoiceContent$]).pipe(
+  public observe$: Observable<InvoiceDomainEntityContext> = combineLatest([
+    this.observeInternal$,
+    this.canEditInvoiceContent$
+  ]).pipe(
     debounceTime(0),
-    map(([context, canEditInvoiceContent]) => {
-      return {
-        ...context,
+    map(([baseContext, canEditInvoiceContent]) => {
+      const context: InvoiceDomainEntityContext = {
+        ...baseContext,
         canEditInvoiceContent
-      } as InvoiceDomainEntityContext;
+      };
+      return context;
     })
-  ) as Observable<InvoiceDomainEntityContext>;
+  );
 
   constructor(
     route: ActivatedRoute,
@@ -97,7 +94,7 @@ export class InvoiceDomainEntityService extends DomainEntityBase<InvoiceDto> imp
   }
 
   private buildInvoiceFormGroup(): InvoiceFormGroup {
-    return new FormGroup({
+    const controls: InvoiceControls = {
       id: new FormControl(super.readonlyFormState),
       invoiceNumber: new FormControl(super.readonlyFormState),
       customerId: new FormControl(null, [Validators.required], []),
@@ -120,18 +117,20 @@ export class InvoiceDomainEntityService extends DomainEntityBase<InvoiceDto> imp
       lastModifiedBy: new FormControl(super.readonlyFormState),
       lastModifiedOn: new FormControl(super.readonlyFormState),
       timestamp: new FormControl(super.readonlyFormState)
-    } as InvoiceControls) as InvoiceFormGroup;
+    };
+    return new FormGroup(controls) as InvoiceFormGroup;
   }
 
   private buildInvoiceLineFormGroup(): InvoiceLineFormGroup {
-    return new FormGroup({
+    const controls: InvoiceLineControls = {
       id: new FormControl(super.readonlyFormState),
       lineNumber: new FormControl(super.readonlyFormState),
       quantity: new FormControl(null, [Validators.required], []),
       sellingPrice: new FormControl(null, [Validators.required], []),
       description: new FormControl(null, [Validators.required], []),
       timestamp: new FormControl(super.readonlyFormState)
-    } as InvoiceLineControls) as InvoiceLineFormGroup;
+    };
+    return new FormGroup(controls) as InvoiceLineFormGroup;
   }
 
   public addInvoiceLine(): void {

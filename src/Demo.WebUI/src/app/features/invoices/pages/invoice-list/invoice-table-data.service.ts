@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { combineLatest, debounceTime, map, Observable } from 'rxjs';
+import { combineLatest, debounceTime, map, Observable, of, switchMap } from 'rxjs';
 import {
   ApiInvoicesClient,
   SearchInvoiceDto,
@@ -9,13 +9,13 @@ import {
 import { InvoiceEventsService } from '@api/signalr.generated.services';
 import { InvoiceStoreService } from '@domain/invoice/invoice-store.service';
 import {
+  IEntityUpdatedEvent,
   ITableFilterCriteria,
   TableDataBase,
   TableDataContext,
   TableDataSearchResult,
   TableFilterCriteria
 } from '@shared/base/table-data-base';
-import { CustomerLookupService } from '@shared/services/customer-lookup.service';
 
 export declare type InvoiceSortColumn = 'InvoiceNumber' | 'InvoiceDate' | undefined;
 
@@ -39,23 +39,30 @@ export interface InvoiceTableDataContext extends TableDataContext<SearchInvoiceD
 export class InvoiceTableDataService extends TableDataBase<SearchInvoiceDto> {
   public searchTerm = new FormControl();
 
-  public observe$ = combineLatest([this.observeInternal$]).pipe(
+  public observe$: Observable<InvoiceTableDataContext> = combineLatest([
+    this.observeInternal$
+  ]).pipe(
     debounceTime(0),
-    map(([context]) => {
-      return {
-        ...context
-      } as InvoiceTableDataContext;
+    map(([baseContext]) => {
+      const context: InvoiceTableDataContext = {
+        ...baseContext,
+        criteria: baseContext.criteria as InvoiceTableFilterCriteria
+      };
+      return context;
     })
-  ) as Observable<InvoiceTableDataContext>;
+  );
 
-  protected entityUpdatedInStore$ = this.invoiceStoreService.invoiceUpdatedInStore$;
+  protected entityUpdatedInStore$ = this.invoiceStoreService.invoiceUpdatedInStore$.pipe(
+    map(
+      ([event, entity]) => [event, { ...entity, customerName: null }] as [IEntityUpdatedEvent, any]
+    )
+  );
   protected entityDeletedEvent$ = this.invoiceEventsService.invoiceDeleted$;
 
   constructor(
     private readonly apiInvoicesClient: ApiInvoicesClient,
     private readonly invoiceStoreService: InvoiceStoreService,
-    private readonly invoiceEventsService: InvoiceEventsService,
-    private readonly customerLookupService: CustomerLookupService
+    private readonly invoiceEventsService: InvoiceEventsService
   ) {
     super();
     this.init(new InvoiceTableFilterCriteria());
@@ -73,7 +80,7 @@ export class InvoiceTableDataService extends TableDataBase<SearchInvoiceDto> {
       )
       .pipe(
         map((response) => {
-          return {
+          const result: TableDataSearchResult<SearchInvoiceDto> = {
             items: response.invoices,
             pageIndex: response.pageIndex,
             pageSize: response.pageSize,
@@ -81,7 +88,8 @@ export class InvoiceTableDataService extends TableDataBase<SearchInvoiceDto> {
             totalPages: response.totalPages,
             hasPreviousPage: response.hasPreviousPage,
             hasNextPage: response.hasNextPage
-          } as TableDataSearchResult<SearchInvoiceDto>;
+          };
+          return result;
         })
       );
   };
@@ -95,7 +103,7 @@ export class InvoiceTableDataService extends TableDataBase<SearchInvoiceDto> {
       case 'InvoiceDate':
         return SearchInvoicesOrderByEnum.InvoiceDate;
       default: {
-        const exhaustiveCheck: never = sortColumn; // this line will result in a compiler error when InvoiceSortColumn contains an option that's not handled in the switch statement.
+        const exhaustiveCheck: never = sortColumn; // force compiler error on missing options
         throw new Error(exhaustiveCheck);
       }
     }

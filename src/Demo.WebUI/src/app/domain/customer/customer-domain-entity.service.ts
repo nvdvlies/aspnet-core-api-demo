@@ -23,7 +23,7 @@ export class CustomerDomainEntityContext
   }
 }
 
-type CustomerControls = { [key in keyof ICustomerDto]: AbstractControl };
+type CustomerControls = { [key in keyof ICustomerDto]-?: AbstractControl };
 export type CustomerFormGroup = FormGroup & { controls: CustomerControls };
 
 @Injectable()
@@ -37,14 +37,17 @@ export class CustomerDomainEntityService
   protected deleteFunction = (id?: string) => this.customerStoreService.delete(id!);
   protected entityUpdatedEvent$ = this.customerStoreService.customerUpdatedInStore$;
 
-  public observe$ = combineLatest([this.observeInternal$]).pipe(
+  public observe$: Observable<CustomerDomainEntityContext> = combineLatest([
+    this.observeInternal$
+  ]).pipe(
     debounceTime(0),
-    map(([context]) => {
-      return {
-        ...context
-      } as CustomerDomainEntityContext;
+    map(([baseContext]) => {
+      const context: CustomerDomainEntityContext = {
+        ...baseContext
+      };
+      return context;
     })
-  ) as Observable<CustomerDomainEntityContext>;
+  );
 
   constructor(route: ActivatedRoute, private readonly customerStoreService: CustomerStoreService) {
     super(route);
@@ -63,7 +66,7 @@ export class CustomerDomainEntityService
   }
 
   private buildFormGroup(): CustomerFormGroup {
-    return new FormGroup({
+    const controls: CustomerControls = {
       id: new FormControl(super.readonlyFormState),
       code: new FormControl(super.readonlyFormState),
       name: new FormControl(
@@ -79,7 +82,8 @@ export class CustomerDomainEntityService
       lastModifiedBy: new FormControl(super.readonlyFormState),
       lastModifiedOn: new FormControl(super.readonlyFormState),
       timestamp: new FormControl(super.readonlyFormState)
-    } as CustomerControls) as CustomerFormGroup;
+    };
+    return new FormGroup(controls) as CustomerFormGroup;
   }
 
   protected instantiateNewEntity(): Observable<CustomerDto> {

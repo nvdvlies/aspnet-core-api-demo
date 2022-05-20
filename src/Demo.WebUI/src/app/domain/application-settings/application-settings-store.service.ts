@@ -24,9 +24,7 @@ export class ApplicationSettingsStoreService {
   >();
 
   public readonly applicationSettingsUpdatedInStore$ =
-    this.applicationSettingsUpdatedInStore.asObservable() as Observable<
-      [ApplicationSettingsUpdatedEvent, ApplicationSettingsDto]
-    >;
+    this.applicationSettingsUpdatedInStore.asObservable();
 
   constructor(
     private readonly apiApplicationSettingsClient: ApiApplicationSettingsClient,
