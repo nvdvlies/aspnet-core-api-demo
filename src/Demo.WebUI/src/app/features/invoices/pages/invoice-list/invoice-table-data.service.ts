@@ -16,6 +16,10 @@ import {
   TableDataSearchResult,
   TableFilterCriteria
 } from '@shared/base/table-data-base';
+import {
+  InvoiceListPageSettings,
+  InvoiceListPageSettingsService
+} from './invoice-list-page-settings.service';
 
 export declare type InvoiceSortColumn = 'InvoiceNumber' | 'InvoiceDate' | undefined;
 
@@ -25,10 +29,10 @@ export class InvoiceTableFilterCriteria
 {
   override sortColumn: InvoiceSortColumn;
 
-  constructor() {
-    super();
-    this.sortColumn = 'InvoiceNumber';
-    this.sortDirection = 'desc';
+  constructor(pageSettings?: InvoiceListPageSettings) {
+    super(pageSettings?.pageSize);
+    this.sortColumn = pageSettings?.sortColumn ?? 'InvoiceNumber';
+    this.sortDirection = pageSettings?.sortDirection ?? 'desc';
   }
 }
 export interface InvoiceTableDataContext extends TableDataContext<SearchInvoiceDto> {
@@ -62,14 +66,22 @@ export class InvoiceTableDataService extends TableDataBase<SearchInvoiceDto> {
   constructor(
     private readonly apiInvoicesClient: ApiInvoicesClient,
     private readonly invoiceStoreService: InvoiceStoreService,
-    private readonly invoiceEventsService: InvoiceEventsService
+    private readonly invoiceEventsService: InvoiceEventsService,
+    private readonly invoiceListPageSettingsService: InvoiceListPageSettingsService
   ) {
     super();
-    this.init(new InvoiceTableFilterCriteria());
+    const pageSettings = this.invoiceListPageSettingsService.settings;
+    this.init(new InvoiceTableFilterCriteria(pageSettings));
     this.search();
   }
 
   protected searchFunction = (criteria: InvoiceTableFilterCriteria) => {
+    this.invoiceListPageSettingsService.update({
+      pageSize: criteria.pageSize,
+      sortColumn: criteria.sortColumn,
+      sortDirection: criteria.sortDirection
+    });
+
     return this.apiInvoicesClient
       .search(
         this.sortColumn(criteria.sortColumn),
