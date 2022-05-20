@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
-import { combineLatest, map, Observable, tap } from 'rxjs';
+import { BehaviorSubject, combineLatest, map, Observable, tap } from 'rxjs';
 import { InvoiceTableDataSource } from '@invoices/pages/invoice-list/invoice-table-datasource';
 import {
   InvoiceTableDataContext,
@@ -8,8 +8,11 @@ import {
 } from '@invoices/pages/invoice-list/invoice-table-data.service';
 import { SearchInvoiceDto } from '@api/api.generated.clients';
 import { TableFilterCriteria } from '@shared/base/table-data-base';
+import { Router } from '@angular/router';
 
-interface ViewModel extends InvoiceTableDataContext {}
+interface ViewModel extends InvoiceTableDataContext {
+  searchInputFocused: boolean;
+}
 
 export interface InvoiceListRouteState {
   spotlightIdentifier: string | undefined;
@@ -25,12 +28,20 @@ export class InvoiceListComponent implements OnInit, OnDestroy {
   public dataSource!: InvoiceTableDataSource;
   public searchTerm = this.invoiceTableDataService.searchTerm;
 
+  public readonly searchInputFocused = new BehaviorSubject<boolean>(false);
+
+  public searchInputFocused$ = this.searchInputFocused.asObservable();
+
   private vm: Readonly<ViewModel> | undefined;
 
-  public vm$: Observable<ViewModel> = combineLatest([this.invoiceTableDataService.observe$]).pipe(
-    map(([baseContext]) => {
+  public vm$: Observable<ViewModel> = combineLatest([
+    this.invoiceTableDataService.observe$,
+    this.searchInputFocused$
+  ]).pipe(
+    map(([baseContext, searchInputFocused]) => {
       const context: ViewModel = {
-        ...baseContext
+        ...baseContext,
+        searchInputFocused
       };
       return context;
     }),
@@ -39,6 +50,7 @@ export class InvoiceListComponent implements OnInit, OnDestroy {
 
   constructor(
     private readonly location: Location,
+    private readonly router: Router,
     private readonly invoiceTableDataService: InvoiceTableDataService
   ) {}
 
@@ -60,6 +72,21 @@ export class InvoiceListComponent implements OnInit, OnDestroy {
 
   public trackById(index: number, item: SearchInvoiceDto): string {
     return item.id;
+  }
+
+  public onSearchInputEnter(): void {
+    if (!this.vm?.selectedItem) {
+      return;
+    }
+    this.router.navigate(['/invoices', this.vm.selectedItem.id]);
+  }
+
+  public onSearchInputArrowUp(): void {
+    this.invoiceTableDataService.selectedItemIndex -= 1;
+  }
+
+  public onSearchInputArrowDown(): void {
+    this.invoiceTableDataService.selectedItemIndex += 1;
   }
 
   public ngOnDestroy(): void {

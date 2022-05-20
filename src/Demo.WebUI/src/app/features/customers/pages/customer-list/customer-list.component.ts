@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
-import { combineLatest, map, Observable, tap } from 'rxjs';
+import { BehaviorSubject, combineLatest, map, Observable, tap } from 'rxjs';
 import { CustomerTableDataSource } from '@customers/pages/customer-list/customer-table-datasource';
 import {
   CustomerTableDataContext,
@@ -8,8 +8,11 @@ import {
 } from '@customers/pages/customer-list/customer-table-data.service';
 import { SearchCustomerDto } from '@api/api.generated.clients';
 import { TableFilterCriteria } from '@shared/base/table-data-base';
+import { Router } from '@angular/router';
 
-interface ViewModel extends CustomerTableDataContext {}
+interface ViewModel extends CustomerTableDataContext {
+  searchInputFocused: boolean;
+}
 
 export interface CustomerListRouteState {
   spotlightIdentifier: string | undefined;
@@ -25,12 +28,20 @@ export class CustomerListComponent implements OnInit, OnDestroy {
   public dataSource!: CustomerTableDataSource;
   public searchTerm = this.customerTableDataService.searchTerm;
 
+  public readonly searchInputFocused = new BehaviorSubject<boolean>(false);
+
+  public searchInputFocused$ = this.searchInputFocused.asObservable();
+
   private vm: Readonly<ViewModel> | undefined;
 
-  public vm$: Observable<ViewModel> = combineLatest([this.customerTableDataService.observe$]).pipe(
-    map(([context]) => {
+  public vm$: Observable<ViewModel> = combineLatest([
+    this.customerTableDataService.observe$,
+    this.searchInputFocused$
+  ]).pipe(
+    map(([context, searchInputFocused]) => {
       const vm: ViewModel = {
-        ...context
+        ...context,
+        searchInputFocused
       };
       return vm;
     }),
@@ -39,6 +50,7 @@ export class CustomerListComponent implements OnInit, OnDestroy {
 
   constructor(
     private readonly location: Location,
+    private readonly router: Router,
     private readonly customerTableDataService: CustomerTableDataService
   ) {}
 
@@ -57,6 +69,21 @@ export class CustomerListComponent implements OnInit, OnDestroy {
 
   public trackById(index: number, item: SearchCustomerDto): string {
     return item.id;
+  }
+
+  public onSearchInputEnter(): void {
+    if (!this.vm?.selectedItem) {
+      return;
+    }
+    this.router.navigate(['/customers', this.vm.selectedItem.id]);
+  }
+
+  public onSearchInputArrowUp(): void {
+    this.customerTableDataService.selectedItemIndex -= 1;
+  }
+
+  public onSearchInputArrowDown(): void {
+    this.customerTableDataService.selectedItemIndex += 1;
   }
 
   public ngOnDestroy(): void {

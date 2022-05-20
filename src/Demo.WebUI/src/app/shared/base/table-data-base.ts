@@ -54,6 +54,7 @@ export interface TableDataContext<T> {
   hasNextPage: boolean | undefined;
   problemDetails: ProblemDetails | ApiException | undefined;
   spotlightIdentifier: string | undefined;
+  selectedItem: T | undefined;
 }
 
 export interface IEntityUpdatedEvent {
@@ -89,6 +90,7 @@ export abstract class TableDataBase<T extends ITableDataSearchResultItem> {
   protected readonly isLoadingForFirstTime = new BehaviorSubject<boolean>(true);
   protected readonly isLoading = new BehaviorSubject<boolean>(true);
   protected readonly spotlightIdentifier = new BehaviorSubject<string | undefined>(undefined);
+  protected readonly selectedItem = new BehaviorSubject<T | undefined>(undefined);
 
   protected searchResult$ = this.searchResult.asObservable();
   protected criteria$ = this.criteria.asObservable();
@@ -96,6 +98,7 @@ export abstract class TableDataBase<T extends ITableDataSearchResultItem> {
   protected isLoading$ = this.isLoading.asObservable();
   protected problemDetails$ = this.problemDetails.asObservable();
   protected spotlightIdentifier$ = this.spotlightIdentifier.asObservable();
+  protected selectedItem$ = this.selectedItem.asObservable();
 
   protected observeInternal$: Observable<TableDataContext<T>> = combineLatest([
     this.searchResult$,
@@ -103,7 +106,8 @@ export abstract class TableDataBase<T extends ITableDataSearchResultItem> {
     this.isLoadingForFirstTime$,
     this.isLoading$,
     this.problemDetails$,
-    this.spotlightIdentifier$
+    this.spotlightIdentifier$,
+    this.selectedItem$
   ]).pipe(
     debounceTime(0),
     map(
@@ -113,7 +117,8 @@ export abstract class TableDataBase<T extends ITableDataSearchResultItem> {
         isLoadingForFirstTime,
         isLoading,
         problemDetails,
-        spotlightIdentifier
+        spotlightIdentifier,
+        selectedItem
       ]) => {
         const context: TableDataContext<T> = {
           items: searchResult?.items,
@@ -127,12 +132,24 @@ export abstract class TableDataBase<T extends ITableDataSearchResultItem> {
           isLoadingForFirstTime,
           isLoading,
           problemDetails,
-          spotlightIdentifier
+          spotlightIdentifier,
+          selectedItem
         };
         return context;
       }
     )
   );
+
+  private _selectedItemIndex: number = 0;
+  public set selectedItemIndex(value: number) {
+    if (value >= 0 && value < (this.searchResult.value?.items?.length ?? 0)) {
+      this._selectedItemIndex = value;
+      this.selectedItem.next(this.searchResult.value?.items?.[this._selectedItemIndex]);
+    }
+  }
+  public get selectedItemIndex(): number {
+    return this._selectedItemIndex;
+  }
 
   protected init(defaultCriteria: TableFilterCriteria): void {
     this.criteria.next(defaultCriteria);
@@ -168,6 +185,7 @@ export abstract class TableDataBase<T extends ITableDataSearchResultItem> {
       )
       .subscribe((response) => {
         this.searchResult.next(response);
+        this.selectedItemIndex = 0;
       });
   }
 

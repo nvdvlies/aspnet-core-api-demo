@@ -20,6 +20,11 @@
               appSetFocus="true"
               autocomplete="off"
               type="text"
+              (focus)="searchInputFocused.next(true)"
+              (blur)="searchInputFocused.next(false)"
+              (keyup.enter)="onSearchInputEnter()"
+              (keyup.arrowup)="onSearchInputArrowUp()"
+              (keyup.arrowdown)="onSearchInputArrowDown()"
             />
             <button
               *ngIf="searchTerm.value"
@@ -64,7 +69,11 @@
             <tr
               mat-row
               *matRowDef="let row; columns: displayedColumns"
-              [ngClass]="{ 'spotlight-row': row.id === vm.spotlightIdentifier }"
+              [ngClass]="{
+                'spotlight-row': row.id === vm.spotlightIdentifier,
+                'bg-stone-50':
+                  vm.searchInputFocused && vm.selectedItem && row.id === vm.selectedItem.id
+              }"
             ></tr>
           </table>
 
