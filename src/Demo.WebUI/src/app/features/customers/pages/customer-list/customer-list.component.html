@@ -71,7 +71,7 @@
           <mat-paginator
             [length]="vm.totalItems ?? 0"
             [pageIndex]="vm.pageIndex ?? 0"
-            [pageSize]="vm.pageSize"
+            [pageSize]="vm.criteria?.pageSize ?? vm.pageSize"
             [pageSizeOptions]="[5, 10, 25]"
             class="bg-inherit"
           ></mat-paginator>

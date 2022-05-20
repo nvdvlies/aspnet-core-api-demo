@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { combineLatest, debounceTime, map, Observable } from 'rxjs';
+import { combineLatest, debounceTime, map, Observable, tap } from 'rxjs';
 import {
   ApiCustomersClient,
   SearchCustomerDto,
@@ -15,6 +15,10 @@ import {
   TableDataSearchResult,
   TableFilterCriteria
 } from '@shared/base/table-data-base';
+import {
+  CustomerListPageSettings,
+  CustomerListPageSettingsService
+} from './customer-list-page-settings.service';
 
 export declare type CustomerSortColumn = 'code' | 'name' | undefined;
 
@@ -24,10 +28,10 @@ export class CustomerTableFilterCriteria
 {
   override sortColumn: CustomerSortColumn;
 
-  constructor() {
-    super();
-    this.sortColumn = 'code';
-    this.sortDirection = 'asc';
+  constructor(pageSettings?: CustomerListPageSettings) {
+    super(pageSettings?.pageSize);
+    this.sortColumn = pageSettings?.sortColumn ?? 'code';
+    this.sortDirection = pageSettings?.sortDirection ?? 'asc';
   }
 }
 export interface CustomerTableDataContext extends TableDataContext<SearchCustomerDto> {
@@ -38,14 +42,18 @@ export interface CustomerTableDataContext extends TableDataContext<SearchCustome
 export class CustomerTableDataService extends TableDataBase<SearchCustomerDto> {
   public searchTerm = new FormControl();
 
-  public observe$ = combineLatest([this.observeInternal$]).pipe(
+  public observe$: Observable<CustomerTableDataContext> = combineLatest([
+    this.observeInternal$
+  ]).pipe(
     debounceTime(0),
-    map(([context]) => {
-      return {
-        ...context
-      } as CustomerTableDataContext;
+    map(([baseContext]) => {
+      const context: CustomerTableDataContext = {
+        ...baseContext,
+        criteria: baseContext.criteria as CustomerTableFilterCriteria
+      };
+      return context;
     })
-  ) as Observable<CustomerTableDataContext>;
+  );
 
   protected entityUpdatedInStore$ = this.customerStoreService.customerUpdatedInStore$;
   protected entityDeletedEvent$ = this.customerEventsService.customerDeleted$;
@@ -53,14 +61,22 @@ export class CustomerTableDataService extends TableDataBase<SearchCustomerDto> {
   constructor(
     private readonly apiCustomersClient: ApiCustomersClient,
     private readonly customerStoreService: CustomerStoreService,
-    private readonly customerEventsService: CustomerEventsService
+    private readonly customerEventsService: CustomerEventsService,
+    private readonly customerListPageSettingsService: CustomerListPageSettingsService
   ) {
     super();
-    this.init(new CustomerTableFilterCriteria());
+    const pageSettings = this.customerListPageSettingsService.settings;
+    this.init(new CustomerTableFilterCriteria(pageSettings));
     this.search();
   }
 
   protected searchFunction = (criteria: CustomerTableFilterCriteria) => {
+    this.customerListPageSettingsService.update({
+      pageSize: criteria.pageSize,
+      sortColumn: criteria.sortColumn,
+      sortDirection: criteria.sortDirection
+    });
+
     return this.apiCustomersClient
       .search(
         this.sortColumn(criteria.sortColumn),
@@ -71,7 +87,7 @@ export class CustomerTableDataService extends TableDataBase<SearchCustomerDto> {
       )
       .pipe(
         map((response) => {
-          return {
+          const result: TableDataSearchResult<SearchCustomerDto> = {
             items: response.customers,
             pageIndex: response.pageIndex,
             pageSize: response.pageSize,
@@ -79,7 +95,8 @@ export class CustomerTableDataService extends TableDataBase<SearchCustomerDto> {
             totalPages: response.totalPages,
             hasPreviousPage: response.hasPreviousPage,
             hasNextPage: response.hasNextPage
-          } as TableDataSearchResult<SearchCustomerDto>;
+          };
+          return result;
         })
       );
   };
@@ -93,7 +110,7 @@ export class CustomerTableDataService extends TableDataBase<SearchCustomerDto> {
       case 'name':
         return SearchCustomersOrderByEnum.Name;
       default: {
-        const exhaustiveCheck: never = sortColumn; // this line will result in a compiler error when CustomerSortColumn contains an option that's not handled in the switch statement.
+        const exhaustiveCheck: never = sortColumn; // force compiler error on missing options
         throw new Error(exhaustiveCheck);
       }
     }

@@ -25,9 +25,9 @@ export class TableFilterCriteria implements ITableFilterCriteria {
   sortColumn: string | undefined;
   sortDirection: SortDirection | undefined;
 
-  constructor() {
+  constructor(pageSize?: number) {
     this.pageIndex = 0;
-    this.pageSize = 10;
+    this.pageSize = pageSize ?? 10;
   }
 }
 
@@ -97,7 +97,7 @@ export abstract class TableDataBase<T extends ITableDataSearchResultItem> {
   protected problemDetails$ = this.problemDetails.asObservable();
   protected spotlightIdentifier$ = this.spotlightIdentifier.asObservable();
 
-  protected observeInternal$ = combineLatest([
+  protected observeInternal$: Observable<TableDataContext<T>> = combineLatest([
     this.searchResult$,
     this.criteria$,
     this.isLoadingForFirstTime$,
@@ -115,17 +115,24 @@ export abstract class TableDataBase<T extends ITableDataSearchResultItem> {
         problemDetails,
         spotlightIdentifier
       ]) => {
-        return {
-          ...searchResult,
+        const context: TableDataContext<T> = {
+          items: searchResult?.items,
+          pageIndex: searchResult?.pageIndex,
+          pageSize: searchResult?.pageSize,
+          totalItems: searchResult?.totalItems,
+          totalPages: searchResult?.totalPages,
+          hasPreviousPage: searchResult?.hasPreviousPage,
+          hasNextPage: searchResult?.hasNextPage,
           criteria,
           isLoadingForFirstTime,
           isLoading,
           problemDetails,
           spotlightIdentifier
-        } as TableDataContext<T>;
+        };
+        return context;
       }
     )
-  ) as Observable<TableDataContext<T>>;
+  );
 
   protected init(defaultCriteria: TableFilterCriteria): void {
     this.criteria.next(defaultCriteria);
@@ -141,7 +148,7 @@ export abstract class TableDataBase<T extends ITableDataSearchResultItem> {
       .pipe(
         catchError((error: ProblemDetails | ApiException) => {
           this.problemDetails.next(error);
-          return of({
+          const result: TableDataSearchResult<T> = {
             items: [],
             pageIndex: criteria!.pageIndex,
             pageSize: criteria!.pageSize,
@@ -149,7 +156,8 @@ export abstract class TableDataBase<T extends ITableDataSearchResultItem> {
             totalPages: 0,
             hasNextPage: false,
             hasPreviousPage: false
-          } as TableDataSearchResult<T>);
+          };
+          return of(result);
         }),
         finalize(() => {
           this.isLoading.next(false);
@@ -169,12 +177,13 @@ export abstract class TableDataBase<T extends ITableDataSearchResultItem> {
       this.getByIdFunction(id).subscribe((item) => {
         if (this.searchResult.value != null) {
           const newItems = [item, ...(this.searchResult.value?.items ?? [])];
-          this.searchResult.next({
+          const result: TableDataSearchResult<T> = {
             ...this.searchResult.value,
             items: newItems
-          });
+          };
+          this.searchResult.next(result);
         } else {
-          this.searchResult.next({
+          const result: TableDataSearchResult<T> = {
             items: [item],
             pageIndex: 0,
             pageSize: this.criteria.value?.pageSize ?? 10,
@@ -182,7 +191,8 @@ export abstract class TableDataBase<T extends ITableDataSearchResultItem> {
             totalPages: 1,
             hasPreviousPage: false,
             hasNextPage: false
-          } as TableDataSearchResult<T>);
+          };
+          this.searchResult.next(result);
         }
         this.setSpotlightIdentifier(id);
       });
