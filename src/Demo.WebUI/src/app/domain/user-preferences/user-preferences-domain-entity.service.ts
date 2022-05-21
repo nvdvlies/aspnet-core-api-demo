@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { combineLatest, Observable, of } from 'rxjs';
 import { debounceTime, map } from 'rxjs/operators';
@@ -87,9 +87,9 @@ export class UserPreferencesDomainEntityService
       preferences: new FormGroup({
         setting1: new FormControl(null),
         setting2: new FormControl(null),
-        setting3: new FormControl(null),
-        setting4: new FormControl(null),
-        setting5: new FormControl(null)
+        setting3: new FormControl(null, [Validators.required], []),
+        setting4: new FormControl(null, [Validators.required], []),
+        setting5: new FormControl(null, [Validators.required], [])
       } as UserPreferencesPreferencesControls) as UserPreferencesPreferencesFormGroup,
       createdBy: new FormControl(super.readonlyFormState),
       createdOn: new FormControl(super.readonlyFormState),
