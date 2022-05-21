@@ -50,6 +50,14 @@ const routes: AppRoutes = [
         loadChildren: () =>
           import('./features/invoices/invoices.module').then((m) => m.InvoicesModule),
         canActivate: [AuthGuard]
+      },
+      {
+        path: 'user-preferences',
+        loadChildren: () =>
+          import('./features/user-preferences/user-preferences.module').then(
+            (m) => m.UserPreferencesModule
+          ),
+        canActivate: [AuthGuard]
       }
     ] as AppRoutes
   }

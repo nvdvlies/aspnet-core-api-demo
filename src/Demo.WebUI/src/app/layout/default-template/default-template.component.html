@@ -10,7 +10,7 @@
     </button>
     <mat-menu #accountMenu [overlapTrigger]="false" yPosition="below">
       <button mat-menu-item routerLink="#"><mat-icon>person</mat-icon><span>Account</span></button>
-      <button mat-menu-item routerLink="#">
+      <button mat-menu-item routerLink="/user-preferences">
         <mat-icon>settings</mat-icon><span>Preferences</span>
       </button>
       <mat-divider></mat-divider>
@@ -19,7 +19,7 @@
   </div>
 </mat-toolbar>
 <mat-sidenav-container style="height: calc(100% - 64px); margin: 0">
-  <mat-sidenav #sidenav opened mode="side" class="mat-elevation-z1" style="width: 220px">
+  <mat-sidenav #sidenav opened mode="side" style="width: 220px">
     <mat-nav-list>
       <mat-list-item routerLink="/customers" [routerLinkActive]="['active']" class="text-gray-900">
         Customers</mat-list-item

@@ -21,6 +21,7 @@ import {
   MAT_MOMENT_DATE_ADAPTER_OPTIONS
 } from '@angular/material-moment-adapter';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @NgModule({
   declarations: [],
@@ -43,7 +44,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatAutocompleteModule,
     MatDatepickerModule,
     MatMomentDateModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatCheckboxModule
   ],
   providers: [{ provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } }]
 })

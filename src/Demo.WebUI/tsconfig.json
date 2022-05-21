@@ -27,7 +27,8 @@
       "@domain/*": ["src/app/domain/*"],
       "@layout/*": ["src/app/layout/*"],
       "@customers/*": ["src/app/features/customers/*"],
-      "@invoices/*": ["src/app/features/invoices/*"]
+      "@invoices/*": ["src/app/features/invoices/*"],
+      "@user-preferences/*": ["src/app/features/user-preferences/*"]
     }
   },
   "angularCompilerOptions": {
