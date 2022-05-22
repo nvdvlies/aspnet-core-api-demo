@@ -1,4 +1,4 @@
-import { NonPrintableKey } from '@shared/utils/non-printable-key.enum';
+import { NonPrintableKey } from '@shared/enums/non-printable-key.enum';
 
 export class KeyboardUtils {
   public static isNonPrintableKey(event: KeyboardEvent): boolean {
