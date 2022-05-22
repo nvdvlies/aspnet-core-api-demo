@@ -3,30 +3,30 @@ import { Router } from '@angular/router';
 import { BehaviorSubject, combineLatest, debounceTime, map, Observable, tap } from 'rxjs';
 import { DomainEntityService } from '@domain/shared/domain-entity-base';
 import {
-  UserPreferencesDomainEntityService,
-  UserPreferencesFormGroup,
-  IUserPreferencesDomainEntityContext
-} from '@domain/user-preferences/user-preferences-domain-entity.service';
+  ApplicationSettingsDomainEntityService,
+  ApplicationSettingsFormGroup,
+  IApplicationSettingsDomainEntityContext
+} from '@domain/application-settings/application-settings-domain-entity.service';
 import { IHasForm } from '@shared/guards/unsaved-changes.guard';
 
-interface ViewModel extends IUserPreferencesDomainEntityContext {
+interface ViewModel extends IApplicationSettingsDomainEntityContext {
   settingsSaved: boolean;
 }
 
 @Component({
-  templateUrl: './user-preferences-details.component.html',
-  styleUrls: ['./user-preferences-details.component.scss'],
+  templateUrl: './application-settings-details.component.html',
+  styleUrls: ['./application-settings-details.component.scss'],
   providers: [
-    UserPreferencesDomainEntityService,
+    ApplicationSettingsDomainEntityService,
     {
       provide: DomainEntityService,
-      useExisting: UserPreferencesDomainEntityService
+      useExisting: ApplicationSettingsDomainEntityService
     }
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class UserPreferencesDetailsComponent implements OnInit, IHasForm {
-  public read$ = this.userPreferencesDomainEntityService.read();
+export class ApplicationSettingsDetailsComponent implements OnInit, IHasForm {
+  public read$ = this.applicationSettingsDomainEntityService.read();
 
   public readonly settingsSaved = new BehaviorSubject<boolean>(false);
 
@@ -35,7 +35,7 @@ export class UserPreferencesDetailsComponent implements OnInit, IHasForm {
   private vm: Readonly<ViewModel> | undefined;
 
   public vm$ = combineLatest([
-    this.userPreferencesDomainEntityService.observe$,
+    this.applicationSettingsDomainEntityService.observe$,
     this.settingsSaved$
   ]).pipe(
     debounceTime(0),
@@ -49,11 +49,11 @@ export class UserPreferencesDetailsComponent implements OnInit, IHasForm {
     tap((vm) => (this.vm = vm))
   ) as Observable<ViewModel>;
 
-  public form: UserPreferencesFormGroup = this.userPreferencesDomainEntityService.form;
+  public form: ApplicationSettingsFormGroup = this.applicationSettingsDomainEntityService.form;
 
   constructor(
     private readonly router: Router,
-    private readonly userPreferencesDomainEntityService: UserPreferencesDomainEntityService
+    private readonly applicationSettingsDomainEntityService: ApplicationSettingsDomainEntityService
   ) {}
 
   public ngOnInit(): void {}
@@ -65,7 +65,7 @@ export class UserPreferencesDetailsComponent implements OnInit, IHasForm {
       return;
     }
 
-    this.userPreferencesDomainEntityService.save().subscribe(() => {
+    this.applicationSettingsDomainEntityService.save().subscribe(() => {
       this.settingsSaved.next(true);
     });
   }

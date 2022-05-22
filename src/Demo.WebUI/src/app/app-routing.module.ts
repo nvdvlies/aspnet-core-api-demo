@@ -58,6 +58,14 @@ const routes: AppRoutes = [
             (m) => m.UserPreferencesModule
           ),
         canActivate: [AuthGuard]
+      },
+      {
+        path: 'application-settings',
+        loadChildren: () =>
+          import('./features/application-settings/application-settings.module').then(
+            (m) => m.ApplicationSettingsModule
+          ),
+        canActivate: [AuthGuard]
       }
     ] as AppRoutes
   }

@@ -28,7 +28,8 @@
       "@layout/*": ["src/app/layout/*"],
       "@customers/*": ["src/app/features/customers/*"],
       "@invoices/*": ["src/app/features/invoices/*"],
-      "@user-preferences/*": ["src/app/features/user-preferences/*"]
+      "@user-preferences/*": ["src/app/features/user-preferences/*"],
+      "@application-settings/*": ["src/app/features/application-settings/*"]
     }
   },
   "angularCompilerOptions": {

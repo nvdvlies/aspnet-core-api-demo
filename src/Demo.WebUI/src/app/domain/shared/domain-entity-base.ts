@@ -14,6 +14,7 @@ import {
 } from 'rxjs/operators';
 import { ApiException, ProblemDetails, ValidationProblemDetails } from '@api/api.generated.clients';
 import { MergeUtil } from '@domain/shared/merge.util';
+import { StringUtils } from '@shared/utils/string.utils';
 
 export class ProblemDetailsError extends Error {
   public problemDetails: ValidationProblemDetails | ProblemDetails | ApiException;
@@ -310,7 +311,7 @@ export abstract class DomainEntityBase<T extends IDomainEntity<T>>
   }
 
   protected setEntity(entity: T): void {
-    this.id.next(entity.id);
+    this.id.next(entity.id && !StringUtils.isEmptyGuid(entity.id) ? entity.id : undefined);
     this.entity.next(entity);
     this.patchEntityToForm(entity);
     this.pristine.next(entity.clone());

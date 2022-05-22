@@ -1,0 +1,154 @@
+{{ read$ | async }}
+
+<ng-container *ngIf="vm$ | async as vm; else loading">
+  <ng-container *ngIf="!vm.isLoading; else loading">
+    <ng-container *ngIf="vm.loadingEntityFailed && vm.problemDetails">
+      <div class="page-load-error-container">
+        <app-problem-details [problemDetails]="vm.problemDetails"></app-problem-details>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="!vm.loadingEntityFailed">
+      <form [formGroup]="form" novalidate (ngSubmit)="save()">
+        <app-page-header title="Application settings">
+          <button
+            mat-icon-button
+            type="button"
+            *ngIf="vm.id != null"
+            routerLink="auditlog"
+            matTooltip="Audit log"
+          >
+            <mat-icon>history</mat-icon>
+          </button>
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            [disabled]="vm.isSaving"
+            [class.button-spinner]="vm.isSaving"
+          >
+            Save
+          </button>
+          <button mat-raised-button routerLink="/" type="button">Close</button>
+          <div class="auditlog" *ngIf="vm.id != null">
+            <small
+              >Created by
+              {{ vm.pristine?.createdBy | userIdToName | async }}
+              on {{ vm.pristine?.createdOn | date: 'short' }}</small
+            >
+            <small
+              >Last modified by
+              {{ vm.pristine?.lastModifiedBy | userIdToName | async }}
+              on {{ vm.pristine?.lastModifiedOn | date: 'short' }}</small
+            >
+          </div>
+        </app-page-header>
+        <div class="content-container">
+          <app-problem-details [problemDetails]="vm.problemDetails"></app-problem-details>
+          <app-message *ngIf="vm.settingsSaved && !vm.problemDetails" type="success"
+            >Settings updated.</app-message
+          >
+          <ng-container formGroupName="settings">
+            <mat-card class="card shadow-lg bg-white mt-2">
+              <mat-card-header>
+                <mat-card-title>Settings</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <div class="row">
+                  <div class="col">
+                    <mat-checkbox formControlName="setting1" class="py-4">Setting 1</mat-checkbox>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <mat-form-field appearance="fill" class="full-width">
+                      <mat-label>Setting 2</mat-label>
+                      <input
+                        matInput
+                        placeholder="Setting 2"
+                        formControlName="setting2"
+                        type="text"
+                      />
+                      <mat-error appDomainEntityErrorMessage></mat-error>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <mat-form-field appearance="fill" class="full-width">
+                      <mat-label>Setting 3</mat-label>
+                      <input
+                        matInput
+                        formControlName="setting3"
+                        [matDatepicker]="picker"
+                        placeholder="Setting 2"
+                        type="text"
+                      />
+                      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                      <mat-datepicker #picker></mat-datepicker>
+                      <mat-error appDomainEntityErrorMessage></mat-error>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <mat-form-field appearance="fill" class="full-width">
+                      <mat-label>Setting 4</mat-label>
+                      <button
+                        type="button"
+                        mat-button
+                        matPrefix
+                        mat-icon-button
+                        (click)="setting4Autocomplete.focus()"
+                      >
+                        <mat-icon>search</mat-icon>
+                      </button>
+                      <app-customer-autocomplete-form-field-control
+                        #setting4Autocomplete
+                        matInput
+                        placeholder="Setting 4"
+                        formControlName="setting4"
+                      >
+                      </app-customer-autocomplete-form-field-control>
+                      <button
+                        *ngIf="setting4Autocomplete.value != null"
+                        type="button"
+                        mat-button
+                        mat-icon-button
+                        matSuffix
+                        (click)="setting4Autocomplete.clearSearchField()"
+                        [disabled]="setting4Autocomplete.disabled"
+                      >
+                        <mat-icon>close</mat-icon>
+                      </button>
+                      <mat-error appDomainEntityErrorMessage></mat-error>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <mat-form-field appearance="fill" class="full-width">
+                      <mat-label>Setting 5</mat-label>
+                      <input
+                        matInput
+                        type="number"
+                        formControlName="setting5"
+                        placeholder="Setting 5"
+                      />
+                      <mat-error appDomainEntityErrorMessage></mat-error>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </ng-container>
+        </div>
+        <!-- {{ form.value | json }} -->
+      </form>
+    </ng-container>
+  </ng-container>
+  <!-- {{ vm | json }} -->
+</ng-container>
+
+<ng-template #loading>
+  <app-spinner diameter="50"></app-spinner>
+</ng-template>
