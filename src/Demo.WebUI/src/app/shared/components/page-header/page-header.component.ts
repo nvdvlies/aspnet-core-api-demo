@@ -8,4 +8,5 @@ import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 })
 export class PageHeaderComponent {
   @Input() title: string | undefined;
+  @Input() showButtonBar: boolean = true;
 }

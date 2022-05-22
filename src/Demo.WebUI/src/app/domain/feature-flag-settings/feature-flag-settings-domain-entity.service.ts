@@ -15,6 +15,7 @@ import {
   DomainEntityContext,
   IDomainEntityContext
 } from '@domain/shared/domain-entity-base';
+import { FeatureFlag } from '@shared/enums/feature-flag.enum';
 
 export interface IFeatureFlagSettingsDomainEntityContext
   extends IDomainEntityContext<FeatureFlagSettingsDto> {}
@@ -119,7 +120,7 @@ export class FeatureFlagSettingsDomainEntityService
   private buildFeatureFlagFormGroup(): FeatureFlagFormGroup {
     const controls: FeatureFlagControls = {
       id: new FormControl(super.readonlyFormState),
-      name: new FormControl(null, [Validators.required], []),
+      name: new FormControl(super.readonlyFormState),
       description: new FormControl(null, [Validators.required], []),
       enabledForAll: new FormControl(null),
       enabledForUsers: new FormArray([]),
@@ -128,9 +129,11 @@ export class FeatureFlagSettingsDomainEntityService
     return new FormGroup(controls) as FeatureFlagFormGroup;
   }
 
-  public addFeatureFlag(): void {
-    const newInvoiceLineFormGroup = this.buildFeatureFlagFormGroup();
-    this.featureFlagFormArray.push(newInvoiceLineFormGroup);
+  public addFeatureFlag(featureFlagName: keyof typeof FeatureFlag): FeatureFlagFormGroup {
+    const formGroup = this.buildFeatureFlagFormGroup();
+    formGroup.controls.name.setValue(featureFlagName);
+    this.featureFlagFormArray.push(formGroup);
+    return formGroup;
   }
 
   public removeFeatureFlag(index: number): void {

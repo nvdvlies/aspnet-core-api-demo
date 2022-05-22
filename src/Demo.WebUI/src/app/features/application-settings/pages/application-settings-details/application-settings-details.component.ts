@@ -75,10 +75,4 @@ export class ApplicationSettingsDetailsComponent implements OnInit, IHasForm {
     this.save();
     event.preventDefault();
   }
-
-  @HostListener('document:keydown.shift.alt.c', ['$event'])
-  public closeShortcut(event: KeyboardEvent) {
-    this.router.navigateByUrl('/');
-    event.preventDefault();
-  }
 }

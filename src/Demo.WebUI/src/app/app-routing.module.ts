@@ -66,6 +66,14 @@ const routes: AppRoutes = [
             (m) => m.ApplicationSettingsModule
           ),
         canActivate: [AuthGuard]
+      },
+      {
+        path: 'feature-flag-settings',
+        loadChildren: () =>
+          import('./features/feature-flag-settings/feature-flag-settings.module').then(
+            (m) => m.FeatureFlagsSettingsModule
+          ),
+        canActivate: [AuthGuard]
       }
     ] as AppRoutes
   }

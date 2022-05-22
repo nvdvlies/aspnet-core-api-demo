@@ -75,10 +75,10 @@ export abstract class TableDataBase<T extends ITableDataSearchResultItem> {
   protected abstract searchFunction: (
     criteria: ITableFilterCriteria
   ) => Observable<TableDataSearchResult<T>>;
-  protected abstract getByIdFunction: (id: string) => Observable<T>;
+  protected abstract getByIdFunction?: (id: string) => Observable<T>;
 
   protected abstract entityUpdatedInStore$: Observable<[IEntityUpdatedEvent, any]>;
-  protected abstract entityDeletedEvent$: Observable<IEntityDeletedEvent>;
+  protected abstract entityDeletedEvent$: Observable<IEntityDeletedEvent> | undefined;
   protected readonly problemDetails = new BehaviorSubject<
     ProblemDetails | ApiException | undefined
   >(undefined);
@@ -192,7 +192,7 @@ export abstract class TableDataBase<T extends ITableDataSearchResultItem> {
   public spotlight(id: string): void {
     if (!this.exists(id)) {
       // add a newly created entity on top of the list
-      this.getByIdFunction(id).subscribe((item) => {
+      this.getByIdFunction?.(id).subscribe((item) => {
         if (this.searchResult.value != null) {
           const newItems = [item, ...(this.searchResult.value?.items ?? [])];
           const result: TableDataSearchResult<T> = {
@@ -263,7 +263,7 @@ export abstract class TableDataBase<T extends ITableDataSearchResultItem> {
   }
 
   private subscribeToDeletedEvent(): void {
-    this.entityDeletedEvent$.pipe(filter((event) => this.exists(event.id))).subscribe((event) => {
+    this.entityDeletedEvent$?.pipe(filter((event) => this.exists(event.id))).subscribe((event) => {
       if (this.searchResult.value?.items != null) {
         const newItems = this.searchResult.value.items.filter((x) => x.id !== event.id);
         this.searchResult.next({
