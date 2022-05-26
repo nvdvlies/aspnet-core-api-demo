@@ -11,7 +11,14 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import { combineLatest, Observable, of } from 'rxjs';
 import { debounceTime, map } from 'rxjs/operators';
-import { UserDto, IUserDto, IUserRoleDto } from '@api/api.generated.clients';
+import {
+  UserDto,
+  IUserDto,
+  IUserRoleDto,
+  ApiUsersClient,
+  IsEmailAvailableQueryResult,
+  UserRoleDto
+} from '@api/api.generated.clients';
 import { UserStoreService } from '@domain/user/user-store.service';
 import {
   DomainEntityBase,
@@ -63,7 +70,11 @@ export class UserDomainEntityService extends DomainEntityBase<UserDto> implement
     })
   );
 
-  constructor(route: ActivatedRoute, private readonly userStoreService: UserStoreService) {
+  constructor(
+    route: ActivatedRoute,
+    private readonly userStoreService: UserStoreService,
+    private readonly apiUsersClient: ApiUsersClient
+  ) {
     super(route);
     super.init();
   }
@@ -90,7 +101,7 @@ export class UserDomainEntityService extends DomainEntityBase<UserDto> implement
       email: new FormControl(
         null,
         [Validators.required, Validators.email],
-        [this.uniqueEmailValidator()]
+        [this.uniqueEmailValidator().bind(this)]
       ),
       gender: new FormControl(null),
       birthDate: new FormControl(null),
@@ -133,7 +144,7 @@ export class UserDomainEntityService extends DomainEntityBase<UserDto> implement
 
   protected instantiateNewEntity(): Observable<UserDto> {
     const user = new UserDto();
-    user.userRoles = [];
+    user.userRoles = [new UserRoleDto()];
     return of(user);
   }
 
@@ -189,10 +200,12 @@ export class UserDomainEntityService extends DomainEntityBase<UserDto> implement
 
   private uniqueEmailValidator(): AsyncValidatorFn {
     return (control: AbstractControl): Observable<ValidationErrors | null> => {
-      return of(false).pipe(
-        // TODO
-        map((isTaken: boolean) => {
-          return isTaken ? { emailTaken: true } : null;
+      if (!control.value) {
+        return of(null);
+      }
+      return this.apiUsersClient.isEmailAvailable(control.value, this.id.value).pipe(
+        map((response: IsEmailAvailableQueryResult) => {
+          return !response.isEmailAvailable ? { emailTaken: true } : null;
         })
       );
     };

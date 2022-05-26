@@ -1,3 +1,4 @@
+using Demo.Application.Users.Queries.IsEmailAvailable;
 using Demo.Application.Users.Commands.CreateUser;
 using Demo.Application.Users.Commands.DeleteUser;
 using Demo.Application.Users.Commands.UpdateUser;
@@ -25,7 +26,7 @@ namespace Demo.WebApi.Controllers
         {
             return await Mediator.Send(query, cancellationToken);
         }
-        
+
         [HttpGet("{id:guid}", Name = nameof(GetUserById))]
         [Authorize(nameof(Policies.Admin))]
         [ProducesResponseType(typeof(GetUserByIdQueryResult), (int)HttpStatusCode.OK)]
@@ -43,7 +44,7 @@ namespace Demo.WebApi.Controllers
 
             return Ok(result);
         }
-        
+
         [HttpPost]
         [Authorize(nameof(Policies.Admin))]
         [ProducesResponseType(typeof(CreateUserResponse), (int)HttpStatusCode.Created)]
@@ -55,7 +56,7 @@ namespace Demo.WebApi.Controllers
 
             return CreatedAtRoute(routeName: nameof(GetUserById), routeValues: new { id = result.Id }, result);
         }
-        
+
         [HttpPut("{id:guid}")]
         [Authorize(nameof(Policies.Admin))]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
@@ -69,7 +70,7 @@ namespace Demo.WebApi.Controllers
 
             return NoContent();
         }
-        
+
         [HttpDelete("{id:guid}")]
         [Authorize(nameof(Policies.Admin))]
         [ProducesResponseType((int)HttpStatusCode.OK)]
@@ -83,7 +84,7 @@ namespace Demo.WebApi.Controllers
 
             return Ok();
         }
-        
+
         [HttpGet("{id:guid}/Auditlog")]
         [Authorize(nameof(Policies.Admin))]
         [ProducesResponseType(typeof(GetUserAuditlogQueryResult), (int)HttpStatusCode.OK)]
@@ -100,6 +101,14 @@ namespace Demo.WebApi.Controllers
         [ProducesResponseType(typeof(UserLookupQueryResult), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
         public async Task<ActionResult<UserLookupQueryResult>> Lookup([FromQuery] UserLookupQuery query, CancellationToken cancellationToken)
+        {
+            return await Mediator.Send(query, cancellationToken);
+        }
+
+        [HttpGet("IsEmailAvailable")]
+        [ProducesResponseType(typeof(IsEmailAvailableQueryResult), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
+        public async Task<ActionResult<IsEmailAvailableQueryResult>> IsEmailAvailable([FromQuery] IsEmailAvailableQuery query, CancellationToken cancellationToken)
         {
             return await Mediator.Send(query, cancellationToken);
         }

@@ -137,6 +137,7 @@
                             matSuffix
                             (click)="removeUserRole(i)"
                             matTooltip="Remove user"
+                            [disabled]="userRoles.controls.length === 1"
                           >
                             <mat-icon>delete</mat-icon>
                           </button>
