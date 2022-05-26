@@ -30,14 +30,16 @@ namespace Demo.Application.Users.Queries.UserLookup
 
         public async Task<UserLookupQueryResult> Handle(UserLookupQuery request, CancellationToken cancellationToken)
         {
-            var query = _query.AsQueryable();
+            var query = request.Ids is { Length: > 0 }
+                ? _query.WithOptions(x => x.IncludeDeleted = true).AsQueryable()
+                : _query.AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(request.SearchTerm))
             {
                 query = query.Where(x => EF.Functions.Like(x.Fullname, $"%{request.SearchTerm}%"));
             }
 
-            if (request.Ids != null && request.Ids.Length > 0)
+            if (request.Ids is { Length: > 0 })
             {
                 query = query.Where(x => request.Ids.Contains(x.Id));
             }
