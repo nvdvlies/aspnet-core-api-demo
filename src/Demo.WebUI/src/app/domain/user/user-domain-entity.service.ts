@@ -10,7 +10,7 @@ import {
 } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { combineLatest, Observable, of } from 'rxjs';
-import { debounceTime, map } from 'rxjs/operators';
+import { debounceTime, delay, map, switchMap } from 'rxjs/operators';
 import {
   UserDto,
   IUserDto,
@@ -101,7 +101,7 @@ export class UserDomainEntityService extends DomainEntityBase<UserDto> implement
       email: new FormControl(
         null,
         [Validators.required, Validators.email],
-        [this.uniqueEmailValidator().bind(this)]
+        [this.uniqueEmailValidator()]
       ),
       gender: new FormControl(null),
       birthDate: new FormControl(null),
@@ -121,7 +121,7 @@ export class UserDomainEntityService extends DomainEntityBase<UserDto> implement
       lastModifiedOn: new FormControl(super.readonlyFormState),
       timestamp: new FormControl(super.readonlyFormState)
     };
-    return new FormGroup(controls, { updateOn: 'blur' }) as UserFormGroup;
+    return new FormGroup(controls) as UserFormGroup;
   }
 
   private buildUserRoleFormGroup(): UserRoleFormGroup {
@@ -200,13 +200,20 @@ export class UserDomainEntityService extends DomainEntityBase<UserDto> implement
 
   private uniqueEmailValidator(): AsyncValidatorFn {
     return (control: AbstractControl): Observable<ValidationErrors | null> => {
-      if (!control.value) {
+      if (!control.value || !control.dirty) {
         return of(null);
       }
-      return this.apiUsersClient.isEmailAvailable(control.value, this.id.value).pipe(
-        map((response: IsEmailAvailableQueryResult) => {
-          return !response.isEmailAvailable ? { emailTaken: true } : null;
-        })
+      return of(control.value).pipe(
+        delay(1000),
+        switchMap((value) =>
+          this.apiUsersClient
+            .isEmailAvailable(value, this.id.value)
+            .pipe(
+              map((response: IsEmailAvailableQueryResult) =>
+                !response.isEmailAvailable ? { emailTaken: true } : null
+              )
+            )
+        )
       );
     };
   }
