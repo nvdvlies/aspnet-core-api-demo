@@ -7431,6 +7431,7 @@ export interface ISearchUserDto extends ISoftDeleteEntityDto {
 export enum SearchUserOrderByEnum {
     FamilyName = 0,
     Fullname = 1,
+    Email = 2,
 }
 
 export class CreateUserResponse implements ICreateUserResponse {

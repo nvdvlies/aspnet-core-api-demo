@@ -11,7 +11,6 @@ namespace Demo.Domain.User.Hooks
         {
             context.Entity.UserRoles?.ForEach(x =>
             {
-                x.User = null;
                 x.Role = null;
             });
 

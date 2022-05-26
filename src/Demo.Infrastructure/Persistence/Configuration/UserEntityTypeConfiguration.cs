@@ -18,7 +18,7 @@ namespace Demo.Infrastructure.Persistence.Configuration
             builder.Property(x => x.ExternalId)
                 .HasMaxLength(50);
 
-            builder.HasIndex(x => x.Email).IsUnique();
+            builder.HasIndex(x => x.Email);
             builder.HasIndex(x => x.Fullname);
 
             builder.Property(x => x.Fullname)
@@ -66,7 +66,7 @@ namespace Demo.Infrastructure.Persistence.Configuration
                 ExternalId = AdministratorExternalId,
                 FamilyName = "Administrator",
                 Fullname = "Administrator",
-                Email = "admin@xxxx.xxxx"
+                Email = "demo@demo.com"
             });
         }
     }

@@ -30,7 +30,8 @@
       "@invoices/*": ["src/app/features/invoices/*"],
       "@user-preferences/*": ["src/app/features/user-preferences/*"],
       "@application-settings/*": ["src/app/features/application-settings/*"],
-      "@feature-flag-settings/*": ["src/app/features/feature-flag-settings/*"]
+      "@feature-flag-settings/*": ["src/app/features/feature-flag-settings/*"],
+      "@users/*": ["src/app/features/users/*"]
     }
   },
   "angularCompilerOptions": {

@@ -87,7 +87,11 @@ export class UserDomainEntityService extends DomainEntityBase<UserDto> implement
       givenName: new FormControl(null),
       familyName: new FormControl(null, [Validators.required], []),
       middleName: new FormControl(null),
-      email: new FormControl(null, [Validators.required], [this.emailValidator()]),
+      email: new FormControl(
+        null,
+        [Validators.required, Validators.email],
+        [this.uniqueEmailValidator()]
+      ),
       gender: new FormControl(null),
       birthDate: new FormControl(null),
       zoneInfo: new FormControl(null),
@@ -183,7 +187,7 @@ export class UserDomainEntityService extends DomainEntityBase<UserDto> implement
     });
   }
 
-  private emailValidator(): AsyncValidatorFn {
+  private uniqueEmailValidator(): AsyncValidatorFn {
     return (control: AbstractControl): Observable<ValidationErrors | null> => {
       return of(false).pipe(
         // TODO

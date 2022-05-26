@@ -1,0 +1,165 @@
+{{ initFromRoute$ | async }}
+
+<ng-container *ngIf="vm$ | async as vm; else loading">
+  <ng-container *ngIf="!vm.isLoading; else loading">
+    <ng-container *ngIf="vm.loadingEntityFailed && vm.problemDetails">
+      <div class="page-load-error-container">
+        <app-problem-details [problemDetails]="vm.problemDetails"></app-problem-details>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="!vm.loadingEntityFailed">
+      <form [formGroup]="form" novalidate (ngSubmit)="save()">
+        <app-page-header
+          title="{{ vm.id != null ? 'User: ' + vm.pristine?.fullname : 'New user' }}"
+        >
+          <button
+            mat-icon-button
+            type="button"
+            *ngIf="vm.id != null"
+            routerLink="auditlog"
+            matTooltip="Audit log"
+          >
+            <mat-icon>history</mat-icon>
+          </button>
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            [disabled]="vm.isSaving"
+            [class.button-spinner]="vm.isSaving"
+          >
+            Save
+          </button>
+          <button
+            mat-raised-button
+            (click)="delete()"
+            type="button"
+            *ngIf="vm.id != null"
+            [disabled]="vm.isDeleting"
+            [class.button-spinner]="vm.isDeleting"
+          >
+            Delete
+          </button>
+          <button mat-raised-button routerLink="/users" type="button">Close</button>
+          <div class="auditlog" *ngIf="vm.id != null">
+            <small
+              >Created by
+              {{ vm.pristine?.createdBy | userIdToName | async }}
+              on {{ vm.pristine?.createdOn | date: 'short' }}</small
+            >
+            <small
+              >Last modified by
+              {{ vm.pristine?.lastModifiedBy | userIdToName | async }}
+              on {{ vm.pristine?.lastModifiedOn | date: 'short' }}</small
+            >
+          </div>
+        </app-page-header>
+        <div class="content-container">
+          <app-problem-details [problemDetails]="vm.problemDetails"></app-problem-details>
+          <app-message type="warning" *ngIf="vm.hasNewerVersionWithMergeConflict">
+            This user has just been modified by somebody else and that modification contains changes
+            which conflict with your pending changes. Please click 'Refresh' to switch to the
+            persisted version of the user. Your pending changes will be lost.
+            <div>
+              <button
+                mat-stroked-button
+                (click)="resolveMergeConflictWithTakeTheirs()"
+                type="button"
+              >
+                Refresh
+              </button>
+            </div>
+          </app-message>
+          <mat-card class="card shadow-lg bg-white mt-2">
+            <mat-card-header>
+              <mat-card-title>General</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="row">
+                <div class="col">
+                  <mat-form-field appearance="fill" class="full-width">
+                    <mat-label>Lastname</mat-label>
+                    <input
+                      matInput
+                      [appSetFocus]="vm.id == null"
+                      placeholder="Lastname"
+                      formControlName="familyName"
+                      type="text"
+                    />
+                    <mat-error appDomainEntityErrorMessage></mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <mat-form-field appearance="fill" class="full-width">
+                    <mat-label>Email</mat-label>
+                    <input matInput placeholder="Email" formControlName="email" type="text" />
+                    <mat-error appDomainEntityErrorMessage></mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+
+          <mat-card class="card shadow-lg bg-white mt-2">
+            <mat-card-header>
+              <mat-card-title>User roles</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <ng-container formArrayName="userRoles">
+                <ng-container *ngFor="let user of userRoles!.controls; let i = index">
+                  <ng-container [formGroupName]="i">
+                    <div class="row">
+                      <div class="col">
+                        <mat-form-field appearance="fill" class="full-width">
+                          <mat-label>Role</mat-label>
+                          <button
+                            type="button"
+                            mat-button
+                            matPrefix
+                            mat-icon-button
+                            (click)="userAutocomplete.focus()"
+                          >
+                            <mat-icon>search</mat-icon>
+                          </button>
+                          <app-role-autocomplete-form-field-control
+                            #userAutocomplete
+                            matInput
+                            placeholder="Role"
+                            formControlName="roleId"
+                          >
+                          </app-role-autocomplete-form-field-control>
+                          <button
+                            type="button"
+                            mat-button
+                            mat-icon-button
+                            matSuffix
+                            (click)="removeUserRole(i)"
+                            matTooltip="Remove user"
+                          >
+                            <mat-icon>delete</mat-icon>
+                          </button>
+                          <mat-error appDomainEntityErrorMessage></mat-error>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </ng-container>
+                </ng-container>
+              </ng-container>
+              <button mat-raised-button type="button" (click)="addUserRole()">
+                <mat-icon>add</mat-icon> Add role
+              </button>
+            </mat-card-content>
+          </mat-card>
+        </div>
+        <!-- {{ form.value | json }} -->
+      </form>
+    </ng-container>
+  </ng-container>
+  <!-- {{ vm | json }} -->
+</ng-container>
+
+<ng-template #loading>
+  <app-spinner diameter="50"></app-spinner>
+</ng-template>

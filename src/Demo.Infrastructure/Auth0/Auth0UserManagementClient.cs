@@ -23,7 +23,7 @@ namespace Demo.Infrastructure.Auth0
             _auth0ManagementApiClientCreator = auth0ManagementApiClientCreator;
         }
 
-        public async Task CreateAsync(Domain.User.User internalUser, CancellationToken cancellationToken = default)
+        public async Task<string> CreateAsync(Domain.User.User internalUser, CancellationToken cancellationToken = default)
         {
             var client = await _auth0ManagementApiClientCreator.GetClient(cancellationToken);
 
@@ -62,6 +62,8 @@ namespace Demo.Infrastructure.Auth0
                 Roles = roles
             };
             await client.Users.AssignRolesAsync(user.UserId, assignRolesRequest, cancellationToken);
+
+            return user.UserId;
         }
 
         public async Task<string> GetChangePasswordUrl(Domain.User.User internalUser, CancellationToken cancellationToken = default)
@@ -69,7 +71,7 @@ namespace Demo.Infrastructure.Auth0
             var client = await _auth0ManagementApiClientCreator.GetClient(cancellationToken);
             var passwordChangeTicketRequest = new PasswordChangeTicketRequest
             {
-                UserId = string.Concat("auth0|", internalUser.Id.ToString()),
+                UserId = internalUser.ExternalId,
                 MarkEmailAsVerified = true,
                 ResultUrl = _environmentSettings.Auth0.RedirectUrl,
                 IncludeEmailInRedirect = true,
@@ -88,7 +90,7 @@ namespace Demo.Infrastructure.Auth0
                 EmailVerified = false,
                 VerifyEmail = true
             };
-            await client.Users.UpdateAsync(internalUser.Id.ToString(), request, cancellationToken);
+            await client.Users.UpdateAsync(internalUser.ExternalId, request, cancellationToken);
         }
 
         public async Task SyncNameToAuth0Async(Domain.User.User internalUser, CancellationToken cancellationToken = default)
@@ -100,7 +102,7 @@ namespace Demo.Infrastructure.Auth0
                 FirstName = internalUser.GivenName,
                 LastName = $"{internalUser.MiddleName} {internalUser.FamilyName}".Trim()
             };
-            await client.Users.UpdateAsync(internalUser.Id.ToString(), request, cancellationToken);
+            await client.Users.UpdateAsync(internalUser.ExternalId, request, cancellationToken);
         }
 
         public async Task SyncRolesToAuth0Async(Domain.User.User internalUser, CancellationToken cancellationToken = default)
@@ -111,7 +113,7 @@ namespace Demo.Infrastructure.Auth0
                 .Where(x => internalUser.UserRoles.Any(y => y.RoleId == x.InternalRoleId))
                 .Select(x => x.Auth0RoleId);
 
-            var roleIdsAssignedToUserInAuth0 = (await client.Users.GetRolesAsync(internalUser.Id.ToString(), null, cancellationToken))
+            var roleIdsAssignedToUserInAuth0 = (await client.Users.GetRolesAsync(internalUser.ExternalId, null, cancellationToken))
                 .Select(x => x.Id);
 
             var rolesToAdd = roleIdsAssignedToUser
@@ -123,7 +125,7 @@ namespace Demo.Infrastructure.Auth0
                 {
                     Roles = rolesToAdd
                 };
-                await client.Users.AssignRolesAsync(internalUser.Id.ToString(), assignRolesRequest, cancellationToken);
+                await client.Users.AssignRolesAsync(internalUser.ExternalId, assignRolesRequest, cancellationToken);
             }
 
             var rolesToRemove = roleIdsAssignedToUserInAuth0
@@ -135,7 +137,7 @@ namespace Demo.Infrastructure.Auth0
                 {
                     Roles = rolesToRemove
                 };
-                await client.Users.RemoveRolesAsync(internalUser.Id.ToString(), removeRolesRequest, cancellationToken);
+                await client.Users.RemoveRolesAsync(internalUser.ExternalId, removeRolesRequest, cancellationToken);
             }
         }
 

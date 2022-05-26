@@ -24,11 +24,16 @@ namespace Demo.Application.Users.Messages.CreateAuth0User
         public async Task<Unit> Handle(CreateAuth0UserMessage request, CancellationToken cancellationToken)
         {
             await _userDomainEntity
-                .WithOptions(x => x.AsNoTracking = true)
                 .GetAsync(request.Data.Id, cancellationToken);
 
-            await _auth0UserManagementClient.CreateAsync(_userDomainEntity.Entity, cancellationToken);
-            // TODO: save external id to user table
+            var externalId = await _auth0UserManagementClient.CreateAsync(_userDomainEntity.Entity, cancellationToken);
+
+            _userDomainEntity.With(x =>
+            {
+                x.ExternalId = externalId;
+            });
+            await _userDomainEntity.UpdateAsync(cancellationToken);
+
             var changePasswordUrl = await _auth0UserManagementClient.GetChangePasswordUrl(_userDomainEntity.Entity, cancellationToken);
             // TODO: Send invitation email with changePasswordUrl
 

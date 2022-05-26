@@ -473,7 +473,7 @@ namespace Demo.Infrastructure.Persistence.Migrations
                 schema: "demo",
                 table: "User",
                 column: "Email",
-                unique: true);
+                unique: false);
 
             migrationBuilder.CreateIndex(
                 name: "IX_User_Fullname",

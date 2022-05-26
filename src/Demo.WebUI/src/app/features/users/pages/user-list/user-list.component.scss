@@ -1,0 +1,20 @@
+table {
+  width: 100%;
+}
+
+.spotlight-row {
+  -webkit-animation: target-fade 4s;
+  animation: target-fade 4s;
+}
+
+@-webkit-keyframes target-fade {
+  from {
+    background-color: var(--default-theme-accent-color);
+  }
+}
+
+@keyframes target-fade {
+  from {
+    background-color: var(--default-theme-accent-color);
+  }
+}

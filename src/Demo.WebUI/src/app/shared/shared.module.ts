@@ -20,6 +20,7 @@ import { IfFeatureFlagEnabledDirective } from './directives/if-feature-flag-enab
 import { IfFeatureFlagDisabledDirective } from './directives/if-feature-flag-disabled.directive';
 import { SpinnerComponent } from './components/spinner/spinner.component';
 import { UserAutocompleteFormFieldControlComponent } from '@shared/components/user-autocomplete-form-field-control/user-autocomplete-form-field-control.component';
+import { RoleAutocompleteFormFieldControlComponent } from '@shared/components/role-autocomplete-form-field-control/role-autocomplete-form-field-control.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import { UserAutocompleteFormFieldControlComponent } from '@shared/components/us
     IfFeatureFlagEnabledDirective,
     IfFeatureFlagDisabledDirective,
     SpinnerComponent,
-    UserAutocompleteFormFieldControlComponent
+    UserAutocompleteFormFieldControlComponent,
+    RoleAutocompleteFormFieldControlComponent
   ],
   imports: [CommonModule, ReactiveFormsModule, FormsModule, MaterialModule],
   exports: [
@@ -64,7 +66,8 @@ import { UserAutocompleteFormFieldControlComponent } from '@shared/components/us
     IfFeatureFlagEnabledDirective,
     IfFeatureFlagDisabledDirective,
     SpinnerComponent,
-    UserAutocompleteFormFieldControlComponent
+    UserAutocompleteFormFieldControlComponent,
+    RoleAutocompleteFormFieldControlComponent
   ]
 })
 export class SharedModule {}

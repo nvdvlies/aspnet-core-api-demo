@@ -48,6 +48,7 @@ namespace Demo.Application.Users.Queries.SearchUsers
             {
                 SearchUserOrderByEnum.Fullname => query.OrderBy(x => x.Fullname, sortOrder),
                 SearchUserOrderByEnum.FamilyName => query.OrderBy(x => x.FamilyName, sortOrder),
+                SearchUserOrderByEnum.Email => query.OrderBy(x => x.Email, sortOrder),
                 _ => throw new Exception($"OrderBy '{request.OrderBy}' not implemented.")
             };
 
