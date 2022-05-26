@@ -80,19 +80,26 @@ export class FeatureFlagSettingTableDataService extends TableDataBase<FeatureFla
     return this.featureFlagSettingsStoreService.get().pipe(
       map((featureFlagSettings) => {
         let items = Object.entries(FeatureFlag).map(([key, value]) => {
-          const existingFeatureFlag = featureFlagSettings.settings?.featureFlags?.find(
+          const persistedFeatureFlag = featureFlagSettings.settings?.featureFlags?.find(
             (x) => x.name === key
           );
           const featureFlagDto = new FeatureFlagDto();
           featureFlagDto.name = key;
-          featureFlagDto.description = existingFeatureFlag?.description;
-          featureFlagDto.enabledForAll = existingFeatureFlag?.enabledForAll ?? false;
-          featureFlagDto.enabledForUsers = existingFeatureFlag?.enabledForUsers;
+          featureFlagDto.description = persistedFeatureFlag?.description;
+          featureFlagDto.enabledForAll = persistedFeatureFlag?.enabledForAll ?? false;
+          featureFlagDto.enabledForUsers = persistedFeatureFlag?.enabledForAll
+            ? []
+            : persistedFeatureFlag?.enabledForUsers;
           return featureFlagDto;
         });
 
         if (this.searchTerm.value && this.searchTerm.value.length > 0) {
-          items = items.filter((x) => x.name?.indexOf(this.searchTerm.value) != -1);
+          items = items.filter(
+            (x) =>
+              x.name?.toLowerCase().indexOf(this.searchTerm.value.toLowerCase()) != -1 ||
+              (x.description &&
+                x.description.toLowerCase().indexOf(this.searchTerm.value.toLowerCase()) != -1)
+          );
         }
 
         if (criteria.sortColumn) {
@@ -132,7 +139,6 @@ export class FeatureFlagSettingTableDataService extends TableDataBase<FeatureFla
   };
 
   public override spotlight(id: string): void {
-    this.search();
     this.setSpotlightIdentifier(id);
   }
 

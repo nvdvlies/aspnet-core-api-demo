@@ -63,6 +63,8 @@ export class FeatureFlagSettingListComponent implements OnInit, OnDestroy {
     if (state && state.spotlightIdentifier) {
       this.featureFlagSettingTableDataService.spotlight(state.spotlightIdentifier);
     }
+
+    this.featureFlagSettingTableDataService.search();
   }
 
   public search(criteria: TableFilterCriteria): void {
