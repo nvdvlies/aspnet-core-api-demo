@@ -220,7 +220,7 @@ export abstract class TableDataBase<T extends ITableDataSearchResultItem> {
     }
   }
 
-  private setSpotlightIdentifier(id: string): void {
+  protected setSpotlightIdentifier(id: string): void {
     this.spotlightIdentifier.next(id);
     setTimeout(() => {
       if (this.spotlightIdentifier.value === id) {
@@ -241,12 +241,12 @@ export abstract class TableDataBase<T extends ITableDataSearchResultItem> {
     }
   }
 
-  private subscribeToEvents(): void {
+  protected subscribeToEvents(): void {
     this.subscribeToUpdatedInStoreEvent();
     this.subscribeToDeletedEvent();
   }
 
-  private subscribeToUpdatedInStoreEvent(): void {
+  protected subscribeToUpdatedInStoreEvent(): void {
     this.entityUpdatedInStore$
       .pipe(filter((event) => this.exists(event[0].id)))
       .subscribe(([event, entity]) => {
@@ -262,7 +262,7 @@ export abstract class TableDataBase<T extends ITableDataSearchResultItem> {
       });
   }
 
-  private subscribeToDeletedEvent(): void {
+  protected subscribeToDeletedEvent(): void {
     this.entityDeletedEvent$?.pipe(filter((event) => this.exists(event.id))).subscribe((event) => {
       if (this.searchResult.value?.items != null) {
         const newItems = this.searchResult.value.items.filter((x) => x.id !== event.id);
@@ -278,7 +278,7 @@ export abstract class TableDataBase<T extends ITableDataSearchResultItem> {
     return sortDirection === 'desc' ? true : sortDirection === 'asc' ? false : undefined;
   }
 
-  private exists(id: string): boolean {
+  protected exists(id: string): boolean {
     return (
       this.searchResult.value?.items?.find((x) => x.id.toLowerCase() === id.toLowerCase()) != null
     );

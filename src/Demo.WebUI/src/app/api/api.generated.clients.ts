@@ -5050,7 +5050,7 @@ export interface IFeatureFlagSettingsSettingsDto {
     featureFlags?: FeatureFlagDto[] | undefined;
 }
 
-export class FeatureFlagDto extends EntityDto implements IFeatureFlagDto {
+export class FeatureFlagDto extends AuditableEntityDto implements IFeatureFlagDto {
     name?: string | undefined;
     description?: string | undefined;
     enabledForAll!: boolean;
@@ -5103,7 +5103,7 @@ export class FeatureFlagDto extends EntityDto implements IFeatureFlagDto {
     }
 }
 
-export interface IFeatureFlagDto extends IEntityDto {
+export interface IFeatureFlagDto extends IAuditableEntityDto {
     name?: string | undefined;
     description?: string | undefined;
     enabledForAll: boolean;

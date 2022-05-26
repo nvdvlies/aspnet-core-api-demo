@@ -9,14 +9,13 @@ namespace Demo.WebApi.Auth
     {
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, HasRoleRequirement requirement)
         {
-            if (!context.User.HasClaim(c => c.Type == "scope" && c.Issuer == requirement.Issuer))
-            {
-                return Task.CompletedTask;
-            }
+            var hasRolePermissionClaim = context.User.HasClaim(c =>
+                c.Issuer == requirement.Issuer
+                && c.Type == "permissions"
+                && c.Value == requirement.Role
+            );
 
-            var scopes = context.User.FindFirst(c => c.Type == "scope" && c.Issuer == requirement.Issuer)?.Value.Split(' ') ?? Array.Empty<string>();
-
-            if (scopes.Any(s => s == requirement.Role))
+            if (hasRolePermissionClaim)
             {
                 context.Succeed(requirement);
             }

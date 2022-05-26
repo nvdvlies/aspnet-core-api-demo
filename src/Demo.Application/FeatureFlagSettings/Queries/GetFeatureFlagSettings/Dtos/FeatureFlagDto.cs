@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Demo.Application.FeatureFlagSettings.Queries.GetFeatureFlagSettings.Dtos
 {
-    public class FeatureFlagDto : EntityDto
+    public class FeatureFlagDto : AuditableEntityDto
     {
         public string Name { get; set; }
         public string Description { get; set; }

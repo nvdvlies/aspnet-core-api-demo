@@ -1,6 +1,15 @@
-import { ChangeDetectionStrategy, Component, HostListener, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BehaviorSubject, combineLatest, debounceTime, filter, map, Observable, tap } from 'rxjs';
+import {
+  BehaviorSubject,
+  combineLatest,
+  debounceTime,
+  map,
+  Observable,
+  Subject,
+  takeUntil,
+  tap
+} from 'rxjs';
 import { DomainEntityService } from '@domain/shared/domain-entity-base';
 import {
   FeatureFlagFormGroup,
@@ -11,9 +20,12 @@ import {
 import { IHasForm } from '@shared/guards/unsaved-changes.guard';
 import { FeatureFlagSettingListRouteState } from '@feature-flag-settings/pages/feature-flag-setting-list/feature-flag-setting-list.component';
 import { FeatureFlag } from '@shared/enums/feature-flag.enum';
+import { FormArray, FormControl } from '@angular/forms';
+import { FeatureFlagDto } from '@api/api.generated.clients';
 
 interface ViewModel extends IFeatureFlagSettingsDomainEntityContext {
   featureFlagName: string | undefined;
+  pristine: FeatureFlagDto | undefined;
 }
 
 @Component({
@@ -28,14 +40,15 @@ interface ViewModel extends IFeatureFlagSettingsDomainEntityContext {
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FeatureFlagSettingDetailsComponent implements OnInit, IHasForm {
-  public read$ = this.featureFlagSettingsDomainEntityService.read();
-
+export class FeatureFlagSettingDetailsComponent implements OnInit, OnDestroy, IHasForm {
   public readonly featureFlagName = new BehaviorSubject<keyof typeof FeatureFlag | undefined>(
     undefined
   );
 
+  protected readonly onDestroy = new Subject<void>();
+
   public featureFlagName$ = this.featureFlagName.asObservable();
+  protected onDestroy$ = this.onDestroy.asObservable();
 
   private vm: Readonly<ViewModel> | undefined;
 
@@ -47,15 +60,11 @@ export class FeatureFlagSettingDetailsComponent implements OnInit, IHasForm {
     map(([domainEntityContext, featureFlagName]) => {
       const vm: ViewModel = {
         ...domainEntityContext,
-        featureFlagName
+        featureFlagName,
+        pristine: domainEntityContext.pristine?.settings?.featureFlags?.find(
+          (x) => x.name === featureFlagName
+        )
       };
-
-      this.featureFlagFormGroup =
-        this.featureFlagSettingsDomainEntityService.featureFlags.find(
-          (featureFlags) => featureFlags.controls.name.value === featureFlagName
-        ) ?? this.featureFlagSettingsDomainEntityService.addFeatureFlag(featureFlagName!);
-
-      console.log(this.featureFlagFormGroup.value);
 
       return vm;
     }),
@@ -64,6 +73,10 @@ export class FeatureFlagSettingDetailsComponent implements OnInit, IHasForm {
 
   public form: FeatureFlagSettingsFormGroup = this.featureFlagSettingsDomainEntityService.form;
   public featureFlagFormGroup: FeatureFlagFormGroup | undefined;
+
+  public get enabledForUsersFormArray(): FormArray | undefined {
+    return this.featureFlagFormGroup?.controls.enabledForUsers as FormArray;
+  }
 
   constructor(
     private readonly router: Router,
@@ -78,6 +91,20 @@ export class FeatureFlagSettingDetailsComponent implements OnInit, IHasForm {
     }
 
     this.featureFlagName.next(name as FeatureFlag);
+
+    this.featureFlagSettingsDomainEntityService
+      .read()
+      .pipe(
+        takeUntil(this.onDestroy$),
+        tap(() => {
+          this.featureFlagFormGroup =
+            this.featureFlagSettingsDomainEntityService.featureFlags.find(
+              (featureFlags) => featureFlags.controls.name.value === this.featureFlagName.value
+            ) ??
+            this.featureFlagSettingsDomainEntityService.addFeatureFlag(this.featureFlagName.value!);
+        })
+      )
+      .subscribe();
   }
 
   public save(): void {
@@ -108,5 +135,28 @@ export class FeatureFlagSettingDetailsComponent implements OnInit, IHasForm {
   public closeShortcut(event: KeyboardEvent) {
     this.router.navigateByUrl('/feature-flag-settings');
     event.preventDefault();
+  }
+
+  public getUserFormControl(index: number): FormControl {
+    return this.enabledForUsersFormArray!.at(index) as FormControl;
+  }
+
+  public addUser(): void {
+    if (!this.enabledForUsersFormArray) {
+      return;
+    }
+    this.featureFlagSettingsDomainEntityService.addUser(this.enabledForUsersFormArray);
+  }
+
+  public removeUser(index: number): void {
+    if (!this.enabledForUsersFormArray) {
+      return;
+    }
+    this.featureFlagSettingsDomainEntityService.removeUser(this.enabledForUsersFormArray, index);
+  }
+
+  ngOnDestroy(): void {
+    this.onDestroy.next();
+    this.onDestroy.complete();
   }
 }

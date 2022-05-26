@@ -60,6 +60,7 @@ export class ProblemDetailsComponent implements OnInit {
     } else if (this.problemDetails instanceof ApiException) {
       this.errorMessages.push(this.problemDetails.message);
     } else {
+      console.error(this.problemDetails);
       this.errorMessages.push('An unknown exception occured.');
     }
   }

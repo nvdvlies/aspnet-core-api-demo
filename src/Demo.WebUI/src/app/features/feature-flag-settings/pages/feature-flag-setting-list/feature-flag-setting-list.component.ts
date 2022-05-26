@@ -24,7 +24,7 @@ export interface FeatureFlagSettingListRouteState {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FeatureFlagSettingListComponent implements OnInit, OnDestroy {
-  public displayedColumns = ['name'];
+  public displayedColumns = ['name', 'description', 'enabledForAll', 'enabledForUsers'];
   public dataSource!: FeatureFlagSettingTableDataSource;
   public searchTerm = this.featureFlagSettingTableDataService.searchTerm;
 

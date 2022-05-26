@@ -1,5 +1,13 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { AbstractControl, FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormArray,
+  FormControl,
+  FormGroup,
+  ValidationErrors,
+  ValidatorFn,
+  Validators
+} from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { combineLatest, Observable, of } from 'rxjs';
 import { debounceTime, map } from 'rxjs/operators';
@@ -16,6 +24,7 @@ import {
   IDomainEntityContext
 } from '@domain/shared/domain-entity-base';
 import { FeatureFlag } from '@shared/enums/feature-flag.enum';
+import { v4 as uuidv4 } from 'uuid';
 
 export interface IFeatureFlagSettingsDomainEntityContext
   extends IDomainEntityContext<FeatureFlagSettingsDto> {}
@@ -122,22 +131,66 @@ export class FeatureFlagSettingsDomainEntityService
       id: new FormControl(super.readonlyFormState),
       name: new FormControl(super.readonlyFormState),
       description: new FormControl(null, [Validators.required], []),
-      enabledForAll: new FormControl(null),
-      enabledForUsers: new FormArray([]),
+      enabledForAll: new FormControl(false),
+      enabledForUsers: new FormArray([], [this.uniqueUsersValidator()], []),
+      createdBy: new FormControl(super.readonlyFormState),
+      createdOn: new FormControl(super.readonlyFormState),
+      lastModifiedBy: new FormControl(super.readonlyFormState),
+      lastModifiedOn: new FormControl(super.readonlyFormState),
       timestamp: new FormControl(super.readonlyFormState)
     };
     return new FormGroup(controls) as FeatureFlagFormGroup;
   }
 
+  private uniqueUsersValidator(): ValidatorFn {
+    return (formArray: AbstractControl): ValidationErrors | null => {
+      let userIds: string[] = [];
+      if (formArray instanceof FormArray) {
+        for (let formControl of formArray.controls) {
+          if (formControl instanceof FormControl) {
+            let userId = formControl.value;
+            if (!userId) {
+              continue;
+            }
+
+            if (userIds.includes(userId)) {
+              formControl.setErrors({ isDuplicateUser: true });
+            } else if (formControl.hasError('isDuplicateUser')) {
+              delete formControl.errors?.['isDuplicateUser'];
+              formControl.updateValueAndValidity();
+            }
+
+            userIds.push(userId);
+          }
+        }
+      }
+      return null;
+    };
+  }
+
   public addFeatureFlag(featureFlagName: keyof typeof FeatureFlag): FeatureFlagFormGroup {
     const formGroup = this.buildFeatureFlagFormGroup();
+    formGroup.controls.id.setValue(uuidv4());
     formGroup.controls.name.setValue(featureFlagName);
     this.featureFlagFormArray.push(formGroup);
     return formGroup;
   }
 
+  public addUser(formArray: FormArray): void {
+    formArray.push(new FormControl(null, [Validators.required], []));
+  }
+
+  public removeUser(formArray: FormArray, index: number): void {
+    if (formArray.length > 0) {
+      formArray.removeAt(index);
+      if (!this.form.dirty) {
+        this.form.markAsDirty();
+      }
+    }
+  }
+
   public removeFeatureFlag(index: number): void {
-    if (this.featureFlagFormArray.length > 1) {
+    if (this.featureFlagFormArray.length > 0) {
       this.featureFlagFormArray.removeAt(index);
     }
   }
@@ -172,6 +225,15 @@ export class FeatureFlagSettingsDomainEntityService
       });
       this.featureFlagFormArray.push(featureFlagFormGroup);
     });
+  }
+
+  public override getErrorMessage(errorKey: string, errorValue: any): string | undefined {
+    switch (errorKey) {
+      case 'isDuplicateUser':
+        return 'This user already exists.';
+      default:
+        return super.getErrorMessage(errorKey, errorValue);
+    }
   }
 
   public override reset(): void {

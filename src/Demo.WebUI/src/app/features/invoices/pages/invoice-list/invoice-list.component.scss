@@ -11,17 +11,10 @@ table {
   from {
     background-color: var(--default-theme-accent-color);
   }
-
-  to {
-    background-color: transparent;
-  }
 }
 
 @keyframes target-fade {
   from {
     background-color: var(--default-theme-accent-color);
-  }
-  to {
-    background-color: transparent;
   }
 }

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { combineLatest, debounceTime, map, Observable, of } from 'rxjs';
+import { combineLatest, debounceTime, map, Observable } from 'rxjs';
 import { FeatureFlagDto } from '@api/api.generated.clients';
 import { FeatureFlagSettingsStoreService } from '@domain/feature-flag-settings/feature-flag-settings-store.service';
 import {
@@ -16,7 +16,12 @@ import {
 } from './feature-flag-setting-list-page-settings.service';
 import { FeatureFlag } from '@shared/enums/feature-flag.enum';
 
-export declare type FeatureFlagSettingSortColumn = 'name' | undefined;
+export declare type FeatureFlagSettingSortColumn =
+  | 'name'
+  | 'description'
+  | 'enabledForAll'
+  | 'enabledForUsers'
+  | undefined;
 
 export class FeatureFlagSettingTableFilterCriteria
   extends TableFilterCriteria
@@ -72,43 +77,64 @@ export class FeatureFlagSettingTableDataService extends TableDataBase<FeatureFla
       sortDirection: criteria.sortDirection
     });
 
-    let items = Object.entries(FeatureFlag).map(([key, value]) => {
-      const featureFlagDto = new FeatureFlagDto();
-      featureFlagDto.name = key;
-      return featureFlagDto;
-    });
+    return this.featureFlagSettingsStoreService.get().pipe(
+      map((featureFlagSettings) => {
+        let items = Object.entries(FeatureFlag).map(([key, value]) => {
+          const existingFeatureFlag = featureFlagSettings.settings?.featureFlags?.find(
+            (x) => x.name === key
+          );
+          const featureFlagDto = new FeatureFlagDto();
+          featureFlagDto.name = key;
+          featureFlagDto.description = existingFeatureFlag?.description;
+          featureFlagDto.enabledForAll = existingFeatureFlag?.enabledForAll ?? false;
+          featureFlagDto.enabledForUsers = existingFeatureFlag?.enabledForUsers;
+          return featureFlagDto;
+        });
 
-    if (this.searchTerm.value && this.searchTerm.value.length > 0) {
-      items = items.filter((x) => x.name?.indexOf(this.searchTerm.value) != -1);
-    }
+        if (this.searchTerm.value && this.searchTerm.value.length > 0) {
+          items = items.filter((x) => x.name?.indexOf(this.searchTerm.value) != -1);
+        }
 
-    if (criteria.sortColumn) {
-      if (criteria.sortDirection === 'asc') {
-        items = items.sort((a, b) =>
-          a[criteria.sortColumn!]!.toLowerCase() < b[criteria.sortColumn!]!.toLowerCase() ? 1 : -1
-        );
-      } else if (criteria.sortDirection === 'desc') {
-        items = items.sort((a, b) =>
-          a[criteria.sortColumn!]!.toLowerCase() > b[criteria.sortColumn!]!.toLowerCase() ? 1 : -1
-        );
-      }
-    }
+        if (criteria.sortColumn) {
+          if (criteria.sortDirection === 'asc') {
+            items = items.sort((a, b) =>
+              (a[criteria.sortColumn!] ?? '').toString().toLowerCase() <
+              (b[criteria.sortColumn!] ?? '').toString().toLowerCase()
+                ? 1
+                : -1
+            );
+          } else if (criteria.sortDirection === 'desc') {
+            items = items.sort((a, b) =>
+              (a[criteria.sortColumn!] ?? '').toString().toLowerCase() >
+              (b[criteria.sortColumn!] ?? '').toString().toLowerCase()
+                ? 1
+                : -1
+            );
+          }
+        }
 
-    const result: TableDataSearchResult<FeatureFlagDto> = {
-      items: items.slice(
-        criteria.pageIndex * criteria.pageSize,
-        criteria.pageIndex * criteria.pageSize + criteria.pageSize
-      ),
-      pageIndex: criteria.pageIndex,
-      pageSize: criteria.pageSize,
-      totalItems: items.length,
-      totalPages: criteria.pageSize === 0 ? 0 : Math.ceil(items.length / criteria.pageSize),
-      hasPreviousPage: criteria.pageIndex > 0,
-      hasNextPage: criteria.pageIndex + 1 < Math.ceil(items.length / criteria.pageSize)
-    };
+        const result: TableDataSearchResult<FeatureFlagDto> = {
+          items: items.slice(
+            criteria.pageIndex * criteria.pageSize,
+            criteria.pageIndex * criteria.pageSize + criteria.pageSize
+          ),
+          pageIndex: criteria.pageIndex,
+          pageSize: criteria.pageSize,
+          totalItems: items.length,
+          totalPages: criteria.pageSize === 0 ? 0 : Math.ceil(items.length / criteria.pageSize),
+          hasPreviousPage: criteria.pageIndex > 0,
+          hasNextPage: criteria.pageIndex + 1 < Math.ceil(items.length / criteria.pageSize)
+        };
 
-    return of(result);
+        return result;
+      })
+    );
   };
+
+  public override spotlight(id: string): void {
+    this.search();
+    this.setSpotlightIdentifier(id);
+  }
 
   protected getByIdFunction = undefined;
 }

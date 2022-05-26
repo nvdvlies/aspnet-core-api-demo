@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Demo.Domain.FeatureFlagSettings
 {
-    public partial class FeatureFlag : Entity
+    public partial class FeatureFlag : AuditableEntity
     {
         public FeatureFlag()
         {
