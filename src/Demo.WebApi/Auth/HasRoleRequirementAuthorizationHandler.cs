@@ -1,6 +1,4 @@
-﻿using System;
-using Microsoft.AspNetCore.Authorization;
-using System.Linq;
+﻿using Microsoft.AspNetCore.Authorization;
 using System.Threading.Tasks;
 
 namespace Demo.WebApi.Auth

@@ -1,5 +1,5 @@
 {
   "ConnectionStrings": {
-    "SqlDatabase": "Data Source=(localdb)\\MsSqlLocalDb;initial catalog=Demo_IntegrationTest;Integrated Security=True; MultipleActiveResultSets=True"
+    "SqlDatabase": "Data Source=localhost;initial catalog=Demo_IntegrationTest;Integrated Security=True; MultipleActiveResultSets=True"
   }
 }

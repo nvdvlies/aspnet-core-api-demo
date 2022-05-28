@@ -493,7 +493,7 @@ namespace Demo.Infrastructure.Persistence.Migrations
                             Deleted = false,
                             DeletedBy = new Guid("00000000-0000-0000-0000-000000000000"),
                             LastModifiedBy = new Guid("00000000-0000-0000-0000-000000000000"),
-                            Name = "Administrator"
+                            Name = "Admin"
                         },
                         new
                         {

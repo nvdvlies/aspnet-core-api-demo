@@ -10,14 +10,11 @@ using Demo.WebApi.Tests.Helpers;
 using FluentAssertions;
 using FluentAssertions.Extensions;
 using FluentValidation;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR.Client;
-using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using System;
-using System.Linq;
 using System.Net;
 using System.Net.Http.Json;
 using System.Threading;
@@ -37,6 +34,7 @@ namespace Demo.WebApi.Tests.Controllers.Customers
         public async Task CreateCustomer_When_a_customer_can_be_created_It_should_return_statuscode_Created()
         {
             // Arrange
+            await SetTestUserToAuthenticated();
             var command = new CreateCustomerCommand
             {
                 Name = "Test"
@@ -57,6 +55,7 @@ namespace Demo.WebApi.Tests.Controllers.Customers
         public async Task CreateCustomer_When_a_customer_is_created_It_should_be_persisted_to_the_database()
         {
             // Arrange
+            await SetTestUserToAuthenticated();
             var command = new CreateCustomerCommand
             {
                 Name = "Test"
@@ -81,6 +80,7 @@ namespace Demo.WebApi.Tests.Controllers.Customers
         public async Task CreateCustomer_When_a_customer_is_created_It_should_publish_a_CustomerCreated_event()
         {
             // Arrange
+            await SetTestUserToAuthenticated();
             var command = new CreateCustomerCommand
             {
                 Name = "Test"
@@ -109,18 +109,14 @@ namespace Demo.WebApi.Tests.Controllers.Customers
         public async Task CreateCustomer_When_a_command_validator_throws_a_ValidationException_It_should_return_statuscode_BadRequest()
         {
             // Arrange
-            //var client = _factory
-            //    .WithWebHostBuilder(builder =>
-            //    {
-            //        builder.ConfigureTestServices(services =>
-            //        {
-            //            var mock = new Mock<IValidator<CreateCustomerCommand>>();
-            //            mock.Setup(x => x.Validate(It.IsAny<CreateCustomerCommand>())).Throws(new ValidationException("'Name' must not be empty"));
-
-            //            services.AddSingleton(mock.Object);
-            //        });
-            //    })
-            //    .CreateClient();
+            // var client = CreateHttpClientWitCustomConfiguration(services =>
+            // {
+            //     var mock = new Mock<FluentValidation.IValidator<CreateCustomerCommand>>();
+            //     mock.Setup(x => x.Validate(It.IsAny<CreateCustomerCommand>())).Throws(new ValidationException("'Name' must not be empty"));
+            //
+            //     services.AddSingleton(mock.Object);
+            // });
+            await SetTestUserToAuthenticated();
 
             var command = new CreateCustomerCommand
             {
@@ -142,19 +138,16 @@ namespace Demo.WebApi.Tests.Controllers.Customers
         [Fact]
         public async Task CreateCustomer_When_a_domainentity_validator_throws_a_DomainValidationException_It_should_return_statuscode_BadRequest()
         {
-            var client = Factory
-                .WithWebHostBuilder(builder =>
-                {
-                    builder.ConfigureTestServices(services =>
-                    {
-                        var mock = new Mock<Domain.Shared.Interfaces.IValidator<Customer>>();
-                        mock.Setup(x => x.ValidateAsync(It.IsAny<IDomainEntityContext<Customer>>(), It.IsAny<CancellationToken>()))
-                            .Throws(new DomainValidationException(new[] { new ValidationMessage("TestProperty", "TestMessage") }));
+            // Arrange
+            var client = CreateHttpClientWithCustomConfiguration(services =>
+            {
+                var mock = new Mock<Domain.Shared.Interfaces.IValidator<Customer>>();
+                mock.Setup(x => x.ValidateAsync(It.IsAny<IDomainEntityContext<Customer>>(), It.IsAny<CancellationToken>()))
+                    .Throws(new DomainValidationException(new[] { new ValidationMessage("TestProperty", "TestMessage") }));
 
-                        services.AddSingleton(mock.Object);
-                    });
-                })
-                .CreateClient();
+                services.AddSingleton(mock.Object);
+            });
+            await SetTestUserToAuthenticated();
 
             var command = new CreateCustomerCommand
             {
@@ -176,19 +169,16 @@ namespace Demo.WebApi.Tests.Controllers.Customers
         [Fact]
         public async Task CreateCustomer_When_a_domainentity_hook_throws_a_DomainException_It_should_return_statuscode_BadRequest()
         {
-            var client = Factory
-                .WithWebHostBuilder(builder =>
-                {
-                    builder.ConfigureTestServices(services =>
-                    {
-                        var mock = new Mock<IAfterCreate<Customer>>();
-                        mock.Setup(x => x.ExecuteAsync(It.IsAny<HookType>(), It.IsAny<IDomainEntityContext<Customer>>(), It.IsAny<CancellationToken>()))
-                            .Throws(new DomainException("TestMessage"));
+            // Arrange
+            var client = CreateHttpClientWithCustomConfiguration(services =>
+            {
+                var mock = new Mock<IAfterCreate<Customer>>();
+                mock.Setup(x => x.ExecuteAsync(It.IsAny<HookType>(), It.IsAny<IDomainEntityContext<Customer>>(), It.IsAny<CancellationToken>()))
+                    .Throws(new DomainException("TestMessage"));
 
-                        services.AddSingleton(mock.Object);
-                    });
-                })
-                .CreateClient();
+                services.AddSingleton(mock.Object);
+            });
+            await SetTestUserToAuthenticated();
 
             var command = new CreateCustomerCommand
             {
@@ -211,19 +201,15 @@ namespace Demo.WebApi.Tests.Controllers.Customers
         public async Task CreateCustomer_When_an_unhandled_exception_occurs_It_should_return_statuscode_InternalServerError()
         {
             // Arrange
-            var client = Factory
-                .WithWebHostBuilder(builder =>
-                {
-                    builder.ConfigureTestServices(services =>
-                    {
-                        var mock = new Mock<ICustomerDomainEntity>();
-                        mock.Setup(x => x.CreateAsync(It.IsAny<CancellationToken>()))
-                            .Throws(new ArgumentException("TestException"));
+            var client = CreateHttpClientWithCustomConfiguration(services =>
+            {
+                var mock = new Mock<ICustomerDomainEntity>();
+                mock.Setup(x => x.CreateAsync(It.IsAny<CancellationToken>()))
+                    .Throws(new ArgumentException("TestException"));
 
-                        services.AddSingleton(mock.Object);
-                    });
-                })
-                .CreateClient();
+                services.AddSingleton(mock.Object);
+            });
+            await SetTestUserToAuthenticated();
 
             var command = new CreateCustomerCommand
             {
@@ -246,26 +232,14 @@ namespace Demo.WebApi.Tests.Controllers.Customers
         public async Task CreateCustomer_When_request_is_not_authenticated_It_should_return_statuscode_Unauthorized()
         {
             // Arrange
-            var client = Factory
-                .WithWebHostBuilder(builder =>
-                {
-                    builder.ConfigureTestServices(services =>
-                    {
-                        var serviceDescriptor = services
-                            .Where(x => x.ServiceType == typeof(IAuthorizationHandler))
-                            .Where(x => x.ImplementationType == typeof(AllowUnauthorizedAuthorizationHandler))
-                            .Single();
-                        services.Remove(serviceDescriptor);
-                    });
-                })
-                .CreateClient();
+            await SetTestUserToUnauthenticated();
             var command = new CreateCustomerCommand
             {
                 Name = "Test"
             };
 
             // Act
-            var response = await client.CustomersController().CreateAsync(command);
+            var response = await Client.CustomersController().CreateAsync(command);
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);

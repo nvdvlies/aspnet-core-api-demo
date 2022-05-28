@@ -1,5 +1,5 @@
 ﻿using Demo.Application.Shared.Interfaces;
-using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
@@ -26,7 +26,17 @@ namespace Demo.WebApi.Tests.Helpers
 
             builder.ConfigureTestServices(services =>
             {
-                services.AddSingleton<IAuthorizationHandler, AllowUnauthorizedAuthorizationHandler>();
+                services.AddSingleton(new TestUser());
+
+                services
+                    .AddAuthentication(options =>
+                    {
+                        options.DefaultAuthenticateScheme = TestAuthHandler.DefaultScheme;
+                        options.DefaultScheme = TestAuthHandler.DefaultScheme;
+                    })
+                    .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>(
+                        TestAuthHandler.DefaultScheme, options => { }
+                    );
 
                 services.AddTransient<IEventPublisher, FakeEventPublisher>();
                 services.AddTransient<IMessageSender, FakeMessageSender>();

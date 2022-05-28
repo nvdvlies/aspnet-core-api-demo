@@ -31,7 +31,7 @@ namespace Demo.Infrastructure.Persistence.Configuration
             builder.Property(p => p.DeletedOn);
 
             builder.HasData(new[] {
-                new Role { Id = AdministratorRoleId, Name = "Administrator" },
+                new Role { Id = AdministratorRoleId, Name = "Admin" },
                 new Role { Id = UserRoleId, Name = "User" }
             });
         }

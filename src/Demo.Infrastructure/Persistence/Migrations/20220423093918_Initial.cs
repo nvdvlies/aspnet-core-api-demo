@@ -337,7 +337,7 @@ namespace Demo.Infrastructure.Persistence.Migrations
                 schema: "demo",
                 table: "Role",
                 columns: new[] { "Id", "CreatedBy", "CreatedOn", "DeletedBy", "DeletedOn", "LastModifiedBy", "LastModifiedOn", "Name" },
-                values: new object[] { new Guid("7c20005d-d5f8-4079-af26-434d69b43c82"), new Guid("00000000-0000-0000-0000-000000000000"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("00000000-0000-0000-0000-000000000000"), null, new Guid("00000000-0000-0000-0000-000000000000"), null, "Administrator" });
+                values: new object[] { new Guid("7c20005d-d5f8-4079-af26-434d69b43c82"), new Guid("00000000-0000-0000-0000-000000000000"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("00000000-0000-0000-0000-000000000000"), null, new Guid("00000000-0000-0000-0000-000000000000"), null, "Admin" });
 
             migrationBuilder.InsertData(
                 schema: "demo",

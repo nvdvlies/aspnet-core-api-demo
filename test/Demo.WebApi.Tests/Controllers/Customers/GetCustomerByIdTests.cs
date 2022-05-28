@@ -22,7 +22,7 @@ namespace Demo.WebApi.Tests.Controllers.Customers
         public async Task GetCustomerById_When_customer_exists_It_should_return_statuscode_OK()
         {
             // Arrange
-            await ResetDatabaseAsync();
+            await SetTestUserToAuthenticated();
 
             var existingCustomer = new Customer { Id = Guid.NewGuid(), Name = "Test" };
             await AddAsExistingEntityAsync(existingCustomer);
@@ -44,7 +44,7 @@ namespace Demo.WebApi.Tests.Controllers.Customers
         public async Task GetCustomerById_When_customer_does_not_exist_It_should_return_statuscode_NotFound()
         {
             // Arrange
-            await ResetDatabaseAsync();
+            await SetTestUserToAuthenticated();
 
             var customerId = Guid.NewGuid();
 

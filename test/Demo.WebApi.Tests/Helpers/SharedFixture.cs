@@ -4,7 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Respawn;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Testing;
 using Xunit;
 
 namespace Demo.WebApi.Tests.Helpers
@@ -19,13 +21,21 @@ namespace Demo.WebApi.Tests.Helpers
             SchemasToInclude = new[] {
                 "demo"
             },
+            TablesToIgnore = new []
+            {
+                "Role"
+            },
             WithReseed = true
         };
 
         public SharedFixture()
         {
             Factory = new CustomWebApplicationFactory();
-            Client = Factory.CreateClient();
+            Client = Factory.CreateClient(new WebApplicationFactoryClientOptions
+            {
+                AllowAutoRedirect = false,
+            });
+            Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(TestAuthHandler.DefaultScheme);
 
             HubConnection = new HubConnectionBuilder()
                 .WithAutomaticReconnect()
