@@ -45,7 +45,7 @@ namespace Demo.Infrastructure.Auth0
             {
                 var userCreateRequest = new UserCreateRequest
                 {
-                    Connection = _environmentSettings.Auth0.Auth0Management.UserDatabaseIdentifier,
+                    Connection = _environmentSettings.Auth0.Management.UserDatabaseIdentifier,
                     UserId = internalUser.Id.ToString(),
                     Email = internalUser.Email,
                     EmailVerified = false,
@@ -89,7 +89,7 @@ namespace Demo.Infrastructure.Auth0
             var client = await _auth0ManagementApiClientCreator.GetClient(cancellationToken);
             var request = new UserUpdateRequest
             {
-                Connection = _environmentSettings.Auth0.Auth0Management.UserDatabaseIdentifier,
+                Connection = _environmentSettings.Auth0.Management.UserDatabaseIdentifier,
                 Email = internalUser.Email,
                 EmailVerified = false,
                 VerifyEmail = true
@@ -102,7 +102,7 @@ namespace Demo.Infrastructure.Auth0
             var client = await _auth0ManagementApiClientCreator.GetClient(cancellationToken);
             var request = new UserUpdateRequest
             {
-                Connection = _environmentSettings.Auth0.Auth0Management.UserDatabaseIdentifier,
+                Connection = _environmentSettings.Auth0.Management.UserDatabaseIdentifier,
                 FirstName = internalUser.GivenName,
                 LastName = $"{internalUser.MiddleName} {internalUser.FamilyName}".Trim()
             };

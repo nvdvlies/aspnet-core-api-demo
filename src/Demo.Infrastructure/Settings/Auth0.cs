@@ -7,6 +7,6 @@ namespace Demo.Infrastructure.Settings
         public string Domain { get; set; }
         public string Audience { get; set; }
         public string RedirectUrl { get; set; }
-        public Auth0Management Auth0Management { get; set; } = new Auth0Management();
+        public Auth0Management Management { get; set; } = new Auth0Management();
     }
 }
