@@ -6,5 +6,6 @@ namespace Demo.Application.Roles.Commands.CreateRole
     public class CreateRoleCommand : ICommand, IRequest<CreateRoleResponse>
     {
         public string Name { get; set; }
+        public string ExternalId { get; set; }
     }
 }

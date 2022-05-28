@@ -21,6 +21,10 @@ namespace Demo.Infrastructure.Persistence.Configuration
                 .HasMaxLength(50)
                 .IsRequired();
 
+            builder.Property(x => x.ExternalId)
+                .HasMaxLength(100)
+                .IsRequired();
+
             builder.Property(p => p.Timestamp).IsRowVersion();
             builder.Property(p => p.CreatedOn).IsRequired();
             builder.Property(p => p.CreatedBy).IsRequired();
@@ -31,8 +35,8 @@ namespace Demo.Infrastructure.Persistence.Configuration
             builder.Property(p => p.DeletedOn);
 
             builder.HasData(new[] {
-                new Role { Id = AdministratorRoleId, Name = "Admin" },
-                new Role { Id = UserRoleId, Name = "User" }
+                new Role { Id = AdministratorRoleId, Name = "Admin", ExternalId = "rol_N4KEnzIMUDaetcyr" },
+                new Role { Id = UserRoleId, Name = "User", ExternalId = "rol_OUaEQHOTuugOJHwe" }
             });
         }
     }

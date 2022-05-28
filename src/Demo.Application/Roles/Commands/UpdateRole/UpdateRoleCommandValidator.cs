@@ -7,6 +7,7 @@ namespace Demo.Application.Roles.Commands.UpdateRole
         public UpdateRoleCommandValidator()
         {
             RuleFor(x => x.Name).NotEmpty();
+            RuleFor(x => x.ExternalId).NotEmpty();
         }
     }
 }

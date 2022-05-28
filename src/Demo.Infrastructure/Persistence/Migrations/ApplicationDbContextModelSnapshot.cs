@@ -459,6 +459,11 @@ namespace Demo.Infrastructure.Persistence.Migrations
                     b.Property<DateTime?>("DeletedOn")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("ExternalId")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
                     b.Property<Guid>("LastModifiedBy")
                         .HasColumnType("uniqueidentifier");
 
@@ -490,6 +495,7 @@ namespace Demo.Infrastructure.Persistence.Migrations
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Deleted = false,
                             DeletedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            ExternalId = "rol_N4KEnzIMUDaetcyr",
                             LastModifiedBy = new Guid("00000000-0000-0000-0000-000000000000"),
                             Name = "Admin"
                         },
@@ -500,6 +506,7 @@ namespace Demo.Infrastructure.Persistence.Migrations
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Deleted = false,
                             DeletedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            ExternalId = "rol_OUaEQHOTuugOJHwe",
                             LastModifiedBy = new Guid("00000000-0000-0000-0000-000000000000"),
                             Name = "User"
                         });
@@ -597,7 +604,7 @@ namespace Demo.Infrastructure.Persistence.Migrations
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Deleted = false,
                             DeletedBy = new Guid("00000000-0000-0000-0000-000000000000"),
-                            Email = "admin@xxxx.xxxx",
+                            Email = "demo@demo.com",
                             ExternalId = "auth0|08463267-7065-4631-9944-08da09d992d6",
                             FamilyName = "Administrator",
                             Fullname = "Administrator",

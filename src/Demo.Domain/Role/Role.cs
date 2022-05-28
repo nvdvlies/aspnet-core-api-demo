@@ -9,6 +9,8 @@ namespace Demo.Domain.Role
     {
         public string Name { get; set; }
 
+        public string ExternalId { get; set; }
+
         public List<UserRole> UserRoles { get; set; }
     }
 }

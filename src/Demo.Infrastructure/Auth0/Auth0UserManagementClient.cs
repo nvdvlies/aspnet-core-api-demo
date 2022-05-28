@@ -6,6 +6,7 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Demo.Domain.Shared.Interfaces;
 
 namespace Demo.Infrastructure.Auth0
 {
@@ -13,14 +14,17 @@ namespace Demo.Infrastructure.Auth0
     {
         private readonly EnvironmentSettings _environmentSettings;
         private readonly IAuth0ManagementApiClientProvider _auth0ManagementApiClientCreator;
+        private readonly IRolesProvider _rolesProvider;
 
         public Auth0UserManagementClient(
             EnvironmentSettings environmentSettings,
-            IAuth0ManagementApiClientProvider auth0ManagementApiClientCreator
+            IAuth0ManagementApiClientProvider auth0ManagementApiClientCreator,
+            IRolesProvider rolesProvider
         )
         {
             _environmentSettings = environmentSettings;
             _auth0ManagementApiClientCreator = auth0ManagementApiClientCreator;
+            _rolesProvider = rolesProvider;
         }
 
         public async Task<string> CreateAsync(Domain.User.User internalUser, CancellationToken cancellationToken = default)
@@ -41,7 +45,7 @@ namespace Demo.Infrastructure.Auth0
             {
                 var userCreateRequest = new UserCreateRequest
                 {
-                    Connection = _environmentSettings.Auth0.Connection,
+                    Connection = _environmentSettings.Auth0.Auth0Management.UserDatabaseIdentifier,
                     UserId = internalUser.Id.ToString(),
                     Email = internalUser.Email,
                     EmailVerified = false,
@@ -53,9 +57,9 @@ namespace Demo.Infrastructure.Auth0
                 user = await client.Users.CreateAsync(userCreateRequest, cancellationToken);
             }
 
-            var roles = _environmentSettings.Auth0.Auth0RoleMappings
-                .Where(mapping => internalUser.UserRoles.Any(userRole => userRole.RoleId == mapping.InternalRoleId))
-                .Select(x => x.Auth0RoleId)
+            var roles = _rolesProvider.Get()
+                .Where(x => internalUser.UserRoles.Any(userRole => userRole.RoleId == x.Id))
+                .Select(x => x.ExternalId)
                 .ToArray();
             var assignRolesRequest = new AssignRolesRequest
             {
@@ -85,7 +89,7 @@ namespace Demo.Infrastructure.Auth0
             var client = await _auth0ManagementApiClientCreator.GetClient(cancellationToken);
             var request = new UserUpdateRequest
             {
-                Connection = _environmentSettings.Auth0.Connection,
+                Connection = _environmentSettings.Auth0.Auth0Management.UserDatabaseIdentifier,
                 Email = internalUser.Email,
                 EmailVerified = false,
                 VerifyEmail = true
@@ -98,7 +102,7 @@ namespace Demo.Infrastructure.Auth0
             var client = await _auth0ManagementApiClientCreator.GetClient(cancellationToken);
             var request = new UserUpdateRequest
             {
-                Connection = _environmentSettings.Auth0.Connection,
+                Connection = _environmentSettings.Auth0.Auth0Management.UserDatabaseIdentifier,
                 FirstName = internalUser.GivenName,
                 LastName = $"{internalUser.MiddleName} {internalUser.FamilyName}".Trim()
             };
@@ -109,15 +113,16 @@ namespace Demo.Infrastructure.Auth0
         {
             var client = await _auth0ManagementApiClientCreator.GetClient(cancellationToken);
 
-            var roleIdsAssignedToUser = _environmentSettings.Auth0.Auth0RoleMappings
-                .Where(x => internalUser.UserRoles.Any(y => y.RoleId == x.InternalRoleId))
-                .Select(x => x.Auth0RoleId);
+            var roleIdsAssignedToUser = _rolesProvider.Get()
+                .Where(x => internalUser.UserRoles.Any(y => y.RoleId == x.Id))
+                .Select(x => x.ExternalId)
+                .ToList();
 
             var roleIdsAssignedToUserInAuth0 = (await client.Users.GetRolesAsync(internalUser.ExternalId, null, cancellationToken))
                 .Select(x => x.Id);
 
             var rolesToAdd = roleIdsAssignedToUser
-                .Where(internalRoleId => !roleIdsAssignedToUserInAuth0.Any(auth0RoleId => auth0RoleId == internalRoleId))
+                .Where(internalRoleId => roleIdsAssignedToUserInAuth0.All(auth0RoleId => auth0RoleId != internalRoleId))
                 .ToArray();
             if (rolesToAdd.Length > 0)
             {
@@ -129,7 +134,7 @@ namespace Demo.Infrastructure.Auth0
             }
 
             var rolesToRemove = roleIdsAssignedToUserInAuth0
-                .Where(auth0RoleId => !roleIdsAssignedToUser.Any(internalRoleId => internalRoleId == auth0RoleId))
+                .Where(auth0RoleId => roleIdsAssignedToUser.All(internalRoleId => internalRoleId != auth0RoleId))
                 .ToArray();
             if (rolesToRemove.Length > 0)
             {

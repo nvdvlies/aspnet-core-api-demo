@@ -143,6 +143,7 @@ namespace Demo.Infrastructure.Persistence.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    ExternalId = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Timestamp = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: true),
                     CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -336,20 +337,20 @@ namespace Demo.Infrastructure.Persistence.Migrations
             migrationBuilder.InsertData(
                 schema: "demo",
                 table: "Role",
-                columns: new[] { "Id", "CreatedBy", "CreatedOn", "DeletedBy", "DeletedOn", "LastModifiedBy", "LastModifiedOn", "Name" },
-                values: new object[] { new Guid("7c20005d-d5f8-4079-af26-434d69b43c82"), new Guid("00000000-0000-0000-0000-000000000000"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("00000000-0000-0000-0000-000000000000"), null, new Guid("00000000-0000-0000-0000-000000000000"), null, "Admin" });
+                columns: new[] { "Id", "CreatedBy", "CreatedOn", "DeletedBy", "DeletedOn", "ExternalId", "LastModifiedBy", "LastModifiedOn", "Name" },
+                values: new object[] { new Guid("7c20005d-d5f8-4079-af26-434d69b43c82"), new Guid("00000000-0000-0000-0000-000000000000"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("00000000-0000-0000-0000-000000000000"), null, "rol_N4KEnzIMUDaetcyr", new Guid("00000000-0000-0000-0000-000000000000"), null, "Admin" });
 
             migrationBuilder.InsertData(
                 schema: "demo",
                 table: "Role",
-                columns: new[] { "Id", "CreatedBy", "CreatedOn", "DeletedBy", "DeletedOn", "LastModifiedBy", "LastModifiedOn", "Name" },
-                values: new object[] { new Guid("d8a81cd5-d828-47ac-9f72-2e660f43a176"), new Guid("00000000-0000-0000-0000-000000000000"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("00000000-0000-0000-0000-000000000000"), null, new Guid("00000000-0000-0000-0000-000000000000"), null, "User" });
+                columns: new[] { "Id", "CreatedBy", "CreatedOn", "DeletedBy", "DeletedOn", "ExternalId", "LastModifiedBy", "LastModifiedOn", "Name" },
+                values: new object[] { new Guid("d8a81cd5-d828-47ac-9f72-2e660f43a176"), new Guid("00000000-0000-0000-0000-000000000000"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("00000000-0000-0000-0000-000000000000"), null, "rol_OUaEQHOTuugOJHwe", new Guid("00000000-0000-0000-0000-000000000000"), null, "User" });
 
             migrationBuilder.InsertData(
                 schema: "demo",
                 table: "User",
                 columns: new[] { "Id", "BirthDate", "CreatedBy", "CreatedOn", "DeletedBy", "DeletedOn", "Email", "ExternalId", "FamilyName", "Fullname", "Gender", "GivenName", "LastModifiedBy", "LastModifiedOn", "Locale", "MiddleName", "ZoneInfo" },
-                values: new object[] { new Guid("08463267-7065-4631-9944-08da09d992d6"), null, new Guid("00000000-0000-0000-0000-000000000000"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("00000000-0000-0000-0000-000000000000"), null, "admin@xxxx.xxxx", "auth0|08463267-7065-4631-9944-08da09d992d6", "Administrator", "Administrator", null, null, new Guid("00000000-0000-0000-0000-000000000000"), null, null, null, null });
+                values: new object[] { new Guid("08463267-7065-4631-9944-08da09d992d6"), null, new Guid("00000000-0000-0000-0000-000000000000"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("00000000-0000-0000-0000-000000000000"), null, "demo@demo.com", "auth0|08463267-7065-4631-9944-08da09d992d6", "Administrator", "Administrator", null, null, new Guid("00000000-0000-0000-0000-000000000000"), null, null, null, null });
 
             migrationBuilder.InsertData(
                 schema: "demo",
@@ -472,8 +473,7 @@ namespace Demo.Infrastructure.Persistence.Migrations
                 name: "IX_User_Email",
                 schema: "demo",
                 table: "User",
-                column: "Email",
-                unique: false);
+                column: "Email");
 
             migrationBuilder.CreateIndex(
                 name: "IX_User_Fullname",

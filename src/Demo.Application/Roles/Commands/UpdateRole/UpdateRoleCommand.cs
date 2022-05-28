@@ -8,6 +8,7 @@ namespace Demo.Application.Roles.Commands.UpdateRole
     {
         internal Guid Id { get; set; }
         public string Name { get; set; }
+        public string ExternalId { get; set; }
 
         public void SetRoleId(Guid id)
         {

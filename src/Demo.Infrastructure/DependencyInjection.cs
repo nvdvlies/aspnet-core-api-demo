@@ -34,6 +34,7 @@ namespace Demo.Infrastructure
             services.AddScoped<IFeatureFlagChecker, FeatureFlagChecker>();
             services.AddScoped<IUserIdProvider, UserIdProvider>();
             services.AddScoped<IUserProvider, UserProvider>();
+            services.AddScoped<IRolesProvider, RolesProvider>();
             services.AddScoped<IOutboxEventCreator, OutboxEventCreator>();
             services.AddScoped<IOutboxMessageCreator, OutboxMessageCreator>();
             services.AddScoped<IOutboxEventCreatedEvents, OutboxEventCreatedEvents>();
@@ -67,10 +68,10 @@ namespace Demo.Infrastructure
 #if DEBUG
             services.AddDistributedMemoryCache();
 #else
-            services.AddStackExchangeRedisCache(options =>  
-            {  
-                options.Configuration = environmentSettings.Redis.Connection;  
-            });  
+            services.AddStackExchangeRedisCache(options =>
+            {
+                options.Configuration = environmentSettings.Redis.Connection;
+            });
 #endif
             services.AddSingleton<IManagementConnection, HttpClientManagementConnection>();
             services.AddScoped<IAuth0UserManagementClient, Auth0UserManagementClient>();

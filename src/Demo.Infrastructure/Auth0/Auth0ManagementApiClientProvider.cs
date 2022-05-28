@@ -47,8 +47,8 @@ namespace Demo.Infrastructure.Auth0
                 new Dictionary<string, string>
                 {
                             { "grant_type", "client_credentials" },
-                            { "client_id", _environmentSettings.Auth0.ClientId },
-                            { "client_secret", _environmentSettings.Auth0.ClientSecret },
+                            { "client_id", _environmentSettings.Auth0.Auth0Management.ClientId },
+                            { "client_secret", _environmentSettings.Auth0.Auth0Management.ClientSecret },
                             { "audience", $"{_environmentSettings.Auth0.Domain}api/v2/" }
                 }
             ), cancellationToken);

@@ -6,10 +6,7 @@ namespace Demo.Infrastructure.Settings
     {
         public string Domain { get; set; }
         public string Audience { get; set; }
-        public string ClientId { get; set; }
-        public string ClientSecret { get; set; }
-        public string Connection { get; set; }
         public string RedirectUrl { get; set; }
-        public List<Auth0RoleMapping> Auth0RoleMappings { get; set; }
+        public Auth0Management Auth0Management { get; set; } = new Auth0Management();
     }
 }
