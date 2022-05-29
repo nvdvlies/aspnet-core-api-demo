@@ -9,6 +9,7 @@ import { FeatureFlagGuard } from '@shared/guards/feature-flag.guard';
 import { RoleGuard } from '@shared/guards/role.guard';
 import { UnsavedChangesGuard } from '@shared/guards/unsaved-changes.guard';
 import { AppRoutes, RouteData } from 'src/app/app-routing.module';
+import { CustomerAuditlogComponent } from './pages/customer-auditlog/customer-auditlog.component';
 
 const routes: AppRoutes = [
   {
@@ -18,6 +19,10 @@ const routes: AppRoutes = [
       {
         path: '',
         component: CustomerListComponent
+      },
+      {
+        path: ':id/auditlog',
+        component: CustomerAuditlogComponent
       },
       {
         path: ':id',

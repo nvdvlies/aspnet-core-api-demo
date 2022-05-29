@@ -1,0 +1,80 @@
+<ng-container *ngIf="data">
+  <mat-card class="p-5 shadow-lg mt-2 bg-white">
+    <table
+      mat-table
+      class="w-full bg-inherit"
+      [dataSource]="data.items"
+      multiTemplateDataRows
+      [trackBy]="trackById"
+    >
+      <ng-container matColumnDef="expand">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let row" class="w-10">
+          <button
+            *ngIf="row !== expandedRow"
+            mat-icon-button
+            type="button"
+            (click)="expandedRow = row"
+          >
+            <mat-icon>expand_more</mat-icon>
+          </button>
+          <button
+            *ngIf="row === expandedRow"
+            mat-icon-button
+            type="button"
+            (click)="expandedRow = null"
+          >
+            <mat-icon>expand_less</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="modifiedOn">
+        <th mat-header-cell *matHeaderCellDef>Modified on</th>
+        <td mat-cell *matCellDef="let row" class="w-40">
+          {{ row.modifiedOn | date: 'short' }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="modifiedBy">
+        <th mat-header-cell *matHeaderCellDef>Modified by</th>
+        <td mat-cell *matCellDef="let row">
+          {{ row.modifiedBy | userIdToName | async }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="expandedDetail">
+        <td mat-cell *matCellDef="let row" [attr.colspan]="displayedColumns.length">
+          <div
+            class="detail-row-body"
+            [@detailExpand]="row == expandedRow ? 'expanded' : 'collapsed'"
+          >
+            {{ row | json }}
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr
+        mat-row
+        *matRowDef="let row; let i = index; columns: displayedColumns"
+        class="row"
+        [class.example-expanded-row]="expandedRow === row"
+      ></tr>
+      <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="detail-row"></tr>
+    </table>
+
+    <ng-container *ngIf="data.isLoading">
+      <app-spinner diameter="50"></app-spinner>
+    </ng-container>
+
+    <mat-paginator
+      [length]="data.totalItems ?? 0"
+      [pageIndex]="data.pageIndex ?? 0"
+      [pageSize]="10"
+      (page)="pageChange($event)"
+      class="bg-inherit"
+    ></mat-paginator>
+  </mat-card>
+  <!-- {{ data | json }} -->
+</ng-container>

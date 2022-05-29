@@ -6,9 +6,10 @@ import { CustomerListComponent } from '@customers/pages/customer-list/customer-l
 import { CustomerDetailsComponent } from '@customers/pages/customer-details/customer-details.component';
 import { CustomerTableDataService } from '@customers/pages/customer-list/customer-table-data.service';
 import { CustomerListPageSettingsService } from './pages/customer-list/customer-list-page-settings.service';
+import { CustomerAuditlogComponent } from './pages/customer-auditlog/customer-auditlog.component';
 
 @NgModule({
-  declarations: [CustomerListComponent, CustomerDetailsComponent],
+  declarations: [CustomerListComponent, CustomerDetailsComponent, CustomerAuditlogComponent],
   imports: [CommonModule, SharedModule, CustomersRoutingModule],
   providers: [CustomerTableDataService, CustomerListPageSettingsService]
 })

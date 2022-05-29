@@ -1,0 +1,16 @@
+table {
+  width: 100%;
+}
+
+tr.detail-row {
+  height: 0;
+}
+
+.row td {
+  border-bottom-width: 0;
+}
+
+.detail-row-body {
+  overflow: hidden;
+  display: flex;
+}

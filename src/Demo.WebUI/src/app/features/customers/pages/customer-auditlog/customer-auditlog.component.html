@@ -1,0 +1,20 @@
+<ng-container *ngIf="vm$ | async as vm; else loading">
+  <ng-container *ngIf="!vm.isLoadingForFirstTime; else loading">
+    <app-page-header
+      title="Auditlog: {{ vm.id | customerIdToName: { includeCode: true } | async }}"
+    >
+      <button mat-raised-button routerLink="/customers/{{ vm.id }}" type="button">Close</button>
+    </app-page-header>
+
+    <div class="content-container">
+      <app-problem-details [problemDetails]="vm.problemDetails"></app-problem-details>
+
+      <app-auditlog-table [data]="vm" (pageIndexChanged)="search($event)"></app-auditlog-table>
+    </div>
+  </ng-container>
+  <!-- {{ vm | json }} -->
+</ng-container>
+
+<ng-template #loading>
+  <app-spinner diameter="50"></app-spinner>
+</ng-template>

@@ -15,12 +15,13 @@ import { CustomerAutocompleteFormFieldControlComponent } from '@shared/component
 import { UserIdToNamePipe } from '@shared/pipes/user-id-to-name.pipe';
 import { SelectOnFocusDirective } from '@shared/directives/select-on-focus.directive';
 import { ConfirmDeleteModalComponent } from '@shared/modals/confirm-delete-modal/confirm-delete-modal.component';
-import { MessageComponent } from './components/message/message.component';
-import { IfFeatureFlagEnabledDirective } from './directives/if-feature-flag-enabled.directive';
-import { IfFeatureFlagDisabledDirective } from './directives/if-feature-flag-disabled.directive';
-import { SpinnerComponent } from './components/spinner/spinner.component';
+import { MessageComponent } from '@shared/components/message/message.component';
+import { IfFeatureFlagEnabledDirective } from '@shared/directives/if-feature-flag-enabled.directive';
+import { IfFeatureFlagDisabledDirective } from '@shared/directives/if-feature-flag-disabled.directive';
+import { SpinnerComponent } from '@shared/components/spinner/spinner.component';
 import { UserAutocompleteFormFieldControlComponent } from '@shared/components/user-autocomplete-form-field-control/user-autocomplete-form-field-control.component';
 import { RoleAutocompleteFormFieldControlComponent } from '@shared/components/role-autocomplete-form-field-control/role-autocomplete-form-field-control.component';
+import { AuditlogTableComponent } from '@shared/components/auditlog-table/auditlog-table.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import { RoleAutocompleteFormFieldControlComponent } from '@shared/components/ro
     IfFeatureFlagDisabledDirective,
     SpinnerComponent,
     UserAutocompleteFormFieldControlComponent,
-    RoleAutocompleteFormFieldControlComponent
+    RoleAutocompleteFormFieldControlComponent,
+    AuditlogTableComponent
   ],
   imports: [CommonModule, ReactiveFormsModule, FormsModule, MaterialModule],
   exports: [
@@ -67,7 +69,8 @@ import { RoleAutocompleteFormFieldControlComponent } from '@shared/components/ro
     IfFeatureFlagDisabledDirective,
     SpinnerComponent,
     UserAutocompleteFormFieldControlComponent,
-    RoleAutocompleteFormFieldControlComponent
+    RoleAutocompleteFormFieldControlComponent,
+    AuditlogTableComponent
   ]
 })
 export class SharedModule {}
