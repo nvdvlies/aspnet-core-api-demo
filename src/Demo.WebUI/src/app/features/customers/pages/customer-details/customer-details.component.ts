@@ -81,6 +81,7 @@ export class CustomerDetailsComponent implements OnInit, IHasForm {
 
   @HostListener('document:keydown.shift.alt.s', ['$event'])
   public saveShortcut(event: KeyboardEvent) {
+    this.form.markAllAsTouched();
     this.save();
     event.preventDefault();
   }

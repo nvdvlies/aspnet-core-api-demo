@@ -127,6 +127,7 @@ export class FeatureFlagSettingDetailsComponent implements OnInit, OnDestroy, IH
 
   @HostListener('document:keydown.shift.alt.s', ['$event'])
   public saveShortcut(event: KeyboardEvent) {
+    this.form.markAllAsTouched();
     this.save();
     event.preventDefault();
   }

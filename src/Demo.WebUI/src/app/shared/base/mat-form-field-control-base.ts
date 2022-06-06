@@ -139,6 +139,10 @@ export abstract class MatFormFieldControlBase<T>
   }
 
   public get errorState(): boolean {
+    if (this.formControl.touched && !this.touched) {
+      this.touched = true;
+      this.stateChanges.next();
+    }
     return (
       this.formControl.invalid && (this.touched || (this.formGroupDirective?.submitted ?? false))
     );
