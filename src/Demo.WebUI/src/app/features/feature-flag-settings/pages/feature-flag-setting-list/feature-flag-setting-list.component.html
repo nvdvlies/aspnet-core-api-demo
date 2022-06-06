@@ -17,8 +17,6 @@
               appSetFocus="true"
               autocomplete="off"
               type="text"
-              (focus)="searchInputFocused.next(true)"
-              (blur)="searchInputFocused.next(false)"
               (keydown.enter)="navigateToDetails($event)"
               (keydown.arrowup)="navigateTableUp($event)"
               (keydown.arrowdown)="navigateTableDown($event)"
@@ -48,7 +46,7 @@
               <ng-container matColumnDef="name">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Name</th>
                 <td mat-cell *matCellDef="let row" class="w-40">
-                  <a routerLink="/feature-flag-settings/{{ row.name }}">{{ row.name ?? '-' }}</a>
+                  {{ row.name }}
                 </td>
               </ng-container>
 
@@ -86,10 +84,10 @@
               <tr
                 mat-row
                 *matRowDef="let row; let i = index; columns: displayedColumns"
+                (click)="navigateToDetailsById(row.name)"
                 [ngClass]="{
                   'spotlight-row': row.name === vm.spotlightIdentifier,
                   'bg-stone-50':
-                    vm.searchInputFocused &&
                     vm.selectedItem &&
                     row.name === vm.selectedItem.name &&
                     !(row.name === vm.spotlightIdentifier)

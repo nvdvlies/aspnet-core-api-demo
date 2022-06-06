@@ -21,9 +21,7 @@ import { Router } from '@angular/router';
 import { FeatureFlagDto } from '@api/api.generated.clients';
 import { MatPaginator } from '@angular/material/paginator';
 
-interface ViewModel extends FeatureFlagSettingTableDataContext {
-  searchInputFocused: boolean;
-}
+interface ViewModel extends FeatureFlagSettingTableDataContext {}
 
 export interface FeatureFlagSettingListRouteState {
   spotlightIdentifier: string | undefined;
@@ -42,20 +40,14 @@ export class FeatureFlagSettingListComponent implements OnInit, OnDestroy {
   public dataSource!: FeatureFlagSettingTableDataSource;
   public searchTerm = this.featureFlagSettingTableDataService.searchTerm;
 
-  public readonly searchInputFocused = new BehaviorSubject<boolean>(false);
-
-  public searchInputFocused$ = this.searchInputFocused.asObservable();
-
   private vm: Readonly<ViewModel> | undefined;
 
   public vm$: Observable<ViewModel> = combineLatest([
-    this.featureFlagSettingTableDataService.observe$,
-    this.searchInputFocused$
+    this.featureFlagSettingTableDataService.observe$
   ]).pipe(
-    map(([context, searchInputFocused]) => {
+    map(([context]) => {
       const vm: ViewModel = {
-        ...context,
-        searchInputFocused
+        ...context
       };
       return vm;
     }),
@@ -89,12 +81,16 @@ export class FeatureFlagSettingListComponent implements OnInit, OnDestroy {
     return item.name!;
   }
 
+  public navigateToDetailsById(id: string): void {
+    this.router.navigate(['/feature-flag-settings', id]);
+  }
+
   @HostListener('document:keydown.shift.alt.enter', ['$event'])
   public navigateToDetails(event: Event): void {
     if (!this.vm?.selectedItem) {
       return;
     }
-    this.router.navigate(['/feature-flag-settings', this.vm.selectedItem.id]);
+    this.navigateToDetailsById(this.vm.selectedItem.id);
     event.preventDefault();
   }
 

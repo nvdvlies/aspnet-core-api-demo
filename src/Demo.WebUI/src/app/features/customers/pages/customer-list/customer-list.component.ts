@@ -22,9 +22,7 @@ import { TableFilterCriteria } from '@shared/base/table-data-base';
 import { Router } from '@angular/router';
 import { MatPaginator } from '@angular/material/paginator';
 
-interface ViewModel extends CustomerTableDataContext {
-  searchInputFocused: boolean;
-}
+interface ViewModel extends CustomerTableDataContext {}
 
 export interface CustomerListRouteState {
   spotlightIdentifier: string | undefined;
@@ -43,20 +41,12 @@ export class CustomerListComponent implements OnInit, OnDestroy {
   public dataSource!: CustomerTableDataSource;
   public searchTerm = this.customerTableDataService.searchTerm;
 
-  public readonly searchInputFocused = new BehaviorSubject<boolean>(false);
-
-  public searchInputFocused$ = this.searchInputFocused.asObservable();
-
   private vm: Readonly<ViewModel> | undefined;
 
-  public vm$: Observable<ViewModel> = combineLatest([
-    this.customerTableDataService.observe$,
-    this.searchInputFocused$
-  ]).pipe(
-    map(([context, searchInputFocused]) => {
+  public vm$: Observable<ViewModel> = combineLatest([this.customerTableDataService.observe$]).pipe(
+    map(([context]) => {
       const vm: ViewModel = {
-        ...context,
-        searchInputFocused
+        ...context
       };
       return vm;
     }),
@@ -86,12 +76,16 @@ export class CustomerListComponent implements OnInit, OnDestroy {
     return item.id;
   }
 
+  public navigateToDetailsById(id: string): void {
+    this.router.navigate(['/customers', id]);
+  }
+
   @HostListener('document:keydown.shift.alt.enter', ['$event'])
   public navigateToDetails(event: Event): void {
     if (!this.vm?.selectedItem) {
       return;
     }
-    this.router.navigate(['/customers', this.vm.selectedItem.id]);
+    this.navigateToDetailsById(this.vm.selectedItem.id);
     event.preventDefault();
   }
 

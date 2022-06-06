@@ -22,8 +22,6 @@
                   appSetFocus="true"
                   autocomplete="off"
                   type="text"
-                  (focus)="searchInputFocused.next(true)"
-                  (blur)="searchInputFocused.next(false)"
                   (keydown.enter)="navigateToDetails($event)"
                   (keydown.arrowup)="navigateTableUp($event)"
                   (keydown.arrowdown)="navigateTableDown($event)"
@@ -68,7 +66,7 @@
               <ng-container matColumnDef="InvoiceNumber">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Number</th>
                 <td mat-cell *matCellDef="let row" class="w-40">
-                  <a routerLink="/invoices/{{ row.id }}">{{ row.invoiceNumber ?? '-' }}</a>
+                  {{ row.invoiceNumber }}
                 </td>
               </ng-container>
               <ng-container matColumnDef="CustomerName">
@@ -87,10 +85,10 @@
               <tr
                 mat-row
                 *matRowDef="let row; columns: displayedColumns"
+                (click)="navigateToDetailsById(row.id)"
                 [ngClass]="{
                   'spotlight-row': row.id === vm.spotlightIdentifier,
                   'bg-stone-50':
-                    vm.searchInputFocused &&
                     vm.selectedItem &&
                     row.id === vm.selectedItem.id &&
                     !(row.id === vm.spotlightIdentifier)

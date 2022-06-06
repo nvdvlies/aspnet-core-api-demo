@@ -21,9 +21,7 @@ import { TableFilterCriteria } from '@shared/base/table-data-base';
 import { Router } from '@angular/router';
 import { MatPaginator } from '@angular/material/paginator';
 
-interface ViewModel extends InvoiceTableDataContext {
-  searchInputFocused: boolean;
-}
+interface ViewModel extends InvoiceTableDataContext {}
 
 class InvoiceStatusSelectOption {
   public value: number | undefined;
@@ -53,10 +51,6 @@ export class InvoiceListComponent implements OnInit, OnDestroy {
   public searchTerm = this.invoiceTableDataService.searchTerm;
   public invoiceStatus = this.invoiceTableDataService.invoiceStatus;
 
-  public readonly searchInputFocused = new BehaviorSubject<boolean>(false);
-
-  public searchInputFocused$ = this.searchInputFocused.asObservable();
-
   private vm: Readonly<ViewModel> | undefined;
 
   public invoiceStatuses: InvoiceStatusSelectOption[] = [
@@ -67,14 +61,10 @@ export class InvoiceListComponent implements OnInit, OnDestroy {
     new InvoiceStatusSelectOption(InvoiceStatusEnum.Cancelled, 'Cancelled')
   ];
 
-  public vm$: Observable<ViewModel> = combineLatest([
-    this.invoiceTableDataService.observe$,
-    this.searchInputFocused$
-  ]).pipe(
-    map(([baseContext, searchInputFocused]) => {
+  public vm$: Observable<ViewModel> = combineLatest([this.invoiceTableDataService.observe$]).pipe(
+    map(([baseContext]) => {
       const context: ViewModel = {
-        ...baseContext,
-        searchInputFocused
+        ...baseContext
       };
       return context;
     }),
@@ -107,12 +97,16 @@ export class InvoiceListComponent implements OnInit, OnDestroy {
     return item.id;
   }
 
+  public navigateToDetailsById(id: string): void {
+    this.router.navigate(['/invoices', id]);
+  }
+
   @HostListener('document:keydown.shift.alt.enter', ['$event'])
   public navigateToDetails(event: Event): void {
     if (!this.vm?.selectedItem) {
       return;
     }
-    this.router.navigate(['/invoices', this.vm.selectedItem.id]);
+    this.navigateToDetailsById(this.vm.selectedItem.id);
     event.preventDefault();
   }
 

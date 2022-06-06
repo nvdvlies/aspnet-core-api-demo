@@ -10,7 +10,7 @@ import {
   ViewChildren
 } from '@angular/core';
 import { Location } from '@angular/common';
-import { BehaviorSubject, combineLatest, map, Observable, tap } from 'rxjs';
+import { combineLatest, map, Observable, tap } from 'rxjs';
 import { UserTableDataSource } from '@users/pages/user-list/user-table-datasource';
 import {
   UserTableDataContext,
@@ -21,9 +21,7 @@ import { TableFilterCriteria } from '@shared/base/table-data-base';
 import { Router } from '@angular/router';
 import { MatPaginator } from '@angular/material/paginator';
 
-interface ViewModel extends UserTableDataContext {
-  searchInputFocused: boolean;
-}
+interface ViewModel extends UserTableDataContext {}
 
 export interface UserListRouteState {
   spotlightIdentifier: string | undefined;
@@ -42,20 +40,12 @@ export class UserListComponent implements OnInit, OnDestroy {
   public dataSource!: UserTableDataSource;
   public searchTerm = this.userTableDataService.searchTerm;
 
-  public readonly searchInputFocused = new BehaviorSubject<boolean>(false);
-
-  public searchInputFocused$ = this.searchInputFocused.asObservable();
-
   private vm: Readonly<ViewModel> | undefined;
 
-  public vm$: Observable<ViewModel> = combineLatest([
-    this.userTableDataService.observe$,
-    this.searchInputFocused$
-  ]).pipe(
-    map(([baseContext, searchInputFocused]) => {
+  public vm$: Observable<ViewModel> = combineLatest([this.userTableDataService.observe$]).pipe(
+    map(([baseContext]) => {
       const context: ViewModel = {
-        ...baseContext,
-        searchInputFocused
+        ...baseContext
       };
       return context;
     }),
@@ -88,12 +78,16 @@ export class UserListComponent implements OnInit, OnDestroy {
     return item.id;
   }
 
+  public navigateToDetailsById(id: string): void {
+    this.router.navigate(['/users', id]);
+  }
+
   @HostListener('document:keydown.shift.alt.enter', ['$event'])
   public navigateToDetails(event: Event): void {
     if (!this.vm?.selectedItem) {
       return;
     }
-    this.router.navigate(['/users', this.vm.selectedItem.id]);
+    this.navigateToDetailsById(this.vm.selectedItem.id);
     event.preventDefault();
   }
 

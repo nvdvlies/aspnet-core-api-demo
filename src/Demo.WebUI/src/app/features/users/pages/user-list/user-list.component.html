@@ -20,8 +20,6 @@
               appSetFocus="true"
               autocomplete="off"
               type="text"
-              (focus)="searchInputFocused.next(true)"
-              (blur)="searchInputFocused.next(false)"
               (keydown.enter)="navigateToDetails($event)"
               (keydown.arrowup)="navigateTableUp($event)"
               (keydown.arrowdown)="navigateTableDown($event)"
@@ -51,7 +49,7 @@
               <ng-container matColumnDef="Fullname">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Name</th>
                 <td mat-cell *matCellDef="let row" class="w-40">
-                  <a routerLink="/users/{{ row.id }}">{{ row.fullname ?? '-' }}</a>
+                  {{ row.fullname }}
                 </td>
               </ng-container>
               <ng-container matColumnDef="Email">
@@ -64,10 +62,10 @@
               <tr
                 mat-row
                 *matRowDef="let row; columns: displayedColumns"
+                (click)="navigateToDetailsById(row.id)"
                 [ngClass]="{
                   'spotlight-row': row.id === vm.spotlightIdentifier,
                   'bg-stone-50':
-                    vm.searchInputFocused &&
                     vm.selectedItem &&
                     row.id === vm.selectedItem.id &&
                     !(row.id === vm.spotlightIdentifier)
