@@ -8,6 +8,17 @@ $default-theme-warn: mat-palette($mat-red);
 
 $default-theme: mat-light-theme($default-theme-primary, $default-theme-accent, $default-theme-warn);
 
+$default-theme: mat-light-theme(
+  (
+    color: (
+      primary: $default-theme-primary,
+      accent: $default-theme-accent,
+      warn: $default-theme-warn
+    ),
+    density: -3
+  )
+);
+
 .default-theme {
   @include angular-material-theme($default-theme);
 }
