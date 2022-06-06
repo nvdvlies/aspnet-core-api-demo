@@ -37,6 +37,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo.SignalrTypescript.Gene
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo.Infrastructure.Tests", "test\Demo.Infrastructure.Tests\Demo.Infrastructure.Tests.csproj", "{0F9A21D3-CDBA-45B9-9369-15E8467FF761}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo.Domain.Tests", "test\Demo.Domain.Tests\Demo.Domain.Tests.csproj", "{511681A5-5ECC-4A31-B034-3C74A03E5463}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -87,6 +89,10 @@ Global
 		{0F9A21D3-CDBA-45B9-9369-15E8467FF761}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0F9A21D3-CDBA-45B9-9369-15E8467FF761}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0F9A21D3-CDBA-45B9-9369-15E8467FF761}.Release|Any CPU.Build.0 = Release|Any CPU
+		{511681A5-5ECC-4A31-B034-3C74A03E5463}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{511681A5-5ECC-4A31-B034-3C74A03E5463}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{511681A5-5ECC-4A31-B034-3C74A03E5463}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{511681A5-5ECC-4A31-B034-3C74A03E5463}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -103,6 +109,7 @@ Global
 		{590EB492-9028-4D79-A7DD-55D5E2E77381} = {40C4A224-AC5D-4D6A-BBB3-3D0ADD381999}
 		{DCE5BB10-B207-411F-827B-AF547CF5C9E4} = {17932B49-52D9-455A-A3BF-2F62C9328677}
 		{0F9A21D3-CDBA-45B9-9369-15E8467FF761} = {3F2479ED-3BEC-4023-ABEE-F2DD6AD010C1}
+		{511681A5-5ECC-4A31-B034-3C74A03E5463} = {D428C2F4-3463-41A2-B9A5-F481088341E6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {76D635C7-C035-405F-A97A-B62823258E71}
