@@ -16,13 +16,23 @@ import {
   InvoiceTableDataContext,
   InvoiceTableDataService
 } from '@invoices/pages/invoice-list/invoice-table-data.service';
-import { SearchInvoiceDto } from '@api/api.generated.clients';
+import { InvoiceStatusEnum, SearchInvoiceDto } from '@api/api.generated.clients';
 import { TableFilterCriteria } from '@shared/base/table-data-base';
 import { Router } from '@angular/router';
 import { MatPaginator } from '@angular/material/paginator';
 
 interface ViewModel extends InvoiceTableDataContext {
   searchInputFocused: boolean;
+}
+
+class InvoiceStatusSelectOption {
+  public value: number | undefined;
+  public label: string;
+
+  constructor(value: number | undefined, label: string) {
+    this.value = value;
+    this.label = label;
+  }
 }
 
 export interface InvoiceListRouteState {
@@ -41,12 +51,21 @@ export class InvoiceListComponent implements OnInit, OnDestroy {
   public displayedColumns = ['InvoiceNumber', 'CustomerName', 'InvoiceDate'];
   public dataSource!: InvoiceTableDataSource;
   public searchTerm = this.invoiceTableDataService.searchTerm;
+  public invoiceStatus = this.invoiceTableDataService.invoiceStatus;
 
   public readonly searchInputFocused = new BehaviorSubject<boolean>(false);
 
   public searchInputFocused$ = this.searchInputFocused.asObservable();
 
   private vm: Readonly<ViewModel> | undefined;
+
+  public invoiceStatuses: InvoiceStatusSelectOption[] = [
+    new InvoiceStatusSelectOption(undefined, 'All'),
+    new InvoiceStatusSelectOption(InvoiceStatusEnum.Draft, 'Draft'),
+    new InvoiceStatusSelectOption(InvoiceStatusEnum.Sent, 'Sent'),
+    new InvoiceStatusSelectOption(InvoiceStatusEnum.Paid, 'Paid'),
+    new InvoiceStatusSelectOption(InvoiceStatusEnum.Cancelled, 'Cancelled')
+  ];
 
   public vm$: Observable<ViewModel> = combineLatest([
     this.invoiceTableDataService.observe$,

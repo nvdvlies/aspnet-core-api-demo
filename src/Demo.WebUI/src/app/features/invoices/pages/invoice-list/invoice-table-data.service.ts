@@ -42,6 +42,7 @@ export interface InvoiceTableDataContext extends TableDataContext<SearchInvoiceD
 @Injectable()
 export class InvoiceTableDataService extends TableDataBase<SearchInvoiceDto> {
   public searchTerm = new FormControl();
+  public invoiceStatus = new FormControl(undefined);
 
   public observe$: Observable<InvoiceTableDataContext> = combineLatest([
     this.observeInternal$
@@ -88,7 +89,8 @@ export class InvoiceTableDataService extends TableDataBase<SearchInvoiceDto> {
         this.sortbyDescending(criteria.sortDirection),
         criteria.pageIndex,
         criteria.pageSize,
-        this.searchTerm.value
+        this.searchTerm.value,
+        this.invoiceStatus.value
       )
       .pipe(
         map((response) => {

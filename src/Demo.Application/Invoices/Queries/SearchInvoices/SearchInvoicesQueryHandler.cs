@@ -48,6 +48,11 @@ namespace Demo.Application.Invoices.Queries.SearchInvoices
                 );
             }
 
+            if (request.Status.HasValue)
+            {
+                query = query.Where(x => x.Status == (InvoiceStatus)(int)request.Status.Value);
+            }
+
             var totalItems = await query.CountAsync(cancellationToken);
 
             var sortOrder = request.OrderByDescending ? SortDirection.Descending : SortDirection.Ascending;

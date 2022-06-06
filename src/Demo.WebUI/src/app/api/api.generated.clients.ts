@@ -1125,7 +1125,7 @@ export class ApiInvoicesClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
     }
 
-    search(orderBy?: SearchInvoicesOrderByEnum | undefined, orderByDescending?: boolean | undefined, pageIndex?: number | undefined, pageSize?: number | undefined, searchTerm?: string | null | undefined): Observable<SearchInvoicesQueryResult> {
+    search(orderBy?: SearchInvoicesOrderByEnum | undefined, orderByDescending?: boolean | undefined, pageIndex?: number | undefined, pageSize?: number | undefined, searchTerm?: string | null | undefined, status?: InvoiceStatusEnum | null | undefined): Observable<SearchInvoicesQueryResult> {
         let url_ = this.baseUrl + "/api/Invoices?";
         if (orderBy === null)
             throw new Error("The parameter 'orderBy' cannot be null.");
@@ -1145,6 +1145,8 @@ export class ApiInvoicesClient {
             url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
         if (searchTerm !== undefined && searchTerm !== null)
             url_ += "SearchTerm=" + encodeURIComponent("" + searchTerm) + "&";
+        if (status !== undefined && status !== null)
+            url_ += "Status=" + encodeURIComponent("" + status) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -6620,6 +6622,7 @@ export interface ISearchRolesQueryResult extends IBasePaginatedResult {
 
 export class SearchRoleDto extends SoftDeleteEntityDto implements ISearchRoleDto {
     name?: string | undefined;
+    externalId?: string | undefined;
 
     constructor(data?: ISearchRoleDto) {
         super(data);
@@ -6629,6 +6632,7 @@ export class SearchRoleDto extends SoftDeleteEntityDto implements ISearchRoleDto
         super.init(_data);
         if (_data) {
             this.name = _data["name"];
+            this.externalId = _data["externalId"];
         }
     }
 
@@ -6642,6 +6646,7 @@ export class SearchRoleDto extends SoftDeleteEntityDto implements ISearchRoleDto
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["name"] = this.name;
+        data["externalId"] = this.externalId;
         super.toJSON(data);
         return data;
     }
@@ -6656,6 +6661,7 @@ export class SearchRoleDto extends SoftDeleteEntityDto implements ISearchRoleDto
 
 export interface ISearchRoleDto extends ISoftDeleteEntityDto {
     name?: string | undefined;
+    externalId?: string | undefined;
 }
 
 export enum SearchRoleOrderByEnum {
@@ -6707,6 +6713,7 @@ export interface IGetRoleByIdQueryResult {
 
 export class RoleDto extends SoftDeleteEntityDto implements IRoleDto {
     name?: string | undefined;
+    externalId?: string | undefined;
 
     constructor(data?: IRoleDto) {
         super(data);
@@ -6716,6 +6723,7 @@ export class RoleDto extends SoftDeleteEntityDto implements IRoleDto {
         super.init(_data);
         if (_data) {
             this.name = _data["name"];
+            this.externalId = _data["externalId"];
         }
     }
 
@@ -6729,6 +6737,7 @@ export class RoleDto extends SoftDeleteEntityDto implements IRoleDto {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["name"] = this.name;
+        data["externalId"] = this.externalId;
         super.toJSON(data);
         return data;
     }
@@ -6743,6 +6752,7 @@ export class RoleDto extends SoftDeleteEntityDto implements IRoleDto {
 
 export interface IRoleDto extends ISoftDeleteEntityDto {
     name?: string | undefined;
+    externalId?: string | undefined;
 }
 
 export class CreateRoleResponse implements ICreateRoleResponse {
@@ -6790,6 +6800,7 @@ export interface ICreateRoleResponse {
 
 export class CreateRoleCommand implements ICreateRoleCommand {
     name?: string | undefined;
+    externalId?: string | undefined;
 
     constructor(data?: ICreateRoleCommand) {
         if (data) {
@@ -6803,6 +6814,7 @@ export class CreateRoleCommand implements ICreateRoleCommand {
     init(_data?: any) {
         if (_data) {
             this.name = _data["name"];
+            this.externalId = _data["externalId"];
         }
     }
 
@@ -6816,6 +6828,7 @@ export class CreateRoleCommand implements ICreateRoleCommand {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["name"] = this.name;
+        data["externalId"] = this.externalId;
         return data;
     }
 
@@ -6829,10 +6842,12 @@ export class CreateRoleCommand implements ICreateRoleCommand {
 
 export interface ICreateRoleCommand {
     name?: string | undefined;
+    externalId?: string | undefined;
 }
 
 export class UpdateRoleCommand implements IUpdateRoleCommand {
     name?: string | undefined;
+    externalId?: string | undefined;
 
     constructor(data?: IUpdateRoleCommand) {
         if (data) {
@@ -6846,6 +6861,7 @@ export class UpdateRoleCommand implements IUpdateRoleCommand {
     init(_data?: any) {
         if (_data) {
             this.name = _data["name"];
+            this.externalId = _data["externalId"];
         }
     }
 
@@ -6859,6 +6875,7 @@ export class UpdateRoleCommand implements IUpdateRoleCommand {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["name"] = this.name;
+        data["externalId"] = this.externalId;
         return data;
     }
 
@@ -6872,6 +6889,7 @@ export class UpdateRoleCommand implements IUpdateRoleCommand {
 
 export interface IUpdateRoleCommand {
     name?: string | undefined;
+    externalId?: string | undefined;
 }
 
 export class DeleteRoleCommand implements IDeleteRoleCommand {

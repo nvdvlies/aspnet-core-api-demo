@@ -9,33 +9,50 @@
 
       <mat-card class="pl-3 pr-3 pb-0 shadow-lg pt-3 bg-white h-full">
         <div appTableFilterContainer [filterCriteria]="vm.criteria" (filterChange)="search($event)">
-          <mat-form-field appearance="fill" class="w-full">
-            <mat-label>Search</mat-label>
-            <input
-              appTableFilter
-              debounceTime="350"
-              matInput
-              placeholder="Search..."
-              [formControl]="searchTerm"
-              appSetFocus="true"
-              autocomplete="off"
-              type="text"
-              (focus)="searchInputFocused.next(true)"
-              (blur)="searchInputFocused.next(false)"
-              (keydown.enter)="navigateToDetails($event)"
-              (keydown.arrowup)="navigateTableUp($event)"
-              (keydown.arrowdown)="navigateTableDown($event)"
-            />
-            <button
-              *ngIf="searchTerm.value"
-              matSuffix
-              mat-icon-button
-              aria-label="Clear"
-              (click)="searchTerm.setValue(null)"
-            >
-              <mat-icon>close</mat-icon>
-            </button>
-          </mat-form-field>
+          <div class="flex gap-2">
+            <div class="grow">
+              <mat-form-field appearance="fill" class="w-full">
+                <mat-label>Search</mat-label>
+                <input
+                  appTableFilter
+                  debounceTime="350"
+                  matInput
+                  placeholder="Search..."
+                  [formControl]="searchTerm"
+                  appSetFocus="true"
+                  autocomplete="off"
+                  type="text"
+                  (focus)="searchInputFocused.next(true)"
+                  (blur)="searchInputFocused.next(false)"
+                  (keydown.enter)="navigateToDetails($event)"
+                  (keydown.arrowup)="navigateTableUp($event)"
+                  (keydown.arrowdown)="navigateTableDown($event)"
+                />
+                <button
+                  *ngIf="searchTerm.value"
+                  matSuffix
+                  mat-icon-button
+                  aria-label="Clear"
+                  (click)="searchTerm.setValue(null)"
+                >
+                  <mat-icon>close</mat-icon>
+                </button>
+              </mat-form-field>
+            </div>
+            <div class="flex-none">
+              <mat-form-field appearance="fill">
+                <mat-label>Status</mat-label>
+                <mat-select appTableFilter [formControl]="invoiceStatus">
+                  <mat-option
+                    *ngFor="let invoiceStatus of invoiceStatuses"
+                    [value]="invoiceStatus.value"
+                  >
+                    {{ invoiceStatus.label }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
 
           <div class="table-container">
             <table
