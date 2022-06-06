@@ -5,7 +5,7 @@
   <a mat-button [routerLink]="'/invoices'" routerLinkActive="active"> Invoices </a>
   <div>
     <button mat-icon-button [matMenuTriggerFor]="systemMenu"><mat-icon>menu</mat-icon></button>
-    <mat-menu #systemMenu>
+    <mat-menu #systemMenu [overlapTrigger]="false" yPosition="below">
       <button mat-menu-item routerLink="/application-settings">Application settings</button>
       <button mat-menu-item routerLink="/feature-flag-settings">Feature flags</button>
       <button mat-menu-item routerLink="/users">Users</button>
