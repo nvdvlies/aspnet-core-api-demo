@@ -7,7 +7,7 @@
     <div class="content-container">
       <app-problem-details [problemDetails]="vm.problemDetails"></app-problem-details>
 
-      <mat-card class="p-5 shadow-lg mt-2 bg-white">
+      <mat-card class="pl-3 pr-3 pb-0 shadow-lg pt-3 bg-white h-full">
         <div appTableFilterContainer [filterCriteria]="vm.criteria" (filterChange)="search($event)">
           <mat-form-field appearance="fill" class="w-full">
             <mat-label>Search</mat-label>
@@ -22,9 +22,9 @@
               type="text"
               (focus)="searchInputFocused.next(true)"
               (blur)="searchInputFocused.next(false)"
-              (keydown.enter)="onSearchInputEnter()"
-              (keydown.arrowup)="onSearchInputArrowUp()"
-              (keydown.arrowdown)="onSearchInputArrowDown()"
+              (keydown.enter)="navigateToDetails($event)"
+              (keydown.arrowup)="navigateTableUp($event)"
+              (keydown.arrowdown)="navigateTableDown($event)"
             />
             <button
               *ngIf="searchTerm.value"
@@ -37,42 +37,44 @@
             </button>
           </mat-form-field>
 
-          <table
-            mat-table
-            matSort
-            [matSortActive]="vm.criteria?.sortColumn ?? 'Fullname'"
-            matSortDisableClear
-            [matSortDirection]="vm.criteria?.sortDirection ?? 'desc'"
-            class="w-full bg-inherit"
-            [dataSource]="dataSource"
-            [trackBy]="trackById"
-          >
-            <ng-container matColumnDef="Fullname">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Name</th>
-              <td mat-cell *matCellDef="let row" class="w-40">
-                <a routerLink="/users/{{ row.id }}">{{ row.fullname ?? '-' }}</a>
-              </td>
-            </ng-container>
-            <ng-container matColumnDef="Email">
-              <th mat-header-cell *matHeaderCellDef disableClear>Email</th>
-              <td mat-cell *matCellDef="let row">
-                {{ row.email }}
-              </td>
-            </ng-container>
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr
-              mat-row
-              *matRowDef="let row; columns: displayedColumns"
-              [ngClass]="{
-                'spotlight-row': row.id === vm.spotlightIdentifier,
-                'bg-stone-50':
-                  vm.searchInputFocused &&
-                  vm.selectedItem &&
-                  row.id === vm.selectedItem.id &&
-                  !(row.id === vm.spotlightIdentifier)
-              }"
-            ></tr>
-          </table>
+          <div class="table-container">
+            <table
+              mat-table
+              matSort
+              [matSortActive]="vm.criteria?.sortColumn ?? 'Fullname'"
+              matSortDisableClear
+              [matSortDirection]="vm.criteria?.sortDirection ?? 'desc'"
+              class="w-full bg-inherit"
+              [dataSource]="dataSource"
+              [trackBy]="trackById"
+            >
+              <ng-container matColumnDef="Fullname">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Name</th>
+                <td mat-cell *matCellDef="let row" class="w-40">
+                  <a routerLink="/users/{{ row.id }}">{{ row.fullname ?? '-' }}</a>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="Email">
+                <th mat-header-cell *matHeaderCellDef disableClear>Email</th>
+                <td mat-cell *matCellDef="let row">
+                  {{ row.email }}
+                </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr
+                mat-row
+                *matRowDef="let row; columns: displayedColumns"
+                [ngClass]="{
+                  'spotlight-row': row.id === vm.spotlightIdentifier,
+                  'bg-stone-50':
+                    vm.searchInputFocused &&
+                    vm.selectedItem &&
+                    row.id === vm.selectedItem.id &&
+                    !(row.id === vm.spotlightIdentifier)
+                }"
+              ></tr>
+            </table>
+          </div>
 
           <ng-container *ngIf="vm.isLoading">
             <app-spinner diameter="50"></app-spinner>
@@ -82,7 +84,7 @@
             [length]="vm.totalItems ?? 0"
             [pageIndex]="vm.pageIndex ?? 0"
             [pageSize]="vm.criteria?.pageSize ?? vm.pageSize"
-            [pageSizeOptions]="[5, 10, 25]"
+            [pageSizeOptions]="[5, 10, 15, 20, 25, 30, 40, 50, 100]"
             class="bg-inherit"
           ></mat-paginator>
         </div>

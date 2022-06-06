@@ -18,3 +18,8 @@ table {
     background-color: var(--default-theme-accent-color);
   }
 }
+
+.table-container {
+  height: calc(100vh - 310px);
+  overflow: auto;
+}

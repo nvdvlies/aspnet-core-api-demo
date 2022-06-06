@@ -1,4 +1,14 @@
-import { ChangeDetectionStrategy, Component, HostListener, OnDestroy, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  HostListener,
+  OnDestroy,
+  OnInit,
+  QueryList,
+  ViewChild,
+  ViewChildren
+} from '@angular/core';
 import { Location } from '@angular/common';
 import { BehaviorSubject, combineLatest, map, Observable, tap } from 'rxjs';
 import { UserTableDataSource } from '@users/pages/user-list/user-table-datasource';
@@ -9,6 +19,7 @@ import {
 import { SearchUserDto } from '@api/api.generated.clients';
 import { TableFilterCriteria } from '@shared/base/table-data-base';
 import { Router } from '@angular/router';
+import { MatPaginator } from '@angular/material/paginator';
 
 interface ViewModel extends UserTableDataContext {
   searchInputFocused: boolean;
@@ -24,6 +35,9 @@ export interface UserListRouteState {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UserListComponent implements OnInit, OnDestroy {
+  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator | undefined;
+  @ViewChildren('tableRows', { read: ElementRef }) tableRows: QueryList<ElementRef> | undefined;
+
   public displayedColumns = ['Fullname', 'Email'];
   public dataSource!: UserTableDataSource;
   public searchTerm = this.userTableDataService.searchTerm;
@@ -74,24 +88,52 @@ export class UserListComponent implements OnInit, OnDestroy {
     return item.id;
   }
 
-  public onSearchInputEnter(): void {
+  @HostListener('document:keydown.shift.alt.enter', ['$event'])
+  public navigateToDetails(event: Event): void {
     if (!this.vm?.selectedItem) {
       return;
     }
     this.router.navigate(['/users', this.vm.selectedItem.id]);
+    event.preventDefault();
   }
 
-  public onSearchInputArrowUp(): void {
+  @HostListener('document:keydown.shift.alt.ArrowUp', ['$event'])
+  public navigateTableUp(event: Event): void {
     this.userTableDataService.selectedItemIndex -= 1;
+    this.tableRows
+      ?.get(this.userTableDataService.selectedItemIndex)
+      ?.nativeElement.scrollIntoView(false, { behavior: 'auto', block: 'end' });
+    event.preventDefault();
   }
 
-  public onSearchInputArrowDown(): void {
+  @HostListener('document:keydown.shift.alt.ArrowDown', ['$event'])
+  public navigateTableDown(event: Event): void {
     this.userTableDataService.selectedItemIndex += 1;
+    this.tableRows
+      ?.get(this.userTableDataService.selectedItemIndex)
+      ?.nativeElement.scrollIntoView(false, { behavior: 'auto', block: 'end' });
+    event.preventDefault();
   }
 
   @HostListener('document:keydown.shift.alt.n', ['$event'])
   public newUserShortcut(event: KeyboardEvent) {
     this.router.navigateByUrl('/users/new');
+    event.preventDefault();
+  }
+
+  @HostListener('document:keydown.shift.alt.ArrowRight', ['$event'])
+  public navigateToNextPage(event: KeyboardEvent) {
+    if (this.paginator?.hasNextPage) {
+      this.paginator?.nextPage();
+    }
+    event.preventDefault();
+  }
+
+  @HostListener('document:keydown.shift.alt.ArrowLeft', ['$event'])
+  public navigateToPreviousPage(event: KeyboardEvent) {
+    if (this.paginator?.hasPreviousPage) {
+      this.paginator?.previousPage();
+    }
     event.preventDefault();
   }
 

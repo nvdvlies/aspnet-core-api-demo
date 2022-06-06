@@ -40,3 +40,12 @@ body {
   border-top-color: #000000;
   animation: button-spinner 0.8s linear infinite;
 }
+
+.mat-header-row {
+  background-color: #ffffff !important;
+}
+
+.mat-header-row,
+.mat-row {
+  height: 29px !important;
+}

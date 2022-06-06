@@ -1,4 +1,14 @@
-import { ChangeDetectionStrategy, Component, HostListener, OnDestroy, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  HostListener,
+  OnDestroy,
+  OnInit,
+  QueryList,
+  ViewChild,
+  ViewChildren
+} from '@angular/core';
 import { Location } from '@angular/common';
 import { BehaviorSubject, combineLatest, map, Observable, tap } from 'rxjs';
 import { InvoiceTableDataSource } from '@invoices/pages/invoice-list/invoice-table-datasource';
@@ -9,6 +19,7 @@ import {
 import { SearchInvoiceDto } from '@api/api.generated.clients';
 import { TableFilterCriteria } from '@shared/base/table-data-base';
 import { Router } from '@angular/router';
+import { MatPaginator } from '@angular/material/paginator';
 
 interface ViewModel extends InvoiceTableDataContext {
   searchInputFocused: boolean;
@@ -24,6 +35,9 @@ export interface InvoiceListRouteState {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InvoiceListComponent implements OnInit, OnDestroy {
+  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator | undefined;
+  @ViewChildren('tableRows', { read: ElementRef }) tableRows: QueryList<ElementRef> | undefined;
+
   public displayedColumns = ['InvoiceNumber', 'CustomerName', 'InvoiceDate'];
   public dataSource!: InvoiceTableDataSource;
   public searchTerm = this.invoiceTableDataService.searchTerm;
@@ -74,24 +88,52 @@ export class InvoiceListComponent implements OnInit, OnDestroy {
     return item.id;
   }
 
-  public onSearchInputEnter(): void {
+  @HostListener('document:keydown.shift.alt.enter', ['$event'])
+  public navigateToDetails(event: Event): void {
     if (!this.vm?.selectedItem) {
       return;
     }
     this.router.navigate(['/invoices', this.vm.selectedItem.id]);
+    event.preventDefault();
   }
 
-  public onSearchInputArrowUp(): void {
+  @HostListener('document:keydown.shift.alt.ArrowUp', ['$event'])
+  public navigateTableUp(event: Event): void {
     this.invoiceTableDataService.selectedItemIndex -= 1;
+    this.tableRows
+      ?.get(this.invoiceTableDataService.selectedItemIndex)
+      ?.nativeElement.scrollIntoView(false, { behavior: 'auto', block: 'end' });
+    event.preventDefault();
   }
 
-  public onSearchInputArrowDown(): void {
+  @HostListener('document:keydown.shift.alt.ArrowDown', ['$event'])
+  public navigateTableDown(event: Event): void {
     this.invoiceTableDataService.selectedItemIndex += 1;
+    this.tableRows
+      ?.get(this.invoiceTableDataService.selectedItemIndex)
+      ?.nativeElement.scrollIntoView(false, { behavior: 'auto', block: 'end' });
+    event.preventDefault();
   }
 
   @HostListener('document:keydown.shift.alt.n', ['$event'])
   public newInvoiceShortcut(event: KeyboardEvent) {
     this.router.navigateByUrl('/invoices/new');
+    event.preventDefault();
+  }
+
+  @HostListener('document:keydown.shift.alt.ArrowRight', ['$event'])
+  public navigateToNextPage(event: KeyboardEvent) {
+    if (this.paginator?.hasNextPage) {
+      this.paginator?.nextPage();
+    }
+    event.preventDefault();
+  }
+
+  @HostListener('document:keydown.shift.alt.ArrowLeft', ['$event'])
+  public navigateToPreviousPage(event: KeyboardEvent) {
+    if (this.paginator?.hasPreviousPage) {
+      this.paginator?.previousPage();
+    }
     event.preventDefault();
   }
 
