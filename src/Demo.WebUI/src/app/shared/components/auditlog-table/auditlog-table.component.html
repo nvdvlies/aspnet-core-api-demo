@@ -49,7 +49,7 @@
             class="detail-row-body"
             [@detailExpand]="row == expandedRow ? 'expanded' : 'collapsed'"
           >
-            {{ row | json }}
+            <pre>{{ row | json }}</pre>
           </div>
         </td>
       </ng-container>
@@ -76,5 +76,5 @@
       class="bg-inherit"
     ></mat-paginator>
   </mat-card>
-  <!-- {{ data | json }} -->
+  <!-- <pre>{{ data | json }}</pre> -->
 </ng-container>
