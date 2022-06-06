@@ -3,11 +3,17 @@ table {
 }
 
 tr.detail-row {
-  height: 0;
+  height: 0px !important;
 }
 
 .row td {
   border-bottom-width: 0;
+}
+
+tr .mat-icon-button {
+  height: 24px;
+  width: 24px;
+  line-height: 18px;
 }
 
 .detail-row-body {

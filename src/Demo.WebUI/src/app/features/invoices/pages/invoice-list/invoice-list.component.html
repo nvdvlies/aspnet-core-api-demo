@@ -7,7 +7,7 @@
     <div class="content-container">
       <app-problem-details [problemDetails]="vm.problemDetails"></app-problem-details>
 
-      <mat-card class="pl-3 pr-3 pb-0 shadow-lg pt-3 bg-white h-full">
+      <mat-card class="pl-3 pr-3 pb-0 shadow-md pt-3 bg-white h-full">
         <div appTableFilterContainer [filterCriteria]="vm.criteria" (filterChange)="search($event)">
           <div class="flex gap-2">
             <div class="grow">
