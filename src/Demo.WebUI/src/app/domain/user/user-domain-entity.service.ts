@@ -6,6 +6,7 @@ import {
   FormControl,
   FormGroup,
   ValidationErrors,
+  ValidatorFn,
   Validators
 } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -109,7 +110,7 @@ export class UserDomainEntityService extends DomainEntityBase<UserDto> implement
       locale: new FormControl(null),
       userRoles: new FormArray(
         [] as UserRoleFormGroup[],
-        [Validators.required],
+        [Validators.required, this.uniqueRolesValidator()],
         []
       ) as UserRoleFormArray,
       deleted: new FormControl(super.readonlyFormState),
@@ -218,10 +219,36 @@ export class UserDomainEntityService extends DomainEntityBase<UserDto> implement
     };
   }
 
+  private uniqueRolesValidator(): ValidatorFn {
+    return (formArray: AbstractControl): ValidationErrors | null => {
+      let roleIds: string[] = [];
+      if (formArray instanceof FormArray) {
+        for (let userRoleFormGroup of formArray.controls as UserRoleFormGroup[]) {
+          let roleId = userRoleFormGroup.controls.roleId.value;
+          if (!roleId) {
+            continue;
+          }
+
+          if (roleIds.includes(roleId)) {
+            userRoleFormGroup.controls.roleId.setErrors({ isDuplicateRole: true });
+          } else if (userRoleFormGroup.controls.roleId.hasError('isDuplicateRole')) {
+            delete userRoleFormGroup.controls.roleId.errors?.['isDuplicateRole'];
+            userRoleFormGroup.controls.roleId.updateValueAndValidity();
+          }
+
+          roleIds.push(roleId);
+        }
+      }
+      return null;
+    };
+  }
+
   public override getErrorMessage(errorKey: string, errorValue: any): string | undefined {
     switch (errorKey) {
       case 'emailTaken':
         return 'This e-mail address is already taken.';
+      case 'isDuplicateRole':
+        return 'This role is already assigned.';
       default:
         return super.getErrorMessage(errorKey, errorValue);
     }
