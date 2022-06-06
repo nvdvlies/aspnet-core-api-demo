@@ -1,15 +1,27 @@
 <mat-toolbar color="primary">
-  <button mat-icon-button (click)="sidenav.toggle()">
+  <!-- <button mat-icon-button (click)="sidenav.toggle()">
     <mat-icon>menu</mat-icon>
-  </button>
+  </button> -->
   AppName
   <span style="flex: 1 1 auto"></span>
+  <a mat-button routerLink="/customers" routerLinkActive="active"> Customers </a>
+  <a mat-button [routerLink]="'/invoices'" routerLinkActive="active"> Invoices </a>
+  <mat-menu #menu="matMenu">
+    <button mat-menu-item routerLink="/application-settings" routerLinkActive="active">
+      Application settings
+    </button>
+    <button mat-menu-item routerLink="/feature-flag-settings" routerLinkActive="active">
+      Feature flags
+    </button>
+    <button mat-menu-item routerLink="/users" routerLinkActive="active">Users</button>
+  </mat-menu>
+  <a mat-button [matMenuTriggerFor]="menu"> System </a>
   <div>
     <button mat-icon-button [matMenuTriggerFor]="accountMenu">
       <mat-icon>account_circle</mat-icon>
     </button>
     <mat-menu #accountMenu [overlapTrigger]="false" yPosition="below">
-      <button mat-menu-item routerLink="#"><mat-icon>person</mat-icon><span>Account</span></button>
+      <button mat-menu-item routerLink="#"><mat-icon>person</mat-icon><span>Profile</span></button>
       <button mat-menu-item routerLink="/user-preferences">
         <mat-icon>settings</mat-icon><span>Preferences</span>
       </button>
@@ -18,30 +30,6 @@
     </mat-menu>
   </div>
 </mat-toolbar>
-<mat-sidenav-container style="height: calc(100% - 64px); margin: 0">
-  <mat-sidenav #sidenav opened mode="side" style="width: 220px">
-    <mat-nav-list>
-      <mat-list-item routerLink="/customers" [routerLinkActive]="['active']" class="text-gray-900">
-        Customers</mat-list-item
-      >
-      <mat-list-item routerLink="/invoices" [routerLinkActive]="['active']">Invoices</mat-list-item>
-    </mat-nav-list>
-    <mat-expansion-panel class="mat-elevation-z0">
-      <mat-expansion-panel-header class="pl-[16px]" expandedHeight="48px"
-        >System</mat-expansion-panel-header
-      >
-      <mat-nav-list>
-        <mat-list-item routerLink="/application-settings" [routerLinkActive]="['active']"
-          >Application settings</mat-list-item
-        >
-        <mat-list-item routerLink="/feature-flag-settings" [routerLinkActive]="['active']"
-          >Feature flags</mat-list-item
-        >
-        <mat-list-item routerLink="/users" [routerLinkActive]="['active']">Users</mat-list-item>
-      </mat-nav-list>
-    </mat-expansion-panel>
-  </mat-sidenav>
-  <mat-sidenav-content>
-    <router-outlet></router-outlet>
-  </mat-sidenav-content>
-</mat-sidenav-container>
+<div style="height: calc(100% - 64px); margin: 0">
+  <router-outlet></router-outlet>
+</div>
