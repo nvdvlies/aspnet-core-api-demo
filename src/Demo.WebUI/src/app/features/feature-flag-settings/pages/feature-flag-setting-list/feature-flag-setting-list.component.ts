@@ -81,8 +81,8 @@ export class FeatureFlagSettingListComponent implements OnInit, OnDestroy {
     return item.name!;
   }
 
-  public navigateToDetailsById(id: string): void {
-    this.router.navigate(['/feature-flag-settings', id]);
+  public navigateToDetailsByName(name: string): void {
+    this.router.navigate(['/feature-flag-settings', name]);
   }
 
   @HostListener('document:keydown.shift.alt.enter', ['$event'])
@@ -90,7 +90,7 @@ export class FeatureFlagSettingListComponent implements OnInit, OnDestroy {
     if (!this.vm?.selectedItem) {
       return;
     }
-    this.navigateToDetailsById(this.vm.selectedItem.id);
+    this.navigateToDetailsByName(this.vm.selectedItem.name!);
     event.preventDefault();
   }
 

@@ -1,0 +1,8 @@
+<ng-container *ngFor="let match of result">
+  <span
+    *ngIf="highlight && match.toLowerCase() === highlight.toLowerCase(); else nomatch"
+    class="highlight"
+    >{{ match }}</span
+  >
+  <ng-template #nomatch>{{ match }}</ng-template>
+</ng-container>

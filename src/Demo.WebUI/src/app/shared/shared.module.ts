@@ -22,6 +22,7 @@ import { SpinnerComponent } from '@shared/components/spinner/spinner.component';
 import { UserAutocompleteFormFieldControlComponent } from '@shared/components/user-autocomplete-form-field-control/user-autocomplete-form-field-control.component';
 import { RoleAutocompleteFormFieldControlComponent } from '@shared/components/role-autocomplete-form-field-control/role-autocomplete-form-field-control.component';
 import { AuditlogTableComponent } from '@shared/components/auditlog-table/auditlog-table.component';
+import { HighlightComponent } from './components/highlight/highlight.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import { AuditlogTableComponent } from '@shared/components/auditlog-table/auditl
     SpinnerComponent,
     UserAutocompleteFormFieldControlComponent,
     RoleAutocompleteFormFieldControlComponent,
-    AuditlogTableComponent
+    AuditlogTableComponent,
+    HighlightComponent
   ],
   imports: [CommonModule, ReactiveFormsModule, FormsModule, MaterialModule],
   exports: [
@@ -70,7 +72,8 @@ import { AuditlogTableComponent } from '@shared/components/auditlog-table/auditl
     SpinnerComponent,
     UserAutocompleteFormFieldControlComponent,
     RoleAutocompleteFormFieldControlComponent,
-    AuditlogTableComponent
+    AuditlogTableComponent,
+    HighlightComponent
   ]
 })
 export class SharedModule {}
