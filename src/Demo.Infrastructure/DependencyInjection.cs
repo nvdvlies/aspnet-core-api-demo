@@ -24,7 +24,7 @@ namespace Demo.Infrastructure
 {
     public static class DependencyInjection
     {
-        public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration, EnvironmentSettings environmentSettings)
         {
             services.AddTransient<IDateTime, DateTimeProvider>();
             services.AddScoped(typeof(IJsonService<>), typeof(JsonService<>));
