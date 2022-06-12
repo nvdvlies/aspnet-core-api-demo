@@ -1,0 +1,15 @@
+﻿FROM node:lts-alpine3.16 AS build
+
+WORKDIR /app
+
+RUN npm install -g @angular/cli@13
+
+COPY ./src/Demo.WebUI/package.json ./src/Demo.WebUI/package-lock.json ./
+RUN npm ci
+
+COPY ./src/Demo.WebUI/ .
+RUN ng build --configuration dockerdev
+
+FROM nginx:latest
+COPY ./infra/nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=build /app/dist/demo-web-ui /usr/share/nginx/html

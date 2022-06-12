@@ -88,7 +88,7 @@ namespace Demo.WebApi.Middleware
             var options = new JsonSerializerOptions
             {
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                WriteIndented = env.IsDevelopment()
+                WriteIndented = env.IsDevelopment() || env.IsDockerDev()
             };
             var json = JsonSerializer.Serialize(problemDetails, problemDetails.GetType(), options);
             await context.Response.WriteAsync(json);

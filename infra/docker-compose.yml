@@ -1,0 +1,41 @@
+version: "3.4"
+
+services:
+
+  webui:
+    container_name: 'demo_webui'
+    image: 'demo_webui'
+    build:
+      context: ./../
+      dockerfile: ./infra/webui-dockerfile
+    ports:
+      - 5500:80
+
+  webapi:
+    container_name: 'demo_webapi'
+    image: 'demo_webapi'
+    build:
+      context: ./../
+      dockerfile: ./infra/webapi-dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=DockerDev
+    ports:
+      - 5501:80
+    depends_on:
+      - sqlserver
+
+  sqlserver:
+    container_name: 'demo_sqlserver'
+    image: "mcr.microsoft.com/mssql/server"
+    user: root
+    environment:
+      SA_PASSWORD: "P@ssw0rd!12345"
+      ACCEPT_EULA: "Y"
+      MSSQL_PID: Express
+    volumes:
+      - sqlserver_data:/var/opt/mssql/data
+    ports:
+      - 5502:1433
+
+volumes:
+  sqlserver_data:

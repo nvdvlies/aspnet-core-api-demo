@@ -353,4 +353,3 @@ MigrationBackup/
 
 # Custom
 /tools/Demo.Scaffold.Tool/appsettings.user.json
-src/Demo.WebUI/package-lock.json

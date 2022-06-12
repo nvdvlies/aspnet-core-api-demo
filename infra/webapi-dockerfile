@@ -1,0 +1,26 @@
+﻿FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS base
+WORKDIR /app
+EXPOSE 80
+
+FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
+WORKDIR /src
+COPY ["./src/Demo.WebApi/Demo.WebApi.csproj", "Demo.WebApi/"]
+COPY ["./src/Demo.Application/Demo.Application.csproj", "Demo.Application/"]
+COPY ["./src/Demo.Common/Demo.Common.csproj", "Demo.Common/"]
+COPY ["./src/Demo.Domain/Demo.Domain.csproj", "Demo.Domain/"]
+COPY ["./src/Demo.Events/Demo.Events.csproj", "Demo.Events/"]
+COPY ["./src/Demo.Messages/Demo.Messages.csproj", "Demo.Messages/"]
+COPY ["./src/Demo.Infrastructure/Demo.Infrastructure.csproj", "Demo.Infrastructure/"]
+RUN dotnet restore "Demo.WebApi/Demo.WebApi.csproj"
+
+COPY ./src .
+WORKDIR "/src/Demo.WebApi"
+RUN dotnet build "Demo.WebApi.csproj" -c Release -o /app/build
+
+FROM build AS publish
+RUN dotnet publish "Demo.WebApi.csproj" -c Release -o /app/publish
+
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+ENTRYPOINT ["dotnet", "Demo.WebApi.dll"]

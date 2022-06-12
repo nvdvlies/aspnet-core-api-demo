@@ -20,6 +20,7 @@ using Microsoft.Extensions.Hosting;
 using NSwag;
 using NSwag.Generation.Processors.Security;
 using System.Linq;
+using Demo.WebApi.Extensions;
 
 namespace Demo.WebApi
 {
@@ -55,7 +56,7 @@ namespace Demo.WebApi
 
             services.AddCors(o => o.AddDefaultPolicy(builder =>
             {
-                builder.WithOrigins("http://localhost:4401")
+                builder.WithOrigins("http://localhost:4401", "http://localhost:5500")
                        .AllowAnyMethod()
                        .AllowAnyHeader()
                        .AllowCredentials();
@@ -98,7 +99,7 @@ namespace Demo.WebApi
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
+            if (env.IsDevelopment() || env.IsDockerDev())
             {
                 app.UseDeveloperExceptionPage();
             }
@@ -109,7 +110,10 @@ namespace Demo.WebApi
                 app.UseSwaggerUi3();
             }
 
-            app.UseHttpsRedirection();
+            if (!env.IsDockerDev())
+            {
+                app.UseHttpsRedirection();
+            }
 
             app.UseRouting();
             app.UseCors();
