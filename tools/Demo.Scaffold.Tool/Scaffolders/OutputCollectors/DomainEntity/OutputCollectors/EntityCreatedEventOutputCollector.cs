@@ -32,7 +32,7 @@ namespace Demo.Events.%ENTITY%
 {
     public class %ENTITY%CreatedEvent : Event<%ENTITY%CreatedEvent, %ENTITY%CreatedEventData>
     {
-        public static %ENTITY%CreatedEvent Create(string correlationId, Guid id, Guid createdBy)
+        public static %ENTITY%CreatedEvent Create(Guid correlationId, Guid id, Guid createdBy)
         {
             var data = new %ENTITY%CreatedEventData
             {
@@ -54,7 +54,7 @@ namespace Demo.Events.%ENTITY%
     public class %ENTITY%CreatedEventData : IEventData
     {
         public string EventDataVersion => ""1.0"";
-        public string CorrelationId { get; set; }
+        public Guid CorrelationId { get; set; }
 
         public Guid Id { get; set; }
         public Guid CreatedBy { get; set; }

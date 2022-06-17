@@ -21,22 +21,12 @@ namespace Demo.Domain.User.Hooks
 
         public Task ExecuteAsync(HookType type, IDomainEntityContext<User> context, CancellationToken cancellationToken)
         {
-            if (context.IsPropertyDirty(x => x.Email))
+            if (context.IsPropertyDirty(x => x.Email)
+                || context.IsPropertyDirty(x => x.Fullname)
+                || !context.Entity.UserRoles.OrderBy(x => x.RoleId).Select(x => x.RoleId).SequenceEqual(context.Pristine.UserRoles.OrderBy(x => x.RoleId).Select(x => x.RoleId)
+                ))
             {
-                context.AddMessageAsync(SyncEmailToAuth0UserMessage.Create(_correlationIdProvider.Id, context.Entity.Id), cancellationToken);
-            }
-
-            if (context.IsPropertyDirty(x => x.Fullname))
-            {
-                context.AddMessageAsync(SyncNameToAuth0UserMessage.Create(_correlationIdProvider.Id, context.Entity.Id), cancellationToken);
-            }
-
-            if (!Enumerable.SequenceEqual(
-                context.Entity.UserRoles.Select(x => x.RoleId),
-                context.Pristine.UserRoles.Select(x => x.RoleId)
-            ))
-            {
-                context.AddMessageAsync(SyncRolesToAuth0UserMessage.Create(_correlationIdProvider.Id, context.Entity.Id), cancellationToken);
+                context.AddMessageAsync(SyncAuth0UserMessage.Create(_correlationIdProvider.Id, context.Entity.Id, context.IsPropertyDirty(x => x.Email)), cancellationToken);
             }
 
             return Task.CompletedTask;

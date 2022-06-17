@@ -4,7 +4,7 @@ namespace Demo.Messages
 {
     public interface IMessage
     {
-        string CorrelationId { get; }
+        Guid CorrelationId { get; }
         DateTime CreatedOn { get; }
         string DataVersion { get; }
         string Subject { get; }

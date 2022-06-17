@@ -4,7 +4,7 @@ namespace Demo.Messages.Invoice
 {
     public class SynchronizeInvoicePdfMessage : Message<SynchronizeInvoicePdfMessage, SynchronizeInvoicePdfMessageData>
     {
-        public static SynchronizeInvoicePdfMessage Create(string correlationId, Guid id)
+        public static SynchronizeInvoicePdfMessage Create(Guid correlationId, Guid id)
         {
             var data = new SynchronizeInvoicePdfMessageData
             {
@@ -25,7 +25,7 @@ namespace Demo.Messages.Invoice
     public class SynchronizeInvoicePdfMessageData : IMessageData
     {
         public string MessageDataVersion => "1.0";
-        public string CorrelationId { get; set; }
+        public Guid CorrelationId { get; set; }
 
         public Guid Id { get; set; }
     }

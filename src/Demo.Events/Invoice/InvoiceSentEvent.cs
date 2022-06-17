@@ -4,7 +4,7 @@ namespace Demo.Events.Invoice
 {
     public class InvoiceSentEvent : Event<InvoiceSentEvent, InvoiceSentEventData>
     {
-        public static InvoiceSentEvent Create(string correlationId, Guid id)
+        public static InvoiceSentEvent Create(Guid correlationId, Guid id)
         {
             var data = new InvoiceSentEventData
             {
@@ -25,7 +25,7 @@ namespace Demo.Events.Invoice
     public class InvoiceSentEventData : IEventData
     {
         public string EventDataVersion => "1.0";
-        public string CorrelationId { get; set; }
+        public Guid CorrelationId { get; set; }
 
         public Guid Id { get; set; }
     }

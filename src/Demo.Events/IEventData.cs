@@ -1,8 +1,10 @@
-﻿namespace Demo.Events
+﻿using System;
+
+namespace Demo.Events
 {
     public interface IEventData
     {
         string EventDataVersion { get; }
-        string CorrelationId { get; }
+        Guid CorrelationId { get; }
     }
 }

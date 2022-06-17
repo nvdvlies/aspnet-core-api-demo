@@ -5,14 +5,14 @@ using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Demo.Application.Users.Messages.SyncRolesToAuth0User
+namespace Demo.Application.Users.Messages.SyncAuth0User
 {
-    public class SyncRolesToAuth0UserMessageHandler : IRequestHandler<SyncRolesToAuth0UserMessage, Unit>
+    public class SyncAuth0UserMessageHandler : IRequestHandler<SyncAuth0UserMessage, Unit>
     {
         private readonly IUserDomainEntity _userDomainEntity;
         private readonly IAuth0UserManagementClient _auth0UserManagementClient;
 
-        public SyncRolesToAuth0UserMessageHandler(
+        public SyncAuth0UserMessageHandler(
             IUserDomainEntity userDomainEntity,
             IAuth0UserManagementClient auth0UserManagementClient
         )
@@ -21,13 +21,13 @@ namespace Demo.Application.Users.Messages.SyncRolesToAuth0User
             _auth0UserManagementClient = auth0UserManagementClient;
         }
 
-        public async Task<Unit> Handle(SyncRolesToAuth0UserMessage request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(SyncAuth0UserMessage request, CancellationToken cancellationToken)
         {
             await _userDomainEntity
                 .WithOptions(x => x.AsNoTracking = true)
                 .GetAsync(request.Data.Id, cancellationToken);
 
-            await _auth0UserManagementClient.SyncRolesToAuth0Async(_userDomainEntity.Entity, cancellationToken);
+            await _auth0UserManagementClient.SyncAsync(_userDomainEntity.Entity, request.Data.EmailChanged, cancellationToken);
 
             return Unit.Value;
         }

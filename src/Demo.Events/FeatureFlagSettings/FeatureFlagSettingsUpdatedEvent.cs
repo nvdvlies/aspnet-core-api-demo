@@ -4,7 +4,7 @@ namespace Demo.Events.FeatureFlagSettings
 {
     public class FeatureFlagSettingsUpdatedEvent : Event<FeatureFlagSettingsUpdatedEvent, FeatureFlagSettingsUpdatedEventData>
     {
-        public static FeatureFlagSettingsUpdatedEvent Create(string correlationId, Guid id, Guid updatedBy)
+        public static FeatureFlagSettingsUpdatedEvent Create(Guid correlationId, Guid id, Guid updatedBy)
         {
             var data = new FeatureFlagSettingsUpdatedEventData
             {
@@ -26,7 +26,7 @@ namespace Demo.Events.FeatureFlagSettings
     public class FeatureFlagSettingsUpdatedEventData : IEventData
     {
         public string EventDataVersion => "1.0";
-        public string CorrelationId { get; set; }
+        public Guid CorrelationId { get; set; }
 
         public Guid Id { get; set; }
         public Guid UpdatedBy { get; set; }

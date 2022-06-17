@@ -84,32 +84,27 @@ namespace Demo.Infrastructure.Auth0
             return (await client.Tickets.CreatePasswordChangeTicketAsync(passwordChangeTicketRequest, cancellationToken)).Value;
         }
 
-        public async Task SyncEmailToAuth0Async(Domain.User.User internalUser, CancellationToken cancellationToken = default)
+        public async Task SyncAsync(Domain.User.User internalUser, bool verifyEmail, CancellationToken cancellationToken = default)
         {
             var client = await _auth0ManagementApiClientCreator.GetClient(cancellationToken);
             var request = new UserUpdateRequest
             {
                 Connection = _environmentSettings.Auth0.Management.UserDatabaseIdentifier,
                 Email = internalUser.Email,
-                EmailVerified = false,
-                VerifyEmail = true
-            };
-            await client.Users.UpdateAsync(internalUser.ExternalId, request, cancellationToken);
-        }
-
-        public async Task SyncNameToAuth0Async(Domain.User.User internalUser, CancellationToken cancellationToken = default)
-        {
-            var client = await _auth0ManagementApiClientCreator.GetClient(cancellationToken);
-            var request = new UserUpdateRequest
-            {
-                Connection = _environmentSettings.Auth0.Management.UserDatabaseIdentifier,
                 FirstName = internalUser.GivenName,
-                LastName = $"{internalUser.MiddleName} {internalUser.FamilyName}".Trim()
+                LastName = $"{internalUser.MiddleName} {internalUser.FamilyName}".Trim(),
             };
+            if (verifyEmail)
+            {
+                request.EmailVerified = false;
+                request.VerifyEmail = true;
+            }
             await client.Users.UpdateAsync(internalUser.ExternalId, request, cancellationToken);
+
+            await SyncRolesAsync(internalUser, cancellationToken);
         }
 
-        public async Task SyncRolesToAuth0Async(Domain.User.User internalUser, CancellationToken cancellationToken = default)
+        private async Task SyncRolesAsync(Domain.User.User internalUser, CancellationToken cancellationToken = default)
         {
             var client = await _auth0ManagementApiClientCreator.GetClient(cancellationToken);
 

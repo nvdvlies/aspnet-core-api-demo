@@ -4,7 +4,7 @@ namespace Demo.Events.Role
 {
     public class RoleDeletedEvent : Event<RoleDeletedEvent, RoleDeletedEventData>
     {
-        public static RoleDeletedEvent Create(string correlationId, Guid id, Guid deletedBy)
+        public static RoleDeletedEvent Create(Guid correlationId, Guid id, Guid deletedBy)
         {
             var data = new RoleDeletedEventData
             {
@@ -26,7 +26,7 @@ namespace Demo.Events.Role
     public class RoleDeletedEventData : IEventData
     {
         public string EventDataVersion => "1.0";
-        public string CorrelationId { get; set; }
+        public Guid CorrelationId { get; set; }
 
         public Guid Id { get; set; }
         public Guid DeletedBy { get; set; }

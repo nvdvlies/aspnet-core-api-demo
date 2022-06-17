@@ -20,17 +20,12 @@ namespace Demo.Messages
         [JsonInclude]
         public string DataVersion { get; protected set; }
         [JsonInclude]
-        public string CorrelationId { get; protected set; }
+        public Guid CorrelationId { get; protected set; }
 
         public Message()
         {
             Type = GetType().FullName;
             CreatedOn = DateTime.UtcNow;
-        }
-
-        public static M FromBinaryData(BinaryData binaryData)
-        {
-            return binaryData.ToObjectFromJson<M>();
         }
 
         public static M FromJson(string json)

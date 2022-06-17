@@ -4,7 +4,7 @@ namespace Demo.Events.Invoice
 {
     public class InvoicePdfSynchronizedEvent : Event<InvoicePdfSynchronizedEvent, InvoicePdfSynchronizedEventData>
     {
-        public static InvoicePdfSynchronizedEvent Create(string correlationId, Guid id)
+        public static InvoicePdfSynchronizedEvent Create(Guid correlationId, Guid id)
         {
             var data = new InvoicePdfSynchronizedEventData
             {
@@ -25,7 +25,7 @@ namespace Demo.Events.Invoice
     public class InvoicePdfSynchronizedEventData : IEventData
     {
         public string EventDataVersion => "1.0";
-        public string CorrelationId { get; set; }
+        public Guid CorrelationId { get; set; }
 
         public Guid Id { get; set; }
     }

@@ -1,9 +1,8 @@
 ﻿using Demo.Application.Shared.Interfaces;
 using Demo.Domain.Shared.Interfaces;
 using Microsoft.AspNetCore.SignalR;
-using System;
 
-namespace Demo.WebApi.SignalR
+namespace Demo.Infrastructure.SignalR
 {
     public class SignalrHubContext : IEventHubContext
     {
@@ -20,7 +19,7 @@ namespace Demo.WebApi.SignalR
         }
 
         public IEventHub All => _hubContext.Clients.All;
-        public IEventHub CurrentUser => _hubContext.Clients.User(_currentUser.Id.ToString());
-        public IEventHub User(Guid userId) => _hubContext.Clients.User(userId.ToString());
+        public IEventHub CurrentUser => _hubContext.Clients.User(_currentUser.ExternalId);
+        public IEventHub User(string externalId) => _hubContext.Clients.User(externalId);
     }
 }

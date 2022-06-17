@@ -9,7 +9,6 @@ using Demo.Infrastructure.Settings;
 using Demo.WebApi.Auth;
 using Demo.WebApi.Middleware;
 using Demo.WebApi.Services;
-using Demo.WebApi.SignalR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -20,6 +19,7 @@ using Microsoft.Extensions.Hosting;
 using NSwag;
 using NSwag.Generation.Processors.Security;
 using System.Linq;
+using Demo.Infrastructure.SignalR;
 using Demo.WebApi.Extensions;
 
 namespace Demo.WebApi
@@ -79,22 +79,23 @@ namespace Demo.WebApi
                 options.AddPolicy(nameof(Policies.Machine), policy => policy.Requirements.Add(new HasRoleRequirement(Auth0Roles.Machine, environmentSettings.Auth0.Domain)));
             });
 
-            services.AddApplicationInsightsTelemetry();
-
             services.AddSingleton<IAuthorizationHandler, HasRoleRequirementAuthorizationHandler>();
 
-            services.AddScoped<ICorrelationIdProvider, CorrelationIdProvider>();
+            services.AddHttpContextAccessor();
             services.AddScoped<ICurrentUser, CurrentUserService>();
             services.AddScoped<IEventHubContext, SignalrHubContext>();
 
             services.AddLogging();
 
+            services.AddSignalR()
+                .AddStackExchangeRedis(environmentSettings.Redis.Connection, options => {
+                    options.Configuration.ChannelPrefix = "SignalrHub";
+                });
+
             services.AddApplication();
             services.AddDomain();
             services.AddInfrastructure(Configuration, environmentSettings);
             services.AddCommon();
-
-            services.AddSignalR();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -122,6 +123,7 @@ namespace Demo.WebApi
             app.UseAuthorization();
 
             app.UseExceptionHandler(x => x.Run(GlobalExceptionHandler.Handle(env)));
+            app.UseMiddleware<CorrelationIdMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {

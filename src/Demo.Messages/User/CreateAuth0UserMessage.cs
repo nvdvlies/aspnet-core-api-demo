@@ -4,7 +4,7 @@ namespace Demo.Messages.User
 {
     public class CreateAuth0UserMessage : Message<CreateAuth0UserMessage, CreateAuth0UserMessageData>
     {
-        public static CreateAuth0UserMessage Create(string correlationId, Guid id)
+        public static CreateAuth0UserMessage Create(Guid correlationId, Guid id)
         {
             var data = new CreateAuth0UserMessageData
             {
@@ -25,7 +25,7 @@ namespace Demo.Messages.User
     public class CreateAuth0UserMessageData : IMessageData
     {
         public string MessageDataVersion => "1.0";
-        public string CorrelationId { get; set; }
+        public Guid CorrelationId { get; set; }
 
         public Guid Id { get; set; }
     }

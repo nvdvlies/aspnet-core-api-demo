@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Automatonymous;
 
 namespace Demo.WebApi.Tests.Helpers
 {
@@ -23,8 +24,8 @@ namespace Demo.WebApi.Tests.Helpers
             using var scope = _serviceProvider.CreateScope();
             var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
 
-            var eventGridEvent = @event.ToEventGridEvent();
-            var @event2 = eventGridEvent.ToEvent();
+            var rabbitMqEvent = @event.ToRabbitMqEvent();
+            var @event2 = rabbitMqEvent.ToEvent();
 
             await mediator.Publish(@event2, cancellationToken);
         }

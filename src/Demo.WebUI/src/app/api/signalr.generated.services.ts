@@ -27,7 +27,7 @@ export class SignalRService {
         accessTokenFactory: () => lastValueFrom(this.authService.getAccessTokenSilently())
       } as IHttpConnectionOptions)
       .withAutomaticReconnect()
-      .configureLogging(signalR.LogLevel.Warning)
+      .configureLogging(signalR.LogLevel.Information)
       .build();
 
     this.authService.isAuthenticated$.subscribe((isAuthenticated) =>

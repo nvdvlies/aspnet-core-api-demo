@@ -4,7 +4,7 @@ namespace Demo.Events.UserPreferences
 {
     public class UserPreferencesDeletedEvent : Event<UserPreferencesDeletedEvent, UserPreferencesDeletedEventData>
     {
-        public static UserPreferencesDeletedEvent Create(string correlationId, Guid id, Guid deletedBy)
+        public static UserPreferencesDeletedEvent Create(Guid correlationId, Guid id, Guid deletedBy)
         {
             var data = new UserPreferencesDeletedEventData
             {
@@ -26,7 +26,7 @@ namespace Demo.Events.UserPreferences
     public class UserPreferencesDeletedEventData : IEventData
     {
         public string EventDataVersion => "1.0";
-        public string CorrelationId { get; set; }
+        public Guid CorrelationId { get; set; }
 
         public Guid Id { get; set; }
         public Guid DeletedBy { get; set; }

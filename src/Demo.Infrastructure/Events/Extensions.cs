@@ -1,26 +1,29 @@
-﻿using Azure.Messaging.EventGrid;
-using Demo.Events;
 using System.Reflection;
+using System.Text.Json;
+using Demo.Events;
 
 namespace Demo.Infrastructure.Events
 {
-    public static class Extensions
+    internal static class Extensions
     {
-        public static EventGridEvent ToEventGridEvent(this IEvent @event)
+        public static RabbitMqEvent ToRabbitMqEvent(this IEvent @event)
         {
-            return new EventGridEvent(@event.Subject, @event.Type, @event.DataVersion, @event)
+            var assembly = typeof(Event<IEvent, IEventData>).Assembly;
+            var eventType = assembly.GetType(@event.Type);
+            var payload = JsonSerializer.Serialize(@event, eventType, new JsonSerializerOptions());
+            return new RabbitMqEvent()
             {
-                Topic = @event.Topic.ToString(),
-                EventTime = @event.CreatedOn
+                ContentType = @event.Type,
+                Payload = payload
             };
         }
 
-        public static IEvent ToEvent(this EventGridEvent eventGridEvent)
+        public static IEvent ToEvent(this RabbitMqEvent rabbitMqEvent)
         {
-            var eventType = typeof(Event<IEvent, IEventData>).Assembly.GetType(eventGridEvent.EventType);
-            var methodName = nameof(Event<IEvent, IEventData>.FromBinaryData);
+            var eventType = typeof(Event<IEvent, IEventData>).Assembly.GetType(rabbitMqEvent.ContentType);
+            var methodName = nameof(Event<IEvent, IEventData>.FromJson);
             var method = eventType.GetMethod(methodName, BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
-            var @event = method.Invoke(null, new object[] { eventGridEvent.Data });
+            var @event = method.Invoke(null, new object[] { rabbitMqEvent.Payload });
             return (IEvent)@event;
         }
     }

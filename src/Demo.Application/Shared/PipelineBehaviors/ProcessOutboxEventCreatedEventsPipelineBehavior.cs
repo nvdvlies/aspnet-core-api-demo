@@ -31,7 +31,7 @@ namespace Demo.Application.Shared.PipelineBehaviors
         {
             var response = await next();
 
-            if (request is ICommand || request is IMessage)
+            if (request is ICommand or IMessage)
             {
                 try
                 {

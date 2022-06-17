@@ -1,7 +1,10 @@
-﻿namespace Demo.Common.Interfaces
+﻿using System;
+
+namespace Demo.Common.Interfaces
 {
     public interface ICorrelationIdProvider
     {
-        string Id { get; }
+        Guid Id { get; }
+        void SwitchToCorrelationId(Guid id);
     }
 }

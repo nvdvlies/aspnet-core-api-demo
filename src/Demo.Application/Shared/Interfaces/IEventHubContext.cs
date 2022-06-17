@@ -6,6 +6,6 @@ namespace Demo.Application.Shared.Interfaces
     {
         IEventHub All { get; }
         IEventHub CurrentUser { get; }
-        IEventHub User(Guid userId);
+        IEventHub User(string externalUserId);
     }
 }

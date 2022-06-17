@@ -20,17 +20,12 @@ namespace Demo.Events
         [JsonInclude]
         public string DataVersion { get; protected set; }
         [JsonInclude]
-        public string CorrelationId { get; protected set; }
+        public Guid CorrelationId { get; protected set; }
 
         public Event()
         {
             Type = GetType().FullName;
             CreatedOn = DateTime.UtcNow;
-        }
-
-        public static E FromBinaryData(BinaryData binaryData)
-        {
-            return binaryData.ToObjectFromJson<E>();
         }
 
         public static E FromJson(string json)

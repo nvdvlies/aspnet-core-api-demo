@@ -24,10 +24,7 @@ namespace Demo.WebApi.Tests.Helpers
             using var scope = _serviceProvider.CreateScope();
             var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
 
-            var eventGridEvent = message.ToServiceBusMessage();
-            var message2 = eventGridEvent.ToMessage();
-
-            await mediator.Send(message2, cancellationToken);
+            await mediator.Send(message, cancellationToken);
         }
 
         public async Task SendAsync(IEnumerable<IMessage> messages, CancellationToken cancellationToken)
@@ -37,10 +34,7 @@ namespace Demo.WebApi.Tests.Helpers
 
             foreach (var message in messages)
             {
-                var eventGridEvent = message.ToServiceBusMessage();
-                var message2 = eventGridEvent.ToMessage();
-
-                await mediator.Send(message2, cancellationToken);
+                await mediator.Send(message, cancellationToken);
             }
         }
     }

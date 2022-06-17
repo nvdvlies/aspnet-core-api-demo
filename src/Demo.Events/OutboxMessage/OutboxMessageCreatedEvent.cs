@@ -4,7 +4,7 @@ namespace Demo.Events.OutboxMessage
 {
     public class OutboxMessageCreatedEvent : Event<OutboxMessageCreatedEvent, OutboxMessageCreatedEventData>
     {
-        public static OutboxMessageCreatedEvent Create(string correlationId, Guid id, Guid createdBy)
+        public static OutboxMessageCreatedEvent Create(Guid correlationId, Guid id, Guid createdBy)
         {
             var data = new OutboxMessageCreatedEventData
             {
@@ -26,7 +26,7 @@ namespace Demo.Events.OutboxMessage
     public class OutboxMessageCreatedEventData : IEventData
     {
         public string EventDataVersion => "1.0";
-        public string CorrelationId { get; set; }
+        public Guid CorrelationId { get; set; }
 
         public Guid Id { get; set; }
         public Guid CreatedBy { get; set; }

@@ -9,9 +9,7 @@ namespace Demo.Application.Shared.Interfaces
     {
         Task<string> CreateAsync(User internalUser, CancellationToken cancellationToken = default);
         Task<string> GetChangePasswordUrl(User internalUser, CancellationToken cancellationToken = default);
-        Task SyncEmailToAuth0Async(User internalUser, CancellationToken cancellationToken = default);
-        Task SyncNameToAuth0Async(User internalUser, CancellationToken cancellationToken = default);
-        Task SyncRolesToAuth0Async(User internalUser, CancellationToken cancellationToken = default);
+        Task SyncAsync(User internalUser, bool verifyEmail, CancellationToken cancellationToken = default);
         Task DeleteAsync(Guid id, CancellationToken cancellationToken = default);
     }
 }
