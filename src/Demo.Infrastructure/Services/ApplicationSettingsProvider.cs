@@ -1,22 +1,21 @@
-﻿using Demo.Domain.ApplicationSettings;
-using Demo.Domain.ApplicationSettings.Interfaces;
-using Demo.Domain.Shared.Interfaces;
-using Microsoft.Extensions.Caching.Distributed;
-using Microsoft.Extensions.Caching.Memory;
-using System;
+﻿using System;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Demo.Domain.ApplicationSettings;
+using Demo.Domain.ApplicationSettings.Interfaces;
+using Demo.Domain.Shared.Interfaces;
+using Microsoft.Extensions.Caching.Distributed;
 
 namespace Demo.Infrastructure.Services
 {
     public class ApplicationSettingsProvider : IApplicationSettingsProvider
     {
         private const string CacheKey = "ApplicationSettings";
+        private readonly IApplicationSettingsDomainEntity _applicationSettingsDomainEntity;
 
         private readonly IDistributedCache _cache;
         private readonly IJsonService<ApplicationSettings> _jsonService;
-        private readonly IApplicationSettingsDomainEntity _applicationSettingsDomainEntity;
 
         public ApplicationSettingsProvider(
             IDistributedCache cache,
@@ -31,10 +30,11 @@ namespace Demo.Infrastructure.Services
 
         public async Task<ApplicationSettings> GetAsync(CancellationToken cancellationToken = default)
         {
-            return await GetAsync(refreshCache: false, cancellationToken);
+            return await GetAsync(false, cancellationToken);
         }
 
-        public async Task<ApplicationSettings> GetAsync(bool refreshCache, CancellationToken cancellationToken = default)
+        public async Task<ApplicationSettings> GetAsync(bool refreshCache,
+            CancellationToken cancellationToken = default)
         {
             var cacheValue = await _cache.GetAsync(CacheKey, cancellationToken);
 
@@ -51,10 +51,8 @@ namespace Demo.Infrastructure.Services
 
                 return applicationSettings;
             }
-            else
-            {
-                return Decode(cacheValue);
-            }
+
+            return Decode(cacheValue);
         }
 
         private ApplicationSettings Decode(byte[] value)

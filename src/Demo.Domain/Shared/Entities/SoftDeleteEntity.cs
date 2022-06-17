@@ -1,17 +1,16 @@
-﻿using Demo.Domain.Shared.Interfaces;
-using System;
+﻿using System;
 using System.Text.Json.Serialization;
+using Demo.Domain.Shared.Interfaces;
 
 namespace Demo.Domain.Shared.Entities
 {
     public abstract class SoftDeleteEntity : AuditableEntity, ISoftDeleteEntity, IAuditableEntity, IEntity
     {
-        [JsonInclude]
-        public bool Deleted { get; private set; }
-        [JsonInclude]
-        public Guid DeletedBy { get; private set; }
-        [JsonInclude]
-        public DateTime? DeletedOn { get; private set; }
+        [JsonInclude] public bool Deleted { get; private set; }
+
+        [JsonInclude] public Guid DeletedBy { get; private set; }
+
+        [JsonInclude] public DateTime? DeletedOn { get; private set; }
 
         void ISoftDeleteEntity.MarkAsDeleted(Guid deletedBy, DateTime deletedOn)
         {

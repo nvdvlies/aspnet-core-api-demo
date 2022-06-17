@@ -18,10 +18,12 @@ namespace Demo.Infrastructure.Auditlogging
         {
         }
 
-        protected override List<AuditlogItem> AuditlogItems(Role current, Role previous) =>
-            new AuditlogBuilder<Role>()
+        protected override List<AuditlogItem> AuditlogItems(Role current, Role previous)
+        {
+            return new AuditlogBuilder<Role>()
                 .WithProperty(x => x.Name)
                 .WithProperty(x => x.ExternalId)
                 .Build(current, previous);
+        }
     }
 }

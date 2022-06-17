@@ -1,20 +1,21 @@
-﻿using Demo.Application.Shared.Interfaces;
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
+using Demo.Application.Shared.Interfaces;
 using Demo.Domain.Shared.Interfaces;
 using Demo.Events.OutboxMessage;
 using Demo.Messages;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Demo.Application.Shared.PipelineBehaviors
 {
-    public class ProcessOutboxMessageCreatedEventsPipelineBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+    public class
+        ProcessOutboxMessageCreatedEventsPipelineBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     {
-        private readonly Lazy<IOutboxMessageCreatedEvents> _outboxMessageCreatedEvents;
         private readonly Lazy<IEventPublisher> _eventPublisher;
         private readonly ILogger<ProcessOutboxMessageCreatedEventsPipelineBehavior<TRequest, TResponse>> _logger;
+        private readonly Lazy<IOutboxMessageCreatedEvents> _outboxMessageCreatedEvents;
 
         public ProcessOutboxMessageCreatedEventsPipelineBehavior(
             Lazy<IOutboxMessageCreatedEvents> outboxMessageCreatedEvents,
@@ -27,7 +28,8 @@ namespace Demo.Application.Shared.PipelineBehaviors
             _logger = logger;
         }
 
-        public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
+        public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken,
+            RequestHandlerDelegate<TResponse> next)
         {
             var response = await next();
 
@@ -42,7 +44,8 @@ namespace Demo.Application.Shared.PipelineBehaviors
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, $"Failed to publish {nameof(OutboxMessageCreatedEvent)} event(s). The affected message(s) will be processed later by the outbox monitoring service.");
+                    _logger.LogError(ex,
+                        $"Failed to publish {nameof(OutboxMessageCreatedEvent)} event(s). The affected message(s) will be processed later by the outbox monitoring service.");
                 }
             }
 

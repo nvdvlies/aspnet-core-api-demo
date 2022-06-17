@@ -1,3 +1,7 @@
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using AutoMapper;
 using Demo.Application.Shared.Dtos;
 using Demo.Domain.Auditlog;
@@ -5,17 +9,14 @@ using Demo.Domain.Invoice;
 using Demo.Domain.Shared.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Demo.Application.Invoices.Queries.GetInvoiceAuditlog
 {
-    public class GetInvoiceAuditlogQueryHandler : IRequestHandler<GetInvoiceAuditlogQuery, GetInvoiceAuditlogQueryResult>
+    public class
+        GetInvoiceAuditlogQueryHandler : IRequestHandler<GetInvoiceAuditlogQuery, GetInvoiceAuditlogQueryResult>
     {
-        private readonly IDbQuery<Auditlog> _query;
         private readonly IMapper _mapper;
+        private readonly IDbQuery<Auditlog> _query;
 
         public GetInvoiceAuditlogQueryHandler(
             IDbQuery<Auditlog> query,
@@ -26,11 +27,12 @@ namespace Demo.Application.Invoices.Queries.GetInvoiceAuditlog
             _mapper = mapper;
         }
 
-        public async Task<GetInvoiceAuditlogQueryResult> Handle(GetInvoiceAuditlogQuery request, CancellationToken cancellationToken)
+        public async Task<GetInvoiceAuditlogQueryResult> Handle(GetInvoiceAuditlogQuery request,
+            CancellationToken cancellationToken)
         {
             var query = _query.AsQueryable()
                 .Include(x => x.AuditlogItems)
-                    .ThenInclude(y => y.AuditlogItems)
+                .ThenInclude(y => y.AuditlogItems)
                 .Where(x => x.EntityName == nameof(Invoice))
                 .Where(x => x.EntityId == request.InvoiceId);
 

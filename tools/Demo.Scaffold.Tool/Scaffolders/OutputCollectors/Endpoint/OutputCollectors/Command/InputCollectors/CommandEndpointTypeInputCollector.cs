@@ -1,6 +1,6 @@
-﻿using Demo.Scaffold.Tool.Interfaces;
+﻿using System;
+using Demo.Scaffold.Tool.Interfaces;
 using Spectre.Console;
-using System;
 
 namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint.OutputCollectors.Command.InputCollectors
 {
@@ -18,14 +18,7 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint.OutputCollect
             var option = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
                     .Title("Which type of endpoint would you like to add?")
-                    .AddChoices(new[] {
-                        Create,
-                        Update,
-                        Delete,
-                        CreateSubEndpoint,
-                        UpdateSubEndpoint,
-                        DeleteSubEndpoint
-                    }));
+                    .AddChoices(Create, Update, Delete, CreateSubEndpoint, UpdateSubEndpoint, DeleteSubEndpoint));
 
             var commandEndpointTypes = option switch
             {
@@ -35,7 +28,7 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint.OutputCollect
                 CreateSubEndpoint => CommandEndpointTypes.CreateSubEndpoint,
                 UpdateSubEndpoint => CommandEndpointTypes.UpdateSubEndpoint,
                 DeleteSubEndpoint => CommandEndpointTypes.DeleteSubEndpoint,
-                _ => throw new Exception($"Invalid option {option}"),
+                _ => throw new Exception($"Invalid option {option}")
             };
 
             context.Variables.Set(Constants.CommandEndpointType, commandEndpointTypes);

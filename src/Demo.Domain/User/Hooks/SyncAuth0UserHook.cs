@@ -1,10 +1,10 @@
-﻿using Demo.Common.Interfaces;
+﻿using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using Demo.Common.Interfaces;
 using Demo.Domain.Shared.DomainEntity;
 using Demo.Domain.Shared.Interfaces;
 using Demo.Messages.User;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Demo.Domain.User.Hooks
 {
@@ -23,10 +23,13 @@ namespace Demo.Domain.User.Hooks
         {
             if (context.IsPropertyDirty(x => x.Email)
                 || context.IsPropertyDirty(x => x.Fullname)
-                || !context.Entity.UserRoles.OrderBy(x => x.RoleId).Select(x => x.RoleId).SequenceEqual(context.Pristine.UserRoles.OrderBy(x => x.RoleId).Select(x => x.RoleId)
+                || !context.Entity.UserRoles.OrderBy(x => x.RoleId).Select(x => x.RoleId).SequenceEqual(
+                    context.Pristine.UserRoles.OrderBy(x => x.RoleId).Select(x => x.RoleId)
                 ))
             {
-                context.AddMessageAsync(SyncAuth0UserMessage.Create(_correlationIdProvider.Id, context.Entity.Id, context.IsPropertyDirty(x => x.Email)), cancellationToken);
+                context.AddMessageAsync(
+                    SyncAuth0UserMessage.Create(_correlationIdProvider.Id, context.Entity.Id,
+                        context.IsPropertyDirty(x => x.Email)), cancellationToken);
             }
 
             return Task.CompletedTask;

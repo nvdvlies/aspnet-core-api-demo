@@ -1,9 +1,9 @@
+using System.Threading;
+using System.Threading.Tasks;
 using AutoMapper;
 using Demo.Application.Shared.Mappings;
 using Demo.Domain.Customer.Interfaces;
 using MediatR;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Demo.Application.Customers.Commands.CreateCustomer
 {
@@ -21,7 +21,8 @@ namespace Demo.Application.Customers.Commands.CreateCustomer
             _mapper = mapper;
         }
 
-        public async Task<CreateCustomerResponse> Handle(CreateCustomerCommand request, CancellationToken cancellationToken)
+        public async Task<CreateCustomerResponse> Handle(CreateCustomerCommand request,
+            CancellationToken cancellationToken)
         {
             await _customerDomainEntity.NewAsync(cancellationToken);
 

@@ -6,15 +6,11 @@ namespace Demo.SignalrTypescript.Generator.Models
 {
     internal class Parameter
     {
-        public string Name { get; }
-        public string CSharpType { get; }
-        public string TypescriptType { get; }
-
         public Parameter(ParameterInfo parameterInfo)
         {
             Name = parameterInfo.Name;
             CSharpType = parameterInfo.ParameterType.Name;
-            var typeMapping = new Dictionary<Type, string>()
+            var typeMapping = new Dictionary<Type, string>
             {
                 { typeof(int), "number" },
                 { typeof(string), "string" },
@@ -23,5 +19,9 @@ namespace Demo.SignalrTypescript.Generator.Models
             };
             TypescriptType = typeMapping[parameterInfo.ParameterType];
         }
+
+        public string Name { get; }
+        public string CSharpType { get; }
+        public string TypescriptType { get; }
     }
 }

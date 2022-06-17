@@ -1,9 +1,9 @@
-﻿using Demo.Domain.Shared.Interfaces;
-using Microsoft.AspNetCore.Http;
-using System;
+﻿using System;
 using System.Globalization;
 using System.Linq;
 using System.Security.Claims;
+using Demo.Domain.Shared.Interfaces;
+using Microsoft.AspNetCore.Http;
 
 namespace Demo.WebApi.Services
 {
@@ -13,7 +13,8 @@ namespace Demo.WebApi.Services
             IHttpContextAccessor httpContextAccessor,
             IUserIdProvider userIdProvider)
         {
-            ExternalId = httpContextAccessor.HttpContext?.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+            ExternalId = httpContextAccessor.HttpContext?.User.Claims
+                .FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
             Id = userIdProvider.Get(ExternalId);
         }
 
@@ -21,7 +22,8 @@ namespace Demo.WebApi.Services
 
         public string ExternalId { get; }
 
-        public TimeZoneInfo TimeZone => TimeZoneInfo.FindSystemTimeZoneById("W. Europe Standard Time"); // linux: Europe/Amsterdam
+        public TimeZoneInfo TimeZone =>
+            TimeZoneInfo.FindSystemTimeZoneById("W. Europe Standard Time"); // linux: Europe/Amsterdam
 
         public CultureInfo Culture => CultureInfo.CreateSpecificCulture("nl-NL");
     }

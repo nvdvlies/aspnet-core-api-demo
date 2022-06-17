@@ -24,9 +24,8 @@ namespace Demo.Messages.Invoice
 
     public class SynchronizeInvoicePdfMessageData : IMessageData
     {
+        public Guid Id { get; set; }
         public string MessageDataVersion => "1.0";
         public Guid CorrelationId { get; set; }
-
-        public Guid Id { get; set; }
     }
 }

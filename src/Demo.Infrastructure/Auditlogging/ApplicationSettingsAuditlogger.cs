@@ -1,14 +1,15 @@
-﻿using Demo.Common.Interfaces;
+﻿using System.Collections.Generic;
+using Demo.Common.Interfaces;
 using Demo.Domain.ApplicationSettings;
 using Demo.Domain.Auditlog;
 using Demo.Domain.Auditlog.Interfaces;
 using Demo.Domain.Shared.Interfaces;
 using Demo.Infrastructure.Auditlogging.Shared;
-using System.Collections.Generic;
 
 namespace Demo.Infrastructure.Auditlogging
 {
-    internal class ApplicationSettingsAuditlogger : AuditloggerBase<ApplicationSettings>, IAuditlogger<ApplicationSettings>
+    internal class ApplicationSettingsAuditlogger : AuditloggerBase<ApplicationSettings>,
+        IAuditlogger<ApplicationSettings>
     {
         public ApplicationSettingsAuditlogger(
             ICurrentUser currentUser,
@@ -18,8 +19,9 @@ namespace Demo.Infrastructure.Auditlogging
         {
         }
 
-        protected override List<AuditlogItem> AuditlogItems(ApplicationSettings current, ApplicationSettings previous) =>
-            new AuditlogBuilder<ApplicationSettings>()
+        protected override List<AuditlogItem> AuditlogItems(ApplicationSettings current, ApplicationSettings previous)
+        {
+            return new AuditlogBuilder<ApplicationSettings>()
                 .WithChildEntity(x => x.Settings, new AuditlogBuilder<ApplicationSettingsSettings>()
                     .WithProperty(c => c.Setting1)
                     .WithProperty(c => c.Setting2)
@@ -28,5 +30,6 @@ namespace Demo.Infrastructure.Auditlogging
                     .WithProperty(c => c.Setting5)
                 )
                 .Build(current, previous);
+        }
     }
 }

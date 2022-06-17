@@ -1,7 +1,7 @@
-using Demo.Domain.Invoice.Interfaces;
-using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
+using Demo.Domain.Invoice.Interfaces;
+using MediatR;
 
 namespace Demo.Application.Invoices.Commands.DeleteInvoice
 {

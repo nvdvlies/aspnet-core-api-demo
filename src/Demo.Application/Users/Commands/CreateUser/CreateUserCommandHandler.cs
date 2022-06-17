@@ -1,16 +1,16 @@
+using System.Threading;
+using System.Threading.Tasks;
 using AutoMapper;
 using Demo.Application.Shared.Mappings;
 using Demo.Domain.User.Interfaces;
 using MediatR;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Demo.Application.Users.Commands.CreateUser
 {
     public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, CreateUserResponse>
     {
-        private readonly IUserDomainEntity _userDomainEntity;
         private readonly IMapper _mapper;
+        private readonly IUserDomainEntity _userDomainEntity;
 
         public CreateUserCommandHandler(
             IUserDomainEntity userDomainEntity,

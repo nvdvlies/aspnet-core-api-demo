@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Demo.Application.ApplicationSettings.Commands.SaveApplicationSettings.Dtos;
+using Demo.Domain.ApplicationSettings;
 
 namespace Demo.Application.ApplicationSettings.Commands.SaveApplicationSettings
 {
@@ -14,7 +15,7 @@ namespace Demo.Application.ApplicationSettings.Commands.SaveApplicationSettings
                 .ForMember(x => x.LastModifiedBy, opt => opt.Ignore())
                 .ForMember(x => x.LastModifiedOn, opt => opt.Ignore());
 
-            CreateMap<SaveApplicationSettingsSettingsDto, Domain.ApplicationSettings.ApplicationSettingsSettings>();
+            CreateMap<SaveApplicationSettingsSettingsDto, ApplicationSettingsSettings>();
         }
     }
 }

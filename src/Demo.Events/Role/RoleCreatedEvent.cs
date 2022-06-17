@@ -25,10 +25,9 @@ namespace Demo.Events.Role
 
     public class RoleCreatedEventData : IEventData
     {
-        public string EventDataVersion => "1.0";
-        public Guid CorrelationId { get; set; }
-
         public Guid Id { get; set; }
         public Guid CreatedBy { get; set; }
+        public string EventDataVersion => "1.0";
+        public Guid CorrelationId { get; set; }
     }
 }

@@ -1,6 +1,6 @@
-﻿using Demo.Scaffold.Tool.Changes;
+﻿using System.Collections.Generic;
+using Demo.Scaffold.Tool.Changes;
 using Demo.Scaffold.Tool.Scaffolders;
-using System.Collections.Generic;
 
 namespace Demo.Scaffold.Tool.Interfaces
 {

@@ -25,10 +25,9 @@ namespace Demo.Messages.User
 
     public class SyncAuth0UserMessageData : IMessageData
     {
-        public string MessageDataVersion => "1.0";
-        public Guid CorrelationId { get; set; }
-
         public Guid Id { get; set; }
         public bool EmailChanged { get; set; }
+        public string MessageDataVersion => "1.0";
+        public Guid CorrelationId { get; set; }
     }
 }

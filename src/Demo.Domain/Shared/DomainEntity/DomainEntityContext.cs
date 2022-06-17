@@ -1,23 +1,21 @@
-﻿using Demo.Domain.Shared.Interfaces;
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
+using Demo.Domain.Shared.Interfaces;
 using Demo.Events;
 using Demo.Messages;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Demo.Domain.Shared.DomainEntity
 {
     internal class DomainEntityContext<T> : IDomainEntityContext<T> where T : IEntity
     {
+        private readonly object _entityLock = new();
+        private readonly Lazy<IJsonService<T>> _jsonService;
         private readonly ILogger _logger;
         private readonly Lazy<IOutboxEventCreator> _outboxEventCreator;
         private readonly Lazy<IOutboxMessageCreator> _outboxMessageCreator;
-        private readonly Lazy<IJsonService<T>> _jsonService;
         private T _entity;
-        private readonly object _entityLock = new object();
-
-        public PerformanceMeasurements PerformanceMeasurements { get; }
 
         public DomainEntityContext(
             ILogger logger,
@@ -34,6 +32,8 @@ namespace Demo.Domain.Shared.DomainEntity
             State = new DomainEntityState();
         }
 
+        public PerformanceMeasurements PerformanceMeasurements { get; }
+
         public T Entity
         {
             get => _entity;
@@ -46,6 +46,7 @@ namespace Demo.Domain.Shared.DomainEntity
                 }
             }
         }
+
         public T Pristine { get; private set; }
         public EditMode EditMode { get; set; }
         public IDomainEntityState State { get; }

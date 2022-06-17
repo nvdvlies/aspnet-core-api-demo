@@ -1,12 +1,11 @@
-﻿using Demo.Application.Shared.Interfaces;
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
+using Demo.Application.Shared.Interfaces;
 using Demo.Events;
 using Demo.Infrastructure.Events;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-using Automatonymous;
 
 namespace Demo.WebApi.Tests.Helpers
 {
@@ -25,9 +24,9 @@ namespace Demo.WebApi.Tests.Helpers
             var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
 
             var rabbitMqEvent = @event.ToRabbitMqEvent();
-            var @event2 = rabbitMqEvent.ToEvent();
+            var event2 = rabbitMqEvent.ToEvent();
 
-            await mediator.Publish(@event2, cancellationToken);
+            await mediator.Publish(event2, cancellationToken);
         }
     }
 }

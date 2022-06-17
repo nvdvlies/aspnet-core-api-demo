@@ -1,13 +1,15 @@
+using System.Threading;
+using System.Threading.Tasks;
 using AutoMapper;
 using Demo.Application.ApplicationSettings.Queries.GetApplicationSettings.Dtos;
 using Demo.Domain.ApplicationSettings.Interfaces;
 using MediatR;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Demo.Application.ApplicationSettings.Queries.GetApplicationSettings
 {
-    public class GetApplicationSettingsQueryHandler : IRequestHandler<GetApplicationSettingsQuery, GetApplicationSettingsQueryResult>
+    public class
+        GetApplicationSettingsQueryHandler : IRequestHandler<GetApplicationSettingsQuery,
+            GetApplicationSettingsQueryResult>
     {
         private readonly IApplicationSettingsProvider _applicationSettingsProvider;
         private readonly IMapper _mapper;
@@ -21,7 +23,8 @@ namespace Demo.Application.ApplicationSettings.Queries.GetApplicationSettings
             _mapper = mapper;
         }
 
-        public async Task<GetApplicationSettingsQueryResult> Handle(GetApplicationSettingsQuery request, CancellationToken cancellationToken)
+        public async Task<GetApplicationSettingsQueryResult> Handle(GetApplicationSettingsQuery request,
+            CancellationToken cancellationToken)
         {
             var applicationSettings = await _applicationSettingsProvider.GetAsync(cancellationToken);
 

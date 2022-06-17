@@ -1,9 +1,9 @@
+using System.Threading;
+using System.Threading.Tasks;
 using AutoMapper;
 using Demo.Application.Shared.Mappings;
 using Demo.Domain.ApplicationSettings.Interfaces;
 using MediatR;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Demo.Application.ApplicationSettings.Commands.SaveApplicationSettings
 {

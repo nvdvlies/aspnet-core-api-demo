@@ -1,7 +1,7 @@
-using Demo.Domain.Invoice.Interfaces;
-using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
+using Demo.Domain.Invoice.Interfaces;
+using MediatR;
 
 namespace Demo.Application.Invoices.Commands.CreditInvoice
 {
@@ -16,7 +16,8 @@ namespace Demo.Application.Invoices.Commands.CreditInvoice
             _invoiceDomainEntity = invoiceDomainEntity;
         }
 
-        public async Task<CreditInvoiceResponse> Handle(CreditInvoiceCommand request, CancellationToken cancellationToken)
+        public async Task<CreditInvoiceResponse> Handle(CreditInvoiceCommand request,
+            CancellationToken cancellationToken)
         {
             await _invoiceDomainEntity.GetAsNewCreditAsync(request.Id, cancellationToken);
 

@@ -1,16 +1,16 @@
-﻿using Demo.Application.Shared.Interfaces;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using Demo.Application.Shared.Interfaces;
 using Demo.Domain.User.Interfaces;
 using Demo.Messages.User;
 using MediatR;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Demo.Application.Users.Messages.CreateAuth0User
 {
     public class CreateAuth0UserMessageHandler : IRequestHandler<CreateAuth0UserMessage, Unit>
     {
-        private readonly IUserDomainEntity _userDomainEntity;
         private readonly IAuth0UserManagementClient _auth0UserManagementClient;
+        private readonly IUserDomainEntity _userDomainEntity;
 
         public CreateAuth0UserMessageHandler(
             IUserDomainEntity userDomainEntity,
@@ -28,13 +28,11 @@ namespace Demo.Application.Users.Messages.CreateAuth0User
 
             var externalId = await _auth0UserManagementClient.CreateAsync(_userDomainEntity.Entity, cancellationToken);
 
-            _userDomainEntity.With(x =>
-            {
-                x.ExternalId = externalId;
-            });
+            _userDomainEntity.With(x => { x.ExternalId = externalId; });
             await _userDomainEntity.UpdateAsync(cancellationToken);
 
-            var changePasswordUrl = await _auth0UserManagementClient.GetChangePasswordUrl(_userDomainEntity.Entity, cancellationToken);
+            var changePasswordUrl =
+                await _auth0UserManagementClient.GetChangePasswordUrl(_userDomainEntity.Entity, cancellationToken);
             // TODO: Send invitation email with changePasswordUrl
 
             return Unit.Value;

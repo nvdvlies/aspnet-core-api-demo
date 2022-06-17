@@ -1,8 +1,8 @@
-﻿using Demo.Scaffold.Tool.Changes;
+﻿using System.Collections.Generic;
+using Demo.Scaffold.Tool.Changes;
 using Demo.Scaffold.Tool.Helpers;
 using Demo.Scaffold.Tool.Interfaces;
 using Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint.OutputCollectors.Query.InputCollectors;
-using System.Collections.Generic;
 
 namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint.OutputCollectors.Query.OutputCollectors
 {
@@ -16,21 +16,22 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint.OutputCollect
             var controllerName = context.Variables.Get<string>(Constants.ControllerName);
             var queryName = context.Variables.Get<string>(Constants.QueryName);
 
-            var entityName = controllerName.EndsWith("s") ? controllerName[0..^1] : controllerName;
+            var entityName = controllerName.EndsWith("s") ? controllerName[..^1] : controllerName;
 
             changes.Add(new CreateNewClass(
-                    directory: context.GetQueryDirectory(controllerName, queryName),
-                    fileName: $"{queryName}Query.cs",
-                    content: GetTemplate(queryEndpointType, controllerName, queryName, entityName)
-                ));
+                context.GetQueryDirectory(controllerName, queryName),
+                $"{queryName}Query.cs",
+                GetTemplate(queryEndpointType, controllerName, queryName, entityName)
+            ));
 
             return changes;
         }
 
-        private static string GetTemplate(QueryEndpointTypes queryEndpointType, string controllerName, string queryName, string entityName)
+        private static string GetTemplate(QueryEndpointTypes queryEndpointType, string controllerName, string queryName,
+            string entityName)
         {
-            var code = queryEndpointType == QueryEndpointTypes.SubEndpoint ?
-@"
+            var code = queryEndpointType == QueryEndpointTypes.SubEndpoint
+                ? @"
 using Demo.Application.Shared.Interfaces;
 using MediatR;
 using System;
@@ -47,8 +48,8 @@ namespace Demo.Application.%CONTROLLERNAME%.Queries.%QUERYNAME%
         }
     }
 }
-" :
-@"
+"
+                : @"
 using Demo.Application.Shared.Interfaces;
 using MediatR;
 using System;

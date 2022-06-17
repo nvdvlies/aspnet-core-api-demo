@@ -1,8 +1,8 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
 using Demo.Application.Shared.Dtos;
 using Demo.Domain.Auditlog;
 using Demo.Domain.Shared.Interfaces;
-using System;
 
 namespace Demo.Application.Shared.Mappings
 {
@@ -33,7 +33,8 @@ namespace Demo.Application.Shared.Mappings
                 _currentUser = currentUser;
             }
 
-            public string Resolve(AuditlogItem source, AuditlogItemDto destination, string sourceValue, string destinationValue, ResolutionContext context)
+            public string Resolve(AuditlogItem source, AuditlogItemDto destination, string sourceValue,
+                string destinationValue, ResolutionContext context)
             {
                 if (string.IsNullOrWhiteSpace(sourceValue))
                 {
@@ -48,7 +49,8 @@ namespace Demo.Application.Shared.Mappings
                     case AuditlogType.DateTime:
                     case AuditlogType.TimeOnly:
                         var sourceValueAsUtcDate = DateTime.Parse(sourceValue);
-                        var sourceValueAsLocalDate = TimeZoneInfo.ConvertTime(sourceValueAsUtcDate, _currentUser.TimeZone);
+                        var sourceValueAsLocalDate =
+                            TimeZoneInfo.ConvertTime(sourceValueAsUtcDate, _currentUser.TimeZone);
                         switch (source.Type)
                         {
                             case AuditlogType.DateOnly:
@@ -58,6 +60,7 @@ namespace Demo.Application.Shared.Mappings
                             case AuditlogType.TimeOnly:
                                 return sourceValueAsLocalDate.ToString("t", _currentUser.Culture);
                         }
+
                         return null;
                     case AuditlogType.Decimal:
                     case AuditlogType.Currency:
@@ -69,9 +72,10 @@ namespace Demo.Application.Shared.Mappings
                             case AuditlogType.Currency:
                                 return sourceValueAsDecimal.ToString("C", _currentUser.Culture);
                         }
+
                         return null;
                     case AuditlogType.Number:
-                        return sourceValue.ToString();
+                        return sourceValue;
                     case AuditlogType.OnOff:
                     case AuditlogType.YesNo:
                         var sourceValueAsBoolean = sourceValue == "1";
@@ -82,8 +86,11 @@ namespace Demo.Application.Shared.Mappings
                             case AuditlogType.YesNo:
                                 return sourceValueAsBoolean ? "yes" : "no";
                         }
+
                         return null;
-                };
+                }
+
+                ;
                 return null;
             }
         }

@@ -1,7 +1,7 @@
+using System;
 using Demo.Domain.Role;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
 
 namespace Demo.Infrastructure.Persistence.Configuration
 {
@@ -34,10 +34,8 @@ namespace Demo.Infrastructure.Persistence.Configuration
             builder.Property(p => p.DeletedBy);
             builder.Property(p => p.DeletedOn);
 
-            builder.HasData(new[] {
-                new Role { Id = AdministratorRoleId, Name = "Admin", ExternalId = "rol_N4KEnzIMUDaetcyr" },
-                new Role { Id = UserRoleId, Name = "User", ExternalId = "rol_OUaEQHOTuugOJHwe" }
-            });
+            builder.HasData(new Role { Id = AdministratorRoleId, Name = "Admin", ExternalId = "rol_N4KEnzIMUDaetcyr" },
+                new Role { Id = UserRoleId, Name = "User", ExternalId = "rol_OUaEQHOTuugOJHwe" });
         }
     }
 }

@@ -8,7 +8,7 @@ namespace Demo.Domain.FeatureFlagSettings
         {
             FeatureFlags = new List<FeatureFlag>();
         }
-        
+
         public List<FeatureFlag> FeatureFlags { get; set; }
     }
 }

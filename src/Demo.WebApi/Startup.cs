@@ -1,12 +1,14 @@
+using System.Linq;
 using Demo.Application;
 using Demo.Application.Shared.Interfaces;
 using Demo.Common;
-using Demo.Common.Interfaces;
 using Demo.Domain;
 using Demo.Domain.Shared.Interfaces;
 using Demo.Infrastructure;
 using Demo.Infrastructure.Settings;
+using Demo.Infrastructure.SignalR;
 using Demo.WebApi.Auth;
+using Demo.WebApi.Extensions;
 using Demo.WebApi.Middleware;
 using Demo.WebApi.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -18,9 +20,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NSwag;
 using NSwag.Generation.Processors.Security;
-using System.Linq;
-using Demo.Infrastructure.SignalR;
-using Demo.WebApi.Extensions;
 
 namespace Demo.WebApi
 {
@@ -44,7 +43,7 @@ namespace Demo.WebApi
             {
                 config.OperationProcessors.Add(new OperationSecurityScopeProcessor("Bearer"));
                 config.AddSecurity("Bearer", Enumerable.Empty<string>(),
-                    new OpenApiSecurityScheme()
+                    new OpenApiSecurityScheme
                     {
                         Type = OpenApiSecuritySchemeType.ApiKey,
                         Name = "Authorization",
@@ -57,9 +56,9 @@ namespace Demo.WebApi
             services.AddCors(o => o.AddDefaultPolicy(builder =>
             {
                 builder.WithOrigins("http://localhost:4401", "http://localhost:5500")
-                       .AllowAnyMethod()
-                       .AllowAnyHeader()
-                       .AllowCredentials();
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials();
             }));
 
             services.AddAuthentication(options =>
@@ -74,9 +73,15 @@ namespace Demo.WebApi
 
             services.AddAuthorization(options =>
             {
-                options.AddPolicy(nameof(Policies.User), policy => policy.Requirements.Add(new HasRoleRequirement(Auth0Roles.User, environmentSettings.Auth0.Domain)));
-                options.AddPolicy(nameof(Policies.Admin), policy => policy.Requirements.Add(new HasRoleRequirement(Auth0Roles.Admin, environmentSettings.Auth0.Domain)));
-                options.AddPolicy(nameof(Policies.Machine), policy => policy.Requirements.Add(new HasRoleRequirement(Auth0Roles.Machine, environmentSettings.Auth0.Domain)));
+                options.AddPolicy(nameof(Policies.User),
+                    policy => policy.Requirements.Add(new HasRoleRequirement(Auth0Roles.User,
+                        environmentSettings.Auth0.Domain)));
+                options.AddPolicy(nameof(Policies.Admin),
+                    policy => policy.Requirements.Add(new HasRoleRequirement(Auth0Roles.Admin,
+                        environmentSettings.Auth0.Domain)));
+                options.AddPolicy(nameof(Policies.Machine),
+                    policy => policy.Requirements.Add(new HasRoleRequirement(Auth0Roles.Machine,
+                        environmentSettings.Auth0.Domain)));
             });
 
             services.AddSingleton<IAuthorizationHandler, HasRoleRequirementAuthorizationHandler>();
@@ -88,9 +93,8 @@ namespace Demo.WebApi
             services.AddLogging();
 
             services.AddSignalR()
-                .AddStackExchangeRedis(environmentSettings.Redis.Connection, options => {
-                    options.Configuration.ChannelPrefix = "SignalrHub";
-                });
+                .AddStackExchangeRedis(environmentSettings.Redis.Connection,
+                    options => { options.Configuration.ChannelPrefix = "SignalrHub"; });
 
             services.AddApplication();
             services.AddDomain();

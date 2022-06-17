@@ -1,7 +1,7 @@
-using Demo.Domain.User.Interfaces;
-using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
+using Demo.Domain.User.Interfaces;
+using MediatR;
 
 namespace Demo.Application.Users.Commands.DeleteUser
 {

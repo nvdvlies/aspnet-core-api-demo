@@ -1,6 +1,6 @@
+using System.Collections.Generic;
 using Demo.Application.Roles.Queries.RoleLookup.Dtos;
 using Demo.Application.Shared.Models;
-using System.Collections.Generic;
 
 namespace Demo.Application.Roles.Queries.RoleLookup
 {

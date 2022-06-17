@@ -1,13 +1,13 @@
+using System;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using Demo.Common.Interfaces;
 using Demo.Domain.FeatureFlagSettings.Interfaces;
 using Demo.Domain.Shared.DomainEntity;
 using Demo.Domain.Shared.Exceptions;
 using Demo.Domain.Shared.Interfaces;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Demo.Domain.FeatureFlagSettings
 {
@@ -33,7 +33,9 @@ namespace Demo.Domain.FeatureFlagSettings
             Lazy<IJsonService<FeatureFlagSettings>> jsonService,
             Lazy<IAuditlogger<FeatureFlagSettings>> auditlogger
         )
-            : base(logger, currentUser, dateTime, dbCommand, defaultValuesSetters, validators, beforeCreateHooks, afterCreateHooks, beforeUpdateHooks, afterUpdateHooks, beforeDeleteHooks, afterDeleteHooks, outboxEventCreator, outboxMessageCreator, jsonService, auditlogger)
+            : base(logger, currentUser, dateTime, dbCommand, defaultValuesSetters, validators, beforeCreateHooks,
+                afterCreateHooks, beforeUpdateHooks, afterUpdateHooks, beforeDeleteHooks, afterDeleteHooks,
+                outboxEventCreator, outboxMessageCreator, jsonService, auditlogger)
         {
             _dbCommand = dbCommand;
         }
@@ -46,6 +48,7 @@ namespace Demo.Domain.FeatureFlagSettings
                 await NewAsync(cancellationToken);
                 return;
             }
+
             Context.Entity = entity;
         }
 

@@ -1,14 +1,15 @@
-﻿using Demo.Domain.Shared.Exceptions;
+﻿using System.Net;
+using Demo.Domain.Shared.Exceptions;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Net;
 
 namespace Demo.WebApi.Extensions
 {
     public static class ExceptionExtensions
     {
-        public static ProblemDetails ToProblemDetails(this DomainException exception, HttpStatusCode statusCode, bool includeDetails = false)
+        public static ProblemDetails ToProblemDetails(this DomainException exception, HttpStatusCode statusCode,
+            bool includeDetails = false)
         {
             return new ProblemDetails
             {
@@ -19,7 +20,8 @@ namespace Demo.WebApi.Extensions
             };
         }
 
-        public static ValidationProblemDetails ToValidationProblemDetails(this DomainValidationException exception, HttpStatusCode statusCode, bool includeDetails = false)
+        public static ValidationProblemDetails ToValidationProblemDetails(this DomainValidationException exception,
+            HttpStatusCode statusCode, bool includeDetails = false)
         {
             var validationProblemDetails = new ValidationProblemDetails
             {
@@ -31,13 +33,15 @@ namespace Demo.WebApi.Extensions
 
             foreach (var validationMessage in exception.ValidationMessages)
             {
-                validationProblemDetails.Errors.Add(validationMessage.PropertyName ?? "_", new[] { validationMessage.Message });
+                validationProblemDetails.Errors.Add(validationMessage.PropertyName ?? "_",
+                    new[] { validationMessage.Message });
             }
 
             return validationProblemDetails;
         }
 
-        public static ProblemDetails ToProblemDetails(this DomainEntityNotFoundException exception, HttpStatusCode statusCode, bool includeDetails = false)
+        public static ProblemDetails ToProblemDetails(this DomainEntityNotFoundException exception,
+            HttpStatusCode statusCode, bool includeDetails = false)
         {
             return new ProblemDetails
             {
@@ -48,7 +52,8 @@ namespace Demo.WebApi.Extensions
             };
         }
 
-        public static ValidationProblemDetails ToValidationProblemDetails(this ValidationException exception, HttpStatusCode statusCode, bool includeDetails = false)
+        public static ValidationProblemDetails ToValidationProblemDetails(this ValidationException exception,
+            HttpStatusCode statusCode, bool includeDetails = false)
         {
             var validationProblemDetails = new ValidationProblemDetails
             {
@@ -66,7 +71,8 @@ namespace Demo.WebApi.Extensions
             return validationProblemDetails;
         }
 
-        public static ProblemDetails ToProblemDetails(this DbUpdateConcurrencyException exception, HttpStatusCode statusCode, bool includeDetails = false)
+        public static ProblemDetails ToProblemDetails(this DbUpdateConcurrencyException exception,
+            HttpStatusCode statusCode, bool includeDetails = false)
         {
             return new ProblemDetails
             {

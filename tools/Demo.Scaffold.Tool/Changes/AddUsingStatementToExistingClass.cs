@@ -14,7 +14,7 @@ namespace Demo.Scaffold.Tool.Changes
 
         public void Apply()
         {
-            string content = File.ReadAllText(DirectoryAndFileName);
+            var content = File.ReadAllText(DirectoryAndFileName);
             content = $"{Content}{Environment.NewLine}{content}";
             File.WriteAllText(DirectoryAndFileName, content);
         }

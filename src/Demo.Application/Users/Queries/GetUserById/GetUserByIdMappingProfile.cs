@@ -4,7 +4,7 @@ using Demo.Domain.User;
 
 namespace Demo.Application.Users.Queries.GetUserById
 {
-    public partial class GetUserByIdMappingProfile : Profile
+    public class GetUserByIdMappingProfile : Profile
     {
         public GetUserByIdMappingProfile()
         {

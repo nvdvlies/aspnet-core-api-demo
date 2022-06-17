@@ -11,7 +11,7 @@ namespace Demo.Infrastructure.Events
             var assembly = typeof(Event<IEvent, IEventData>).Assembly;
             var eventType = assembly.GetType(@event.Type);
             var payload = JsonSerializer.Serialize(@event, eventType, new JsonSerializerOptions());
-            return new RabbitMqEvent()
+            return new RabbitMqEvent
             {
                 ContentType = @event.Type,
                 Payload = payload
@@ -22,7 +22,8 @@ namespace Demo.Infrastructure.Events
         {
             var eventType = typeof(Event<IEvent, IEventData>).Assembly.GetType(rabbitMqEvent.ContentType);
             var methodName = nameof(Event<IEvent, IEventData>.FromJson);
-            var method = eventType.GetMethod(methodName, BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
+            var method = eventType.GetMethod(methodName,
+                BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
             var @event = method.Invoke(null, new object[] { rabbitMqEvent.Payload });
             return (IEvent)@event;
         }

@@ -1,11 +1,11 @@
-﻿using Demo.Domain.Shared.Interfaces;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Demo.Domain.Shared.Interfaces;
 
 namespace Demo.Domain.Shared.DomainEntity
 {
     internal class DomainEntityState : IDomainEntityState
     {
-        private Dictionary<string, object> _dictionary;
+        private readonly Dictionary<string, object> _dictionary;
 
         public DomainEntityState()
         {
@@ -24,11 +24,12 @@ namespace Demo.Domain.Shared.DomainEntity
 
         public bool TryGet<T>(string key, out T value)
         {
-            if (_dictionary.TryGetValue(key, out object internalValue) && internalValue is T result)
+            if (_dictionary.TryGetValue(key, out var internalValue) && internalValue is T result)
             {
                 value = result;
                 return true;
             }
+
             value = default;
             return false;
         }

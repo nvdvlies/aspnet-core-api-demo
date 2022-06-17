@@ -1,3 +1,4 @@
+using System.Web;
 using Demo.Application.Shared.Interfaces;
 using Demo.Application.Users.Queries.SearchUsers.Dtos;
 using MediatR;
@@ -19,7 +20,7 @@ namespace Demo.Application.Users.Queries.SearchUsers
 
         public string ToQueryString()
         {
-            var queryString = System.Web.HttpUtility.ParseQueryString(string.Empty);
+            var queryString = HttpUtility.ParseQueryString(string.Empty);
 
             queryString.Add(nameof(OrderBy), OrderBy.ToString());
             queryString.Add(nameof(OrderByDescending), OrderByDescending ? "true" : "false");

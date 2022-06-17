@@ -1,21 +1,21 @@
-﻿using Demo.Scaffold.Tool.Changes;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Demo.Scaffold.Tool.Changes;
 using Demo.Scaffold.Tool.Interfaces;
 using Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint.OutputCollectors.Query.InputCollectors;
 using Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint.OutputCollectors.Query.OutputCollectors;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint.OutputCollectors.Query
 {
     internal class QueryOutputCollector : IOutputCollector
     {
-        private List<IInputCollector> _inputCollectors = new List<IInputCollector>()
+        private readonly List<IInputCollector> _inputCollectors = new()
         {
             new QueryNameInputCollector(),
             new QueryEndpointTypeInputCollector()
         };
 
-        private List<IOutputCollector> _outputCollectors = new List<IOutputCollector>()
+        private readonly List<IOutputCollector> _outputCollectors = new()
         {
             new CreateControllerIfNotExistsOutputCollector(),
             new AddUsingStatementToControllerOutputCollector(),

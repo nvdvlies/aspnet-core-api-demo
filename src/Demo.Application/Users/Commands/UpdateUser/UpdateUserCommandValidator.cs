@@ -1,7 +1,7 @@
-using Demo.Application.Users.Commands.UpdateUser.Dtos;
-using FluentValidation;
 using System.Collections.Generic;
 using System.Linq;
+using Demo.Application.Users.Commands.UpdateUser.Dtos;
+using FluentValidation;
 
 namespace Demo.Application.Users.Commands.UpdateUser
 {
@@ -12,12 +12,9 @@ namespace Demo.Application.Users.Commands.UpdateUser
             RuleFor(user => user.Email).NotEmpty();
             RuleFor(user => user.FamilyName).NotEmpty();
             RuleFor(user => user.UserRoles).NotEmpty();
-            RuleForEach(user => user.UserRoles).ChildRules(userRole =>
-            {
-                userRole.RuleFor(x => x.RoleId).NotEmpty();
-            });
+            RuleForEach(user => user.UserRoles).ChildRules(userRole => { userRole.RuleFor(x => x.RoleId).NotEmpty(); });
             RuleFor(user => user.UserRoles)
-                .Must((userRoles) => HasUniqueRoles(userRoles))
+                .Must(userRoles => HasUniqueRoles(userRoles))
                 .WithMessage(x => "UserRoles cannot contain duplicate roles");
         }
 

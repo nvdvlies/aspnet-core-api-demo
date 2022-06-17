@@ -1,13 +1,13 @@
-﻿using Demo.Domain.Customer;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using Demo.Domain.Customer;
 using Demo.Domain.Invoice;
 using Demo.Domain.Invoice.Interfaces;
 using Demo.Domain.Invoice.Models;
 using Demo.Domain.Shared.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Demo.Application.Invoices.Services
 {
@@ -18,9 +18,9 @@ namespace Demo.Application.Invoices.Services
         //private readonly IDbQuery<Item> _itemQuery;
 
         public InvoiceToPdfModelMapper(
-            IDbQuery<Customer> customerQuery//,
-                                            //IDbQuery<Contact> contactQuery,
-                                            //IDbQuery<Item> itemQuery
+            IDbQuery<Customer> customerQuery //,
+            //IDbQuery<Contact> contactQuery,
+            //IDbQuery<Item> itemQuery
         )
         {
             _customerQuery = customerQuery;
@@ -60,7 +60,7 @@ namespace Demo.Application.Invoices.Services
                 var modelInvoiceLine = new InvoiceToPdfInvoiceLineModel
                 {
                     Quantity = entityInvoiceLine.Quantity,
-                    Description = entityInvoiceLine.Description,
+                    Description = entityInvoiceLine.Description
                     //ItemDescription = item?.Description
                 };
                 invoiceToPdfModel.InvoiceLines.Add(modelInvoiceLine);

@@ -1,12 +1,13 @@
-﻿using Demo.Domain.Shared.DomainEntity;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using Demo.Domain.Shared.DomainEntity;
+using ValidationResult = FluentValidation.Results.ValidationResult;
 
 namespace Demo.Domain.Shared.Extensions
 {
     internal static class ValidationResultExtensions
     {
-        internal static IEnumerable<ValidationMessage> ToValidationMessage(this FluentValidation.Results.ValidationResult result)
+        internal static IEnumerable<ValidationMessage> ToValidationMessage(this ValidationResult result)
         {
             var validationMessages = new List<ValidationMessage>();
             if (!result.IsValid)
@@ -20,6 +21,7 @@ namespace Demo.Domain.Shared.Extensions
                     });
                 }
             }
+
             return validationMessages.AsEnumerable();
         }
     }

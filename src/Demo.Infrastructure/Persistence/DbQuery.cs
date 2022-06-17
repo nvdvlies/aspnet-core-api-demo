@@ -1,7 +1,7 @@
-﻿using Demo.Domain.Shared.Interfaces;
-using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Linq;
+using Demo.Domain.Shared.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Demo.Infrastructure.Persistence
 {
@@ -22,8 +22,11 @@ namespace Demo.Infrastructure.Persistence
             return this;
         }
 
-        public IQueryable<T> AsQueryable() => DbContext.Set<T>()
-            .AsNoTracking()
-            .AsQueryable();
+        public IQueryable<T> AsQueryable()
+        {
+            return DbContext.Set<T>()
+                .AsNoTracking()
+                .AsQueryable();
+        }
     }
 }

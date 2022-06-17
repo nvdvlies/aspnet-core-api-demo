@@ -1,7 +1,7 @@
-﻿using Demo.Domain.User;
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Demo.Domain.User;
 
 namespace Demo.Application.Shared.Interfaces
 {

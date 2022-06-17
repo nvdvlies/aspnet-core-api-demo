@@ -1,4 +1,7 @@
-﻿using Demo.Common.Interfaces;
+﻿using System.Net;
+using System.Text.Json;
+using System.Threading.Tasks;
+using Demo.Common.Interfaces;
 using Demo.Domain.Shared.Exceptions;
 using Demo.WebApi.Extensions;
 using FluentValidation;
@@ -10,9 +13,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using System.Net;
-using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace Demo.WebApi.Middleware
 {
@@ -48,30 +48,35 @@ namespace Demo.WebApi.Middleware
                         logger.LogInformation(exception, "A domain validation exception ocurred.");
 
                         statusCode = HttpStatusCode.BadRequest;
-                        problemDetails = domainValidationException.ToValidationProblemDetails(statusCode, includeDetailsInResponse);
+                        problemDetails =
+                            domainValidationException.ToValidationProblemDetails(statusCode, includeDetailsInResponse);
                         break;
                     case DomainEntityNotFoundException domainEntityNotFoundException:
                         logger.LogInformation(exception, "A domain entity not found exception ocurred.");
 
                         statusCode = HttpStatusCode.NotFound;
-                        problemDetails = domainEntityNotFoundException.ToProblemDetails(statusCode, includeDetailsInResponse);
+                        problemDetails =
+                            domainEntityNotFoundException.ToProblemDetails(statusCode, includeDetailsInResponse);
                         break;
                     case ValidationException validationException:
                         logger.LogInformation(exception, "A validation exception ocurred.");
 
                         statusCode = HttpStatusCode.BadRequest;
-                        problemDetails = validationException.ToValidationProblemDetails(statusCode, includeDetailsInResponse);
+                        problemDetails =
+                            validationException.ToValidationProblemDetails(statusCode, includeDetailsInResponse);
                         break;
                     case DbUpdateConcurrencyException dbUpdateConcurrencyException:
                         logger.LogWarning(exception, "A database update concurrency exception ocurred.");
 
                         statusCode = HttpStatusCode.BadRequest;
-                        problemDetails = dbUpdateConcurrencyException.ToProblemDetails(statusCode, includeDetailsInResponse);
+                        problemDetails =
+                            dbUpdateConcurrencyException.ToProblemDetails(statusCode, includeDetailsInResponse);
                         break;
                     default:
                         logger.LogError(exception, "An unhandled exception occured.");
 
-                        var correlationIdProvider = context.RequestServices.GetRequiredService<ICorrelationIdProvider>();
+                        var correlationIdProvider =
+                            context.RequestServices.GetRequiredService<ICorrelationIdProvider>();
                         problemDetails.Extensions["traceId"] = correlationIdProvider.Id;
                         break;
                 }
@@ -80,7 +85,8 @@ namespace Demo.WebApi.Middleware
             };
         }
 
-        private static async Task WriteResponseAsync(IWebHostEnvironment env, HttpContext context, ProblemDetails problemDetails, HttpStatusCode statusCode)
+        private static async Task WriteResponseAsync(IWebHostEnvironment env, HttpContext context,
+            ProblemDetails problemDetails, HttpStatusCode statusCode)
         {
             context.Response.StatusCode = (int)statusCode;
             context.Response.ContentType = "application/problem+json";

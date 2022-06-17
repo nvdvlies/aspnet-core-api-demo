@@ -2,7 +2,7 @@
 
 namespace Demo.Domain.ApplicationSettings
 {
-    public partial class ApplicationSettingsSettings
+    public class ApplicationSettingsSettings
     {
         public bool Setting1 { get; set; }
         public string Setting2 { get; set; }

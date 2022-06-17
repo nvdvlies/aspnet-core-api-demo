@@ -14,11 +14,11 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.DomainEntity.OutputCol
 
             var entityName = context.Variables.Get<string>(Constants.EntityName);
             var collectionName = context.Variables.Get<string>(Constants.CollectionName);
-            
+
             changes.Add(new CreateNewClass(
-                directory: Path.Combine(context.GetApplicationDirectory(), collectionName, "Events", $"{entityName}Deleted"),
-                fileName: $"{entityName}DeletedEventHandler.cs",
-                content: GetTemplate(collectionName, entityName)
+                Path.Combine(context.GetApplicationDirectory(), collectionName, "Events", $"{entityName}Deleted"),
+                $"{entityName}DeletedEventHandler.cs",
+                GetTemplate(collectionName, entityName)
             ));
 
             return changes;

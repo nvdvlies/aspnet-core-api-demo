@@ -1,11 +1,18 @@
-﻿using Demo.Domain.Shared.Extensions;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Demo.Domain.Shared.Extensions;
 
 namespace Demo.Domain.Shared.DomainEntity
 {
     internal static class ValidationResult
     {
-        internal static IEnumerable<ValidationMessage> Ok() => default;
-        internal static IEnumerable<ValidationMessage> Invalid(string message, string propertyName = null) => message.ToValidationMessage(propertyName);
+        internal static IEnumerable<ValidationMessage> Ok()
+        {
+            return default;
+        }
+
+        internal static IEnumerable<ValidationMessage> Invalid(string message, string propertyName = null)
+        {
+            return message.ToValidationMessage(propertyName);
+        }
     }
 }

@@ -1,21 +1,22 @@
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using AutoMapper;
 using Demo.Application.Shared.Dtos;
 using Demo.Domain.Auditlog;
 using Demo.Domain.Shared.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Demo.Application.UserPreferences.Queries.GetUserPreferencesAuditlog
 {
-    public class GetUserPreferencesAuditlogQueryHandler : IRequestHandler<GetUserPreferencesAuditlogQuery, GetUserPreferencesAuditlogQueryResult>
+    public class GetUserPreferencesAuditlogQueryHandler : IRequestHandler<GetUserPreferencesAuditlogQuery,
+        GetUserPreferencesAuditlogQueryResult>
     {
         private readonly ICurrentUser _currentUser;
-        private readonly IDbQuery<Auditlog> _query;
         private readonly IMapper _mapper;
+        private readonly IDbQuery<Auditlog> _query;
 
         public GetUserPreferencesAuditlogQueryHandler(
             ICurrentUser currentUser,
@@ -28,7 +29,8 @@ namespace Demo.Application.UserPreferences.Queries.GetUserPreferencesAuditlog
             _mapper = mapper;
         }
 
-        public async Task<GetUserPreferencesAuditlogQueryResult> Handle(GetUserPreferencesAuditlogQuery request, CancellationToken cancellationToken)
+        public async Task<GetUserPreferencesAuditlogQueryResult> Handle(GetUserPreferencesAuditlogQuery request,
+            CancellationToken cancellationToken)
         {
             var query = _query.AsQueryable()
                 .Include(x => x.AuditlogItems)

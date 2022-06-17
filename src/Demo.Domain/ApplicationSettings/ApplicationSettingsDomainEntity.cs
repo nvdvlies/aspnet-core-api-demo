@@ -1,13 +1,13 @@
-﻿using Demo.Common.Interfaces;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+using Demo.Common.Interfaces;
 using Demo.Domain.ApplicationSettings.Interfaces;
 using Demo.Domain.Shared.DomainEntity;
 using Demo.Domain.Shared.Exceptions;
 using Demo.Domain.Shared.Interfaces;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Demo.Domain.ApplicationSettings
 {
@@ -33,7 +33,9 @@ namespace Demo.Domain.ApplicationSettings
             Lazy<IJsonService<ApplicationSettings>> jsonService,
             Lazy<IAuditlogger<ApplicationSettings>> auditlogger
         )
-            : base(logger, currentUser, dateTime, dbCommand, defaultValuesSetters, validators, beforeCreateHooks, afterCreateHooks, beforeUpdateHooks, afterUpdateHooks, beforeDeleteHooks, afterDeleteHooks, outboxEventCreator, outboxMessageCreator, jsonService, auditlogger)
+            : base(logger, currentUser, dateTime, dbCommand, defaultValuesSetters, validators, beforeCreateHooks,
+                afterCreateHooks, beforeUpdateHooks, afterUpdateHooks, beforeDeleteHooks, afterDeleteHooks,
+                outboxEventCreator, outboxMessageCreator, jsonService, auditlogger)
         {
             _dbCommand = dbCommand;
         }
@@ -46,6 +48,7 @@ namespace Demo.Domain.ApplicationSettings
                 await NewAsync(cancellationToken);
                 return;
             }
+
             Context.Entity = entity;
         }
 

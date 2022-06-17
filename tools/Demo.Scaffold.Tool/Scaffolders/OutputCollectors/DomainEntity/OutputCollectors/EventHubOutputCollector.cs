@@ -1,8 +1,8 @@
-﻿using Demo.Scaffold.Tool.Changes;
+﻿using System.Collections.Generic;
+using System.IO;
+using Demo.Scaffold.Tool.Changes;
 using Demo.Scaffold.Tool.Helpers;
 using Demo.Scaffold.Tool.Interfaces;
-using System.Collections.Generic;
-using System.IO;
 
 namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.DomainEntity.OutputCollectors
 {
@@ -16,9 +16,9 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.DomainEntity.OutputCol
             var collectionName = context.Variables.Get<string>(Constants.CollectionName);
 
             changes.Add(new CreateNewClass(
-                directory: Path.Combine(context.GetApplicationDirectory(), collectionName, "Events"),
-                fileName: $"I{entityName}EventHub.cs",
-                content: GetTemplate(collectionName, entityName)
+                Path.Combine(context.GetApplicationDirectory(), collectionName, "Events"),
+                $"I{entityName}EventHub.cs",
+                GetTemplate(collectionName, entityName)
             ));
 
             return changes;

@@ -1,16 +1,15 @@
-﻿using Demo.Domain.Shared.DomainEntity;
-using Demo.Domain.Shared.Extensions;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Demo.Domain.Shared.DomainEntity;
+using Demo.Domain.Shared.Extensions;
 
 namespace Demo.Domain.Shared.Exceptions
 {
     public class DomainValidationException : Exception
     {
-        public IEnumerable<ValidationMessage> ValidationMessages { get; private set; }
-
         public DomainValidationException()
-        { }
+        {
+        }
 
         public DomainValidationException(IEnumerable<ValidationMessage> validationMessages)
             : base(validationMessages.AsString())
@@ -23,5 +22,7 @@ namespace Demo.Domain.Shared.Exceptions
         {
             ValidationMessages = validationMessages;
         }
+
+        public IEnumerable<ValidationMessage> ValidationMessages { get; }
     }
 }

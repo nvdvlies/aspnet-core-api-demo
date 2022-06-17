@@ -1,28 +1,25 @@
-﻿using Demo.Scaffold.Tool.Models;
+﻿using System.IO;
+using Demo.Scaffold.Tool.Models;
 using Demo.Scaffold.Tool.Scaffolders;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using System.IO;
 
 namespace Demo.Scaffold.Tool
 {
-    class Program
+    internal class Program
     {
         public static void Main(string[] args)
         {
             using var host = new HostBuilder()
-                .ConfigureLogging((context, builder) =>
-                {
-                    builder.AddConsole();
-                })
+                .ConfigureLogging((context, builder) => { builder.AddConsole(); })
                 .ConfigureServices((context, services) =>
                 {
                     var configuration = new ConfigurationBuilder()
                         .SetBasePath(Directory.GetCurrentDirectory())
-                        .AddJsonFile("appsettings.json", optional: false)
-                        .AddJsonFile(Constants.UserSettingsFileName, optional: true)
+                        .AddJsonFile("appsettings.json", false)
+                        .AddJsonFile(Constants.UserSettingsFileName, true)
                         .Build();
 
                     var appSettings = new AppSettings();

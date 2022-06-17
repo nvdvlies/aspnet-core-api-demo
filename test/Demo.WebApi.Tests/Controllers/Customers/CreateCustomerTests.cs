@@ -1,4 +1,9 @@
-﻿using Demo.Application.Customers.Commands.CreateCustomer;
+﻿using System;
+using System.Net;
+using System.Net.Http.Json;
+using System.Threading;
+using System.Threading.Tasks;
+using Demo.Application.Customers.Commands.CreateCustomer;
 using Demo.Application.Customers.Events;
 using Demo.Domain.Customer;
 using Demo.Domain.Customer.Interfaces;
@@ -14,11 +19,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
-using System;
-using System.Net;
-using System.Net.Http.Json;
-using System.Threading;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Demo.WebApi.Tests.Controllers.Customers
@@ -87,10 +87,8 @@ namespace Demo.WebApi.Tests.Controllers.Customers
             };
 
             var idFromEvent = Guid.Empty;
-            using var subscription = HubConnection.On(nameof(ICustomerEventHub.CustomerCreated), (Guid id, string _) =>
-            {
-                idFromEvent = id;
-            });
+            using var subscription = HubConnection.On(nameof(ICustomerEventHub.CustomerCreated),
+                (Guid id, string _) => { idFromEvent = id; });
 
             // Act
             var response = await Client.CustomersController().CreateAsync(command);
@@ -102,11 +100,13 @@ namespace Demo.WebApi.Tests.Controllers.Customers
             content.Should().NotBeNull();
             content!.Id.Should().NotBeEmpty();
 
-            WithRetry(() => idFromEvent.Should().Be(content.Id), 1.Seconds(), 10.Milliseconds(), $"Didnt receive {nameof(ICustomerEventHub.CustomerCreated)} event for created entity");
+            WithRetry(() => idFromEvent.Should().Be(content.Id), 1.Seconds(), 10.Milliseconds(),
+                $"Didnt receive {nameof(ICustomerEventHub.CustomerCreated)} event for created entity");
         }
 
         [Fact]
-        public async Task CreateCustomer_When_a_command_validator_throws_a_ValidationException_It_should_return_statuscode_BadRequest()
+        public async Task
+            CreateCustomer_When_a_command_validator_throws_a_ValidationException_It_should_return_statuscode_BadRequest()
         {
             // Arrange
             // var client = CreateHttpClientWitCustomConfiguration(services =>
@@ -136,14 +136,17 @@ namespace Demo.WebApi.Tests.Controllers.Customers
         }
 
         [Fact]
-        public async Task CreateCustomer_When_a_domainentity_validator_throws_a_DomainValidationException_It_should_return_statuscode_BadRequest()
+        public async Task
+            CreateCustomer_When_a_domainentity_validator_throws_a_DomainValidationException_It_should_return_statuscode_BadRequest()
         {
             // Arrange
             var client = CreateHttpClientWithCustomConfiguration(services =>
             {
                 var mock = new Mock<Domain.Shared.Interfaces.IValidator<Customer>>();
-                mock.Setup(x => x.ValidateAsync(It.IsAny<IDomainEntityContext<Customer>>(), It.IsAny<CancellationToken>()))
-                    .Throws(new DomainValidationException(new[] { new ValidationMessage("TestProperty", "TestMessage") }));
+                mock.Setup(x =>
+                        x.ValidateAsync(It.IsAny<IDomainEntityContext<Customer>>(), It.IsAny<CancellationToken>()))
+                    .Throws(new DomainValidationException(
+                        new[] { new ValidationMessage("TestProperty", "TestMessage") }));
 
                 services.AddSingleton(mock.Object);
             });
@@ -167,13 +170,15 @@ namespace Demo.WebApi.Tests.Controllers.Customers
         }
 
         [Fact]
-        public async Task CreateCustomer_When_a_domainentity_hook_throws_a_DomainException_It_should_return_statuscode_BadRequest()
+        public async Task
+            CreateCustomer_When_a_domainentity_hook_throws_a_DomainException_It_should_return_statuscode_BadRequest()
         {
             // Arrange
             var client = CreateHttpClientWithCustomConfiguration(services =>
             {
                 var mock = new Mock<IAfterCreate<Customer>>();
-                mock.Setup(x => x.ExecuteAsync(It.IsAny<HookType>(), It.IsAny<IDomainEntityContext<Customer>>(), It.IsAny<CancellationToken>()))
+                mock.Setup(x => x.ExecuteAsync(It.IsAny<HookType>(), It.IsAny<IDomainEntityContext<Customer>>(),
+                        It.IsAny<CancellationToken>()))
                     .Throws(new DomainException("TestMessage"));
 
                 services.AddSingleton(mock.Object);
@@ -198,7 +203,8 @@ namespace Demo.WebApi.Tests.Controllers.Customers
         }
 
         [Fact]
-        public async Task CreateCustomer_When_an_unhandled_exception_occurs_It_should_return_statuscode_InternalServerError()
+        public async Task
+            CreateCustomer_When_an_unhandled_exception_occurs_It_should_return_statuscode_InternalServerError()
         {
             // Arrange
             var client = CreateHttpClientWithCustomConfiguration(services =>

@@ -1,5 +1,5 @@
-﻿using Demo.Events.OutboxEvent;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Demo.Events.OutboxEvent;
 
 namespace Demo.Domain.Shared.Interfaces
 {

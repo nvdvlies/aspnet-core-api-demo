@@ -1,6 +1,6 @@
-﻿using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text;
+using Microsoft.Extensions.Logging;
 
 namespace Demo.Domain.Shared.DomainEntity
 {
@@ -35,6 +35,7 @@ namespace Demo.Domain.Shared.DomainEntity
             {
                 sb.AppendLine(stopwatch.ToString());
             }
+
             return sb.ToString();
         }
 

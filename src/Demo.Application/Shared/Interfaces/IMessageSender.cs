@@ -1,7 +1,7 @@
-﻿using Demo.Messages;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Demo.Messages;
 
 namespace Demo.Application.Shared.Interfaces
 {

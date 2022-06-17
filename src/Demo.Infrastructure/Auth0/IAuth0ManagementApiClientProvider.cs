@@ -1,6 +1,6 @@
-﻿using Auth0.ManagementApi;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
+using Auth0.ManagementApi;
 
 namespace Demo.Infrastructure.Auth0
 {

@@ -1,6 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore.Query;
-using System;
+﻿using System;
 using System.Linq;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace Demo.Domain.Shared.Interfaces
 {

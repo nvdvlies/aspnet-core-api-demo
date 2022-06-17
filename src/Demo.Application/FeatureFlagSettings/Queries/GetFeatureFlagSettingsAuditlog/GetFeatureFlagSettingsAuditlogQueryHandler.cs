@@ -1,20 +1,21 @@
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using AutoMapper;
 using Demo.Application.Shared.Dtos;
 using Demo.Domain.Auditlog;
 using Demo.Domain.Shared.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Demo.Application.FeatureFlagSettings.Queries.GetFeatureFlagSettingsAuditlog
 {
-    public class GetFeatureFlagSettingsAuditlogQueryHandler : IRequestHandler<GetFeatureFlagSettingsAuditlogQuery, GetFeatureFlagSettingsAuditlogQueryResult>
+    public class GetFeatureFlagSettingsAuditlogQueryHandler : IRequestHandler<GetFeatureFlagSettingsAuditlogQuery,
+        GetFeatureFlagSettingsAuditlogQueryResult>
     {
-        private readonly IDbQuery<Auditlog> _query;
         private readonly IMapper _mapper;
+        private readonly IDbQuery<Auditlog> _query;
 
         public GetFeatureFlagSettingsAuditlogQueryHandler(
             IDbQuery<Auditlog> query,
@@ -25,11 +26,12 @@ namespace Demo.Application.FeatureFlagSettings.Queries.GetFeatureFlagSettingsAud
             _mapper = mapper;
         }
 
-        public async Task<GetFeatureFlagSettingsAuditlogQueryResult> Handle(GetFeatureFlagSettingsAuditlogQuery request, CancellationToken cancellationToken)
+        public async Task<GetFeatureFlagSettingsAuditlogQueryResult> Handle(GetFeatureFlagSettingsAuditlogQuery request,
+            CancellationToken cancellationToken)
         {
             var query = _query.AsQueryable()
                 .Include(x => x.AuditlogItems)
-                    .ThenInclude(y => y.AuditlogItems)
+                .ThenInclude(y => y.AuditlogItems)
                 .Where(x => x.EntityName == nameof(Domain.FeatureFlagSettings.FeatureFlagSettings));
 
             var totalItems = await query.CountAsync(cancellationToken);

@@ -1,3 +1,7 @@
+using System;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Demo.Application.Customers.Queries.SearchCustomers.Dtos;
@@ -7,17 +11,13 @@ using Demo.Domain.Customer;
 using Demo.Domain.Shared.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Demo.Application.Customers.Queries.SearchCustomers
 {
     public class SearchCustomersQueryHandler : IRequestHandler<SearchCustomersQuery, SearchCustomersQueryResult>
     {
-        private readonly IDbQuery<Customer> _query;
         private readonly IMapper _mapper;
+        private readonly IDbQuery<Customer> _query;
 
         public SearchCustomersQueryHandler(
             IDbQuery<Customer> query,
@@ -28,7 +28,8 @@ namespace Demo.Application.Customers.Queries.SearchCustomers
             _mapper = mapper;
         }
 
-        public async Task<SearchCustomersQueryResult> Handle(SearchCustomersQuery request, CancellationToken cancellationToken)
+        public async Task<SearchCustomersQueryResult> Handle(SearchCustomersQuery request,
+            CancellationToken cancellationToken)
         {
             var query = _query.AsQueryable();
 

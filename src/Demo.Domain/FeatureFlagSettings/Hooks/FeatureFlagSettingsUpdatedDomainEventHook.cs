@@ -1,16 +1,17 @@
+using System.Threading;
+using System.Threading.Tasks;
 using Demo.Common.Interfaces;
 using Demo.Domain.Shared.DomainEntity;
 using Demo.Domain.Shared.Interfaces;
 using Demo.Events.FeatureFlagSettings;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Demo.Domain.FeatureFlagSettings.Hooks
 {
-    internal class FeatureFlagSettingsUpdatedDomainEventHook : IAfterCreate<FeatureFlagSettings>, IAfterUpdate<FeatureFlagSettings>
+    internal class FeatureFlagSettingsUpdatedDomainEventHook : IAfterCreate<FeatureFlagSettings>,
+        IAfterUpdate<FeatureFlagSettings>
     {
-        private readonly ICurrentUser _currentUser;
         private readonly ICorrelationIdProvider _correlationIdProvider;
+        private readonly ICurrentUser _currentUser;
 
         public FeatureFlagSettingsUpdatedDomainEventHook(
             ICurrentUser currentUser,
@@ -21,9 +22,12 @@ namespace Demo.Domain.FeatureFlagSettings.Hooks
             _correlationIdProvider = correlationIdProvider;
         }
 
-        public async Task ExecuteAsync(HookType type, IDomainEntityContext<FeatureFlagSettings> context, CancellationToken cancellationToken)
+        public async Task ExecuteAsync(HookType type, IDomainEntityContext<FeatureFlagSettings> context,
+            CancellationToken cancellationToken)
         {
-            await context.AddEventAsync(FeatureFlagSettingsUpdatedEvent.Create(_correlationIdProvider.Id, context.Entity.Id, _currentUser.Id), cancellationToken);
+            await context.AddEventAsync(
+                FeatureFlagSettingsUpdatedEvent.Create(_correlationIdProvider.Id, context.Entity.Id, _currentUser.Id),
+                cancellationToken);
         }
     }
 }

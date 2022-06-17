@@ -1,23 +1,23 @@
-﻿using Demo.Scaffold.Tool.Changes;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Demo.Scaffold.Tool.Changes;
 using Demo.Scaffold.Tool.Interfaces;
 using Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint.InputCollectors;
 using Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint.OutputCollectors;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint
 {
     internal class EndpointOutputCollector : IOutputCollector
     {
-        private List<IInputCollector> _inputCollectors = new List<IInputCollector>()
+        private readonly List<IInputCollector> _inputCollectors = new()
         {
             new CommandOrQueryInputCollector(),
             new ControllerNameInputCollector()
         };
 
-        private List<IOutputCollector> _outputCollectors = new List<IOutputCollector>()
+        private readonly List<IOutputCollector> _outputCollectors = new()
         {
-            new EndpointTypeOutputCollector(),
+            new EndpointTypeOutputCollector()
         };
 
         public IEnumerable<IChange> CollectChanges(ScaffolderContext context)

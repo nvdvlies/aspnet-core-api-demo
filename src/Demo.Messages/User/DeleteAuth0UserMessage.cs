@@ -24,9 +24,8 @@ namespace Demo.Messages.User
 
     public class DeleteAuth0UserMessageData : IMessageData
     {
+        public Guid Id { get; set; }
         public string MessageDataVersion => "1.0";
         public Guid CorrelationId { get; set; }
-
-        public Guid Id { get; set; }
     }
 }

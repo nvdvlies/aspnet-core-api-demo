@@ -1,3 +1,7 @@
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using AutoMapper;
 using Demo.Application.Shared.Dtos;
 using Demo.Domain.Auditlog;
@@ -5,17 +9,13 @@ using Demo.Domain.Shared.Interfaces;
 using Demo.Domain.User;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Demo.Application.Users.Queries.GetUserAuditlog
 {
     public class GetUserAuditlogQueryHandler : IRequestHandler<GetUserAuditlogQuery, GetUserAuditlogQueryResult>
     {
-        private readonly IDbQuery<Auditlog> _query;
         private readonly IMapper _mapper;
+        private readonly IDbQuery<Auditlog> _query;
 
         public GetUserAuditlogQueryHandler(
             IDbQuery<Auditlog> query,
@@ -26,11 +26,12 @@ namespace Demo.Application.Users.Queries.GetUserAuditlog
             _mapper = mapper;
         }
 
-        public async Task<GetUserAuditlogQueryResult> Handle(GetUserAuditlogQuery request, CancellationToken cancellationToken)
+        public async Task<GetUserAuditlogQueryResult> Handle(GetUserAuditlogQuery request,
+            CancellationToken cancellationToken)
         {
             var query = _query.AsQueryable()
                 .Include(x => x.AuditlogItems)
-                    .ThenInclude(y => y.AuditlogItems)
+                .ThenInclude(y => y.AuditlogItems)
                 .Where(x => x.EntityName == nameof(User))
                 .Where(x => x.EntityId == request.UserId);
 

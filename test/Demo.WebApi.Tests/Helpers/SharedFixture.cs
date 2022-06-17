@@ -1,48 +1,48 @@
-﻿using Demo.Infrastructure.Persistence;
+﻿using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Threading.Tasks;
+using Demo.Infrastructure.Persistence;
+using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Respawn;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.Testing;
 using Xunit;
 
 namespace Demo.WebApi.Tests.Helpers
 {
     public class SharedFixture : ICollectionFixture<CustomWebApplicationFactory>
     {
-        public readonly CustomWebApplicationFactory Factory;
-        public readonly HttpClient Client;
-        public readonly HubConnection HubConnection;
-        public readonly Checkpoint Checkpoint = new Checkpoint
+        public readonly Checkpoint Checkpoint = new()
         {
-            SchemasToInclude = new[] {
+            SchemasToInclude = new[]
+            {
                 "demo"
             },
-            TablesToIgnore = new []
+            TablesToIgnore = new[]
             {
                 "Role"
             },
             WithReseed = true
         };
 
+        public readonly HttpClient Client;
+        public readonly CustomWebApplicationFactory Factory;
+        public readonly HubConnection HubConnection;
+
         public SharedFixture()
         {
             Factory = new CustomWebApplicationFactory();
             Client = Factory.CreateClient(new WebApplicationFactoryClientOptions
             {
-                AllowAutoRedirect = false,
+                AllowAutoRedirect = false
             });
             Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(TestAuthHandler.DefaultScheme);
 
             HubConnection = new HubConnectionBuilder()
                 .WithAutomaticReconnect()
-                .WithUrl($"http://localhost/hub", o =>
-                {
-                    o.HttpMessageHandlerFactory = _ => Factory.Server.CreateHandler();
-                })
+                .WithUrl("http://localhost/hub",
+                    o => { o.HttpMessageHandlerFactory = _ => Factory.Server.CreateHandler(); })
                 .Build();
             HubConnection.StartAsync().Wait();
 

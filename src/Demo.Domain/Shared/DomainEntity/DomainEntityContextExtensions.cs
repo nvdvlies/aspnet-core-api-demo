@@ -1,13 +1,14 @@
-﻿using Demo.Domain.Shared.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using Demo.Domain.Shared.Interfaces;
 
 namespace Demo.Domain.Shared.DomainEntity
 {
     internal static class DomainEntityContextExtensions
     {
-        internal static bool IsPropertyDirty<TEntity, TProperty>(this IDomainEntityContext<TEntity> context, Expression<Func<TEntity, TProperty>> property)
+        internal static bool IsPropertyDirty<TEntity, TProperty>(this IDomainEntityContext<TEntity> context,
+            Expression<Func<TEntity, TProperty>> property)
             where TEntity : IEntity
             where TProperty : IComparable
         {

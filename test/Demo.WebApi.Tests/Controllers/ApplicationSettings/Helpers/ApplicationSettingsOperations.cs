@@ -1,5 +1,4 @@
-﻿using System;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Demo.Application.ApplicationSettings.Commands.SaveApplicationSettings;
@@ -17,7 +16,7 @@ namespace Demo.WebApi.Tests.Controllers.ApplicationSettings.Helpers
 
         public async Task<HttpResponseMessage> Get()
         {
-            return await _httpClient.GetAsync($"/api/applicationsettings");
+            return await _httpClient.GetAsync("/api/applicationsettings");
         }
 
         public async Task<HttpResponseMessage> Save(SaveApplicationSettingsCommand command)

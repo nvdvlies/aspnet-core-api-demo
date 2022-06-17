@@ -1,7 +1,7 @@
-﻿using Demo.Application.Shared.Interfaces;
-using Demo.Events;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
+using Demo.Application.Shared.Interfaces;
+using Demo.Events;
 using MassTransit;
 
 namespace Demo.Infrastructure.Events
@@ -17,7 +17,8 @@ namespace Demo.Infrastructure.Events
 
         public async Task PublishAsync(IEvent @event, CancellationToken cancellationToken)
         {
-            await _bus.Publish(@event.ToRabbitMqEvent(), context => context.CorrelationId = @event.CorrelationId, cancellationToken);
+            await _bus.Publish(@event.ToRabbitMqEvent(), context => context.CorrelationId = @event.CorrelationId,
+                cancellationToken);
         }
     }
 }

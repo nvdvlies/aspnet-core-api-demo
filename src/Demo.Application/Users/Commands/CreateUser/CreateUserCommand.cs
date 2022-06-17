@@ -1,9 +1,9 @@
+using System;
+using System.Collections.Generic;
 using Demo.Application.Shared.Interfaces;
 using Demo.Application.Users.Commands.CreateUser.Dtos;
 using Demo.Application.Users.Queries.GetUserById.Dtos;
 using MediatR;
-using System;
-using System.Collections.Generic;
 
 namespace Demo.Application.Users.Commands.CreateUser
 {

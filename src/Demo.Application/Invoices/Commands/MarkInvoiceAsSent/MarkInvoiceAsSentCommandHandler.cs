@@ -1,8 +1,8 @@
+using System.Threading;
+using System.Threading.Tasks;
 using Demo.Domain.Invoice;
 using Demo.Domain.Invoice.Interfaces;
 using MediatR;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Demo.Application.Invoices.Commands.MarkInvoiceAsSent
 {

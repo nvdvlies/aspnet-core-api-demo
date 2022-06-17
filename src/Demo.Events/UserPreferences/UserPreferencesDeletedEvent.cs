@@ -25,10 +25,9 @@ namespace Demo.Events.UserPreferences
 
     public class UserPreferencesDeletedEventData : IEventData
     {
-        public string EventDataVersion => "1.0";
-        public Guid CorrelationId { get; set; }
-
         public Guid Id { get; set; }
         public Guid DeletedBy { get; set; }
+        public string EventDataVersion => "1.0";
+        public Guid CorrelationId { get; set; }
     }
 }

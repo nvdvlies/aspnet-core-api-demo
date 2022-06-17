@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Demo.Application.Shared.Dtos;
 
 namespace Demo.Application.FeatureFlagSettings.Queries.GetFeatureFlagSettings.Dtos
 {

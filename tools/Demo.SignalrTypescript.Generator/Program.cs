@@ -1,28 +1,25 @@
-﻿using Demo.SignalrTypescript.Generator.Models;
+﻿using System.IO;
+using Demo.SignalrTypescript.Generator.Models;
 using Demo.SignalrTypescript.Generator.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using System.IO;
 
 namespace Demo.SignalrTypescript.Generator
 {
-    class Program
+    internal class Program
     {
         public static void Main(string[] args)
         {
             using var host = new HostBuilder()
-                .ConfigureLogging((context, builder) =>
-                {
-                    builder.AddConsole();
-                })
+                .ConfigureLogging((context, builder) => { builder.AddConsole(); })
                 .ConfigureServices((context, services) =>
                 {
                     var configuration = new ConfigurationBuilder()
                         .SetBasePath(Directory.GetCurrentDirectory())
-                        .AddJsonFile("appsettings.json", optional: false)
-                        .AddJsonFile("appsettings.user.json", optional: true)
+                        .AddJsonFile("appsettings.json", false)
+                        .AddJsonFile("appsettings.user.json", true)
                         .AddEnvironmentVariables()
                         .Build();
 

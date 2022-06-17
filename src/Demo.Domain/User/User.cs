@@ -1,11 +1,11 @@
-using Demo.Domain.Shared.Entities;
-using Demo.Domain.Shared.Interfaces;
 using System;
 using System.Collections.Generic;
+using Demo.Domain.Shared.Entities;
+using Demo.Domain.Shared.Interfaces;
 
 namespace Demo.Domain.User
 {
-    public partial class User : SoftDeleteEntity, IQueryableEntity
+    public class User : SoftDeleteEntity, IQueryableEntity
     {
         public string ExternalId { get; set; }
         public string Fullname { get; set; }

@@ -1,3 +1,5 @@
+using System.Threading;
+using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Demo.Application.Users.Queries.GetUserById.Dtos;
@@ -5,15 +7,13 @@ using Demo.Domain.Shared.Interfaces;
 using Demo.Domain.User;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Demo.Application.Users.Queries.GetUserById
 {
     public class GetUserByIdQueryHandler : IRequestHandler<GetUserByIdQuery, GetUserByIdQueryResult>
     {
-        private readonly IDbQuery<User> _query;
         private readonly IMapper _mapper;
+        private readonly IDbQuery<User> _query;
 
         public GetUserByIdQueryHandler(
             IDbQuery<User> query,

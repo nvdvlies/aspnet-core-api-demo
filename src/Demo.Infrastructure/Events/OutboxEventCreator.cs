@@ -1,8 +1,8 @@
-﻿using Demo.Domain.OutboxEvent.Interfaces;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using Demo.Domain.OutboxEvent.Interfaces;
 using Demo.Domain.Shared.Interfaces;
 using Demo.Events;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Demo.Infrastructure.Events
 {

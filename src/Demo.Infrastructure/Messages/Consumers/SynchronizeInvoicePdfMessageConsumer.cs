@@ -5,14 +5,15 @@ using Demo.Messages.Invoice;
 using MassTransit;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using Serilog.Context;
 
 namespace Demo.Infrastructure.Messages.Consumers
 {
-    public class SynchronizeInvoicePdfMessageConsumer: IConsumer<SynchronizeInvoicePdfMessage>
+    public class SynchronizeInvoicePdfMessageConsumer : IConsumer<SynchronizeInvoicePdfMessage>
     {
-        private readonly IMediator _mediator;
-        private readonly ILogger<SynchronizeInvoicePdfMessageConsumer> _logger;
         private readonly ICorrelationIdProvider _correlationIdProvider;
+        private readonly ILogger<SynchronizeInvoicePdfMessageConsumer> _logger;
+        private readonly IMediator _mediator;
 
         public SynchronizeInvoicePdfMessageConsumer(
             IMediator mediator,
@@ -27,7 +28,7 @@ namespace Demo.Infrastructure.Messages.Consumers
         public async Task Consume(ConsumeContext<SynchronizeInvoicePdfMessage> context)
         {
             _correlationIdProvider.SwitchToCorrelationId(context.CorrelationId ?? Guid.NewGuid());
-            using (Serilog.Context.LogContext.PushProperty("CorrelationId", _correlationIdProvider.Id))
+            using (LogContext.PushProperty("CorrelationId", _correlationIdProvider.Id))
             {
                 _logger.LogInformation($"Consuming {nameof(SynchronizeInvoicePdfMessage)}");
                 var message = context.Message;

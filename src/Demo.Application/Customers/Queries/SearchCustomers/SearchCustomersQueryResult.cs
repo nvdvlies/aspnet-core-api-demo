@@ -1,6 +1,6 @@
+using System.Collections.Generic;
 using Demo.Application.Customers.Queries.SearchCustomers.Dtos;
 using Demo.Application.Shared.Models;
-using System.Collections.Generic;
 
 namespace Demo.Application.Customers.Queries.SearchCustomers
 {

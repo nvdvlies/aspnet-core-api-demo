@@ -1,25 +1,26 @@
+using System.Collections.Generic;
 using Demo.Common.Interfaces;
 using Demo.Domain.Auditlog;
 using Demo.Domain.Auditlog.Interfaces;
-using Demo.Domain.UserPreferences;
 using Demo.Domain.Shared.Interfaces;
+using Demo.Domain.UserPreferences;
 using Demo.Infrastructure.Auditlogging.Shared;
-using System.Collections.Generic;
 
 namespace Demo.Infrastructure.Auditlogging
 {
     internal class UserPreferencesAuditlogger : AuditloggerBase<UserPreferences>, IAuditlogger<UserPreferences>
     {
-        public UserPreferencesAuditlogger(            
-            ICurrentUser currentUser, 
+        public UserPreferencesAuditlogger(
+            ICurrentUser currentUser,
             IDateTime dateTime,
             IAuditlogDomainEntity auditlogDomainEntity
         ) : base(currentUser, dateTime, auditlogDomainEntity)
         {
         }
 
-        protected override List<AuditlogItem> AuditlogItems(UserPreferences current, UserPreferences previous) => 
-            new AuditlogBuilder<UserPreferences>()
+        protected override List<AuditlogItem> AuditlogItems(UserPreferences current, UserPreferences previous)
+        {
+            return new AuditlogBuilder<UserPreferences>()
                 .WithChildEntity(x => x.Preferences, new AuditlogBuilder<UserPreferencesPreferences>()
                     .WithProperty(c => c.Setting1)
                     .WithProperty(c => c.Setting2)
@@ -28,5 +29,6 @@ namespace Demo.Infrastructure.Auditlogging
                     .WithProperty(c => c.Setting5)
                 )
                 .Build(current, previous);
+        }
     }
 }

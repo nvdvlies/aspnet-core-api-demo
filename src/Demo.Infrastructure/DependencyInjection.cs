@@ -1,37 +1,33 @@
 ﻿using System;
-using System.Data;
 using System.Globalization;
+using System.Linq;
+using System.Reflection;
 using Auth0.ManagementApi;
 using Demo.Application.Shared.Interfaces;
+using Demo.Common.Extensions;
 using Demo.Common.Helpers;
 using Demo.Common.Interfaces;
 using Demo.Domain.ApplicationSettings.Interfaces;
 using Demo.Domain.FeatureFlagSettings.Interfaces;
 using Demo.Domain.Shared.Entities;
 using Demo.Domain.Shared.Interfaces;
+using Demo.Domain.UserPreferences.Interfaces;
 using Demo.Infrastructure.Auditlogging;
 using Demo.Infrastructure.Auth0;
 using Demo.Infrastructure.Events;
 using Demo.Infrastructure.Messages;
+using Demo.Infrastructure.Messages.Consumers;
 using Demo.Infrastructure.Persistence;
 using Demo.Infrastructure.Services;
 using Demo.Infrastructure.Settings;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
-using Demo.Common.Extensions;
-using Demo.Domain.UserPreferences.Interfaces;
-using Demo.Infrastructure.Messages.Consumers;
 using Demo.Infrastructure.SignalR;
 using Demo.Messages;
-using Demo.Messages.Invoice;
 using GreenPipes;
 using GreenPipes.Configurators;
 using MassTransit;
-using MassTransit.SignalR;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -39,7 +35,8 @@ namespace Demo.Infrastructure
 {
     public static class DependencyInjection
     {
-        public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration, EnvironmentSettings environmentSettings)
+        public static IServiceCollection AddInfrastructure(this IServiceCollection services,
+            IConfiguration configuration, EnvironmentSettings environmentSettings)
         {
             services.AddTransient<IDateTime, DateTimeProvider>();
             services.AddScoped(typeof(IJsonService<>), typeof(JsonService<>));
@@ -65,7 +62,7 @@ namespace Demo.Infrastructure
 
                 s.UsingRabbitMq((context, config) =>
                 {
-                    config.ConfigureJsonSerializer((options) =>
+                    config.ConfigureJsonSerializer(options =>
                     {
                         // this is applied globally to (Newtonsoft.Json).SerializerSettings!
                         options.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
@@ -90,7 +87,10 @@ namespace Demo.Infrastructure
                     });
 
                     // 15 retries, first retry after a minute. Subsequent retries after 2,3,4,5 to 15 minutes. Total retry period of 120 minutes.
-                    void DefaultRetryPolicy(IRetryConfigurator x) => x.Incremental(15, TimeSpan.FromMinutes(1), TimeSpan.FromMinutes(1));
+                    void DefaultRetryPolicy(IRetryConfigurator x)
+                    {
+                        x.Incremental(15, TimeSpan.FromMinutes(1), TimeSpan.FromMinutes(1));
+                    }
 
                     config.ReceiveEndpoint(Queues.SynchronizeInvoicePdf.ToString().PascalToKebabCase(), e =>
                     {
@@ -127,13 +127,14 @@ namespace Demo.Infrastructure
             services.AddSingleton<IMessageSender, RabbitMqMessageSender>();
 
             services.AddDbContext<ApplicationDbContext>(options =>
-                    options.UseSqlServer(configuration.GetConnectionString("SqlDatabase"))
-                );
+                options.UseSqlServer(configuration.GetConnectionString("SqlDatabase"))
+            );
 
             services.AddScoped<IApplicationDbContext>(provider => provider.GetService<ApplicationDbContext>());
 
             services.AddTransient(typeof(IDbCommand<>), typeof(DbCommand<>));
-            services.AddTransient(typeof(IDbCommandForTableWithSingleRecord<>), typeof(DbCommandForTableWithSingleRecord<>));
+            services.AddTransient(typeof(IDbCommandForTableWithSingleRecord<>),
+                typeof(DbCommandForTableWithSingleRecord<>));
 
             services.AddDbQueryForEntitiesInDomainAssembly();
             services.AddTransient(typeof(IUnitOfWork), typeof(UnitOfWork));
@@ -170,8 +171,8 @@ namespace Demo.Infrastructure
                 .ClassesThatImplementInterface(typeof(ISoftDeleteEntity))
                 .ForEach(type =>
                 {
-                    var interfaceType = typeof(IDbQuery<>).MakeGenericType(new[] { type });
-                    var implementationType = typeof(SoftDeleteDbQuery<>).MakeGenericType(new[] { type });
+                    var interfaceType = typeof(IDbQuery<>).MakeGenericType(type);
+                    var implementationType = typeof(SoftDeleteDbQuery<>).MakeGenericType(type);
                     services.AddTransient(interfaceType, implementationType);
                 });
 
@@ -182,8 +183,8 @@ namespace Demo.Infrastructure
                 .ClassesThatDoNotImplementInterface(typeof(ISoftDeleteEntity))
                 .ForEach(type =>
                 {
-                    var interfaceType = typeof(IDbQuery<>).MakeGenericType(new[] { type });
-                    var implementationType = typeof(Persistence.DbQuery<>).MakeGenericType(new[] { type });
+                    var interfaceType = typeof(IDbQuery<>).MakeGenericType(type);
+                    var implementationType = typeof(DbQuery<>).MakeGenericType(type);
                     services.AddTransient(interfaceType, implementationType);
                 });
         }

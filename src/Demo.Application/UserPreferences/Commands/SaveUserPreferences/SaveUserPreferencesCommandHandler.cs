@@ -1,16 +1,16 @@
-using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using Demo.Application.Shared.Mappings;
 using Demo.Domain.UserPreferences.Interfaces;
+using MediatR;
 
 namespace Demo.Application.UserPreferences.Commands.SaveUserPreferences
 {
     public class SaveUserPreferencesCommandHandler : IRequestHandler<SaveUserPreferencesCommand, Unit>
     {
-        private readonly IUserPreferencesDomainEntity _userPreferencesDomainEntity;
         private readonly IMapper _mapper;
+        private readonly IUserPreferencesDomainEntity _userPreferencesDomainEntity;
 
         public SaveUserPreferencesCommandHandler(
             IUserPreferencesDomainEntity userPreferencesDomainEntity,
@@ -20,7 +20,7 @@ namespace Demo.Application.UserPreferences.Commands.SaveUserPreferences
             _userPreferencesDomainEntity = userPreferencesDomainEntity;
             _mapper = mapper;
         }
-        
+
         public async Task<Unit> Handle(SaveUserPreferencesCommand request, CancellationToken cancellationToken)
         {
             await _userPreferencesDomainEntity.GetAsync(cancellationToken);

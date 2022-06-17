@@ -8,7 +8,6 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Demo.WebApi.Tests.Helpers
 {
-
     public class CustomWebApplicationFactory : WebApplicationFactory<Startup>
     {
         internal IConfiguration Configuration { get; private set; }

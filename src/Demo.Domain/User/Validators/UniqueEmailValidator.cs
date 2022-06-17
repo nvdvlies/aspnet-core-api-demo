@@ -1,11 +1,11 @@
-﻿using Demo.Domain.Shared.DomainEntity;
-using Demo.Domain.Shared.Interfaces;
-using FluentValidation;
-using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Demo.Domain.Shared.DomainEntity;
+using Demo.Domain.Shared.Interfaces;
+using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 
 namespace Demo.Domain.User.Validators
 {
@@ -18,7 +18,8 @@ namespace Demo.Domain.User.Validators
             _userQuery = userQuery;
         }
 
-        public async Task<IEnumerable<ValidationMessage>> ValidateAsync(IDomainEntityContext<User> context, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<ValidationMessage>> ValidateAsync(IDomainEntityContext<User> context,
+            CancellationToken cancellationToken = default)
         {
             if (context.EditMode == EditMode.Delete)
             {

@@ -1,11 +1,11 @@
-﻿using Auth0.ManagementApi;
-using Demo.Infrastructure.Settings;
-using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using Auth0.ManagementApi;
+using Demo.Infrastructure.Settings;
+using Newtonsoft.Json.Linq;
 
 namespace Demo.Infrastructure.Auth0
 {
@@ -31,6 +31,7 @@ namespace Demo.Infrastructure.Auth0
             {
                 return _managementApiClient;
             }
+
             var accessToken = await GetAccessToken(cancellationToken);
             _managementApiClient = new ManagementApiClient(
                 accessToken,
@@ -46,10 +47,10 @@ namespace Demo.Infrastructure.Auth0
             var response = await client.PostAsync("oauth/token", new FormUrlEncodedContent(
                 new Dictionary<string, string>
                 {
-                            { "grant_type", "client_credentials" },
-                            { "client_id", _environmentSettings.Auth0.Management.ClientId },
-                            { "client_secret", _environmentSettings.Auth0.Management.ClientSecret },
-                            { "audience", $"{_environmentSettings.Auth0.Domain}api/v2/" }
+                    { "grant_type", "client_credentials" },
+                    { "client_id", _environmentSettings.Auth0.Management.ClientId },
+                    { "client_secret", _environmentSettings.Auth0.Management.ClientSecret },
+                    { "audience", $"{_environmentSettings.Auth0.Domain}api/v2/" }
                 }
             ), cancellationToken);
 
@@ -59,10 +60,9 @@ namespace Demo.Infrastructure.Auth0
                 var json = JObject.Parse(content);
                 return json["access_token"].Value<string>();
             }
-            else
-            {
-                throw new Exception($"Failed to retrieve access token for Auth0 Management Api. StatusCode: {response.StatusCode}. Content: {content}");
-            }
+
+            throw new Exception(
+                $"Failed to retrieve access token for Auth0 Management Api. StatusCode: {response.StatusCode}. Content: {content}");
         }
     }
 }

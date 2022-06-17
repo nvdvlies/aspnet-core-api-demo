@@ -2,7 +2,7 @@
 
 namespace Demo.Domain.UserPreferences
 {
-    public partial class UserPreferencesPreferences
+    public class UserPreferencesPreferences
     {
         public bool Setting1 { get; set; }
         public string Setting2 { get; set; }

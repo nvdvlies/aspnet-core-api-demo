@@ -4,7 +4,7 @@ using Demo.Domain.Invoice;
 
 namespace Demo.Application.Invoices.Queries.GetInvoiceById
 {
-    public partial class GetInvoiceByIdMappingProfile : Profile
+    public class GetInvoiceByIdMappingProfile : Profile
     {
         public GetInvoiceByIdMappingProfile()
         {

@@ -19,8 +19,10 @@ namespace Demo.Scaffold.Tool.Changes
         public void Apply()
         {
             var content = File.ReadAllText(DirectoryAndFileName);
-            var markerWithPrecedingTabs = File.ReadAllLines(DirectoryAndFileName).Single(lines => lines.Contains(_marker));
-            content = content.Replace(markerWithPrecedingTabs, $"{Content}{Environment.NewLine}{markerWithPrecedingTabs}");
+            var markerWithPrecedingTabs =
+                File.ReadAllLines(DirectoryAndFileName).Single(lines => lines.Contains(_marker));
+            content = content.Replace(markerWithPrecedingTabs,
+                $"{Content}{Environment.NewLine}{markerWithPrecedingTabs}");
             File.WriteAllText(DirectoryAndFileName, content);
         }
     }

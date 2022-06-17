@@ -5,13 +5,14 @@ namespace Demo.Domain.Shared.DomainEntity
     internal class PerformanceMeasurement
     {
         private readonly string _name;
-        private Stopwatch _stopwatch { get; set; }
 
         public PerformanceMeasurement(string name)
         {
             _name = name;
             _stopwatch = new Stopwatch();
         }
+
+        private Stopwatch _stopwatch { get; }
 
         public void Start()
         {

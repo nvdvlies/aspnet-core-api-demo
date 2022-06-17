@@ -1,3 +1,6 @@
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Demo.Application.Invoices.Queries.GetInvoiceById.Dtos;
@@ -5,16 +8,13 @@ using Demo.Domain.Invoice;
 using Demo.Domain.Shared.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Demo.Application.Invoices.Queries.GetInvoiceById
 {
     public class GetInvoiceByIdQueryHandler : IRequestHandler<GetInvoiceByIdQuery, GetInvoiceByIdQueryResult>
     {
-        private readonly IDbQuery<Invoice> _query;
         private readonly IMapper _mapper;
+        private readonly IDbQuery<Invoice> _query;
 
         public GetInvoiceByIdQueryHandler(
             IDbQuery<Invoice> query,
@@ -25,7 +25,8 @@ namespace Demo.Application.Invoices.Queries.GetInvoiceById
             _mapper = mapper;
         }
 
-        public async Task<GetInvoiceByIdQueryResult> Handle(GetInvoiceByIdQuery request, CancellationToken cancellationToken)
+        public async Task<GetInvoiceByIdQueryResult> Handle(GetInvoiceByIdQuery request,
+            CancellationToken cancellationToken)
         {
             var invoice = await _query.AsQueryable()
                 .Include(invoice => invoice.InvoiceLines)

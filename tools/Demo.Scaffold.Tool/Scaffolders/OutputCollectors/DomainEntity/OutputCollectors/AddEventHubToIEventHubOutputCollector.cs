@@ -15,10 +15,10 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.DomainEntity.OutputCol
             var entityName = context.Variables.Get<string>(Constants.EntityName);
 
             changes.Add(new UpdateExistingClassAtMarker(
-                directory: Path.Combine(context.GetApplicationDirectory(), "Shared", "Interfaces"),
-                fileName: "IEventHub.cs",
-                marker: Tool.Constants.ScaffoldMarkerEventHubInterface,
-                content: GetTemplate(entityName)
+                Path.Combine(context.GetApplicationDirectory(), "Shared", "Interfaces"),
+                "IEventHub.cs",
+                Tool.Constants.ScaffoldMarkerEventHubInterface,
+                GetTemplate(entityName)
             ));
 
             return changes;

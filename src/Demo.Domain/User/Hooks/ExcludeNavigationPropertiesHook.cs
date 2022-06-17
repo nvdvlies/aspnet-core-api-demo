@@ -1,7 +1,7 @@
-﻿using Demo.Domain.Shared.DomainEntity;
-using Demo.Domain.Shared.Interfaces;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
+using Demo.Domain.Shared.DomainEntity;
+using Demo.Domain.Shared.Interfaces;
 
 namespace Demo.Domain.User.Hooks
 {
@@ -9,10 +9,7 @@ namespace Demo.Domain.User.Hooks
     {
         public Task ExecuteAsync(HookType type, IDomainEntityContext<User> context, CancellationToken cancellationToken)
         {
-            context.Entity.UserRoles?.ForEach(x =>
-            {
-                x.Role = null;
-            });
+            context.Entity.UserRoles?.ForEach(x => { x.Role = null; });
 
             return Task.CompletedTask;
         }

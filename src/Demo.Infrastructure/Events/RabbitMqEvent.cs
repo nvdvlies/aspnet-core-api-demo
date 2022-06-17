@@ -1,5 +1,3 @@
-using Demo.Messages.Invoice;
-
 namespace Demo.Infrastructure.Events
 {
     public class RabbitMqEvent

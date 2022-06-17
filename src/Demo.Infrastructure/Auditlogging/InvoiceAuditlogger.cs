@@ -1,11 +1,11 @@
-﻿using Demo.Common.Interfaces;
+﻿using System;
+using System.Collections.Generic;
+using Demo.Common.Interfaces;
 using Demo.Domain.Auditlog;
 using Demo.Domain.Auditlog.Interfaces;
 using Demo.Domain.Invoice;
 using Demo.Domain.Shared.Interfaces;
 using Demo.Infrastructure.Auditlogging.Shared;
-using System;
-using System.Collections.Generic;
 
 namespace Demo.Infrastructure.Auditlogging
 {
@@ -19,8 +19,9 @@ namespace Demo.Infrastructure.Auditlogging
         {
         }
 
-        protected override List<AuditlogItem> AuditlogItems(Invoice current, Invoice previous) =>
-            new AuditlogBuilder<Invoice>()
+        protected override List<AuditlogItem> AuditlogItems(Invoice current, Invoice previous)
+        {
+            return new AuditlogBuilder<Invoice>()
                 .WithProperty(c => c.InvoiceNumber)
                 .WithProperty(c => c.CustomerId)
                 .WithProperty(c => c.InvoiceDate, AuditlogType.DateOnly)
@@ -34,6 +35,7 @@ namespace Demo.Infrastructure.Auditlogging
                     .WithProperty(c => c.SellingPrice, AuditlogType.Currency)
                 )
                 .Build(current, previous);
+        }
 
         private string InvoiceStatusEnumFormatter(Enum value)
         {
@@ -44,7 +46,7 @@ namespace Demo.Infrastructure.Auditlogging
                 InvoiceStatus.Sent => "Verzonden",
                 InvoiceStatus.Paid => "Betaald",
                 InvoiceStatus.Cancelled => "Geannuleerd",
-                _ => value.ToString("G"),
+                _ => value.ToString("G")
             };
         }
     }

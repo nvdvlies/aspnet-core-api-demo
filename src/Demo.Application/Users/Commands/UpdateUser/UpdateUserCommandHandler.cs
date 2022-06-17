@@ -1,16 +1,16 @@
+using System.Threading;
+using System.Threading.Tasks;
 using AutoMapper;
 using Demo.Application.Shared.Mappings;
 using Demo.Domain.User.Interfaces;
 using MediatR;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Demo.Application.Users.Commands.UpdateUser
 {
     public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, Unit>
     {
-        private readonly IUserDomainEntity _userDomainEntity;
         private readonly IMapper _mapper;
+        private readonly IUserDomainEntity _userDomainEntity;
 
         public UpdateUserCommandHandler(
             IUserDomainEntity userDomainEntity,

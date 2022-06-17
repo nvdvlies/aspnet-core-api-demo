@@ -2,7 +2,7 @@
 
 namespace Demo.Domain.User
 {
-    public partial class UserRole
+    public class UserRole
     {
         public Guid UserId { get; set; }
         public User User { get; internal set; }

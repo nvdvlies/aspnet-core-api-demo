@@ -10,6 +10,6 @@ namespace Demo.Application.Shared.Models
 
         public int TotalPages => PageSize == 0 ? 0 : (int)Math.Ceiling(TotalItems / (double)PageSize);
         public bool HasPreviousPage => PageIndex > 0;
-        public bool HasNextPage => (PageIndex + 1 < TotalPages);
+        public bool HasNextPage => PageIndex + 1 < TotalPages;
     }
 }

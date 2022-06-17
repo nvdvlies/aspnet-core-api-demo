@@ -1,14 +1,13 @@
-﻿using Demo.Events;
-using Demo.Messages;
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Demo.Events;
+using Demo.Messages;
 
 namespace Demo.Domain.Shared.Interfaces
 {
     public interface IDomainEntity
     {
-
     }
 
     public interface IDomainEntity<T> : IDomainEntity where T : IEntity

@@ -21,6 +21,7 @@ namespace Demo.Infrastructure.Services
             {
                 _logger.LogInformation("Switching correlation id from '{0}' to '{1}'", Id, id);
             }
+
             Id = id;
         }
     }

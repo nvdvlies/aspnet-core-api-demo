@@ -1,8 +1,8 @@
-﻿using Demo.Application.Shared.Interfaces;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using Demo.Application.Shared.Interfaces;
 using Demo.Messages.User;
 using MediatR;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Demo.Application.Users.Messages.DeleteAuth0User
 {

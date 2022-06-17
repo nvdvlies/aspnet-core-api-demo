@@ -1,5 +1,6 @@
 using AutoMapper;
 using Demo.Application.UserPreferences.Commands.SaveUserPreferences.Dtos;
+using Demo.Domain.UserPreferences;
 
 namespace Demo.Application.UserPreferences.Commands.SaveUserPreferences
 {
@@ -14,8 +15,8 @@ namespace Demo.Application.UserPreferences.Commands.SaveUserPreferences
                 .ForMember(x => x.LastModifiedOn, opt => opt.Ignore())
                 .ForMember(x => x.Id, opt => opt.Ignore())
                 .ForMember(x => x.Timestamp, opt => opt.Ignore());
-            
-            CreateMap<SaveUserPreferencesPreferencesDto, Domain.UserPreferences.UserPreferencesPreferences>();
+
+            CreateMap<SaveUserPreferencesPreferencesDto, UserPreferencesPreferences>();
         }
     }
 }

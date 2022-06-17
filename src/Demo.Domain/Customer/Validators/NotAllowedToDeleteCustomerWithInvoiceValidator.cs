@@ -1,11 +1,11 @@
-﻿using Demo.Domain.Invoice;
-using Demo.Domain.Shared.DomainEntity;
-using Demo.Domain.Shared.Interfaces;
-using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Demo.Domain.Invoice;
+using Demo.Domain.Shared.DomainEntity;
+using Demo.Domain.Shared.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Demo.Domain.Customer.Validators
 {
@@ -18,7 +18,8 @@ namespace Demo.Domain.Customer.Validators
             _invoiceQuery = invoiceQuery;
         }
 
-        public async Task<IEnumerable<ValidationMessage>> ValidateAsync(IDomainEntityContext<Customer> context, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<ValidationMessage>> ValidateAsync(IDomainEntityContext<Customer> context,
+            CancellationToken cancellationToken = default)
         {
             if (context.EditMode != EditMode.Delete)
             {
@@ -34,7 +35,8 @@ namespace Demo.Domain.Customer.Validators
 
             if (hasInvoices)
             {
-                return ValidationResult.Invalid("Cannot delete customer, because one or more invoices are linked to this customer.");
+                return ValidationResult.Invalid(
+                    "Cannot delete customer, because one or more invoices are linked to this customer.");
             }
 
             return ValidationResult.Ok();

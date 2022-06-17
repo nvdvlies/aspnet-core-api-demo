@@ -1,7 +1,7 @@
-﻿using Demo.Scaffold.Tool.Changes;
+﻿using System.Collections.Generic;
+using Demo.Scaffold.Tool.Changes;
 using Demo.Scaffold.Tool.Helpers;
 using Demo.Scaffold.Tool.Interfaces;
-using System.Collections.Generic;
 
 namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.DomainEntity.OutputCollectors
 {
@@ -15,10 +15,10 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.DomainEntity.OutputCol
             var collectionName = context.Variables.Get<string>(Constants.CollectionName);
 
             changes.Add(new UpdateExistingClassAtMarker(
-                directory: context.GetPersistenceDirectory(),
-                fileName: "ApplicationDbContext.cs",
-                marker: Tool.Constants.ScaffoldMarkerDbSet,
-                content: GetTemplate(entityName, collectionName)
+                context.GetPersistenceDirectory(),
+                "ApplicationDbContext.cs",
+                Tool.Constants.ScaffoldMarkerDbSet,
+                GetTemplate(entityName, collectionName)
             ));
 
             return changes;

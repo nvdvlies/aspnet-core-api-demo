@@ -1,7 +1,7 @@
-﻿using Demo.Domain.ApplicationSettings;
+﻿using System.Text.Json;
+using Demo.Domain.ApplicationSettings;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System.Text.Json;
 
 namespace Demo.Infrastructure.Persistence.Configuration
 {
@@ -18,10 +18,7 @@ namespace Demo.Infrastructure.Persistence.Configuration
                     {
                         WriteIndented = true
                     }),
-                    x => JsonSerializer.Deserialize<ApplicationSettingsSettings>(x, new JsonSerializerOptions
-                    {
-
-                    })
+                    x => JsonSerializer.Deserialize<ApplicationSettingsSettings>(x, new JsonSerializerOptions())
                 );
 
             builder.Property(x => x.Timestamp).IsRowVersion();

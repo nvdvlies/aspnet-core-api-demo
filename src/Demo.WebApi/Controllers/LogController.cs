@@ -27,7 +27,7 @@ namespace Demo.WebApi.Controllers
                     _logger.Log(
                         logMessage.LogLevel,
                         new EventId(logMessage.EventId),
-                        logMessage.ExceptionMessage != null ? new Exception(logMessage.ExceptionMessage): null,
+                        logMessage.ExceptionMessage != null ? new Exception(logMessage.ExceptionMessage) : null,
                         logMessage.Message);
                 }
             }

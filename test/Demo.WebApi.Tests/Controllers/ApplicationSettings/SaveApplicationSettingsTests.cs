@@ -17,7 +17,8 @@ namespace Demo.WebApi.Tests.Controllers.ApplicationSettings
         }
 
         [Fact]
-        public async Task SaveApplicationSettings_When_application_settings_can_be_saved_It_should_return_statuscode_NoContent()
+        public async Task
+            SaveApplicationSettings_When_application_settings_can_be_saved_It_should_return_statuscode_NoContent()
         {
             // Arrange
             await SetTestUserToAuthenticatedWithAdministratorRole();
@@ -37,7 +38,8 @@ namespace Demo.WebApi.Tests.Controllers.ApplicationSettings
         }
 
         [Fact]
-        public async Task SaveApplicationSettings_When_user_does_not_have_an_administrator_role_It_should_return_statuscode_Forbidden()
+        public async Task
+            SaveApplicationSettings_When_user_does_not_have_an_administrator_role_It_should_return_statuscode_Forbidden()
         {
             // Arrange
             await SetTestUserToAuthenticated();

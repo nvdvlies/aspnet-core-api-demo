@@ -1,6 +1,5 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.SignalR;
-using IUserIdProvider = Microsoft.AspNetCore.SignalR.IUserIdProvider;
 
 namespace Demo.Infrastructure.SignalR
 {

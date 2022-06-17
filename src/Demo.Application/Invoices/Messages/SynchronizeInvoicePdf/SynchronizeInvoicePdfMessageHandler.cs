@@ -1,7 +1,7 @@
-﻿using Demo.Messages.Invoice;
-using MediatR;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
+using Demo.Messages.Invoice;
+using MediatR;
 
 namespace Demo.Application.Invoices.Messages.SynchronizeInvoicePdf
 {

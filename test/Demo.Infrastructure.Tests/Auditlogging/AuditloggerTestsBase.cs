@@ -5,18 +5,17 @@ using Demo.Common.Interfaces;
 using Demo.Domain.Auditlog;
 using Demo.Domain.Auditlog.Interfaces;
 using Demo.Domain.Shared.Interfaces;
-using Demo.Infrastructure.Auditlogging;
 using Moq;
 
 namespace Demo.Infrastructure.Tests.Auditlogging
 {
     public abstract class AuditloggerTestsBase
     {
-        protected readonly Mock<ICurrentUser> CurrentUserMock = new Mock<ICurrentUser>();
-        protected readonly Mock<IDateTime> DateTimeMock = new Mock<IDateTime>();
-        protected readonly Mock<IAuditlogDomainEntity> AuditlogDomainEntityMock = new Mock<IAuditlogDomainEntity>();
+        protected readonly Mock<IAuditlogDomainEntity> AuditlogDomainEntityMock = new();
 
-        internal readonly Auditlog CapturedAuditlog = new Auditlog();
+        internal readonly Auditlog CapturedAuditlog = new();
+        protected readonly Mock<ICurrentUser> CurrentUserMock = new();
+        protected readonly Mock<IDateTime> DateTimeMock = new();
 
         protected AuditloggerTestsBase()
         {
@@ -29,9 +28,7 @@ namespace Demo.Infrastructure.Tests.Auditlogging
 
             AuditlogDomainEntityMock
                 .Setup(x => x.With(It.IsAny<Action<Auditlog>>()))
-                .Callback((Action<Auditlog> action) => {
-                    action(CapturedAuditlog);
-                })
+                .Callback((Action<Auditlog> action) => { action(CapturedAuditlog); })
                 .Verifiable();
             AuditlogDomainEntityMock
                 .Setup(x => x.CreateAsync(It.IsAny<CancellationToken>()))

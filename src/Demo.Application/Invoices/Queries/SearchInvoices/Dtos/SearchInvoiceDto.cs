@@ -1,5 +1,5 @@
-﻿using Demo.Application.Shared.Dtos;
-using System;
+﻿using System;
+using Demo.Application.Shared.Dtos;
 
 namespace Demo.Application.Invoices.Queries.SearchInvoices.Dtos
 {

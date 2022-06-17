@@ -1,6 +1,6 @@
-﻿using Demo.Scaffold.Tool.Interfaces;
+﻿using System;
+using Demo.Scaffold.Tool.Interfaces;
 using Spectre.Console;
-using System;
 
 namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint.OutputCollectors.Command.InputCollectors
 {

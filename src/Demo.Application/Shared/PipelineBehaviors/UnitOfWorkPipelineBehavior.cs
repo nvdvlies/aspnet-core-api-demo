@@ -1,9 +1,9 @@
-﻿using Demo.Application.Shared.Interfaces;
-using Demo.Messages;
-using MediatR;
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Demo.Application.Shared.Interfaces;
+using Demo.Messages;
+using MediatR;
 
 namespace Demo.Application.Shared.PipelineBehaviors
 {
@@ -18,7 +18,8 @@ namespace Demo.Application.Shared.PipelineBehaviors
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
+        public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken,
+            RequestHandlerDelegate<TResponse> next)
         {
             var response = await next();
 

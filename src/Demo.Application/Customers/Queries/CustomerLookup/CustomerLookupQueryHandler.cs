@@ -1,3 +1,8 @@
+using System;
+using System.Globalization;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Demo.Application.Customers.Queries.CustomerLookup.Dtos;
@@ -7,18 +12,13 @@ using Demo.Domain.Customer;
 using Demo.Domain.Shared.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Globalization;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Demo.Application.Customers.Queries.CustomerLookup
 {
     public class CustomerLookupQueryHandler : IRequestHandler<CustomerLookupQuery, CustomerLookupQueryResult>
     {
-        private readonly IDbQuery<Customer> _query;
         private readonly IMapper _mapper;
+        private readonly IDbQuery<Customer> _query;
 
         public CustomerLookupQueryHandler(
             IDbQuery<Customer> query,
@@ -29,7 +29,8 @@ namespace Demo.Application.Customers.Queries.CustomerLookup
             _mapper = mapper;
         }
 
-        public async Task<CustomerLookupQueryResult> Handle(CustomerLookupQuery request, CancellationToken cancellationToken)
+        public async Task<CustomerLookupQueryResult> Handle(CustomerLookupQuery request,
+            CancellationToken cancellationToken)
         {
             var query = request.Ids is { Length: > 0 }
                 ? _query.WithOptions(x => x.IncludeDeleted = true).AsQueryable()
@@ -37,7 +38,8 @@ namespace Demo.Application.Customers.Queries.CustomerLookup
 
             if (!string.IsNullOrWhiteSpace(request.SearchTerm))
             {
-                var isValidInteger = int.TryParse(request.SearchTerm, NumberStyles.Integer, CultureInfo.GetCultureInfo("nl-NL"), out var integerValue);
+                var isValidInteger = int.TryParse(request.SearchTerm, NumberStyles.Integer,
+                    CultureInfo.GetCultureInfo("nl-NL"), out var integerValue);
 
                 query = query.Where(x =>
                     EF.Functions.Like(x.Name, $"%{request.SearchTerm}%")

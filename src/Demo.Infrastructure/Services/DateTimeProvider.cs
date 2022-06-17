@@ -1,5 +1,5 @@
-﻿using Demo.Common.Interfaces;
-using System;
+﻿using System;
+using Demo.Common.Interfaces;
 
 namespace Demo.Infrastructure.Services
 {

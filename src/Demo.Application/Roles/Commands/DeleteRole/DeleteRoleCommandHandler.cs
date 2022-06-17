@@ -1,7 +1,7 @@
-using Demo.Domain.Role.Interfaces;
-using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
+using Demo.Domain.Role.Interfaces;
+using MediatR;
 
 namespace Demo.Application.Roles.Commands.DeleteRole
 {

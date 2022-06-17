@@ -1,9 +1,9 @@
+using System.Threading;
+using System.Threading.Tasks;
 using AutoMapper;
 using Demo.Application.Shared.Mappings;
 using Demo.Domain.Invoice.Interfaces;
 using MediatR;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Demo.Application.Invoices.Commands.CreateInvoice
 {
@@ -21,7 +21,8 @@ namespace Demo.Application.Invoices.Commands.CreateInvoice
             _mapper = mapper;
         }
 
-        public async Task<CreateInvoiceResponse> Handle(CreateInvoiceCommand request, CancellationToken cancellationToken)
+        public async Task<CreateInvoiceResponse> Handle(CreateInvoiceCommand request,
+            CancellationToken cancellationToken)
         {
             await _invoiceDomainEntity.NewAsync(cancellationToken);
 

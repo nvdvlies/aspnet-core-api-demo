@@ -1,12 +1,12 @@
-﻿using Demo.Application.Customers.Queries.GetCustomerById;
+﻿using System;
+using System.Net;
+using System.Net.Http.Json;
+using System.Threading.Tasks;
+using Demo.Application.Customers.Queries.GetCustomerById;
 using Demo.Domain.Customer;
 using Demo.WebApi.Tests.Controllers.Customers.Helpers;
 using Demo.WebApi.Tests.Helpers;
 using FluentAssertions;
-using System;
-using System.Net;
-using System.Net.Http.Json;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Demo.WebApi.Tests.Controllers.Customers

@@ -1,7 +1,7 @@
-﻿using Demo.Scaffold.Tool.Changes;
+﻿using System.Collections.Generic;
+using Demo.Scaffold.Tool.Changes;
 using Demo.Scaffold.Tool.Helpers;
 using Demo.Scaffold.Tool.Interfaces;
-using System.Collections.Generic;
 
 namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint.OutputCollectors.Command.OutputCollectors
 {
@@ -15,9 +15,9 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint.OutputCollect
             var commandName = context.Variables.Get<string>(Constants.CommandName);
 
             changes.Add(new AddUsingStatementToExistingClass(
-                directory: context.GetControllersDirectory(),
-                fileName: context.GetControllerFileName(controllerName),
-                content: $"using Demo.Application.{controllerName}.Commands.{commandName};"
+                context.GetControllersDirectory(),
+                context.GetControllerFileName(controllerName),
+                $"using Demo.Application.{controllerName}.Commands.{commandName};"
             ));
 
             return changes;

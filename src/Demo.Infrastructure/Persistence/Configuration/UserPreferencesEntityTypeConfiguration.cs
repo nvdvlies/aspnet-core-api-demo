@@ -11,11 +11,11 @@ namespace Demo.Infrastructure.Persistence.Configuration
         {
             builder.ToTable(nameof(UserPreferences))
                 .HasKey(x => x.Id);
-            
+
             builder.HasOne(x => x.User)
                 .WithOne()
                 .HasForeignKey<UserPreferences>(x => x.Id);
-            
+
             builder.Property(x => x.Preferences)
                 .HasConversion(
                     x => JsonSerializer.Serialize(x, new JsonSerializerOptions
@@ -24,7 +24,7 @@ namespace Demo.Infrastructure.Persistence.Configuration
                     }),
                     x => JsonSerializer.Deserialize<UserPreferencesPreferences>(x, new JsonSerializerOptions())
                 );
-            
+
             builder.Property(p => p.Timestamp).IsRowVersion();
             builder.Property(p => p.CreatedOn).IsRequired();
             builder.Property(p => p.CreatedBy).IsRequired();

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Demo.Application.UserPreferences.Queries.GetUserPreferences.Dtos;
+using Demo.Domain.UserPreferences;
 
 namespace Demo.Application.UserPreferences.Queries.GetUserPreferences
 {
@@ -8,7 +9,7 @@ namespace Demo.Application.UserPreferences.Queries.GetUserPreferences
         public GetUserPreferencesMappingProfile()
         {
             CreateMap<Domain.UserPreferences.UserPreferences, UserPreferencesDto>();
-            CreateMap<Domain.UserPreferences.UserPreferencesPreferences, UserPreferencesPreferencesDto>();
+            CreateMap<UserPreferencesPreferences, UserPreferencesPreferencesDto>();
         }
     }
 }

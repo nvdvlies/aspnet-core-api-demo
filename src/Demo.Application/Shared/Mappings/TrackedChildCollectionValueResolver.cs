@@ -1,12 +1,14 @@
-﻿using AutoMapper;
+﻿using System.Collections.Generic;
+using System.Linq;
+using AutoMapper;
 using Demo.Application.Shared.Interfaces;
 using Demo.Domain.Shared.Interfaces;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Demo.Application.Shared.Mappings
 {
-    public class TrackedChildCollectionValueResolver<TDto, TEntity, TDtoCollection, TEntityCollection> : IMemberValueResolver<TDto, TEntity, List<TDtoCollection>, List<TEntityCollection>>
+    public class
+        TrackedChildCollectionValueResolver<TDto, TEntity, TDtoCollection, TEntityCollection> : IMemberValueResolver<
+            TDto, TEntity, List<TDtoCollection>, List<TEntityCollection>>
         where TDtoCollection : ICreateOrUpdateEntityDto
         where TEntityCollection : IEntity
     {
@@ -17,7 +19,8 @@ namespace Demo.Application.Shared.Mappings
             _mapper = mapper;
         }
 
-        public List<TEntityCollection> Resolve(TDto source, TEntity destination, List<TDtoCollection> dtoCollection, List<TEntityCollection> entityCollection, ResolutionContext context)
+        public List<TEntityCollection> Resolve(TDto source, TEntity destination, List<TDtoCollection> dtoCollection,
+            List<TEntityCollection> entityCollection, ResolutionContext context)
         {
             var resultCollection = new List<TEntityCollection>();
             foreach (var item in dtoCollection)
@@ -33,6 +36,7 @@ namespace Demo.Application.Shared.Mappings
                     resultCollection.Add(_mapper.Map<TEntityCollection>(item));
                 }
             }
+
             return resultCollection;
         }
     }

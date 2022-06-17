@@ -1,15 +1,16 @@
-﻿using Demo.Domain.Shared.DomainEntity;
-using Demo.Domain.Shared.Interfaces;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Demo.Domain.Shared.DomainEntity;
+using Demo.Domain.Shared.Interfaces;
 
 namespace Demo.Domain.Invoice.Validators
 {
     internal class NotAllowedToDeleteInvoiceInStatusValidator : IValidator<Invoice>
     {
-        public Task<IEnumerable<ValidationMessage>> ValidateAsync(IDomainEntityContext<Invoice> context, CancellationToken cancellationToken = default)
+        public Task<IEnumerable<ValidationMessage>> ValidateAsync(IDomainEntityContext<Invoice> context,
+            CancellationToken cancellationToken = default)
         {
             if (context.EditMode != EditMode.Delete)
             {

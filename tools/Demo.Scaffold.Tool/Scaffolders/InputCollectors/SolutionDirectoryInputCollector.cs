@@ -1,7 +1,7 @@
-﻿using Demo.Scaffold.Tool.Interfaces;
-using Spectre.Console;
-using System;
+﻿using System;
 using System.IO;
+using Demo.Scaffold.Tool.Interfaces;
+using Spectre.Console;
 
 namespace Demo.Scaffold.Tool.Scaffolders.InputCollectors
 {
@@ -28,14 +28,17 @@ namespace Demo.Scaffold.Tool.Scaffolders.InputCollectors
             {
                 return false;
             }
+
             if (!Directory.Exists(path))
             {
                 return false;
             }
+
             if (!File.Exists(Path.Combine(path, Constants.SolutionName)))
             {
                 return false;
             }
+
             return true;
         }
     }

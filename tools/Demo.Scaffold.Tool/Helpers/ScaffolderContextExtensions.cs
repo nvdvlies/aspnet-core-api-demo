@@ -1,6 +1,6 @@
-﻿using Demo.Scaffold.Tool.Scaffolders;
-using System;
+﻿using System;
 using System.IO;
+using Demo.Scaffold.Tool.Scaffolders;
 
 namespace Demo.Scaffold.Tool.Helpers
 {
@@ -13,7 +13,8 @@ namespace Demo.Scaffold.Tool.Helpers
 
         public static string GetControllerFileName(this ScaffolderContext context, string name)
         {
-            return $"{name.Replace("Controller", string.Empty, StringComparison.CurrentCultureIgnoreCase)}Controller.cs";
+            return
+                $"{name.Replace("Controller", string.Empty, StringComparison.CurrentCultureIgnoreCase)}Controller.cs";
         }
 
         public static string GetControllerFullPath(this ScaffolderContext context, string name)
@@ -61,7 +62,8 @@ namespace Demo.Scaffold.Tool.Helpers
             return Path.Combine(context.AppSettings.PathToSolutionRootDirectory, Constants.ApplicationPath);
         }
 
-        public static string GetCommandDirectory(this ScaffolderContext context, string constrollerName, string commandName)
+        public static string GetCommandDirectory(this ScaffolderContext context, string constrollerName,
+            string commandName)
         {
             return Path.Combine(context.GetApplicationDirectory(), constrollerName, "Commands", commandName);
         }

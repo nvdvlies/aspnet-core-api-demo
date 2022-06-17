@@ -1,6 +1,6 @@
-﻿using Demo.Common.Helpers;
+﻿using System;
+using Demo.Common.Helpers;
 using Microsoft.Extensions.DependencyInjection;
-using System;
 
 namespace Demo.Common
 {

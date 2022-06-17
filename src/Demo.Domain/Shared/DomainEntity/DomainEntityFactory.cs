@@ -1,6 +1,6 @@
-﻿using Demo.Domain.Shared.Interfaces;
+﻿using System;
+using Demo.Domain.Shared.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
-using System;
 
 namespace Demo.Domain.Shared.DomainEntity
 {

@@ -7,7 +7,9 @@ namespace Demo.Common.Extensions
         public static string PascalToKebabCase(this string value)
         {
             if (string.IsNullOrEmpty(value))
+            {
                 return value;
+            }
 
             return Regex.Replace(
                     value,

@@ -1,10 +1,10 @@
-﻿using Demo.Domain.Shared.Entities;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Demo.Domain.Shared.Entities;
 
 namespace Demo.Domain.Auditlog
 {
-    public partial class AuditlogItem : Entity
+    public class AuditlogItem : Entity
     {
         public string PropertyName { get; set; }
         public AuditlogStatus Status { get; set; }

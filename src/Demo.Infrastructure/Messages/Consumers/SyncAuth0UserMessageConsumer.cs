@@ -5,14 +5,15 @@ using Demo.Messages.User;
 using MassTransit;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using Serilog.Context;
 
 namespace Demo.Infrastructure.Messages.Consumers
 {
-    public class SyncAuth0UserMessageConsumer: IConsumer<SyncAuth0UserMessage>
+    public class SyncAuth0UserMessageConsumer : IConsumer<SyncAuth0UserMessage>
     {
-        private readonly IMediator _mediator;
-        private readonly ILogger<SyncAuth0UserMessageConsumer> _logger;
         private readonly ICorrelationIdProvider _correlationIdProvider;
+        private readonly ILogger<SyncAuth0UserMessageConsumer> _logger;
+        private readonly IMediator _mediator;
 
         public SyncAuth0UserMessageConsumer(
             IMediator mediator,
@@ -27,7 +28,7 @@ namespace Demo.Infrastructure.Messages.Consumers
         public async Task Consume(ConsumeContext<SyncAuth0UserMessage> context)
         {
             _correlationIdProvider.SwitchToCorrelationId(context.CorrelationId ?? Guid.NewGuid());
-            using (Serilog.Context.LogContext.PushProperty("CorrelationId", _correlationIdProvider.Id))
+            using (LogContext.PushProperty("CorrelationId", _correlationIdProvider.Id))
             {
                 _logger.LogInformation($"Consuming {nameof(SyncAuth0UserMessage)}");
                 var message = context.Message;

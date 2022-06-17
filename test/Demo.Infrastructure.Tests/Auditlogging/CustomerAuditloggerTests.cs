@@ -14,7 +14,8 @@ namespace Demo.Infrastructure.Tests.Auditlogging
 
         public CustomerAuditloggerTests()
         {
-            _subject = new CustomerAuditlogger(CurrentUserMock.Object, DateTimeMock.Object, AuditlogDomainEntityMock.Object);
+            _subject = new CustomerAuditlogger(CurrentUserMock.Object, DateTimeMock.Object,
+                AuditlogDomainEntityMock.Object);
         }
 
         [Fact]

@@ -1,9 +1,9 @@
-﻿using Demo.Scaffold.Tool.Changes;
+﻿using System;
+using System.Collections.Generic;
+using Demo.Scaffold.Tool.Changes;
 using Demo.Scaffold.Tool.Helpers;
 using Demo.Scaffold.Tool.Interfaces;
 using Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint.OutputCollectors.Command.InputCollectors;
-using System;
-using System.Collections.Generic;
 
 namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint.OutputCollectors.Command.OutputCollectors
 {
@@ -17,20 +17,21 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint.OutputCollect
             var controllerName = context.Variables.Get<string>(Constants.ControllerName);
             var commandName = context.Variables.Get<string>(Constants.CommandName);
 
-            var entityName = controllerName.EndsWith("s") ? controllerName[0..^1] : controllerName;
+            var entityName = controllerName.EndsWith("s") ? controllerName[..^1] : controllerName;
             var endpointName = commandName.Replace(entityName, string.Empty, StringComparison.CurrentCultureIgnoreCase);
 
             changes.Add(new UpdateExistingClassAtMarker(
-                directory: context.GetControllersDirectory(),
-                fileName: context.GetControllerFileName(controllerName),
-                marker: Tool.Constants.ScaffoldMarkerEndpoint,
-                content: GetTemplate(commandEndpointType, entityName, commandName, endpointName)
+                context.GetControllersDirectory(),
+                context.GetControllerFileName(controllerName),
+                Tool.Constants.ScaffoldMarkerEndpoint,
+                GetTemplate(commandEndpointType, entityName, commandName, endpointName)
             ));
 
             return changes;
         }
 
-        private static string GetTemplate(CommandEndpointTypes commandEndpointType, string entityName, string commandName, string endpointName)
+        private static string GetTemplate(CommandEndpointTypes commandEndpointType, string entityName,
+            string commandName, string endpointName)
         {
             switch (commandEndpointType)
             {

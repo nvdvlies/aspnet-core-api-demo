@@ -25,7 +25,8 @@ namespace Demo.Common.Helpers
         {
             if (type.IsGenericType)
             {
-                _types = _types.Where(t => t.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == type));
+                _types = _types.Where(t =>
+                    t.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == type));
             }
             else
             {
@@ -39,7 +40,8 @@ namespace Demo.Common.Helpers
         {
             if (type.IsGenericType)
             {
-                _types = _types.Where(t => !t.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == type));
+                _types = _types.Where(t =>
+                    !t.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == type));
             }
             else
             {

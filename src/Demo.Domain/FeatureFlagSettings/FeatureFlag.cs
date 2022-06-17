@@ -1,10 +1,10 @@
-﻿using Demo.Domain.Shared.Entities;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Demo.Domain.Shared.Entities;
 
 namespace Demo.Domain.FeatureFlagSettings
 {
-    public partial class FeatureFlag : AuditableEntity
+    public class FeatureFlag : AuditableEntity
     {
         public FeatureFlag()
         {

@@ -1,12 +1,10 @@
-﻿using Demo.Domain.Shared.Interfaces;
-using Demo.Domain.User;
-using Microsoft.Extensions.Caching.Distributed;
-using Microsoft.Extensions.Caching.Memory;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Demo.Domain.Role;
+using Demo.Domain.Shared.Interfaces;
+using Microsoft.Extensions.Caching.Distributed;
 
 namespace Demo.Infrastructure.Services
 {
@@ -31,7 +29,7 @@ namespace Demo.Infrastructure.Services
 
         public List<Role> Get()
         {
-            return Get(refreshCache: false);
+            return Get(false);
         }
 
         public List<Role> Get(bool refreshCache)
@@ -52,10 +50,8 @@ namespace Demo.Infrastructure.Services
 
                 return roles;
             }
-            else
-            {
-                return Decode(cacheValue);
-            }
+
+            return Decode(cacheValue);
         }
 
         private List<Role> Decode(byte[] value)

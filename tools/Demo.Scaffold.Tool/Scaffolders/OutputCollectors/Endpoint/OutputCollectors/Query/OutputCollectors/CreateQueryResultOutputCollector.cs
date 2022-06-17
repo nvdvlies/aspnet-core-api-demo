@@ -1,7 +1,7 @@
-﻿using Demo.Scaffold.Tool.Changes;
+﻿using System.Collections.Generic;
+using Demo.Scaffold.Tool.Changes;
 using Demo.Scaffold.Tool.Helpers;
 using Demo.Scaffold.Tool.Interfaces;
-using System.Collections.Generic;
 
 namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint.OutputCollectors.Query.OutputCollectors
 {
@@ -15,10 +15,10 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint.OutputCollect
             var queryName = context.Variables.Get<string>(Constants.QueryName);
 
             changes.Add(new CreateNewClass(
-                    directory: context.GetQueryDirectory(controllerName, queryName),
-                    fileName: $"{queryName}QueryResult.cs",
-                    content: GetTemplate(controllerName, queryName)
-                ));
+                context.GetQueryDirectory(controllerName, queryName),
+                $"{queryName}QueryResult.cs",
+                GetTemplate(controllerName, queryName)
+            ));
 
             return changes;
         }

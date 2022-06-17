@@ -1,22 +1,22 @@
-﻿using Demo.Scaffold.Tool.Changes;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Demo.Scaffold.Tool.Changes;
 using Demo.Scaffold.Tool.Interfaces;
 using Demo.Scaffold.Tool.Scaffolders.OutputCollectors.DomainEntity.InputCollectors;
 using Demo.Scaffold.Tool.Scaffolders.OutputCollectors.DomainEntity.OutputCollectors;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.DomainEntity
 {
     internal class DomainEntityOutputCollector : IOutputCollector
     {
-        private List<IInputCollector> _inputCollectors = new List<IInputCollector>()
+        private readonly List<IInputCollector> _inputCollectors = new()
         {
             new EntityNameInputCollector(),
             new EntityBaseClassInputCollector(),
             new DbContextCollectionNameInputCollector()
         };
 
-        private List<IOutputCollector> _outputCollectors = new List<IOutputCollector>()
+        private readonly List<IOutputCollector> _outputCollectors = new()
         {
             new CreateEntityClassOutputCollector(),
             new CreateDomainEntityInterfaceOutputCollector(),

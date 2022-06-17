@@ -1,7 +1,7 @@
-﻿using Demo.Scaffold.Tool.Changes;
+﻿using System.Collections.Generic;
+using Demo.Scaffold.Tool.Changes;
 using Demo.Scaffold.Tool.Helpers;
 using Demo.Scaffold.Tool.Interfaces;
-using System.Collections.Generic;
 
 namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.DomainEntity.OutputCollectors
 {
@@ -14,9 +14,9 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.DomainEntity.OutputCol
             var entityName = context.Variables.Get<string>(Constants.EntityName);
 
             changes.Add(new CreateNewClass(
-                directory: context.GetEntityDirectory(entityName),
-                fileName: $"{entityName}DomainEntity.cs",
-                content: GetTemplate(entityName)
+                context.GetEntityDirectory(entityName),
+                $"{entityName}DomainEntity.cs",
+                GetTemplate(entityName)
             ));
 
             return changes;

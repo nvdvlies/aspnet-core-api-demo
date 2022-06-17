@@ -21,6 +21,7 @@ namespace Demo.Infrastructure.Auditlogging.Shared
             {
                 return null;
             }
+
             return value.ToString();
         }
 
@@ -45,6 +46,7 @@ namespace Demo.Infrastructure.Auditlogging.Shared
             {
                 return null;
             }
+
             return DateFormatter(value.Value);
         }
 
@@ -64,6 +66,7 @@ namespace Demo.Infrastructure.Auditlogging.Shared
             {
                 return null;
             }
+
             return value.ToString("G");
         }
 
@@ -73,6 +76,7 @@ namespace Demo.Infrastructure.Auditlogging.Shared
             {
                 return null;
             }
+
             return string.Join(",", value);
         }
     }

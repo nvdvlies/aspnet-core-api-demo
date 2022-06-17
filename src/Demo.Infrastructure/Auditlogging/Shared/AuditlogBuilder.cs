@@ -1,19 +1,18 @@
-﻿using Demo.Domain.Auditlog;
-using Demo.Domain.Shared.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using Demo.Domain.Auditlog;
+using Demo.Domain.Shared.Interfaces;
 
 namespace Demo.Infrastructure.Auditlogging.Shared
 {
     internal class AuditlogBuilder<T>
     {
+        private readonly List<Action> _actions;
         private List<AuditlogItem> _auditlogItems;
         private T _current;
         private T _previous;
-
-        private List<Action> _actions;
 
         public AuditlogBuilder()
         {
@@ -21,80 +20,105 @@ namespace Demo.Infrastructure.Auditlogging.Shared
             _actions = new List<Action>();
         }
 
-        public AuditlogBuilder<T> WithProperty(Expression<Func<T, string>> expression, AuditlogType type = AuditlogType.Text, Func<string, string> customFormatter = null)
+        public AuditlogBuilder<T> WithProperty(Expression<Func<T, string>> expression,
+            AuditlogType type = AuditlogType.Text, Func<string, string> customFormatter = null)
         {
-            _actions.Add(new Action(() => WithPropertyInternal(expression, type, customFormatter ?? AuditlogFormatters.StringFormatter)));
+            _actions.Add(() =>
+                WithPropertyInternal(expression, type, customFormatter ?? AuditlogFormatters.StringFormatter));
             return this;
         }
 
-        public AuditlogBuilder<T> WithProperty(Expression<Func<T, Guid>> expression, AuditlogType type = AuditlogType.Text, Func<Guid, string> customFormatter = null)
+        public AuditlogBuilder<T> WithProperty(Expression<Func<T, Guid>> expression,
+            AuditlogType type = AuditlogType.Text, Func<Guid, string> customFormatter = null)
         {
-            _actions.Add(new Action(() => WithPropertyInternal(expression, type, customFormatter ?? AuditlogFormatters.StringFormatter)));
+            _actions.Add(() =>
+                WithPropertyInternal(expression, type, customFormatter ?? AuditlogFormatters.StringFormatter));
             return this;
         }
 
-        public AuditlogBuilder<T> WithProperty(Expression<Func<T, Enum>> expression, AuditlogType type = AuditlogType.Text, Func<Enum, string> customFormatter = null)
+        public AuditlogBuilder<T> WithProperty(Expression<Func<T, Enum>> expression,
+            AuditlogType type = AuditlogType.Text, Func<Enum, string> customFormatter = null)
         {
-            _actions.Add(new Action(() => WithPropertyInternal(expression, type, customFormatter ?? AuditlogFormatters.EnumFormatter)));
+            _actions.Add(() =>
+                WithPropertyInternal(expression, type, customFormatter ?? AuditlogFormatters.EnumFormatter));
             return this;
         }
 
-        public AuditlogBuilder<T> WithProperty<T2>(Expression<Func<T, IList<T2>>> expression, string propertyName = null, AuditlogType type = AuditlogType.Text, Func<IList<T2>, string> customFormatter = null)
+        public AuditlogBuilder<T> WithProperty<T2>(Expression<Func<T, IList<T2>>> expression,
+            string propertyName = null, AuditlogType type = AuditlogType.Text,
+            Func<IList<T2>, string> customFormatter = null)
         {
-            _actions.Add(new Action(() => WithPropertyInternal(expression, type, customFormatter ?? AuditlogFormatters.ListFormatter, propertyName)));
+            _actions.Add(() =>
+                WithPropertyInternal(expression, type, customFormatter ?? AuditlogFormatters.ListFormatter,
+                    propertyName));
             return this;
         }
 
-        public AuditlogBuilder<T> WithProperty(Expression<Func<T, DateTime>> expression, AuditlogType type = AuditlogType.DateTime, Func<DateTime, string> customFormatter = null)
+        public AuditlogBuilder<T> WithProperty(Expression<Func<T, DateTime>> expression,
+            AuditlogType type = AuditlogType.DateTime, Func<DateTime, string> customFormatter = null)
         {
-            _actions.Add(new Action(() => WithPropertyInternal(expression, type, customFormatter ?? AuditlogFormatters.DateFormatter)));
+            _actions.Add(() =>
+                WithPropertyInternal(expression, type, customFormatter ?? AuditlogFormatters.DateFormatter));
             return this;
         }
 
-        public AuditlogBuilder<T> WithProperty(Expression<Func<T, DateTime?>> expression, AuditlogType type = AuditlogType.DateTime, Func<DateTime?, string> customFormatter = null)
+        public AuditlogBuilder<T> WithProperty(Expression<Func<T, DateTime?>> expression,
+            AuditlogType type = AuditlogType.DateTime, Func<DateTime?, string> customFormatter = null)
         {
-            _actions.Add(new Action(() => WithPropertyInternal(expression, type, customFormatter ?? AuditlogFormatters.DateFormatter)));
+            _actions.Add(() =>
+                WithPropertyInternal(expression, type, customFormatter ?? AuditlogFormatters.DateFormatter));
             return this;
         }
 
-        public AuditlogBuilder<T> WithProperty(Expression<Func<T, int>> expression, AuditlogType type = AuditlogType.Number, Func<int, string> customFormatter = null)
+        public AuditlogBuilder<T> WithProperty(Expression<Func<T, int>> expression,
+            AuditlogType type = AuditlogType.Number, Func<int, string> customFormatter = null)
         {
-            _actions.Add(new Action(() => WithPropertyInternal(expression, type, customFormatter ?? AuditlogFormatters.NumberFormatter)));
+            _actions.Add(() =>
+                WithPropertyInternal(expression, type, customFormatter ?? AuditlogFormatters.NumberFormatter));
             return this;
         }
 
-        public AuditlogBuilder<T> WithProperty(Expression<Func<T, long>> expression, AuditlogType type = AuditlogType.Number, Func<long, string> customFormatter = null)
+        public AuditlogBuilder<T> WithProperty(Expression<Func<T, long>> expression,
+            AuditlogType type = AuditlogType.Number, Func<long, string> customFormatter = null)
         {
-            _actions.Add(new Action(() => WithPropertyInternal(expression, type, customFormatter ?? AuditlogFormatters.NumberFormatter)));
+            _actions.Add(() =>
+                WithPropertyInternal(expression, type, customFormatter ?? AuditlogFormatters.NumberFormatter));
             return this;
         }
 
-        public AuditlogBuilder<T> WithProperty(Expression<Func<T, decimal>> expression, AuditlogType type = AuditlogType.Decimal, Func<decimal, string> customFormatter = null)
+        public AuditlogBuilder<T> WithProperty(Expression<Func<T, decimal>> expression,
+            AuditlogType type = AuditlogType.Decimal, Func<decimal, string> customFormatter = null)
         {
-            _actions.Add(new Action(() => WithPropertyInternal(expression, type, customFormatter ?? AuditlogFormatters.DecimalFormatter)));
+            _actions.Add(() =>
+                WithPropertyInternal(expression, type, customFormatter ?? AuditlogFormatters.DecimalFormatter));
             return this;
         }
 
-        public AuditlogBuilder<T> WithProperty(Expression<Func<T, bool>> expression, AuditlogType type = AuditlogType.YesNo, Func<bool, string> customFormatter = null)
+        public AuditlogBuilder<T> WithProperty(Expression<Func<T, bool>> expression,
+            AuditlogType type = AuditlogType.YesNo, Func<bool, string> customFormatter = null)
         {
-            _actions.Add(new Action(() => WithPropertyInternal(expression, type, customFormatter ?? AuditlogFormatters.BooleanFormatter)));
+            _actions.Add(() =>
+                WithPropertyInternal(expression, type, customFormatter ?? AuditlogFormatters.BooleanFormatter));
             return this;
         }
 
         public AuditlogBuilder<T> WithChildEntity<T2>(Expression<Func<T, T2>> expression, AuditlogBuilder<T2> builder)
         {
-            _actions.Add(new Action(() => WithChildEntityInternal(expression, builder)));
+            _actions.Add(() => WithChildEntityInternal(expression, builder));
             return this;
         }
 
-        public AuditlogBuilder<T> WithChildEntityCollection<T2, T3>(Expression<Func<T, T2>> expression, AuditlogBuilder<T3> builder) where T2 : IEnumerable<T3> where T3 : IEntity
+        public AuditlogBuilder<T> WithChildEntityCollection<T2, T3>(Expression<Func<T, T2>> expression,
+            AuditlogBuilder<T3> builder) where T2 : IEnumerable<T3> where T3 : IEntity
         {
             return WithChildEntityCollection(expression, null, builder);
         }
 
-        public AuditlogBuilder<T> WithChildEntityCollection<T2, T3>(Expression<Func<T, T2>> expression, Expression<Func<T3, string>> collectionItemPropertyname, AuditlogBuilder<T3> builder) where T2 : IEnumerable<T3> where T3 : IEntity
+        public AuditlogBuilder<T> WithChildEntityCollection<T2, T3>(Expression<Func<T, T2>> expression,
+            Expression<Func<T3, string>> collectionItemPropertyname, AuditlogBuilder<T3> builder)
+            where T2 : IEnumerable<T3> where T3 : IEntity
         {
-            _actions.Add(new Action(() => WithChildEntityCollectionInternal(expression, collectionItemPropertyname, builder)));
+            _actions.Add(() => WithChildEntityCollectionInternal(expression, collectionItemPropertyname, builder));
             return this;
         }
 
@@ -107,14 +131,16 @@ namespace Demo.Infrastructure.Auditlogging.Shared
             {
                 action.Invoke();
             }
+
             return _auditlogItems;
         }
 
-        private void WithPropertyInternal<T2>(Expression<Func<T, T2>> expression, AuditlogType type, Func<T2, string> formatter, string propertyName = null)
+        private void WithPropertyInternal<T2>(Expression<Func<T, T2>> expression, AuditlogType type,
+            Func<T2, string> formatter, string propertyName = null)
         {
             propertyName ??= GetPropertyName(expression);
-            T2 currentValue = _current != null ? expression.Compile()(_current) : default;
-            T2 previousValue = _previous != null ? expression.Compile()(_previous) : default;
+            var currentValue = _current != null ? expression.Compile()(_current) : default;
+            var previousValue = _previous != null ? expression.Compile()(_previous) : default;
 
             var status = GetAuditlogStatus(currentValue, previousValue);
 
@@ -126,7 +152,7 @@ namespace Demo.Infrastructure.Auditlogging.Shared
                     Type = type,
                     Status = status,
                     CurrentValueAsString = formatter(currentValue),
-                    PreviousValueAsString = formatter(previousValue),
+                    PreviousValueAsString = formatter(previousValue)
                 };
                 _auditlogItems.Add(item);
             }
@@ -135,8 +161,8 @@ namespace Demo.Infrastructure.Auditlogging.Shared
         private void WithChildEntityInternal<T2>(Expression<Func<T, T2>> expression, AuditlogBuilder<T2> builder)
         {
             var propertyName = ((MemberExpression)expression.Body).Member.Name;
-            T2 currentValue = _current != null ? expression.Compile()(_current) : default;
-            T2 previousValue = _previous != null ? expression.Compile()(_previous) : default;
+            var currentValue = _current != null ? expression.Compile()(_current) : default;
+            var previousValue = _previous != null ? expression.Compile()(_previous) : default;
 
             var auditLogItems = builder.Build(currentValue, previousValue);
 
@@ -147,8 +173,8 @@ namespace Demo.Infrastructure.Auditlogging.Shared
 
             var status = GetAuditlogStatus(currentValue, previousValue);
             if (status == AuditlogStatus.Unchanged)
-            {
                 // Set status to updated because a child has changes
+            {
                 status = AuditlogStatus.Updated;
             }
 
@@ -162,11 +188,13 @@ namespace Demo.Infrastructure.Auditlogging.Shared
             _auditlogItems.Add(item);
         }
 
-        private void WithChildEntityCollectionInternal<T2, T3>(Expression<Func<T, T2>> expression, Expression<Func<T3, string>> collectionItemPropertyname, AuditlogBuilder<T3> builder) where T2 : IEnumerable<T3> where T3 : IEntity
+        private void WithChildEntityCollectionInternal<T2, T3>(Expression<Func<T, T2>> expression,
+            Expression<Func<T3, string>> collectionItemPropertyname, AuditlogBuilder<T3> builder)
+            where T2 : IEnumerable<T3> where T3 : IEntity
         {
             var propertyName = ((MemberExpression)expression.Body).Member.Name;
-            T2 currentValue = _current != null ? expression.Compile()(_current) : default;
-            T2 previousValue = _previous != null ? expression.Compile()(_previous) : default;
+            var currentValue = _current != null ? expression.Compile()(_current) : default;
+            var previousValue = _previous != null ? expression.Compile()(_previous) : default;
 
             var status = GetAuditlogStatus(currentValue, previousValue);
 
@@ -184,17 +212,17 @@ namespace Demo.Infrastructure.Auditlogging.Shared
                     };
                 });
             var added = currentValue.Where(x => !previousValue.Any(y => y.Id == x.Id))
-                    .Select(x => new AuditlogPair<T3>
-                    {
-                        Id = x.Id,
-                        CurrentValue = x
-                    });
+                .Select(x => new AuditlogPair<T3>
+                {
+                    Id = x.Id,
+                    CurrentValue = x
+                });
             var removed = previousValue.Where(x => !currentValue.Any(y => y.Id == x.Id))
-                    .Select(previous => new AuditlogPair<T3>
-                    {
-                        Id = previous.Id,
-                        PreviousValue = previous
-                    });
+                .Select(previous => new AuditlogPair<T3>
+                {
+                    Id = previous.Id,
+                    PreviousValue = previous
+                });
 
             var auditlogPairs = updated.Concat(added).Concat(removed);
 
@@ -220,7 +248,8 @@ namespace Demo.Infrastructure.Auditlogging.Shared
                     var item2 = new AuditlogItem
                     {
                         PropertyName = collectionItemPropertyname != null
-                            ? collectionItemPropertyname.Compile()(auditlogPair.CurrentValue ?? auditlogPair.PreviousValue).ToString()
+                            ? collectionItemPropertyname.Compile()(auditlogPair.CurrentValue ??
+                                                                   auditlogPair.PreviousValue)
                             : i.ToString(),
                         Status = auditlogPairStatus,
                         Type = AuditlogType.None,
@@ -246,14 +275,17 @@ namespace Demo.Infrastructure.Auditlogging.Shared
             {
                 return AuditlogStatus.Unchanged;
             }
-            else if (comparer.Equals(current, default) && !comparer.Equals(previous, default))
+
+            if (comparer.Equals(current, default) && !comparer.Equals(previous, default))
             {
                 return AuditlogStatus.Removed;
             }
-            else if (!comparer.Equals(current, default) && comparer.Equals(previous, default))
+
+            if (!comparer.Equals(current, default) && comparer.Equals(previous, default))
             {
                 return AuditlogStatus.Added;
             }
+
             return AuditlogStatus.Updated;
         }
 
@@ -263,11 +295,9 @@ namespace Demo.Infrastructure.Auditlogging.Shared
             {
                 return ((MemberExpression)expression.Body).Member.Name;
             }
-            else
-            {
-                var operand = ((UnaryExpression)expression.Body).Operand;
-                return ((MemberExpression)operand).Member.Name;
-            }
+
+            var operand = ((UnaryExpression)expression.Body).Operand;
+            return ((MemberExpression)operand).Member.Name;
         }
     }
 }

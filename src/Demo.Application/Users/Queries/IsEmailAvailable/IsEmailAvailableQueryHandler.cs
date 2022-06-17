@@ -1,10 +1,10 @@
 using System.Linq;
-using Demo.Domain.Shared.Interfaces;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
 using System.Threading;
 using System.Threading.Tasks;
+using Demo.Domain.Shared.Interfaces;
 using Demo.Domain.User;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace Demo.Application.Users.Queries.IsEmailAvailable
 {
@@ -17,7 +17,8 @@ namespace Demo.Application.Users.Queries.IsEmailAvailable
             _query = query;
         }
 
-        public async Task<IsEmailAvailableQueryResult> Handle(IsEmailAvailableQuery request, CancellationToken cancellationToken)
+        public async Task<IsEmailAvailableQueryResult> Handle(IsEmailAvailableQuery request,
+            CancellationToken cancellationToken)
         {
             var query = _query.AsQueryable();
 

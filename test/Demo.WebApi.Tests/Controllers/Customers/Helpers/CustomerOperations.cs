@@ -1,9 +1,9 @@
-﻿using Demo.Application.Customers.Commands.CreateCustomer;
-using Demo.Application.Customers.Queries.SearchCustomers;
-using System;
+﻿using System;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
+using Demo.Application.Customers.Commands.CreateCustomer;
+using Demo.Application.Customers.Queries.SearchCustomers;
 
 namespace Demo.WebApi.Tests.Controllers.Customers.Helpers
 {

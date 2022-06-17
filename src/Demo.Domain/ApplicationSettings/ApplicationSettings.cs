@@ -1,9 +1,9 @@
-﻿using Demo.Domain.Shared.Entities;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
+using Demo.Domain.Shared.Entities;
 
 namespace Demo.Domain.ApplicationSettings
 {
-    public partial class ApplicationSettings : AuditableEntity
+    public class ApplicationSettings : AuditableEntity
     {
         public ApplicationSettings()
         {
@@ -13,7 +13,6 @@ namespace Demo.Domain.ApplicationSettings
             };
         }
 
-        [JsonInclude]
-        public ApplicationSettingsSettings Settings { get; internal set; }
+        [JsonInclude] public ApplicationSettingsSettings Settings { get; internal set; }
     }
 }

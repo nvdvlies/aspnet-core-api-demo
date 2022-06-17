@@ -1,9 +1,9 @@
-﻿using Demo.Scaffold.Tool.Changes;
+﻿using System;
+using System.Collections.Generic;
+using Demo.Scaffold.Tool.Changes;
 using Demo.Scaffold.Tool.Helpers;
 using Demo.Scaffold.Tool.Interfaces;
 using Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint.OutputCollectors.Query.InputCollectors;
-using System;
-using System.Collections.Generic;
 
 namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint.OutputCollectors.Query.OutputCollectors
 {
@@ -17,21 +17,24 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint.OutputCollect
             var controllerName = context.Variables.Get<string>(Constants.ControllerName);
             var queryName = context.Variables.Get<string>(Constants.QueryName);
 
-            var entityName = controllerName.EndsWith("s") ? controllerName[0..^1] : controllerName;
+            var entityName = controllerName.EndsWith("s") ? controllerName[..^1] : controllerName;
             var endpointName = queryName.Replace(entityName, string.Empty, StringComparison.CurrentCultureIgnoreCase);
-            endpointName = string.Equals(endpointName, "searchs", StringComparison.OrdinalIgnoreCase) ? endpointName[0..^1] : endpointName;
+            endpointName = string.Equals(endpointName, "searchs", StringComparison.OrdinalIgnoreCase)
+                ? endpointName[..^1]
+                : endpointName;
 
             changes.Add(new UpdateExistingClassAtMarker(
-                directory: context.GetControllersDirectory(),
-                fileName: context.GetControllerFileName(controllerName),
-                marker: Tool.Constants.ScaffoldMarkerEndpoint,
-                content: GetTemplate(queryEndpointType, queryName, entityName, endpointName)
+                context.GetControllersDirectory(),
+                context.GetControllerFileName(controllerName),
+                Tool.Constants.ScaffoldMarkerEndpoint,
+                GetTemplate(queryEndpointType, queryName, entityName, endpointName)
             ));
 
             return changes;
         }
 
-        private static string GetTemplate(QueryEndpointTypes queryEndpointType, string queryName, string entityName, string endpointName)
+        private static string GetTemplate(QueryEndpointTypes queryEndpointType, string queryName, string entityName,
+            string endpointName)
         {
             switch (queryEndpointType)
             {

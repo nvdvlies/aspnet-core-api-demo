@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Demo.Common.Interfaces;
 using Microsoft.AspNetCore.Http;
+using Serilog.Context;
 
 namespace Demo.WebApi.Middleware
 {
@@ -34,7 +35,7 @@ namespace Demo.WebApi.Middleware
                 correlationIdProvider.SwitchToCorrelationId(Guid.NewGuid());
             }
 
-            using (Serilog.Context.LogContext.PushProperty("CorrelationId", correlationIdProvider.Id))
+            using (LogContext.PushProperty("CorrelationId", correlationIdProvider.Id))
             {
                 await _next.Invoke(httpContext);
             }

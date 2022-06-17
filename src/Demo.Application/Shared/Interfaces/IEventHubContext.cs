@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Demo.Application.Shared.Interfaces
+﻿namespace Demo.Application.Shared.Interfaces
 {
     public interface IEventHubContext
     {

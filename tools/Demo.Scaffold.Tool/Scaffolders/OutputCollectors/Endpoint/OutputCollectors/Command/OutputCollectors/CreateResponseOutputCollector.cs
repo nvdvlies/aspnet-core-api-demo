@@ -1,8 +1,8 @@
-﻿using Demo.Scaffold.Tool.Changes;
+﻿using System.Collections.Generic;
+using Demo.Scaffold.Tool.Changes;
 using Demo.Scaffold.Tool.Helpers;
 using Demo.Scaffold.Tool.Interfaces;
 using Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint.OutputCollectors.Command.InputCollectors;
-using System.Collections.Generic;
 
 namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint.OutputCollectors.Command.OutputCollectors
 {
@@ -21,10 +21,10 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint.OutputCollect
                 var commandName = context.Variables.Get<string>(Constants.CommandName);
 
                 changes.Add(new CreateNewClass(
-                        directory: context.GetCommandDirectory(controllerName, commandName),
-                        fileName: $"{commandName}Response.cs",
-                        content: GetTemplate(controllerName, commandName)
-                    ));
+                    context.GetCommandDirectory(controllerName, commandName),
+                    $"{commandName}Response.cs",
+                    GetTemplate(controllerName, commandName)
+                ));
             }
 
             return changes;

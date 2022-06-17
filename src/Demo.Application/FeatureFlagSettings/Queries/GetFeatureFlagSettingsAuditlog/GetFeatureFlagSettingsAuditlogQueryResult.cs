@@ -1,6 +1,6 @@
+using System.Collections.Generic;
 using Demo.Application.Shared.Dtos;
 using Demo.Application.Shared.Models;
-using System.Collections.Generic;
 
 namespace Demo.Application.FeatureFlagSettings.Queries.GetFeatureFlagSettingsAuditlog
 {

@@ -4,7 +4,7 @@ using Demo.Domain.Role;
 
 namespace Demo.Application.Roles.Queries.GetRoleById
 {
-    public partial class GetRoleByIdMappingProfile : Profile
+    public class GetRoleByIdMappingProfile : Profile
     {
         public GetRoleByIdMappingProfile()
         {

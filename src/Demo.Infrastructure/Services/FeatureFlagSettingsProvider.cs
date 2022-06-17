@@ -1,12 +1,11 @@
-﻿using Demo.Domain.FeatureFlagSettings;
-using Demo.Domain.FeatureFlagSettings.Interfaces;
-using Demo.Domain.Shared.Interfaces;
-using Microsoft.Extensions.Caching.Distributed;
-using Microsoft.Extensions.Caching.Memory;
-using System;
+﻿using System;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Demo.Domain.FeatureFlagSettings;
+using Demo.Domain.FeatureFlagSettings.Interfaces;
+using Demo.Domain.Shared.Interfaces;
+using Microsoft.Extensions.Caching.Distributed;
 
 namespace Demo.Infrastructure.Services
 {
@@ -15,8 +14,8 @@ namespace Demo.Infrastructure.Services
         private const string CacheKey = "FeatureFlagSettings";
 
         private readonly IDistributedCache _cache;
-        private readonly IJsonService<FeatureFlagSettings> _jsonService;
         private readonly IFeatureFlagSettingsDomainEntity _featureFlagSettingsDomainEntity;
+        private readonly IJsonService<FeatureFlagSettings> _jsonService;
 
         public FeatureFlagSettingsProvider(
             IDistributedCache cache,
@@ -31,10 +30,11 @@ namespace Demo.Infrastructure.Services
 
         public async Task<FeatureFlagSettings> GetAsync(CancellationToken cancellationToken = default)
         {
-            return await GetAsync(refreshCache: false, cancellationToken);
+            return await GetAsync(false, cancellationToken);
         }
 
-        public async Task<FeatureFlagSettings> GetAsync(bool refreshCache, CancellationToken cancellationToken = default)
+        public async Task<FeatureFlagSettings> GetAsync(bool refreshCache,
+            CancellationToken cancellationToken = default)
         {
             var cacheValue = await _cache.GetAsync(CacheKey, cancellationToken);
 
@@ -52,10 +52,8 @@ namespace Demo.Infrastructure.Services
 
                 return featureFlagSettings;
             }
-            else
-            {
-                return Decode(cacheValue);
-            }
+
+            return Decode(cacheValue);
         }
 
         private FeatureFlagSettings Decode(byte[] value)

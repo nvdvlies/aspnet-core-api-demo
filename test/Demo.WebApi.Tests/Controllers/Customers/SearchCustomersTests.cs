@@ -1,15 +1,15 @@
-﻿using AutoFixture;
+﻿using System;
+using System.Linq;
+using System.Net;
+using System.Net.Http.Json;
+using System.Threading.Tasks;
+using AutoFixture;
 using Demo.Application.Customers.Queries.SearchCustomers;
 using Demo.Application.Customers.Queries.SearchCustomers.Dtos;
 using Demo.Domain.Customer;
 using Demo.WebApi.Tests.Controllers.Customers.Helpers;
 using Demo.WebApi.Tests.Helpers;
 using FluentAssertions;
-using System;
-using System.Linq;
-using System.Net;
-using System.Net.Http.Json;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Demo.WebApi.Tests.Controllers.Customers
@@ -158,7 +158,8 @@ namespace Demo.WebApi.Tests.Controllers.Customers
         }
 
         [Fact]
-        public async Task SearchCustomers_When_18_customers_exist_and_pagesize_is_10_and_page_index_is_1_It_should_return_8_customers()
+        public async Task
+            SearchCustomers_When_18_customers_exist_and_pagesize_is_10_and_page_index_is_1_It_should_return_8_customers()
         {
             // Arrange
             await SetTestUserToAuthenticated();
@@ -194,7 +195,8 @@ namespace Demo.WebApi.Tests.Controllers.Customers
         }
 
         [Fact]
-        public async Task SearchCustomers_When_28_customers_exist_and_pagesize_is_10_and_page_index_is_1_It_should_return_10_customers()
+        public async Task
+            SearchCustomers_When_28_customers_exist_and_pagesize_is_10_and_page_index_is_1_It_should_return_10_customers()
         {
             // Arrange
             await SetTestUserToAuthenticated();
@@ -229,7 +231,8 @@ namespace Demo.WebApi.Tests.Controllers.Customers
         }
 
         [Fact]
-        public async Task SearchCustomers_When_ordering_by_customer_code_ascending_It_should_return_list_in_correct_order()
+        public async Task
+            SearchCustomers_When_ordering_by_customer_code_ascending_It_should_return_list_in_correct_order()
         {
             // Arrange
             await SetTestUserToAuthenticated();
@@ -262,7 +265,8 @@ namespace Demo.WebApi.Tests.Controllers.Customers
         }
 
         [Fact]
-        public async Task SearchCustomers_When_ordering_by_customer_code_descending_It_should_return_list_in_correct_order()
+        public async Task
+            SearchCustomers_When_ordering_by_customer_code_descending_It_should_return_list_in_correct_order()
         {
             // Arrange
             await SetTestUserToAuthenticated();
@@ -295,7 +299,8 @@ namespace Demo.WebApi.Tests.Controllers.Customers
         }
 
         [Fact]
-        public async Task SearchCustomers_When_ordering_by_customer_name_ascending_It_should_return_list_in_correct_order()
+        public async Task
+            SearchCustomers_When_ordering_by_customer_name_ascending_It_should_return_list_in_correct_order()
         {
             // Arrange
             await SetTestUserToAuthenticated();
@@ -328,7 +333,8 @@ namespace Demo.WebApi.Tests.Controllers.Customers
         }
 
         [Fact]
-        public async Task SearchCustomers_When_ordering_by_customer_name_descending_It_should_return_list_in_correct_order()
+        public async Task
+            SearchCustomers_When_ordering_by_customer_name_descending_It_should_return_list_in_correct_order()
         {
             // Arrange
             await SetTestUserToAuthenticated();

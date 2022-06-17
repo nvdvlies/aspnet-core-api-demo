@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Demo.Domain.Role;
+using Demo.Domain.User;
 
 namespace Demo.WebApi.Tests.Helpers
 {
@@ -7,6 +8,6 @@ namespace Demo.WebApi.Tests.Helpers
     {
         public bool IsAuthenticated { get; set; }
         public List<Role> Roles { get; set; }
-        public Domain.User.User User { get; set; }
+        public User User { get; set; }
     }
 }

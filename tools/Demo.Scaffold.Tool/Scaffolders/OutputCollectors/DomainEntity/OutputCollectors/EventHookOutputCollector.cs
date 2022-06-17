@@ -1,8 +1,8 @@
-﻿using Demo.Scaffold.Tool.Changes;
+﻿using System.Collections.Generic;
+using System.IO;
+using Demo.Scaffold.Tool.Changes;
 using Demo.Scaffold.Tool.Helpers;
 using Demo.Scaffold.Tool.Interfaces;
-using System.Collections.Generic;
-using System.IO;
 
 namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.DomainEntity.OutputCollectors
 {
@@ -15,9 +15,9 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.DomainEntity.OutputCol
             var entityName = context.Variables.Get<string>(Constants.EntityName);
 
             changes.Add(new CreateNewClass(
-                directory: Path.Combine(context.GetEntityDirectory(entityName), "Hooks"),
-                fileName: $"{entityName}CreatedUpdatedDeletedDomainEventHook.cs",
-                content: GetTemplate(entityName)
+                Path.Combine(context.GetEntityDirectory(entityName), "Hooks"),
+                $"{entityName}CreatedUpdatedDeletedDomainEventHook.cs",
+                GetTemplate(entityName)
             ));
 
             return changes;

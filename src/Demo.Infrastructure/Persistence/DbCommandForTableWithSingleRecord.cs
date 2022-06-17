@@ -1,12 +1,13 @@
-﻿using Demo.Domain.Shared.Interfaces;
-using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Demo.Domain.Shared.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Demo.Infrastructure.Persistence
 {
-    internal class DbCommandForTableWithSingleRecord<T> : DbCommand<T>, IDbCommandForTableWithSingleRecord<T> where T : class, IEntity
+    internal class DbCommandForTableWithSingleRecord<T> : DbCommand<T>, IDbCommandForTableWithSingleRecord<T>
+        where T : class, IEntity
     {
         public DbCommandForTableWithSingleRecord(IApplicationDbContext dbContext) : base(dbContext)
         {
@@ -18,7 +19,7 @@ namespace Demo.Infrastructure.Persistence
             return await query.SingleOrDefaultAsync(cancellationToken);
         }
 
-        public async override Task InsertAsync(T entity, CancellationToken cancellationToken)
+        public override async Task InsertAsync(T entity, CancellationToken cancellationToken)
         {
             var query = _dbContext.Set<T>().AsQueryable();
             var existing = await query.SingleOrDefaultAsync(cancellationToken);
@@ -26,6 +27,7 @@ namespace Demo.Infrastructure.Persistence
             {
                 throw new Exception("Cannot insert item. Only one record is allowed in this recordset");
             }
+
             await base.InsertAsync(entity, cancellationToken);
         }
     }

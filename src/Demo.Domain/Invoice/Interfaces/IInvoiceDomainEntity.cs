@@ -1,7 +1,7 @@
-﻿using Demo.Domain.Shared.Interfaces;
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Demo.Domain.Shared.Interfaces;
 
 namespace Demo.Domain.Invoice.Interfaces
 {

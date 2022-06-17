@@ -1,19 +1,20 @@
-﻿using Auth0.Core.Exceptions;
-using Auth0.ManagementApi.Models;
-using Demo.Application.Shared.Interfaces;
-using Demo.Infrastructure.Settings;
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Auth0.Core.Exceptions;
+using Auth0.ManagementApi.Models;
+using Demo.Application.Shared.Interfaces;
 using Demo.Domain.Shared.Interfaces;
+using Demo.Infrastructure.Settings;
+using User = Demo.Domain.User.User;
 
 namespace Demo.Infrastructure.Auth0
 {
     internal class Auth0UserManagementClient : IAuth0UserManagementClient
     {
-        private readonly EnvironmentSettings _environmentSettings;
         private readonly IAuth0ManagementApiClientProvider _auth0ManagementApiClientCreator;
+        private readonly EnvironmentSettings _environmentSettings;
         private readonly IRolesProvider _rolesProvider;
 
         public Auth0UserManagementClient(
@@ -27,14 +28,15 @@ namespace Demo.Infrastructure.Auth0
             _rolesProvider = rolesProvider;
         }
 
-        public async Task<string> CreateAsync(Domain.User.User internalUser, CancellationToken cancellationToken = default)
+        public async Task<string> CreateAsync(User internalUser, CancellationToken cancellationToken = default)
         {
             var client = await _auth0ManagementApiClientCreator.GetClient(cancellationToken);
 
-            User user = null;
+            global::Auth0.ManagementApi.Models.User user = null;
             try
             {
-                user = await client.Users.GetAsync(string.Concat("auth0|", internalUser.Id.ToString()), cancellationToken: cancellationToken);
+                user = await client.Users.GetAsync(string.Concat("auth0|", internalUser.Id.ToString()),
+                    cancellationToken: cancellationToken);
                 // we're likely in a retry for an exception that occured after the user was successfully created in auth0.
             }
             catch (ErrorApiException ex) when (ex.ApiError?.ErrorCode == "inexistent_user")
@@ -70,7 +72,7 @@ namespace Demo.Infrastructure.Auth0
             return user.UserId;
         }
 
-        public async Task<string> GetChangePasswordUrl(Domain.User.User internalUser, CancellationToken cancellationToken = default)
+        public async Task<string> GetChangePasswordUrl(User internalUser, CancellationToken cancellationToken = default)
         {
             var client = await _auth0ManagementApiClientCreator.GetClient(cancellationToken);
             var passwordChangeTicketRequest = new PasswordChangeTicketRequest
@@ -81,10 +83,11 @@ namespace Demo.Infrastructure.Auth0
                 IncludeEmailInRedirect = true,
                 Ttl = 604800 // one week
             };
-            return (await client.Tickets.CreatePasswordChangeTicketAsync(passwordChangeTicketRequest, cancellationToken)).Value;
+            return (await client.Tickets.CreatePasswordChangeTicketAsync(passwordChangeTicketRequest,
+                cancellationToken)).Value;
         }
 
-        public async Task SyncAsync(Domain.User.User internalUser, bool verifyEmail, CancellationToken cancellationToken = default)
+        public async Task SyncAsync(User internalUser, bool verifyEmail, CancellationToken cancellationToken = default)
         {
             var client = await _auth0ManagementApiClientCreator.GetClient(cancellationToken);
             var request = new UserUpdateRequest
@@ -92,19 +95,26 @@ namespace Demo.Infrastructure.Auth0
                 Connection = _environmentSettings.Auth0.Management.UserDatabaseIdentifier,
                 Email = internalUser.Email,
                 FirstName = internalUser.GivenName,
-                LastName = $"{internalUser.MiddleName} {internalUser.FamilyName}".Trim(),
+                LastName = $"{internalUser.MiddleName} {internalUser.FamilyName}".Trim()
             };
             if (verifyEmail)
             {
                 request.EmailVerified = false;
                 request.VerifyEmail = true;
             }
+
             await client.Users.UpdateAsync(internalUser.ExternalId, request, cancellationToken);
 
             await SyncRolesAsync(internalUser, cancellationToken);
         }
 
-        private async Task SyncRolesAsync(Domain.User.User internalUser, CancellationToken cancellationToken = default)
+        public async Task DeleteAsync(Guid id, CancellationToken cancellationToken = default)
+        {
+            var client = await _auth0ManagementApiClientCreator.GetClient(cancellationToken);
+            await client.Users.DeleteAsync(id.ToString());
+        }
+
+        private async Task SyncRolesAsync(User internalUser, CancellationToken cancellationToken = default)
         {
             var client = await _auth0ManagementApiClientCreator.GetClient(cancellationToken);
 
@@ -113,7 +123,8 @@ namespace Demo.Infrastructure.Auth0
                 .Select(x => x.ExternalId)
                 .ToList();
 
-            var roleIdsAssignedToUserInAuth0 = (await client.Users.GetRolesAsync(internalUser.ExternalId, null, cancellationToken))
+            var roleIdsAssignedToUserInAuth0 =
+                (await client.Users.GetRolesAsync(internalUser.ExternalId, null, cancellationToken))
                 .Select(x => x.Id);
 
             var rolesToAdd = roleIdsAssignedToUser
@@ -139,12 +150,6 @@ namespace Demo.Infrastructure.Auth0
                 };
                 await client.Users.RemoveRolesAsync(internalUser.ExternalId, removeRolesRequest, cancellationToken);
             }
-        }
-
-        public async Task DeleteAsync(Guid id, CancellationToken cancellationToken = default)
-        {
-            var client = await _auth0ManagementApiClientCreator.GetClient(cancellationToken);
-            await client.Users.DeleteAsync(id.ToString());
         }
     }
 }

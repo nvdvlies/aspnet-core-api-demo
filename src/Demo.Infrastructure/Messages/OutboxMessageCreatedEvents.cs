@@ -1,6 +1,6 @@
-﻿using Demo.Domain.Shared.Interfaces;
+﻿using System.Collections.Generic;
+using Demo.Domain.Shared.Interfaces;
 using Demo.Events.OutboxMessage;
-using System.Collections.Generic;
 
 namespace Demo.Infrastructure.Messages
 {

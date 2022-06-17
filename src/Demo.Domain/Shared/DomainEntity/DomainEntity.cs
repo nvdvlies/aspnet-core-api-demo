@@ -1,38 +1,35 @@
-﻿using Demo.Common.Interfaces;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using Demo.Common.Interfaces;
 using Demo.Domain.Shared.Exceptions;
 using Demo.Domain.Shared.Interfaces;
 using Demo.Events;
 using Demo.Messages;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Demo.Domain.Shared.DomainEntity
 {
     internal abstract class DomainEntity<T> : IDomainEntity<T> where T : IEntity
     {
+        private readonly Lazy<IEnumerable<IAfterCreate<T>>> _afterCreateHooks;
+        private readonly Lazy<IEnumerable<IAfterDelete<T>>> _afterDeleteHooks;
+        private readonly Lazy<IEnumerable<IAfterUpdate<T>>> _afterUpdateHooks;
+        private readonly Lazy<IAuditlogger<T>> _auditlogger;
+        private readonly Lazy<IEnumerable<IBeforeCreate<T>>> _beforeCreateHooks;
+        private readonly Lazy<IEnumerable<IBeforeDelete<T>>> _beforeDeleteHooks;
+        private readonly Lazy<IEnumerable<IBeforeUpdate<T>>> _beforeUpdateHooks;
+
+        private readonly Lazy<IEnumerable<IDefaultValuesSetter<T>>> _defaultValuesSetters;
+        private readonly Lazy<IEnumerable<IValidator<T>>> _validators;
         protected readonly IDomainEntityContext<T> Context;
-        protected IReadonlyDomainEntityOptions Options => _options;
         protected readonly ICurrentUser CurrentUser;
         protected readonly IDateTime DateTime;
         protected readonly IDbCommand<T> DbCommand;
         protected readonly ILogger Logger;
-
-        private readonly Lazy<IEnumerable<IDefaultValuesSetter<T>>> _defaultValuesSetters;
-        private readonly Lazy<IEnumerable<IValidator<T>>> _validators;
-        private readonly Lazy<IEnumerable<IBeforeCreate<T>>> _beforeCreateHooks;
-        private readonly Lazy<IEnumerable<IAfterCreate<T>>> _afterCreateHooks;
-        private readonly Lazy<IEnumerable<IBeforeUpdate<T>>> _beforeUpdateHooks;
-        private readonly Lazy<IEnumerable<IAfterUpdate<T>>> _afterUpdateHooks;
-        private readonly Lazy<IEnumerable<IBeforeDelete<T>>> _beforeDeleteHooks;
-        private readonly Lazy<IEnumerable<IAfterDelete<T>>> _afterDeleteHooks;
-        private readonly Lazy<IAuditlogger<T>> _auditlogger;
-
-        private DomainEntityOptions _options { get; set; }
 
         public DomainEntity(
             ILogger logger,
@@ -72,15 +69,19 @@ namespace Demo.Domain.Shared.DomainEntity
             _options = new DomainEntityOptions();
         }
 
+        protected IReadonlyDomainEntityOptions Options => _options;
+
+        private DomainEntityOptions _options { get; }
+
+        internal virtual Func<IQueryable<T>, IIncludableQueryable<T, object>> Includes => null;
+
         public T Entity => Context.Entity;
 
         public Guid EntityId => Context.Entity?.Id ?? default;
 
-        internal virtual Func<IQueryable<T>, IIncludableQueryable<T, object>> Includes => null;
-
         public IDomainEntityState State => Context.State;
 
-        public async virtual Task NewAsync(CancellationToken cancellationToken = default)
+        public virtual async Task NewAsync(CancellationToken cancellationToken = default)
         {
             var stopwatch = Context.PerformanceMeasurements.Start(nameof(NewAsync));
             try
@@ -90,6 +91,7 @@ namespace Demo.Domain.Shared.DomainEntity
                 {
                     await defaultValuesSetter.SetDefaultValuesAsync(entity, Context.State, cancellationToken);
                 }
+
                 Context.Entity = entity;
             }
             finally
@@ -101,14 +103,11 @@ namespace Demo.Domain.Shared.DomainEntity
         public virtual IDomainEntity<T> WithOptions(Action<IDomainEntityOptions> action)
         {
             action(_options);
-            DbCommand.WithOptions(x =>
-            {
-                x.AsNoTracking = Options.AsNoTracking;
-            });
+            DbCommand.WithOptions(x => { x.AsNoTracking = Options.AsNoTracking; });
             return this;
         }
 
-        public async virtual Task GetAsync(Guid id, CancellationToken cancellationToken = default)
+        public virtual async Task GetAsync(Guid id, CancellationToken cancellationToken = default)
         {
             var stopwatch = Context.PerformanceMeasurements.Start(nameof(GetAsync));
             try
@@ -116,7 +115,8 @@ namespace Demo.Domain.Shared.DomainEntity
                 Context.Entity = await DbCommand.GetAsync(id, Includes, cancellationToken);
 
                 if (Context.Entity == null
-                    || (Context.Entity is ISoftDeleteEntity softDeleteEntity && !Options.IncludeDeleted && ((ISoftDeleteEntity)Context.Entity).Deleted))
+                    || (Context.Entity is ISoftDeleteEntity softDeleteEntity && !Options.IncludeDeleted &&
+                        ((ISoftDeleteEntity)Context.Entity).Deleted))
                 {
                     throw new DomainEntityNotFoundException($"Entity with id '{id}' not found");
                 }
@@ -129,38 +129,16 @@ namespace Demo.Domain.Shared.DomainEntity
 
         public virtual void With(Action<T> action)
         {
-            Guard.NotNull(Context.Entity, nameof(Context.Entity), $"Call {nameof(NewAsync)} or {nameof(GetAsync)} first to instantiate entity");
+            Guard.NotNull(Context.Entity, nameof(Context.Entity),
+                $"Call {nameof(NewAsync)} or {nameof(GetAsync)} first to instantiate entity");
 
             action(Context.Entity);
         }
 
-        private async Task ValidateAsync(EditMode editMode, CancellationToken cancellationToken = default)
+        public virtual async Task CreateAsync(CancellationToken cancellationToken = default)
         {
-            var stopwatch = Context.PerformanceMeasurements.Start(nameof(ValidateAsync));
-            try
-            {
-                var validationTasks = _validators.Value
-                    .Select(v => v.ValidateAsync(Context, cancellationToken));
-
-                var validationMessages = (await Task.WhenAll(validationTasks))
-                    .Where(x => x != null)
-                    .SelectMany(x => x)
-                    .ToList();
-
-                if (validationMessages.Count != 0)
-                {
-                    throw new DomainValidationException(validationMessages);
-                }
-            }
-            finally
-            {
-                stopwatch.Stop();
-            }
-        }
-
-        public async virtual Task CreateAsync(CancellationToken cancellationToken = default)
-        {
-            Guard.NotNull(Context.Entity, nameof(Context.Entity), $"Call {nameof(NewAsync)} first to instantiate entity");
+            Guard.NotNull(Context.Entity, nameof(Context.Entity),
+                $"Call {nameof(NewAsync)} first to instantiate entity");
 
             var stopwatch = Context.PerformanceMeasurements.Start(nameof(CreateAsync));
             try
@@ -184,6 +162,125 @@ namespace Demo.Domain.Shared.DomainEntity
             {
                 stopwatch.Stop();
                 Context.PerformanceMeasurements.Flush();
+            }
+        }
+
+        public virtual async Task UpdateAsync(CancellationToken cancellationToken = default)
+        {
+            Guard.NotNull(Context.Entity, nameof(Context.Entity),
+                $"Call {nameof(GetAsync)} first to instantiate entity");
+            Guard.NotTrue(Options.AsNoTracking, nameof(Options.AsNoTracking),
+                $"Cannot update entity with option '{nameof(Options.AsNoTracking)}' set to 'true'");
+
+            var stopwatch = Context.PerformanceMeasurements.Start(nameof(UpdateAsync));
+            try
+            {
+                Context.EditMode = EditMode.Update;
+
+                await ExecuteBeforeUpdateHooks(cancellationToken);
+
+                await ValidateAsync(Context.EditMode, cancellationToken);
+
+                if (Context.Entity is IAuditableEntity auditableEntity)
+                {
+                    auditableEntity.SetLastModifiedByAndLastModifiedOn(CurrentUser.Id, DateTime.UtcNow);
+                }
+
+                await DbCommand.UpdateAsync(Context.Entity, cancellationToken);
+
+                await ExecuteAfterUpdateHooks(cancellationToken);
+
+                await CreateAuditLogAsync(cancellationToken);
+            }
+            finally
+            {
+                stopwatch.Stop();
+                Context.PerformanceMeasurements.Flush();
+            }
+        }
+
+        public virtual async Task UpsertAsync(CancellationToken cancellationToken = default)
+        {
+            Guard.NotNull(Context.Entity, nameof(Context.Entity),
+                $"Call {nameof(NewAsync)} or {nameof(GetAsync)} first to instantiate entity");
+
+            if (EntityId == default)
+            {
+                await CreateAsync(cancellationToken);
+            }
+            else
+            {
+                await UpdateAsync(cancellationToken);
+            }
+        }
+
+        public virtual async Task DeleteAsync(CancellationToken cancellationToken = default)
+        {
+            Guard.NotNull(Context.Entity, nameof(Context.Entity),
+                $"Call {nameof(GetAsync)} first to instantiate entity");
+            Guard.NotTrue(Options.AsNoTracking, nameof(Options.AsNoTracking),
+                $"Cannot delete entity with option '{nameof(Options.AsNoTracking)}' set to 'true'");
+
+            var stopwatch = Context.PerformanceMeasurements.Start(nameof(DeleteAsync));
+            try
+            {
+                Context.EditMode = EditMode.Delete;
+
+                await ExecuteBeforeDeleteHooks(cancellationToken);
+
+                await ValidateAsync(Context.EditMode, cancellationToken);
+
+                if (Context.Entity is ISoftDeleteEntity softDeleteEntity && !Options.DisableSoftDelete)
+                {
+                    softDeleteEntity.MarkAsDeleted(CurrentUser.Id, DateTime.UtcNow);
+
+                    await DbCommand.UpdateAsync(Context.Entity, cancellationToken);
+                }
+                else
+                {
+                    await DbCommand.DeleteAsync(Context.Entity, cancellationToken);
+                }
+
+                await ExecuteAfterDeleteHooks(cancellationToken);
+            }
+            finally
+            {
+                stopwatch.Stop();
+                Context.PerformanceMeasurements.Flush();
+            }
+        }
+
+        public async Task AddEventAsync(IEvent @event, CancellationToken cancellationToken)
+        {
+            await Context.AddEventAsync(@event, cancellationToken);
+        }
+
+        public async Task AddMessageAsync(IMessage message, CancellationToken cancellationToken)
+        {
+            await Context.AddMessageAsync(message, cancellationToken);
+        }
+
+        private async Task ValidateAsync(EditMode editMode, CancellationToken cancellationToken = default)
+        {
+            var stopwatch = Context.PerformanceMeasurements.Start(nameof(ValidateAsync));
+            try
+            {
+                var validationTasks = _validators.Value
+                    .Select(v => v.ValidateAsync(Context, cancellationToken));
+
+                var validationMessages = (await Task.WhenAll(validationTasks))
+                    .Where(x => x != null)
+                    .SelectMany(x => x)
+                    .ToList();
+
+                if (validationMessages.Count != 0)
+                {
+                    throw new DomainValidationException(validationMessages);
+                }
+            }
+            finally
+            {
+                stopwatch.Stop();
             }
         }
 
@@ -219,38 +316,6 @@ namespace Demo.Domain.Shared.DomainEntity
             }
         }
 
-        public async virtual Task UpdateAsync(CancellationToken cancellationToken = default)
-        {
-            Guard.NotNull(Context.Entity, nameof(Context.Entity), $"Call {nameof(GetAsync)} first to instantiate entity");
-            Guard.NotTrue(Options.AsNoTracking, nameof(Options.AsNoTracking), $"Cannot update entity with option '{nameof(Options.AsNoTracking)}' set to 'true'");
-
-            var stopwatch = Context.PerformanceMeasurements.Start(nameof(UpdateAsync));
-            try
-            {
-                Context.EditMode = EditMode.Update;
-
-                await ExecuteBeforeUpdateHooks(cancellationToken);
-
-                await ValidateAsync(Context.EditMode, cancellationToken);
-
-                if (Context.Entity is IAuditableEntity auditableEntity)
-                {
-                    auditableEntity.SetLastModifiedByAndLastModifiedOn(CurrentUser.Id, DateTime.UtcNow);
-                }
-
-                await DbCommand.UpdateAsync(Context.Entity, cancellationToken);
-
-                await ExecuteAfterUpdateHooks(cancellationToken);
-
-                await CreateAuditLogAsync(cancellationToken);
-            }
-            finally
-            {
-                stopwatch.Stop();
-                Context.PerformanceMeasurements.Flush();
-            }
-        }
-
         private async Task ExecuteBeforeUpdateHooks(CancellationToken cancellationToken)
         {
             var stopwatch = Context.PerformanceMeasurements.Start(nameof(ExecuteBeforeUpdateHooks));
@@ -280,54 +345,6 @@ namespace Demo.Domain.Shared.DomainEntity
             finally
             {
                 stopwatch.Stop();
-            }
-        }
-
-        public async virtual Task UpsertAsync(CancellationToken cancellationToken = default)
-        {
-            Guard.NotNull(Context.Entity, nameof(Context.Entity), $"Call {nameof(NewAsync)} or {nameof(GetAsync)} first to instantiate entity");
-
-            if (EntityId == default)
-            {
-                await CreateAsync(cancellationToken);
-            }
-            else
-            {
-                await UpdateAsync(cancellationToken);
-            }
-        }
-
-        public async virtual Task DeleteAsync(CancellationToken cancellationToken = default)
-        {
-            Guard.NotNull(Context.Entity, nameof(Context.Entity), $"Call {nameof(GetAsync)} first to instantiate entity");
-            Guard.NotTrue(Options.AsNoTracking, nameof(Options.AsNoTracking), $"Cannot delete entity with option '{nameof(Options.AsNoTracking)}' set to 'true'");
-
-            var stopwatch = Context.PerformanceMeasurements.Start(nameof(DeleteAsync));
-            try
-            {
-                Context.EditMode = EditMode.Delete;
-
-                await ExecuteBeforeDeleteHooks(cancellationToken);
-
-                await ValidateAsync(Context.EditMode, cancellationToken);
-
-                if (Context.Entity is ISoftDeleteEntity softDeleteEntity && !Options.DisableSoftDelete)
-                {
-                    softDeleteEntity.MarkAsDeleted(CurrentUser.Id, DateTime.UtcNow);
-
-                    await DbCommand.UpdateAsync(Context.Entity, cancellationToken);
-                }
-                else
-                {
-                    await DbCommand.DeleteAsync(Context.Entity, cancellationToken);
-                }
-
-                await ExecuteAfterDeleteHooks(cancellationToken);
-            }
-            finally
-            {
-                stopwatch.Stop();
-                Context.PerformanceMeasurements.Flush();
             }
         }
 
@@ -361,16 +378,6 @@ namespace Demo.Domain.Shared.DomainEntity
             {
                 stopwatch.Stop();
             }
-        }
-
-        public async Task AddEventAsync(IEvent @event, CancellationToken cancellationToken)
-        {
-            await Context.AddEventAsync(@event, cancellationToken);
-        }
-
-        public async Task AddMessageAsync(IMessage message, CancellationToken cancellationToken)
-        {
-            await Context.AddMessageAsync(message, cancellationToken);
         }
 
         private async Task CreateAuditLogAsync(CancellationToken cancellationToken)

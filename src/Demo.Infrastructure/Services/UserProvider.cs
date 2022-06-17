@@ -1,12 +1,11 @@
-﻿using Demo.Domain.Shared.Interfaces;
-using Demo.Domain.User;
-using Demo.Domain.User.Interfaces;
-using Microsoft.Extensions.Caching.Distributed;
-using Microsoft.Extensions.Caching.Memory;
-using System;
+﻿using System;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Demo.Domain.Shared.Interfaces;
+using Demo.Domain.User;
+using Demo.Domain.User.Interfaces;
+using Microsoft.Extensions.Caching.Distributed;
 
 namespace Demo.Infrastructure.Services
 {
@@ -31,7 +30,7 @@ namespace Demo.Infrastructure.Services
 
         public async Task<User> GetAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            return await GetAsync(id, refreshCache: false, cancellationToken);
+            return await GetAsync(id, false, cancellationToken);
         }
 
         public async Task<User> GetAsync(Guid id, bool refreshCache, CancellationToken cancellationToken = default)
@@ -54,10 +53,8 @@ namespace Demo.Infrastructure.Services
 
                 return user;
             }
-            else
-            {
-                return Decode(cacheValue);
-            }
+
+            return Decode(cacheValue);
         }
 
         private User Decode(byte[] value)

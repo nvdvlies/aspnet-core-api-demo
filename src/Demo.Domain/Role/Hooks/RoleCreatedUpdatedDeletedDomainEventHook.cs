@@ -1,16 +1,16 @@
+using System.Threading;
+using System.Threading.Tasks;
 using Demo.Common.Interfaces;
 using Demo.Domain.Shared.DomainEntity;
 using Demo.Domain.Shared.Interfaces;
 using Demo.Events.Role;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Demo.Domain.Role.Hooks
 {
     internal class RoleCreatedUpdatedDeletedEventHook : IAfterCreate<Role>, IAfterUpdate<Role>, IAfterDelete<Role>
     {
-        private readonly ICurrentUser _currentUser;
         private readonly ICorrelationIdProvider _correlationIdProvider;
+        private readonly ICurrentUser _currentUser;
 
         public RoleCreatedUpdatedDeletedEventHook(
             ICurrentUser currentUser,
@@ -26,15 +26,22 @@ namespace Demo.Domain.Role.Hooks
             switch (context.EditMode)
             {
                 case EditMode.Create:
-                    context.AddEventAsync(RoleCreatedEvent.Create(_correlationIdProvider.Id, context.Entity.Id, _currentUser.Id), cancellationToken);
+                    context.AddEventAsync(
+                        RoleCreatedEvent.Create(_correlationIdProvider.Id, context.Entity.Id, _currentUser.Id),
+                        cancellationToken);
                     break;
                 case EditMode.Update:
-                    context.AddEventAsync(RoleUpdatedEvent.Create(_correlationIdProvider.Id, context.Entity.Id, _currentUser.Id), cancellationToken);
+                    context.AddEventAsync(
+                        RoleUpdatedEvent.Create(_correlationIdProvider.Id, context.Entity.Id, _currentUser.Id),
+                        cancellationToken);
                     break;
                 case EditMode.Delete:
-                    context.AddEventAsync(RoleDeletedEvent.Create(_correlationIdProvider.Id, context.Entity.Id, _currentUser.Id), cancellationToken);
+                    context.AddEventAsync(
+                        RoleDeletedEvent.Create(_correlationIdProvider.Id, context.Entity.Id, _currentUser.Id),
+                        cancellationToken);
                     break;
             }
+
             return Task.CompletedTask;
         }
     }

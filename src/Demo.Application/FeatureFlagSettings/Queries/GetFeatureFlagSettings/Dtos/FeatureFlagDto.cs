@@ -1,6 +1,6 @@
-﻿using Demo.Application.Shared.Dtos;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Demo.Application.Shared.Dtos;
 
 namespace Demo.Application.FeatureFlagSettings.Queries.GetFeatureFlagSettings.Dtos
 {

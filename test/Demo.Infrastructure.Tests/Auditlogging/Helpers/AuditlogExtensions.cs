@@ -6,7 +6,8 @@ namespace Demo.Infrastructure.Tests.Auditlogging.Helpers
 {
     public static class AssertExtensions
     {
-        public static void AssertHasAuditlogItem(this Auditlog auditlog, string propertyName, string prevValue, string currentValue)
+        public static void AssertHasAuditlogItem(this Auditlog auditlog, string propertyName, string prevValue,
+            string currentValue)
         {
             var auditlogItem = auditlog.AuditlogItems.FirstOrDefault(x => x.PropertyName == propertyName);
             Assert.NotNull(auditlogItem);

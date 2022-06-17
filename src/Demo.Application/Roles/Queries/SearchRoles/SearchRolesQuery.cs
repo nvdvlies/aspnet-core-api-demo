@@ -1,3 +1,4 @@
+using System.Web;
 using Demo.Application.Roles.Queries.SearchRoles.Dtos;
 using Demo.Application.Shared.Interfaces;
 using MediatR;
@@ -19,7 +20,7 @@ namespace Demo.Application.Roles.Queries.SearchRoles
 
         public string ToQueryString()
         {
-            var queryString = System.Web.HttpUtility.ParseQueryString(string.Empty);
+            var queryString = HttpUtility.ParseQueryString(string.Empty);
 
             queryString.Add(nameof(OrderBy), OrderBy.ToString());
             queryString.Add(nameof(OrderByDescending), OrderByDescending ? "true" : "false");

@@ -1,12 +1,12 @@
-﻿using Demo.Domain.Shared.Interfaces;
-using System.Text.Json;
+﻿using System.Text.Json;
 using System.Text.Json.Serialization;
+using Demo.Domain.Shared.Interfaces;
 
 namespace Demo.Infrastructure.Services
 {
     public class JsonService<T> : IJsonService<T>
     {
-        private JsonSerializerOptions _options;
+        private readonly JsonSerializerOptions _options;
 
         public JsonService()
         {

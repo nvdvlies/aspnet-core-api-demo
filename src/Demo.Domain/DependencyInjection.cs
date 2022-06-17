@@ -1,9 +1,9 @@
-﻿using Demo.Common.Helpers;
+﻿using System.Linq;
+using System.Reflection;
+using Demo.Common.Helpers;
 using Demo.Domain.Shared.DomainEntity;
 using Demo.Domain.Shared.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
-using System.Linq;
-using System.Reflection;
 
 namespace Demo.Domain
 {
@@ -28,7 +28,8 @@ namespace Demo.Domain
                 {
                     var nonGenericInterfaceType = type.GetInterfaces()
                         .Where(i => !i.GetTypeInfo().IsGenericType)
-                        .Where(i => i.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IDomainEntity<>)))
+                        .Where(i => i.GetInterfaces().Any(i =>
+                            i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IDomainEntity<>)))
                         .FirstOrDefault();
                     services.AddTransient(nonGenericInterfaceType, type);
                 });

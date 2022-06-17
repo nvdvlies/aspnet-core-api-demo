@@ -1,9 +1,9 @@
-﻿using Demo.Common.Interfaces;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using Demo.Common.Interfaces;
 using Demo.Domain.Shared.DomainEntity;
 using Demo.Domain.Shared.Interfaces;
 using Demo.Messages.User;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Demo.Domain.User.Hooks
 {
@@ -20,7 +20,8 @@ namespace Demo.Domain.User.Hooks
 
         public Task ExecuteAsync(HookType type, IDomainEntityContext<User> context, CancellationToken cancellationToken)
         {
-            context.AddMessageAsync(DeleteAuth0UserMessage.Create(_correlationIdProvider.Id, context.Entity.Id), cancellationToken);
+            context.AddMessageAsync(DeleteAuth0UserMessage.Create(_correlationIdProvider.Id, context.Entity.Id),
+                cancellationToken);
             return Task.CompletedTask;
         }
     }

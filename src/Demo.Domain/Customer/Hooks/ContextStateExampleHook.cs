@@ -1,15 +1,16 @@
-﻿using Demo.Domain.Customer.State;
-using Demo.Domain.Shared.DomainEntity;
-using Demo.Domain.Shared.Interfaces;
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Demo.Domain.Customer.State;
+using Demo.Domain.Shared.DomainEntity;
+using Demo.Domain.Shared.Interfaces;
 
 namespace Demo.Domain.Customer.Hooks
 {
     internal class ContextStateExampleHook : IBeforeCreate<Customer>, IBeforeUpdate<Customer>, IBeforeDelete<Customer>
     {
-        public Task ExecuteAsync(HookType type, IDomainEntityContext<Customer> context, CancellationToken cancellationToken)
+        public Task ExecuteAsync(HookType type, IDomainEntityContext<Customer> context,
+            CancellationToken cancellationToken)
         {
             // Example: Retrieve variable set in application layer.
             // var exampleBoolean = context.State.Get<bool>(CustomerStateKeys.ExampleBoolean);

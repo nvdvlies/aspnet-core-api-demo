@@ -1,20 +1,21 @@
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using AutoMapper;
 using Demo.Application.Shared.Dtos;
 using Demo.Domain.Auditlog;
 using Demo.Domain.Shared.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Demo.Application.ApplicationSettings.Queries.GetApplicationSettingsAuditlog
 {
-    public class GetApplicationSettingsAuditlogQueryHandler : IRequestHandler<GetApplicationSettingsAuditlogQuery, GetApplicationSettingsAuditlogQueryResult>
+    public class GetApplicationSettingsAuditlogQueryHandler : IRequestHandler<GetApplicationSettingsAuditlogQuery,
+        GetApplicationSettingsAuditlogQueryResult>
     {
-        private readonly IDbQuery<Auditlog> _query;
         private readonly IMapper _mapper;
+        private readonly IDbQuery<Auditlog> _query;
 
         public GetApplicationSettingsAuditlogQueryHandler(
             IDbQuery<Auditlog> query,
@@ -25,11 +26,12 @@ namespace Demo.Application.ApplicationSettings.Queries.GetApplicationSettingsAud
             _mapper = mapper;
         }
 
-        public async Task<GetApplicationSettingsAuditlogQueryResult> Handle(GetApplicationSettingsAuditlogQuery request, CancellationToken cancellationToken)
+        public async Task<GetApplicationSettingsAuditlogQueryResult> Handle(GetApplicationSettingsAuditlogQuery request,
+            CancellationToken cancellationToken)
         {
             var query = _query.AsQueryable()
                 .Include(x => x.AuditlogItems)
-                    .ThenInclude(y => y.AuditlogItems)
+                .ThenInclude(y => y.AuditlogItems)
                 .Where(x => x.EntityName == nameof(Domain.ApplicationSettings.ApplicationSettings));
 
             var totalItems = await query.CountAsync(cancellationToken);

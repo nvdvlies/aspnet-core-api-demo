@@ -4,14 +4,15 @@ using Demo.Common.Interfaces;
 using MassTransit;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using Serilog.Context;
 
 namespace Demo.Infrastructure.Events
 {
-    public class RabbitMqEventConsumer: IConsumer<RabbitMqEvent>
+    public class RabbitMqEventConsumer : IConsumer<RabbitMqEvent>
     {
-        private readonly IMediator _mediator;
-        private readonly ILogger<RabbitMqEventConsumer> _logger;
         private readonly ICorrelationIdProvider _correlationIdProvider;
+        private readonly ILogger<RabbitMqEventConsumer> _logger;
+        private readonly IMediator _mediator;
 
         public RabbitMqEventConsumer(
             IMediator mediator,
@@ -26,10 +27,11 @@ namespace Demo.Infrastructure.Events
         public async Task Consume(ConsumeContext<RabbitMqEvent> context)
         {
             _correlationIdProvider.SwitchToCorrelationId(context.CorrelationId ?? Guid.NewGuid());
-            using (Serilog.Context.LogContext.PushProperty("CorrelationId", _correlationIdProvider.Id))
+            using (LogContext.PushProperty("CorrelationId", _correlationIdProvider.Id))
             {
                 var @event = context.Message.ToEvent();
-                _logger.LogInformation("Consuming {0} with type '{1}'", nameof(RabbitMqEvent), context.Message.ContentType);
+                _logger.LogInformation("Consuming {0} with type '{1}'", nameof(RabbitMqEvent),
+                    context.Message.ContentType);
                 await _mediator.Publish(@event, context.CancellationToken);
             }
         }

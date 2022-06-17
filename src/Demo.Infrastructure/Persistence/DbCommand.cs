@@ -1,10 +1,10 @@
-﻿using Demo.Domain.Shared.Interfaces;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query;
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Demo.Domain.Shared.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace Demo.Infrastructure.Persistence
 {
@@ -25,9 +25,11 @@ namespace Demo.Infrastructure.Persistence
             return this;
         }
 
-        public virtual async Task<T> GetAsync(Guid id, Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null, CancellationToken cancellationToken = default)
+        public virtual async Task<T> GetAsync(Guid id,
+            Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null,
+            CancellationToken cancellationToken = default)
         {
-            IQueryable<T> query = Options.AsNoTracking
+            var query = Options.AsNoTracking
                 ? _dbContext.Set<T>().AsNoTracking().AsQueryable()
                 : _dbContext.Set<T>().AsQueryable();
 

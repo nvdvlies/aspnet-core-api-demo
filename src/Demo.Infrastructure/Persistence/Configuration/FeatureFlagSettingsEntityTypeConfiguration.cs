@@ -1,8 +1,7 @@
+using System.Text.Json;
 using Demo.Domain.FeatureFlagSettings;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System.Collections.Generic;
-using System.Text.Json;
 
 namespace Demo.Infrastructure.Persistence.Configuration
 {

@@ -1,6 +1,6 @@
-﻿using Demo.Scaffold.Tool.Interfaces;
+﻿using System;
+using Demo.Scaffold.Tool.Interfaces;
 using Spectre.Console;
-using System;
 
 namespace Demo.Scaffold.Tool.Scaffolders.InputCollectors
 {
@@ -14,16 +14,13 @@ namespace Demo.Scaffold.Tool.Scaffolders.InputCollectors
             var option = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
                     .Title("What would you like to scaffold?")
-                    .AddChoices(new[] {
-                        DomainEntity,
-                        Endpoint,
-                    }));
+                    .AddChoices(DomainEntity, Endpoint));
 
             context.ScaffolderType = option switch
             {
                 DomainEntity => ScaffolderTypes.DomainEntity,
                 Endpoint => ScaffolderTypes.Endpoint,
-                _ => throw new Exception($"Invalid option {option}"),
+                _ => throw new Exception($"Invalid option {option}")
             };
         }
     }

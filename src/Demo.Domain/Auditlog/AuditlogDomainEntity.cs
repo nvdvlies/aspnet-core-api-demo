@@ -1,13 +1,13 @@
-﻿using Demo.Common.Interfaces;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+using Demo.Common.Interfaces;
 using Demo.Domain.Auditlog.Interfaces;
 using Demo.Domain.Shared.DomainEntity;
 using Demo.Domain.Shared.Exceptions;
 using Demo.Domain.Shared.Interfaces;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Demo.Domain.Auditlog
 {
@@ -30,7 +30,9 @@ namespace Demo.Domain.Auditlog
             Lazy<IOutboxMessageCreator> outboxMessageCreator,
             Lazy<IJsonService<Auditlog>> jsonService
         )
-            : base(logger, currentUser, dateTime, dbCommand, defaultValuesSetters, validators, beforeCreateHooks, afterCreateHooks, beforeUpdateHooks, afterUpdateHooks, beforeDeleteHooks, afterDeleteHooks, outboxEventCreator, outboxMessageCreator, jsonService, null)
+            : base(logger, currentUser, dateTime, dbCommand, defaultValuesSetters, validators, beforeCreateHooks,
+                afterCreateHooks, beforeUpdateHooks, afterUpdateHooks, beforeDeleteHooks, afterDeleteHooks,
+                outboxEventCreator, outboxMessageCreator, jsonService, null)
         {
         }
 

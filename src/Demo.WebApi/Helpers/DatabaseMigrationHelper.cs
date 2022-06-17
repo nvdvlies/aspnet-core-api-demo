@@ -1,10 +1,10 @@
-﻿using Demo.Infrastructure.Persistence;
+﻿using System;
+using System.Linq;
+using Demo.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Linq;
 
 namespace Demo.WebApi.Helpers
 {
@@ -14,7 +14,8 @@ namespace Demo.WebApi.Helpers
         {
             using var scope = host.Services.CreateScope();
             using var appContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-            var logger = scope.ServiceProvider.GetRequiredService<ILoggerFactory>().CreateLogger(nameof(DatabaseMigrationHelper));
+            var logger = scope.ServiceProvider.GetRequiredService<ILoggerFactory>()
+                .CreateLogger(nameof(DatabaseMigrationHelper));
             try
             {
                 logger.LogInformation("Retrieving pending database migrations.");
@@ -28,9 +29,12 @@ namespace Demo.WebApi.Helpers
                     var lastAppliedMigration = appContext.Database.GetAppliedMigrations().LastOrDefault();
                     if (!string.IsNullOrEmpty(lastAppliedMigration))
                     {
-                        logger.LogInformation("Database currently on migration '{lastAppliedMigration}'.", lastAppliedMigration);
+                        logger.LogInformation("Database currently on migration '{lastAppliedMigration}'.",
+                            lastAppliedMigration);
                     }
-                    logger.LogInformation("Applying {count} migration(s) ({names}).", pendingMigrations.Count(), string.Join(",", pendingMigrations));
+
+                    logger.LogInformation("Applying {count} migration(s) ({names}).", pendingMigrations.Count(),
+                        string.Join(",", pendingMigrations));
 
                     appContext.Database.Migrate();
 

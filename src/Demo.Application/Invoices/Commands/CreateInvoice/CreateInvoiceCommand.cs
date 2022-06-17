@@ -1,8 +1,8 @@
+using System;
+using System.Collections.Generic;
 using Demo.Application.Invoices.Commands.CreateInvoice.Dtos;
 using Demo.Application.Shared.Interfaces;
 using MediatR;
-using System;
-using System.Collections.Generic;
 
 namespace Demo.Application.Invoices.Commands.CreateInvoice
 {

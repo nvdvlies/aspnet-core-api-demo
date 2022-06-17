@@ -1,5 +1,5 @@
-﻿using Demo.Domain.Shared.Interfaces;
-using System.Linq;
+﻿using System.Linq;
+using Demo.Domain.Shared.Interfaces;
 
 namespace Demo.Infrastructure.Persistence
 {

@@ -1,4 +1,9 @@
-﻿using Demo.Common.Interfaces;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using Demo.Common.Interfaces;
 using Demo.Domain.Invoice.Interfaces;
 using Demo.Domain.Shared.DomainEntity;
 using Demo.Domain.Shared.Exceptions;
@@ -6,11 +11,6 @@ using Demo.Domain.Shared.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Demo.Domain.Invoice
 {
@@ -34,7 +34,9 @@ namespace Demo.Domain.Invoice
             Lazy<IJsonService<Invoice>> jsonService,
             Lazy<IAuditlogger<Invoice>> auditlogger
         )
-            : base(logger, currentUser, dateTime, dbCommand, defaultValuesSetters, validators, beforeCreateHooks, afterCreateHooks, beforeUpdateHooks, afterUpdateHooks, beforeDeleteHooks, afterDeleteHooks, outboxEventCreator, outboxMessageCreator, jsonService, auditlogger)
+            : base(logger, currentUser, dateTime, dbCommand, defaultValuesSetters, validators, beforeCreateHooks,
+                afterCreateHooks, beforeUpdateHooks, afterUpdateHooks, beforeDeleteHooks, afterDeleteHooks,
+                outboxEventCreator, outboxMessageCreator, jsonService, auditlogger)
         {
         }
 
@@ -125,12 +127,13 @@ namespace Demo.Domain.Invoice
                 case InvoiceStatus.Sent when currentStatus == InvoiceStatus.Draft:
                 case InvoiceStatus.Paid when currentStatus == InvoiceStatus.Sent:
                 case InvoiceStatus.Cancelled when currentStatus == InvoiceStatus.Draft
-                                               || currentStatus == InvoiceStatus.Sent:
+                                                  || currentStatus == InvoiceStatus.Sent:
                 case InvoiceStatus.Draft when currentStatus == InvoiceStatus.Cancelled:
                     Context.Entity.Status = newStatus;
                     break;
                 default:
-                    throw new DomainException($"Changing invoice status from '{currentStatus}' to '{newStatus}' is not allowed.");
+                    throw new DomainException(
+                        $"Changing invoice status from '{currentStatus}' to '{newStatus}' is not allowed.");
             }
         }
     }

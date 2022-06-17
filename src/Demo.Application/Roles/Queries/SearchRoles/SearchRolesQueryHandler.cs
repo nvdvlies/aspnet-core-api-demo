@@ -1,3 +1,7 @@
+using System;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Demo.Application.Roles.Queries.SearchRoles.Dtos;
@@ -7,17 +11,13 @@ using Demo.Domain.Role;
 using Demo.Domain.Shared.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Demo.Application.Roles.Queries.SearchRoles
 {
     public class SearchRolesQueryHandler : IRequestHandler<SearchRolesQuery, SearchRolesQueryResult>
     {
-        private readonly IDbQuery<Role> _query;
         private readonly IMapper _mapper;
+        private readonly IDbQuery<Role> _query;
 
         public SearchRolesQueryHandler(
             IDbQuery<Role> query,

@@ -1,7 +1,7 @@
-﻿using Demo.Scaffold.Tool.Changes;
+﻿using System.Collections.Generic;
+using Demo.Scaffold.Tool.Changes;
 using Demo.Scaffold.Tool.Helpers;
 using Demo.Scaffold.Tool.Interfaces;
-using System.Collections.Generic;
 
 namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.DomainEntity.OutputCollectors
 {
@@ -14,9 +14,9 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.DomainEntity.OutputCol
             var entityName = context.Variables.Get<string>(Constants.EntityName);
 
             changes.Add(new AddUsingStatementToExistingClass(
-                directory: context.GetPersistenceDirectory(),
-                fileName: "ApplicationDbContext.cs",
-                content: $"using Demo.Domain.{entityName};"
+                context.GetPersistenceDirectory(),
+                "ApplicationDbContext.cs",
+                $"using Demo.Domain.{entityName};"
             ));
 
             return changes;

@@ -5,14 +5,15 @@ using Demo.Messages.User;
 using MassTransit;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using Serilog.Context;
 
 namespace Demo.Infrastructure.Messages.Consumers
 {
-    public class DeleteAuth0UserMessageConsumer: IConsumer<DeleteAuth0UserMessage>
+    public class DeleteAuth0UserMessageConsumer : IConsumer<DeleteAuth0UserMessage>
     {
-        private readonly IMediator _mediator;
-        private readonly ILogger<DeleteAuth0UserMessageConsumer> _logger;
         private readonly ICorrelationIdProvider _correlationIdProvider;
+        private readonly ILogger<DeleteAuth0UserMessageConsumer> _logger;
+        private readonly IMediator _mediator;
 
         public DeleteAuth0UserMessageConsumer(
             IMediator mediator,
@@ -27,7 +28,7 @@ namespace Demo.Infrastructure.Messages.Consumers
         public async Task Consume(ConsumeContext<DeleteAuth0UserMessage> context)
         {
             _correlationIdProvider.SwitchToCorrelationId(context.CorrelationId ?? Guid.NewGuid());
-            using (Serilog.Context.LogContext.PushProperty("CorrelationId", _correlationIdProvider.Id))
+            using (LogContext.PushProperty("CorrelationId", _correlationIdProvider.Id))
             {
                 _logger.LogInformation($"Consuming {nameof(DeleteAuth0UserMessage)}");
                 var message = context.Message;

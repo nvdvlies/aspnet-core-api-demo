@@ -1,5 +1,5 @@
-﻿using Demo.Domain.Shared.Interfaces;
-using System;
+﻿using System;
+using Demo.Domain.Shared.Interfaces;
 
 namespace Demo.Domain.Shared.Entities
 {
@@ -11,12 +11,21 @@ namespace Demo.Domain.Shared.Entities
         public bool Equals(IEntity other)
         {
             if (other is null)
+            {
                 return false;
+            }
 
             return Id == other.Id;
         }
 
-        public override bool Equals(object obj) => Equals(obj as IEntity);
-        public override int GetHashCode() => (Id).GetHashCode();
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as IEntity);
+        }
+
+        public override int GetHashCode()
+        {
+            return Id.GetHashCode();
+        }
     }
 }

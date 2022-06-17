@@ -1,19 +1,19 @@
 using System;
 using System.Threading.Tasks;
 using Demo.Common.Interfaces;
-using Demo.Infrastructure.Events;
 using Demo.Messages.User;
 using MassTransit;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using Serilog.Context;
 
 namespace Demo.Infrastructure.Messages.Consumers
 {
-    public class CreateAuth0UserMessageConsumer: IConsumer<CreateAuth0UserMessage>
+    public class CreateAuth0UserMessageConsumer : IConsumer<CreateAuth0UserMessage>
     {
-        private readonly IMediator _mediator;
-        private readonly ILogger<CreateAuth0UserMessageConsumer> _logger;
         private readonly ICorrelationIdProvider _correlationIdProvider;
+        private readonly ILogger<CreateAuth0UserMessageConsumer> _logger;
+        private readonly IMediator _mediator;
 
         public CreateAuth0UserMessageConsumer(
             IMediator mediator,
@@ -28,7 +28,7 @@ namespace Demo.Infrastructure.Messages.Consumers
         public async Task Consume(ConsumeContext<CreateAuth0UserMessage> context)
         {
             _correlationIdProvider.SwitchToCorrelationId(context.CorrelationId ?? Guid.NewGuid());
-            using (Serilog.Context.LogContext.PushProperty("CorrelationId", _correlationIdProvider.Id))
+            using (LogContext.PushProperty("CorrelationId", _correlationIdProvider.Id))
             {
                 _logger.LogInformation($"Consuming {nameof(CreateAuth0UserMessage)}");
                 var message = context.Message;

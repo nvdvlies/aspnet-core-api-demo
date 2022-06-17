@@ -1,8 +1,8 @@
-﻿using Demo.Scaffold.Tool.Changes;
+﻿using System.Collections.Generic;
+using Demo.Scaffold.Tool.Changes;
 using Demo.Scaffold.Tool.Helpers;
 using Demo.Scaffold.Tool.Interfaces;
 using Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint.OutputCollectors.Command.InputCollectors;
-using System.Collections.Generic;
 
 namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint.OutputCollectors.Command.OutputCollectors
 {
@@ -15,25 +15,26 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint.OutputCollect
             var commandEndpointType = context.Variables.Get<CommandEndpointTypes>(Constants.CommandEndpointType);
             var controllerName = context.Variables.Get<string>(Constants.ControllerName);
             var commandName = context.Variables.Get<string>(Constants.CommandName);
-            var entityName = controllerName.EndsWith("s") ? controllerName[0..^1] : controllerName;
+            var entityName = controllerName.EndsWith("s") ? controllerName[..^1] : controllerName;
 
             changes.Add(new CreateNewClass(
-                    directory: context.GetCommandDirectory(controllerName, commandName),
-                    fileName: $"{commandName}Command.cs",
-                    content: GetTemplate(commandEndpointType, controllerName, commandName, entityName)
-                ));
+                context.GetCommandDirectory(controllerName, commandName),
+                $"{commandName}Command.cs",
+                GetTemplate(commandEndpointType, controllerName, commandName, entityName)
+            ));
 
             return changes;
         }
 
-        private static string GetTemplate(CommandEndpointTypes commandEndpointType, string controllerName, string commandName, string entityName)
+        private static string GetTemplate(CommandEndpointTypes commandEndpointType, string controllerName,
+            string commandName, string entityName)
         {
             var code = commandEndpointType == CommandEndpointTypes.CreateSubEndpoint
-                    || commandEndpointType == CommandEndpointTypes.UpdateSubEndpoint
-                    || commandEndpointType == CommandEndpointTypes.DeleteSubEndpoint
-                    || commandEndpointType == CommandEndpointTypes.Update
-                    || commandEndpointType == CommandEndpointTypes.Delete ?
-@"using Demo.Application.Shared.Interfaces;
+                       || commandEndpointType == CommandEndpointTypes.UpdateSubEndpoint
+                       || commandEndpointType == CommandEndpointTypes.DeleteSubEndpoint
+                       || commandEndpointType == CommandEndpointTypes.Update
+                       || commandEndpointType == CommandEndpointTypes.Delete
+                ? @"using Demo.Application.Shared.Interfaces;
 using MediatR;
 using System;
 
@@ -49,8 +50,8 @@ namespace Demo.Application.%CONTROLLERNAME%.Commands.%COMMANDNAME%
         }
     }
 }
-" :
-@"
+"
+                : @"
 using MediatR;
 using System;
 

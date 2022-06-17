@@ -1,12 +1,12 @@
 using System;
-using Demo.Common.Interfaces;
-using Demo.Domain.Shared.DomainEntity;
-using Demo.Domain.UserPreferences.Interfaces;
-using Demo.Domain.Shared.Interfaces;
-using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Demo.Common.Interfaces;
+using Demo.Domain.Shared.DomainEntity;
+using Demo.Domain.Shared.Interfaces;
+using Demo.Domain.UserPreferences.Interfaces;
+using Microsoft.Extensions.Logging;
 
 namespace Demo.Domain.UserPreferences
 {
@@ -19,10 +19,10 @@ namespace Demo.Domain.UserPreferences
             ILogger<UserPreferencesDomainEntity> logger,
             ICurrentUser currentUser,
             IDateTime dateTime,
-            IDbCommand<UserPreferences> dbCommand, 
-            Lazy<IEnumerable<IDefaultValuesSetter<UserPreferences>>> defaultValuesSetters, 
-            Lazy<IEnumerable<IValidator<UserPreferences>>> validators, 
-            Lazy<IEnumerable<IBeforeCreate<UserPreferences>>> beforeCreateHooks, 
+            IDbCommand<UserPreferences> dbCommand,
+            Lazy<IEnumerable<IDefaultValuesSetter<UserPreferences>>> defaultValuesSetters,
+            Lazy<IEnumerable<IValidator<UserPreferences>>> validators,
+            Lazy<IEnumerable<IBeforeCreate<UserPreferences>>> beforeCreateHooks,
             Lazy<IEnumerable<IAfterCreate<UserPreferences>>> afterCreateHooks,
             Lazy<IEnumerable<IBeforeUpdate<UserPreferences>>> beforeUpdateHooks,
             Lazy<IEnumerable<IAfterUpdate<UserPreferences>>> afterUpdateHooks,
@@ -32,13 +32,15 @@ namespace Demo.Domain.UserPreferences
             Lazy<IOutboxMessageCreator> outboxMessageCreator,
             Lazy<IJsonService<UserPreferences>> jsonService,
             Lazy<IAuditlogger<UserPreferences>> auditlogger
-        ) 
-            : base(logger, currentUser, dateTime, dbCommand, defaultValuesSetters, validators, beforeCreateHooks, afterCreateHooks, beforeUpdateHooks, afterUpdateHooks, beforeDeleteHooks, afterDeleteHooks, outboxEventCreator, outboxMessageCreator, jsonService, auditlogger)
+        )
+            : base(logger, currentUser, dateTime, dbCommand, defaultValuesSetters, validators, beforeCreateHooks,
+                afterCreateHooks, beforeUpdateHooks, afterUpdateHooks, beforeDeleteHooks, afterDeleteHooks,
+                outboxEventCreator, outboxMessageCreator, jsonService, auditlogger)
         {
             _currentUser = currentUser;
             _dbCommand = dbCommand;
         }
-        
+
         public async Task GetAsync(CancellationToken cancellationToken = default)
         {
             var userId = _currentUser.Id;

@@ -1,5 +1,4 @@
-﻿using Demo.WebApi.Auth;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
@@ -23,6 +22,7 @@ namespace Demo.WebApi.Controllers
                 {
                     _mediator = HttpContext.RequestServices.GetService<IMediator>();
                 }
+
                 return _mediator;
             }
         }

@@ -1,12 +1,11 @@
-﻿using Demo.Application.Shared.Interfaces;
-using System;
+﻿using System;
+using Demo.Application.Shared.Interfaces;
 
 namespace Demo.Application.Shared.Dtos
 {
     public class EntityDto : IEntityDto
     {
-        public Guid Id { get; set; }
-
         public byte[] Timestamp { get; set; }
+        public Guid Id { get; set; }
     }
 }

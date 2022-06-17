@@ -1,3 +1,7 @@
+using System;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Demo.Application.Shared.Extensions;
@@ -7,17 +11,13 @@ using Demo.Domain.Shared.Interfaces;
 using Demo.Domain.User;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Demo.Application.Users.Queries.SearchUsers
 {
     public class SearchUsersQueryHandler : IRequestHandler<SearchUsersQuery, SearchUsersQueryResult>
     {
-        private readonly IDbQuery<User> _query;
         private readonly IMapper _mapper;
+        private readonly IDbQuery<User> _query;
 
         public SearchUsersQueryHandler(
             IDbQuery<User> query,

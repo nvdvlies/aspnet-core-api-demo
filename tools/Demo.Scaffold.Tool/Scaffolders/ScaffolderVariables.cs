@@ -4,7 +4,7 @@ namespace Demo.Scaffold.Tool.Scaffolders
 {
     internal class ScaffolderVariables
     {
-        private Dictionary<string, object> _dictionary;
+        private readonly Dictionary<string, object> _dictionary;
 
         public ScaffolderVariables()
         {
@@ -23,11 +23,12 @@ namespace Demo.Scaffold.Tool.Scaffolders
 
         public bool TryGet<T>(string key, out T value)
         {
-            if (_dictionary.TryGetValue(key, out object internalValue) && internalValue is T result)
+            if (_dictionary.TryGetValue(key, out var internalValue) && internalValue is T result)
             {
                 value = result;
                 return true;
             }
+
             value = default;
             return false;
         }

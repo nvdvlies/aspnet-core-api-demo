@@ -1,7 +1,7 @@
-﻿using Demo.Scaffold.Tool.Changes;
+﻿using System.Collections.Generic;
+using Demo.Scaffold.Tool.Changes;
 using Demo.Scaffold.Tool.Helpers;
 using Demo.Scaffold.Tool.Interfaces;
-using System.Collections.Generic;
 
 namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint.OutputCollectors.Command.OutputCollectors
 {
@@ -16,9 +16,9 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint.OutputCollect
             if (!context.DoesControllerAlreadyExist(controllerName))
             {
                 changes.Add(new CreateNewClass(
-                    directory: context.GetControllersDirectory(),
-                    fileName: context.GetControllerFileName(controllerName),
-                    content: GetTemplate(controllerName)
+                    context.GetControllersDirectory(),
+                    context.GetControllerFileName(controllerName),
+                    GetTemplate(controllerName)
                 ));
             }
 

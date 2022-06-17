@@ -1,6 +1,6 @@
-﻿using Demo.Events;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
+using Demo.Events;
 
 namespace Demo.Application.Shared.Interfaces
 {

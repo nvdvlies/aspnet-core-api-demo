@@ -30,10 +30,10 @@ namespace Demo.Infrastructure.Services
             _jsonService = jsonService;
             _userPreferencesDomainEntity = userPreferencesDomainEntity;
         }
-        
+
         public async Task<UserPreferences> GetAsync(CancellationToken cancellationToken)
         {
-            return await GetAsync(refreshCache: false, cancellationToken);
+            return await GetAsync(false, cancellationToken);
         }
 
         public async Task<UserPreferences> GetAsync(bool refreshCache, CancellationToken cancellationToken)
@@ -41,7 +41,7 @@ namespace Demo.Infrastructure.Services
             var userId = _currentUser.Id;
             var cacheKey = $"{CacheKeyPrefix}/{userId}";
             var cacheValue = await _cache.GetAsync(cacheKey, cancellationToken);
-            
+
             if (refreshCache || cacheValue == null)
             {
                 _userPreferencesDomainEntity.WithOptions(x => x.AsNoTracking = true);
@@ -55,12 +55,10 @@ namespace Demo.Infrastructure.Services
 
                 return userPreferences;
             }
-            else
-            {
-                return Decode(cacheValue);
-            }
+
+            return Decode(cacheValue);
         }
-        
+
         private UserPreferences Decode(byte[] value)
         {
             return _jsonService.FromJson(Encoding.UTF8.GetString(value));

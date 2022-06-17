@@ -19,11 +19,10 @@ namespace Demo.Infrastructure.Persistence.Configuration
                 .WithMany(x => x.UserRoles)
                 .HasForeignKey(x => x.RoleId);
 
-            builder.HasData(new[] {
-                new UserRole {
-                    UserId = UserEntityTypeConfiguration.AdministratorUserId,
-                    RoleId = RoleEntityTypeConfiguration.AdministratorRoleId
-                }
+            builder.HasData(new UserRole
+            {
+                UserId = UserEntityTypeConfiguration.AdministratorUserId,
+                RoleId = RoleEntityTypeConfiguration.AdministratorRoleId
             });
         }
     }

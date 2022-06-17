@@ -1,18 +1,18 @@
-using Demo.Application.Users.Queries.IsEmailAvailable;
+using System;
+using System.Net;
+using System.Threading;
+using System.Threading.Tasks;
 using Demo.Application.Users.Commands.CreateUser;
 using Demo.Application.Users.Commands.DeleteUser;
 using Demo.Application.Users.Commands.UpdateUser;
 using Demo.Application.Users.Queries.GetUserAuditlog;
 using Demo.Application.Users.Queries.GetUserById;
+using Demo.Application.Users.Queries.IsEmailAvailable;
 using Demo.Application.Users.Queries.SearchUsers;
 using Demo.Application.Users.Queries.UserLookup;
 using Demo.WebApi.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Net;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Demo.WebApi.Controllers
 {
@@ -22,7 +22,8 @@ namespace Demo.WebApi.Controllers
         [Authorize(nameof(Policies.Admin))]
         [ProducesResponseType(typeof(SearchUsersQueryResult), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
-        public async Task<ActionResult<SearchUsersQueryResult>> Search([FromQuery] SearchUsersQuery query, CancellationToken cancellationToken)
+        public async Task<ActionResult<SearchUsersQueryResult>> Search([FromQuery] SearchUsersQuery query,
+            CancellationToken cancellationToken)
         {
             return await Mediator.Send(query, cancellationToken);
         }
@@ -32,7 +33,8 @@ namespace Demo.WebApi.Controllers
         [ProducesResponseType(typeof(GetUserByIdQueryResult), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
-        public async Task<ActionResult<GetUserByIdQueryResult>> GetUserById([FromRoute] Guid id, CancellationToken cancellationToken)
+        public async Task<ActionResult<GetUserByIdQueryResult>> GetUserById([FromRoute] Guid id,
+            CancellationToken cancellationToken)
         {
             var query = new GetUserByIdQuery { Id = id };
             var result = await Mediator.Send(query, cancellationToken);
@@ -50,11 +52,12 @@ namespace Demo.WebApi.Controllers
         [ProducesResponseType(typeof(CreateUserResponse), (int)HttpStatusCode.Created)]
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
-        public async Task<ActionResult<CreateUserResponse>> Create(CreateUserCommand command, CancellationToken cancellationToken)
+        public async Task<ActionResult<CreateUserResponse>> Create(CreateUserCommand command,
+            CancellationToken cancellationToken)
         {
             var result = await Mediator.Send(command, cancellationToken);
 
-            return CreatedAtRoute(routeName: nameof(GetUserById), routeValues: new { id = result.Id }, result);
+            return CreatedAtRoute(nameof(GetUserById), new { id = result.Id }, result);
         }
 
         [HttpPut("{id:guid}")]
@@ -62,7 +65,8 @@ namespace Demo.WebApi.Controllers
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
-        public async Task<ActionResult> Update([FromRoute] Guid id, UpdateUserCommand command, CancellationToken cancellationToken)
+        public async Task<ActionResult> Update([FromRoute] Guid id, UpdateUserCommand command,
+            CancellationToken cancellationToken)
         {
             command.SetUserId(id);
 
@@ -76,7 +80,8 @@ namespace Demo.WebApi.Controllers
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
-        public async Task<ActionResult> Delete([FromRoute] Guid id, DeleteUserCommand command, CancellationToken cancellationToken)
+        public async Task<ActionResult> Delete([FromRoute] Guid id, DeleteUserCommand command,
+            CancellationToken cancellationToken)
         {
             command.SetUserId(id);
 
@@ -89,7 +94,8 @@ namespace Demo.WebApi.Controllers
         [Authorize(nameof(Policies.Admin))]
         [ProducesResponseType(typeof(GetUserAuditlogQueryResult), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
-        public async Task<ActionResult<GetUserAuditlogQueryResult>> GetUserAuditlog([FromRoute] Guid id, [FromQuery] GetUserAuditlogQuery query, CancellationToken cancellationToken)
+        public async Task<ActionResult<GetUserAuditlogQueryResult>> GetUserAuditlog([FromRoute] Guid id,
+            [FromQuery] GetUserAuditlogQuery query, CancellationToken cancellationToken)
         {
             query.SetUserId(id);
 
@@ -100,7 +106,8 @@ namespace Demo.WebApi.Controllers
         [HttpGet("Lookup")]
         [ProducesResponseType(typeof(UserLookupQueryResult), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
-        public async Task<ActionResult<UserLookupQueryResult>> Lookup([FromQuery] UserLookupQuery query, CancellationToken cancellationToken)
+        public async Task<ActionResult<UserLookupQueryResult>> Lookup([FromQuery] UserLookupQuery query,
+            CancellationToken cancellationToken)
         {
             return await Mediator.Send(query, cancellationToken);
         }
@@ -108,7 +115,8 @@ namespace Demo.WebApi.Controllers
         [HttpGet("IsEmailAvailable")]
         [ProducesResponseType(typeof(IsEmailAvailableQueryResult), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
-        public async Task<ActionResult<IsEmailAvailableQueryResult>> IsEmailAvailable([FromQuery] IsEmailAvailableQuery query, CancellationToken cancellationToken)
+        public async Task<ActionResult<IsEmailAvailableQueryResult>> IsEmailAvailable(
+            [FromQuery] IsEmailAvailableQuery query, CancellationToken cancellationToken)
         {
             return await Mediator.Send(query, cancellationToken);
         }

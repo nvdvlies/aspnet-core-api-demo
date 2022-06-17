@@ -1,8 +1,8 @@
-﻿using Demo.Domain.Shared.DomainEntity;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using Demo.Domain.Shared.DomainEntity;
 using Demo.Events;
 using Demo.Messages;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Demo.Domain.Shared.Interfaces
 {

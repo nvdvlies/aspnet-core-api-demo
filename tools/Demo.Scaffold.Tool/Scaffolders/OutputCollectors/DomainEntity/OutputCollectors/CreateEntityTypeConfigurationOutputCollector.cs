@@ -1,7 +1,7 @@
-﻿using Demo.Scaffold.Tool.Changes;
+﻿using System.Collections.Generic;
+using Demo.Scaffold.Tool.Changes;
 using Demo.Scaffold.Tool.Helpers;
 using Demo.Scaffold.Tool.Interfaces;
-using System.Collections.Generic;
 
 namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.DomainEntity.OutputCollectors
 {
@@ -15,9 +15,9 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.DomainEntity.OutputCol
             var enableSoftDelete = context.Variables.Get<bool>(Constants.EnableSoftDelete);
 
             changes.Add(new CreateNewClass(
-                directory: context.GetEntityTypeConfigurationDirectory(),
-                fileName: $"{entityName}EntityTypeConfiguration.cs",
-                content: GetTemplate(entityName, enableSoftDelete)
+                context.GetEntityTypeConfigurationDirectory(),
+                $"{entityName}EntityTypeConfiguration.cs",
+                GetTemplate(entityName, enableSoftDelete)
             ));
 
             return changes;
@@ -50,9 +50,11 @@ namespace Demo.Infrastructure.Persistence.Configuration
 }
 ";
             code = code.Replace("%ENTITY%", entityName);
-            code = code.Replace("%SOFT_DELETE_PROPERTIES%", enableSoftDelete ? @"builder.Property(p => p.Deleted).HasDefaultValue(false);
+            code = code.Replace("%SOFT_DELETE_PROPERTIES%", enableSoftDelete
+                ? @"builder.Property(p => p.Deleted).HasDefaultValue(false);
             builder.Property(p => p.DeletedBy);
-            builder.Property(p => p.DeletedOn);" : null);
+            builder.Property(p => p.DeletedOn);"
+                : null);
             return code;
         }
     }

@@ -1,6 +1,6 @@
 using Demo.Application.Shared.Interfaces;
-using MediatR;
 using Demo.Application.UserPreferences.Commands.SaveUserPreferences.Dtos;
+using MediatR;
 
 namespace Demo.Application.UserPreferences.Commands.SaveUserPreferences
 {

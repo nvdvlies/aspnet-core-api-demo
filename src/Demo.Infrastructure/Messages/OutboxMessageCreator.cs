@@ -1,8 +1,8 @@
-﻿using Demo.Domain.OutboxMessage.Interfaces;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using Demo.Domain.OutboxMessage.Interfaces;
 using Demo.Domain.Shared.Interfaces;
 using Demo.Messages;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Demo.Infrastructure.Messages
 {

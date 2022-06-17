@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Demo.Application.ApplicationSettings.Queries.GetApplicationSettings.Dtos;
+using Demo.Domain.ApplicationSettings;
 
 namespace Demo.Application.ApplicationSettings.Queries.GetApplicationSettings
 {
@@ -8,7 +9,7 @@ namespace Demo.Application.ApplicationSettings.Queries.GetApplicationSettings
         public GetApplicationSettingsMappingProfile()
         {
             CreateMap<Domain.ApplicationSettings.ApplicationSettings, ApplicationSettingsDto>();
-            CreateMap<Domain.ApplicationSettings.ApplicationSettingsSettings, ApplicationSettingsSettingsDto>();
+            CreateMap<ApplicationSettingsSettings, ApplicationSettingsSettingsDto>();
         }
     }
 }

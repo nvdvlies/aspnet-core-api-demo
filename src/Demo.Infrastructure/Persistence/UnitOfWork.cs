@@ -1,6 +1,6 @@
-﻿using Demo.Application.Shared.Interfaces;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
+using Demo.Application.Shared.Interfaces;
 
 namespace Demo.Infrastructure.Persistence
 {

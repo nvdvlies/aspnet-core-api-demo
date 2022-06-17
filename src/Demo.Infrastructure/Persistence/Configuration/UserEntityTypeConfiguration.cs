@@ -1,7 +1,7 @@
+using System;
 using Demo.Domain.User;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
 
 namespace Demo.Infrastructure.Persistence.Configuration
 {

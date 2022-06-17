@@ -1,16 +1,16 @@
+using System.Threading;
+using System.Threading.Tasks;
 using AutoMapper;
 using Demo.Application.Shared.Mappings;
 using Demo.Domain.Role.Interfaces;
 using MediatR;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Demo.Application.Roles.Commands.CreateRole
 {
     public class CreateRoleCommandHandler : IRequestHandler<CreateRoleCommand, CreateRoleResponse>
     {
-        private readonly IRoleDomainEntity _roleDomainEntity;
         private readonly IMapper _mapper;
+        private readonly IRoleDomainEntity _roleDomainEntity;
 
         public CreateRoleCommandHandler(
             IRoleDomainEntity roleDomainEntity,

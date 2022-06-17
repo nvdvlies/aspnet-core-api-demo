@@ -1,5 +1,6 @@
 using AutoMapper;
 using Demo.Application.FeatureFlagSettings.Commands.SaveFeatureFlagSettings.Dtos;
+using Demo.Domain.FeatureFlagSettings;
 
 namespace Demo.Application.FeatureFlagSettings.Commands.SaveFeatureFlagSettings
 {
@@ -14,9 +15,9 @@ namespace Demo.Application.FeatureFlagSettings.Commands.SaveFeatureFlagSettings
                 .ForMember(x => x.LastModifiedOn, opt => opt.Ignore())
                 .ForMember(x => x.Id, opt => opt.Ignore());
 
-            CreateMap<SaveFeatureFlagSettingsCommandSettingsDto, Domain.FeatureFlagSettings.FeatureFlagSettingsSettings>();
-            
-            CreateMap<SaveFeatureFlagSettingsCommandSettingsFeatureFlagDto, Domain.FeatureFlagSettings.FeatureFlag>()
+            CreateMap<SaveFeatureFlagSettingsCommandSettingsDto, FeatureFlagSettingsSettings>();
+
+            CreateMap<SaveFeatureFlagSettingsCommandSettingsFeatureFlagDto, FeatureFlag>()
                 .ForMember(x => x.Timestamp, opt => opt.Ignore());
         }
     }

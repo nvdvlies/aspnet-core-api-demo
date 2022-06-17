@@ -1,38 +1,38 @@
-﻿using Demo.Scaffold.Tool.Changes;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text.Json;
+using Demo.Scaffold.Tool.Changes;
 using Demo.Scaffold.Tool.Interfaces;
 using Demo.Scaffold.Tool.Models;
 using Demo.Scaffold.Tool.Scaffolders.InputCollectors;
 using Demo.Scaffold.Tool.Scaffolders.OutputCollectors;
 using Spectre.Console;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text.Json;
 
 namespace Demo.Scaffold.Tool.Scaffolders
 {
     internal class ScaffolderService
     {
-        private ScaffolderContext _context { get; set; }
+        private readonly AppSettings _appSettings;
 
-        private List<IInputCollector> _inputCollectors = new List<IInputCollector>()
+        private readonly List<IInputCollector> _inputCollectors = new()
         {
             new SolutionDirectoryInputCollector(),
             new ScaffoldTypeInputCollector()
         };
 
-        private List<IOutputCollector> _outputCollectors = new List<IOutputCollector>()
+        private readonly List<IOutputCollector> _outputCollectors = new()
         {
-            new ScaffolderTypeOutputCollector(),
+            new ScaffolderTypeOutputCollector()
         };
-
-        private readonly AppSettings _appSettings;
 
         public ScaffolderService(AppSettings appSettings)
         {
             _appSettings = appSettings;
         }
+
+        private ScaffolderContext _context { get; set; }
 
         public void Run()
         {
@@ -71,12 +71,14 @@ namespace Demo.Scaffold.Tool.Scaffolders
             Console.WriteLine("Pending changes:");
             Console.WriteLine();
             foreach (var change in changes
-                .GroupBy(x => x.DirectoryAndFileName)
-                .Select(x => x.First())
-                .OrderBy(x => x.DirectoryAndFileName))
+                         .GroupBy(x => x.DirectoryAndFileName)
+                         .Select(x => x.First())
+                         .OrderBy(x => x.DirectoryAndFileName))
             {
-                Console.WriteLine($" - {change.ModificationType}: {Path.GetRelativePath(_appSettings.PathToSolutionRootDirectory, change.DirectoryAndFileName)}");
+                Console.WriteLine(
+                    $" - {change.ModificationType}: {Path.GetRelativePath(_appSettings.PathToSolutionRootDirectory, change.DirectoryAndFileName)}");
             }
+
             Console.WriteLine();
             return AnsiConsole.Confirm("Apply pending changes?");
         }
@@ -92,7 +94,8 @@ namespace Demo.Scaffold.Tool.Scaffolders
         private void SaveUserAppSettings()
         {
             var fullPathAndFileName = Path.Combine(Directory.GetCurrentDirectory(), Constants.UserSettingsFileName);
-            var serializedAppSettings = JsonSerializer.Serialize(_context.AppSettings, new JsonSerializerOptions() { WriteIndented = true });
+            var serializedAppSettings =
+                JsonSerializer.Serialize(_context.AppSettings, new JsonSerializerOptions { WriteIndented = true });
             File.WriteAllText(fullPathAndFileName, serializedAppSettings);
         }
     }

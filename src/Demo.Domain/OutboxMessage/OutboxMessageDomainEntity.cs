@@ -1,14 +1,14 @@
-﻿using Demo.Common.Interfaces;
+﻿using System;
+using System.Collections.Generic;
+using System.Reflection;
+using System.Text.Json;
+using Demo.Common.Interfaces;
 using Demo.Domain.OutboxMessage.Interfaces;
 using Demo.Domain.Shared.DomainEntity;
 using Demo.Domain.Shared.Exceptions;
 using Demo.Domain.Shared.Interfaces;
 using Demo.Messages;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Text.Json;
 
 namespace Demo.Domain.OutboxMessage
 {
@@ -31,7 +31,9 @@ namespace Demo.Domain.OutboxMessage
             Lazy<IOutboxMessageCreator> outboxMessageCreator,
             Lazy<IJsonService<OutboxMessage>> jsonService
         )
-            : base(logger, currentUser, dateTime, dbCommand, defaultValuesSetters, validators, beforeCreateHooks, afterCreateHooks, beforeUpdateHooks, afterUpdateHooks, beforeDeleteHooks, afterDeleteHooks, outboxEventCreator, outboxMessageCreator, jsonService, null)
+            : base(logger, currentUser, dateTime, dbCommand, defaultValuesSetters, validators, beforeCreateHooks,
+                afterCreateHooks, beforeUpdateHooks, afterUpdateHooks, beforeDeleteHooks, afterDeleteHooks,
+                outboxEventCreator, outboxMessageCreator, jsonService, null)
         {
         }
 
@@ -39,14 +41,17 @@ namespace Demo.Domain.OutboxMessage
 
         public void SetMessage(IMessage message)
         {
-            Guard.NotNull(Context.Entity, nameof(Context.Entity), $"Call {nameof(NewAsync)} first to instantiate entity");
+            Guard.NotNull(Context.Entity, nameof(Context.Entity),
+                $"Call {nameof(NewAsync)} first to instantiate entity");
             Guard.NotNull(message, nameof(message), $"Parameter '{nameof(message)}' cannot be null.");
-            Guard.NotNullOrWhiteSpace(message.Type, nameof(message.Type), $"Property '{nameof(message.Type)}' on parameter '{nameof(message)}' cannot be null.");
+            Guard.NotNullOrWhiteSpace(message.Type, nameof(message.Type),
+                $"Property '{nameof(message.Type)}' on parameter '{nameof(message)}' cannot be null.");
 
             var assembly = typeof(Message<IMessage, IMessageData>).Assembly;
             var messageType = assembly.GetType(message.Type);
 
-            Guard.NotNull(messageType, nameof(messageType), $"Class of type '{message.Type}' cannot be found in assembly '{assembly.FullName}'");
+            Guard.NotNull(messageType, nameof(messageType),
+                $"Class of type '{message.Type}' cannot be found in assembly '{assembly.FullName}'");
 
             Context.Entity.Type = message.Type;
             Context.Entity.Message = JsonSerializer.Serialize(message, messageType, new JsonSerializerOptions());
@@ -54,18 +59,23 @@ namespace Demo.Domain.OutboxMessage
 
         public IMessage GetMessage()
         {
-            Guard.NotNullOrWhiteSpace(Context.Entity.Type, nameof(Context.Entity.Type), $"{nameof(Context.Entity.Type)} is undefined. Call {nameof(GetAsync)} or {nameof(SetMessage)} first.");
-            Guard.NotNullOrWhiteSpace(Context.Entity.Message, nameof(Context.Entity.Message), $"{nameof(Context.Entity.Message)} is undefined. Call {nameof(GetAsync)} or {nameof(SetMessage)} first.");
+            Guard.NotNullOrWhiteSpace(Context.Entity.Type, nameof(Context.Entity.Type),
+                $"{nameof(Context.Entity.Type)} is undefined. Call {nameof(GetAsync)} or {nameof(SetMessage)} first.");
+            Guard.NotNullOrWhiteSpace(Context.Entity.Message, nameof(Context.Entity.Message),
+                $"{nameof(Context.Entity.Message)} is undefined. Call {nameof(GetAsync)} or {nameof(SetMessage)} first.");
 
             var assembly = typeof(Message<IMessage, IMessageData>).Assembly;
             var messageType = assembly.GetType(Context.Entity.Type);
 
-            Guard.NotNull(messageType, nameof(messageType), $"Class of type '{Context.Entity.Type}' not found in assembly '{assembly.FullName}'");
+            Guard.NotNull(messageType, nameof(messageType),
+                $"Class of type '{Context.Entity.Type}' not found in assembly '{assembly.FullName}'");
 
             var methodName = nameof(Message<IMessage, IMessageData>.FromJson);
-            var method = messageType.GetMethod(methodName, BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
+            var method = messageType.GetMethod(methodName,
+                BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
 
-            Guard.NotNull(method, nameof(method), $"Method '{methodName}' not found in classs of type '{Context.Entity.Type}'");
+            Guard.NotNull(method, nameof(method),
+                $"Method '{methodName}' not found in classs of type '{Context.Entity.Type}'");
 
             var message = method.Invoke(null, new object[] { Context.Entity.Message });
 

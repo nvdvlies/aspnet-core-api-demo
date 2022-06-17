@@ -1,7 +1,7 @@
-using Demo.Domain.Customer.Interfaces;
-using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
+using Demo.Domain.Customer.Interfaces;
+using MediatR;
 
 namespace Demo.Application.Customers.Commands.DeleteCustomer
 {

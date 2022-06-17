@@ -1,7 +1,7 @@
-﻿using Demo.Scaffold.Tool.Changes;
+﻿using System.Collections.Generic;
+using Demo.Scaffold.Tool.Changes;
 using Demo.Scaffold.Tool.Helpers;
 using Demo.Scaffold.Tool.Interfaces;
-using System.Collections.Generic;
 
 namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.DomainEntity.OutputCollectors
 {
@@ -16,9 +16,9 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.DomainEntity.OutputCol
             context.Variables.TryGet<bool>(Constants.EnableAuditlogging, out var enableAuditlogging);
 
             changes.Add(new CreateNewClass(
-                directory: context.GetEntityDirectory(entityName),
-                fileName: $"{entityName}.cs",
-                content: GetTemplate(entityName, enableSoftDelete, enableAuditlogging)
+                context.GetEntityDirectory(entityName),
+                $"{entityName}.cs",
+                GetTemplate(entityName, enableSoftDelete, enableAuditlogging)
             ));
 
             return changes;
@@ -39,7 +39,8 @@ namespace Demo.Domain.%ENTITY%
 }
 ";
             code = code.Replace("%ENTITY%", entityName);
-            code = code.Replace("%BASE_CLASS%", enableSoftDelete ? "SoftDeleteEntity" : enableAuditlogging ? "AuditableEntity" : "Entity");
+            code = code.Replace("%BASE_CLASS%",
+                enableSoftDelete ? "SoftDeleteEntity" : enableAuditlogging ? "AuditableEntity" : "Entity");
             return code;
         }
     }

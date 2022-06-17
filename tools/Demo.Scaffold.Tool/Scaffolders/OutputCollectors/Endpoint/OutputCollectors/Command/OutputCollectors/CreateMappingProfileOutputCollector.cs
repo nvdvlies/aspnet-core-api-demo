@@ -1,8 +1,8 @@
-﻿using Demo.Scaffold.Tool.Changes;
+﻿using System.Collections.Generic;
+using Demo.Scaffold.Tool.Changes;
 using Demo.Scaffold.Tool.Helpers;
 using Demo.Scaffold.Tool.Interfaces;
 using Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint.OutputCollectors.Command.InputCollectors;
-using System.Collections.Generic;
 
 namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint.OutputCollectors.Command.OutputCollectors
 {
@@ -24,15 +24,16 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint.OutputCollect
             var commandName = context.Variables.Get<string>(Constants.CommandName);
 
             changes.Add(new CreateNewClass(
-                    directory: context.GetCommandDirectory(controllerName, commandName),
-                    fileName: $"{commandName}MappingProfile.cs",
-                    content: GetTemplate(controllerName, commandName, commandEndpointType)
-                ));
+                context.GetCommandDirectory(controllerName, commandName),
+                $"{commandName}MappingProfile.cs",
+                GetTemplate(controllerName, commandName, commandEndpointType)
+            ));
 
             return changes;
         }
 
-        private static string GetTemplate(string controllerName, string commandName, CommandEndpointTypes commandEndpointType)
+        private static string GetTemplate(string controllerName, string commandName,
+            CommandEndpointTypes commandEndpointType)
         {
             var code = @"
 using AutoMapper;
@@ -61,7 +62,8 @@ namespace Demo.Application.%CONTROLLERNAME%.Commands.%COMMANDNAME%
 
             code = code.Replace("%CONTROLLERNAME%", controllerName);
             code = code.Replace("%COMMANDNAME%", commandName);
-            code = code.Replace("%ENTITYNAME_GUESS%", commandName.Replace("Create", string.Empty).Replace("Update", string.Empty));
+            code = code.Replace("%ENTITYNAME_GUESS%",
+                commandName.Replace("Create", string.Empty).Replace("Update", string.Empty));
             return code;
         }
     }

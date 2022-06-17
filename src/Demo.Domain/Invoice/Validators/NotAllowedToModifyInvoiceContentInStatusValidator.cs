@@ -1,11 +1,12 @@
-﻿using Demo.Domain.Shared.DomainEntity;
-using Demo.Domain.Shared.Interfaces;
-using FluentAssertions;
-using Microsoft.Extensions.Logging;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Demo.Domain.Shared.DomainEntity;
+using Demo.Domain.Shared.Interfaces;
+using FluentAssertions;
+using Microsoft.Extensions.Logging;
 
 namespace Demo.Domain.Invoice.Validators
 {
@@ -13,12 +14,14 @@ namespace Demo.Domain.Invoice.Validators
     {
         private readonly ILogger<NotAllowedToModifyInvoiceContentInStatusValidator> _logger;
 
-        public NotAllowedToModifyInvoiceContentInStatusValidator(ILogger<NotAllowedToModifyInvoiceContentInStatusValidator> logger)
+        public NotAllowedToModifyInvoiceContentInStatusValidator(
+            ILogger<NotAllowedToModifyInvoiceContentInStatusValidator> logger)
         {
             _logger = logger;
         }
 
-        public Task<IEnumerable<ValidationMessage>> ValidateAsync(IDomainEntityContext<Invoice> context, CancellationToken cancellationToken = default)
+        public Task<IEnumerable<ValidationMessage>> ValidateAsync(IDomainEntityContext<Invoice> context,
+            CancellationToken cancellationToken = default)
         {
             if (context.EditMode != EditMode.Update)
             {
@@ -39,7 +42,7 @@ namespace Demo.Domain.Invoice.Validators
                             .Excluding(x => x.Timestamp)
                     );
                 }
-                catch (System.Exception ex)
+                catch (Exception ex)
                 {
                     _logger.LogWarning(ex, "Not allowed to change invoice content in current status.");
                     return ValidationResultTask.Invalid("Not allowed to change invoice content in current status.");

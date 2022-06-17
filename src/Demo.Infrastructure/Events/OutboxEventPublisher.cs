@@ -1,18 +1,18 @@
-﻿using Demo.Application.Shared.Interfaces;
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
+using Demo.Application.Shared.Interfaces;
 using Demo.Domain.OutboxEvent.Interfaces;
 using Demo.Domain.Shared.Interfaces;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Demo.Infrastructure.Events
 {
     internal class OutboxEventPublisher : IOutboxEventPublisher
     {
-        private readonly ILogger<OutboxEventPublisher> _logger;
         private readonly IDomainEntityFactory _domainEntityFactory;
         private readonly IEventPublisher _eventPublisher;
+        private readonly ILogger<OutboxEventPublisher> _logger;
         private readonly IUnitOfWork _unitOfWork;
 
         public OutboxEventPublisher(
@@ -37,7 +37,7 @@ namespace Demo.Infrastructure.Events
 
             _logger.LogInformation("Publishing event of type '{type}'", outboxEventDomainEntity.Type);
 
-            bool isPublished = false;
+            var isPublished = false;
             try
             {
                 var @event = outboxEventDomainEntity.GetEvent();
@@ -47,7 +47,8 @@ namespace Demo.Infrastructure.Events
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Failed to publish event of type '{type}' (ID: {id})", outboxEventDomainEntity.Type, outboxEventDomainEntity.EntityId);
+                _logger.LogError(ex, "Failed to publish event of type '{type}' (ID: {id})",
+                    outboxEventDomainEntity.Type, outboxEventDomainEntity.EntityId);
                 await UnLockAsync(outboxEventDomainEntity, cancellationToken);
             }
 
@@ -59,19 +60,22 @@ namespace Demo.Infrastructure.Events
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogCritical(ex, "Failed to mark published event of type '{type}' as published (ID: {id})", outboxEventDomainEntity.Type, outboxEventDomainEntity.EntityId);
+                    _logger.LogCritical(ex, "Failed to mark published event of type '{type}' as published (ID: {id})",
+                        outboxEventDomainEntity.Type, outboxEventDomainEntity.EntityId);
                 }
             }
         }
 
-        private async Task UnLockAsync(IOutboxEventDomainEntity outboxEventDomainEntity, CancellationToken cancellationToken)
+        private async Task UnLockAsync(IOutboxEventDomainEntity outboxEventDomainEntity,
+            CancellationToken cancellationToken)
         {
             outboxEventDomainEntity.Unlock();
             await outboxEventDomainEntity.UpdateAsync(cancellationToken);
             await _unitOfWork.CommitAsync(cancellationToken);
         }
 
-        private async Task UnlockAndMarkAsPublishedAsync(IOutboxEventDomainEntity outboxEventDomainEntity, CancellationToken cancellationToken)
+        private async Task UnlockAndMarkAsPublishedAsync(IOutboxEventDomainEntity outboxEventDomainEntity,
+            CancellationToken cancellationToken)
         {
             outboxEventDomainEntity.Unlock();
             outboxEventDomainEntity.MarkAsPublished();

@@ -1,8 +1,8 @@
-﻿using Demo.Application.Shared.Interfaces;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using Demo.Application.Shared.Interfaces;
 using Demo.Events.Invoice;
 using MediatR;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Demo.Application.Invoices.Events.InvoicePaid
 {

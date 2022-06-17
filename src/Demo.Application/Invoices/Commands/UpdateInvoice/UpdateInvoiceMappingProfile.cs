@@ -1,8 +1,8 @@
-﻿using AutoMapper;
+﻿using System.Collections.Generic;
+using AutoMapper;
 using Demo.Application.Invoices.Commands.UpdateInvoice.Dtos;
 using Demo.Application.Shared.Mappings;
 using Demo.Domain.Invoice;
-using System.Collections.Generic;
 
 namespace Demo.Application.Invoices.Commands.UpdateInvoice
 {
@@ -19,7 +19,10 @@ namespace Demo.Application.Invoices.Commands.UpdateInvoice
 
             CreateMap<UpdateInvoiceCommand, Invoice>()
                 .ForMember(dest => dest.InvoiceLines,
-                    opt => opt.MapFrom<TrackedChildCollectionValueResolver<UpdateInvoiceCommand, Invoice, UpdateInvoiceCommandInvoiceLineDto, InvoiceLine>, List<UpdateInvoiceCommandInvoiceLineDto>>(src => src.InvoiceLines)
+                    opt => opt
+                        .MapFrom<TrackedChildCollectionValueResolver<UpdateInvoiceCommand, Invoice,
+                            UpdateInvoiceCommandInvoiceLineDto, InvoiceLine>, List<UpdateInvoiceCommandInvoiceLineDto>>(
+                            src => src.InvoiceLines)
                 )
                 .ForMember(x => x.Id, opt => opt.Ignore())
                 .ForMember(x => x.InvoiceNumber, opt => opt.Ignore())

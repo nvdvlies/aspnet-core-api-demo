@@ -1,11 +1,11 @@
-﻿using Demo.Domain.Shared.Entities;
-using Demo.Domain.Shared.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Demo.Domain.Shared.Entities;
+using Demo.Domain.Shared.Interfaces;
 
 namespace Demo.Domain.Auditlog
 {
-    public partial class Auditlog : Entity, IQueryableEntity
+    public class Auditlog : Entity, IQueryableEntity
     {
         public string EntityName { get; set; }
         public Guid EntityId { get; set; }

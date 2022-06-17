@@ -1,6 +1,6 @@
-﻿using Demo.Messages;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
+using Demo.Messages;
 
 namespace Demo.Domain.Shared.Interfaces
 {

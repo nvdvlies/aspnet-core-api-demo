@@ -1,10 +1,10 @@
-﻿using Demo.Application.Invoices.Services;
+﻿using System.Reflection;
+using Demo.Application.Invoices.Services;
 using Demo.Application.Shared.PipelineBehaviors;
 using Demo.Domain.Invoice.Interfaces;
 using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
-using System.Reflection;
 
 namespace Demo.Application
 {
@@ -19,9 +19,9 @@ namespace Demo.Application
                     services.Add(ServiceDescriptor.Transient(pair.ValidatorType, pair.ValidatorType));
                 });
 
-            services.AddAutoMapper(new[] { Assembly.GetExecutingAssembly() });
+            services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
-            services.AddMediatR(new[] { Assembly.GetExecutingAssembly() });
+            services.AddMediatR(Assembly.GetExecutingAssembly());
 
             services.RegisterPipelineBehaviors();
 
@@ -46,8 +46,10 @@ namespace Demo.Application
 
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingPipelineBehavior<,>));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationPipelineBehavior<,>));
-            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ProcessOutboxMessageCreatedEventsPipelineBehavior<,>));
-            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ProcessOutboxEventCreatedEventsPipelineBehavior<,>));
+            services.AddTransient(typeof(IPipelineBehavior<,>),
+                typeof(ProcessOutboxMessageCreatedEventsPipelineBehavior<,>));
+            services.AddTransient(typeof(IPipelineBehavior<,>),
+                typeof(ProcessOutboxEventCreatedEventsPipelineBehavior<,>));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(UnitOfWorkPipelineBehavior<,>));
         }
 

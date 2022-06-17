@@ -1,18 +1,18 @@
-﻿using Demo.Common.Interfaces;
+﻿using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+using Demo.Common.Interfaces;
 using Demo.Domain.Auditlog;
 using Demo.Domain.Auditlog.Interfaces;
 using Demo.Domain.Shared.Interfaces;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Demo.Infrastructure.Auditlogging.Shared
 {
     internal abstract class AuditloggerBase<T> where T : IEntity
     {
+        private readonly IAuditlogDomainEntity _auditlogDomainEntity;
         private readonly ICurrentUser _currentUser;
         private readonly IDateTime _dateTime;
-        private readonly IAuditlogDomainEntity _auditlogDomainEntity;
 
         public AuditloggerBase(
             ICurrentUser currentUser,

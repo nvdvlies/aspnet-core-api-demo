@@ -1,6 +1,6 @@
-﻿using Demo.Domain.Shared.DomainEntity;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
+using Demo.Domain.Shared.DomainEntity;
 
 namespace Demo.Domain.Shared.Interfaces
 {
@@ -8,6 +8,7 @@ namespace Demo.Domain.Shared.Interfaces
     {
         int Order => 0;
 
-        Task ExecuteAsync(HookType type, IDomainEntityContext<T> context, CancellationToken cancellationToken = default);
+        Task ExecuteAsync(HookType type, IDomainEntityContext<T> context,
+            CancellationToken cancellationToken = default);
     }
 }

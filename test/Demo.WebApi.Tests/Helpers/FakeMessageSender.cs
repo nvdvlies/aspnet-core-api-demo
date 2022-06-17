@@ -1,12 +1,11 @@
-﻿using Demo.Application.Shared.Interfaces;
-using Demo.Infrastructure.Messages;
-using Demo.Messages;
-using MediatR;
-using Microsoft.Extensions.DependencyInjection;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Demo.Application.Shared.Interfaces;
+using Demo.Messages;
+using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Demo.WebApi.Tests.Helpers
 {

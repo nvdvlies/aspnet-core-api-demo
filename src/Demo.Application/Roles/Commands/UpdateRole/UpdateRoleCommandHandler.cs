@@ -1,16 +1,16 @@
+using System.Threading;
+using System.Threading.Tasks;
 using AutoMapper;
 using Demo.Application.Shared.Mappings;
 using Demo.Domain.Role.Interfaces;
 using MediatR;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Demo.Application.Roles.Commands.UpdateRole
 {
     public class UpdateRoleCommandHandler : IRequestHandler<UpdateRoleCommand, Unit>
     {
-        private readonly IRoleDomainEntity _roleDomainEntity;
         private readonly IMapper _mapper;
+        private readonly IRoleDomainEntity _roleDomainEntity;
 
         public UpdateRoleCommandHandler(
             IRoleDomainEntity roleDomainEntity,
