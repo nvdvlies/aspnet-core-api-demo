@@ -17,20 +17,14 @@ A DomainEntity offers:
   - Auto merging of changes others made when making changes yourself. [View example](https://github.com/nvdvlies/dotnet-api-and-angular-frontend/blob/main/src/Demo.WebUI/src/app/domain/shared/domain-entity-base.ts#L279).
   - Strongly-typed forms
 
-## Prerequisites
+## Run locally
 
-- Node.Js (https://nodejs.org/en/)
-- Dotnet 5 runtime (https://dotnet.microsoft.com/en-us/download/dotnet/5.0)
-- SQL Server 2019 Developer (https://www.microsoft.com/en-us/sql-server/sql-server-downloads)
+- Install Docker Desktop (https://www.docker.com/products/docker-desktop/)
+- Run `docker compose -p demo up -d` from `./infra` directory
+- Browse to `http://localhost:5500/`
+- Login with user `demo@demo.com` and password `P@ssw0rd!`
 
-## One time setup
+## Clean up
 
-- `npm i -g angular-cli`
-- `npm install` in directory \src\Demo.WebUI\
+- Run `docker compose -p demo down --volume --rmi all`
 
-## Run
-
-- `dotnet run` in directory \src\Demo.WebApi\
-- `npm start` in directory \src\Demo.WebUI\
-- browse to `http://localhost:4401/`
-- login with e-mail address `demo@demo.com` and password `P@ssw0rd!`
