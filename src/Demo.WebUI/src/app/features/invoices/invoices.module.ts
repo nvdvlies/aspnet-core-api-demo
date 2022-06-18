@@ -6,9 +6,10 @@ import { InvoiceListComponent } from '@invoices/pages/invoice-list/invoice-list.
 import { InvoiceDetailsComponent } from '@invoices/pages/invoice-details/invoice-details.component';
 import { InvoiceTableDataService } from '@invoices/pages/invoice-list/invoice-table-data.service';
 import { InvoiceListPageSettingsService } from './pages/invoice-list/invoice-list-page-settings.service';
+import { InvoiceAuditlogComponent } from './pages/invoice-auditlog/invoice-auditlog.component';
 
 @NgModule({
-  declarations: [InvoiceListComponent, InvoiceDetailsComponent],
+  declarations: [InvoiceListComponent, InvoiceDetailsComponent, InvoiceAuditlogComponent],
   imports: [CommonModule, SharedModule, InvoicesRoutingModule],
   providers: [InvoiceTableDataService, InvoiceListPageSettingsService]
 })

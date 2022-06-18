@@ -12,6 +12,7 @@ using Demo.Application.Invoices.Commands.MarkInvoiceAsSent;
 using Demo.Application.Invoices.Commands.UpdateInvoice;
 using Demo.Application.Invoices.Queries.GetInvoiceAuditlog;
 using Demo.Application.Invoices.Queries.GetInvoiceById;
+using Demo.Application.Invoices.Queries.InvoiceLookup;
 using Demo.Application.Invoices.Queries.SearchInvoices;
 using Microsoft.AspNetCore.Mvc;
 
@@ -170,6 +171,14 @@ namespace Demo.WebApi.Controllers
             var result = await Mediator.Send(command, cancellationToken);
 
             return CreatedAtRoute(nameof(GetInvoiceById), new { id = result.Id }, result);
+        }
+
+        [HttpGet("Lookup")]
+        [ProducesResponseType(typeof(InvoiceLookupQueryResult), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
+        public async Task<ActionResult<InvoiceLookupQueryResult>> Lookup([FromQuery] InvoiceLookupQuery query, CancellationToken cancellationToken)
+        {
+            return await Mediator.Send(query, cancellationToken);
         }
 
         // SCAFFOLD-MARKER: ENDPOINT

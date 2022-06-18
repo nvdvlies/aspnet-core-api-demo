@@ -6,19 +6,19 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="AutoMapper" Version="10.1.1"/>
-        <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1"/>
-        <PackageReference Include="FluentValidation" Version="10.1.0"/>
-        <PackageReference Include="MediatR" Version="9.0.0"/>
-        <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="9.0.0"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.5"/>
+        <PackageReference Include="AutoMapper" Version="10.1.1" />
+        <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
+        <PackageReference Include="FluentValidation" Version="10.1.0" />
+        <PackageReference Include="MediatR" Version="9.0.0" />
+        <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="9.0.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.5" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Demo.Common\Demo.Common.csproj"/>
-        <ProjectReference Include="..\Demo.Domain\Demo.Domain.csproj"/>
-        <ProjectReference Include="..\Demo.Events\Demo.Events.csproj"/>
-        <ProjectReference Include="..\Demo.Messages\Demo.Messages.csproj"/>
+        <ProjectReference Include="..\Demo.Common\Demo.Common.csproj" />
+        <ProjectReference Include="..\Demo.Domain\Demo.Domain.csproj" />
+        <ProjectReference Include="..\Demo.Events\Demo.Events.csproj" />
+        <ProjectReference Include="..\Demo.Messages\Demo.Messages.csproj" />
     </ItemGroup>
 
     <ItemGroup>

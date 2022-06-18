@@ -24,6 +24,7 @@ import { RoleAutocompleteFormFieldControlComponent } from '@shared/components/ro
 import { AuditlogTableComponent } from '@shared/components/auditlog-table/auditlog-table.component';
 import { HighlightComponent } from './components/highlight/highlight.component';
 import { AuditlogItemComponent } from './components/auditlog-item/auditlog-item.component';
+import { InvoiceIdToNumberPipe } from './pipes/invoice-id-to-number.pipe';
 
 @NgModule({
   declarations: [
@@ -48,7 +49,8 @@ import { AuditlogItemComponent } from './components/auditlog-item/auditlog-item.
     RoleAutocompleteFormFieldControlComponent,
     AuditlogTableComponent,
     HighlightComponent,
-    AuditlogItemComponent
+    AuditlogItemComponent,
+    InvoiceIdToNumberPipe
   ],
   imports: [CommonModule, ReactiveFormsModule, FormsModule, MaterialModule],
   exports: [
@@ -76,7 +78,8 @@ import { AuditlogItemComponent } from './components/auditlog-item/auditlog-item.
     RoleAutocompleteFormFieldControlComponent,
     AuditlogTableComponent,
     HighlightComponent,
-    AuditlogItemComponent
+    AuditlogItemComponent,
+    InvoiceIdToNumberPipe
   ]
 })
 export class SharedModule {}

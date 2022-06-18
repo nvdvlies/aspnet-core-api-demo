@@ -850,75 +850,6 @@ export class ApiCustomersClient {
 @Injectable({
     providedIn: 'root'
 })
-export class ApiEventsClient {
-    private http: HttpClient;
-    private baseUrl: string;
-    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
-
-    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
-        this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
-    }
-
-    post(eventGridEvents: EventGridEvent[]): Observable<void> {
-        let url_ = this.baseUrl + "/api/Events";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(eventGridEvents);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processPost(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processPost(<any>response_);
-                } catch (e) {
-                    return <Observable<void>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<void>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processPost(response: HttpResponseBase): Observable<void> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return _observableOf<void>(<any>null);
-            }));
-        } else if (status === 500) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result500: any = null;
-            let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result500 = ProblemDetails.fromJS(resultData500);
-            return throwException("A server side error occurred.", status, _responseText, _headers, result500);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<void>(<any>null);
-    }
-}
-
-@Injectable({
-    providedIn: 'root'
-})
 export class ApiFeatureFlagSettingsClient {
     private http: HttpClient;
     private baseUrl: string;
@@ -1894,6 +1825,81 @@ export class ApiInvoicesClient {
         }
         return _observableOf<CreditInvoiceResponse>(<any>null);
     }
+
+    lookup(orderBy?: InvoiceLookupOrderByEnum | undefined, orderByDescending?: boolean | undefined, pageIndex?: number | undefined, pageSize?: number | undefined, searchTerm?: string | null | undefined, ids?: string[] | null | undefined): Observable<InvoiceLookupQueryResult> {
+        let url_ = this.baseUrl + "/api/Invoices/Lookup?";
+        if (orderBy === null)
+            throw new Error("The parameter 'orderBy' cannot be null.");
+        else if (orderBy !== undefined)
+            url_ += "OrderBy=" + encodeURIComponent("" + orderBy) + "&";
+        if (orderByDescending === null)
+            throw new Error("The parameter 'orderByDescending' cannot be null.");
+        else if (orderByDescending !== undefined)
+            url_ += "OrderByDescending=" + encodeURIComponent("" + orderByDescending) + "&";
+        if (pageIndex === null)
+            throw new Error("The parameter 'pageIndex' cannot be null.");
+        else if (pageIndex !== undefined)
+            url_ += "PageIndex=" + encodeURIComponent("" + pageIndex) + "&";
+        if (pageSize === null)
+            throw new Error("The parameter 'pageSize' cannot be null.");
+        else if (pageSize !== undefined)
+            url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
+        if (searchTerm !== undefined && searchTerm !== null)
+            url_ += "SearchTerm=" + encodeURIComponent("" + searchTerm) + "&";
+        if (ids !== undefined && ids !== null)
+            ids && ids.forEach(item => { url_ += "Ids=" + encodeURIComponent("" + item) + "&"; });
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processLookup(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processLookup(<any>response_);
+                } catch (e) {
+                    return <Observable<InvoiceLookupQueryResult>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<InvoiceLookupQueryResult>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processLookup(response: HttpResponseBase): Observable<InvoiceLookupQueryResult> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = InvoiceLookupQueryResult.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 500) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result500: any = null;
+            let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result500 = ProblemDetails.fromJS(resultData500);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result500);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<InvoiceLookupQueryResult>(<any>null);
+    }
 }
 
 @Injectable({
@@ -1914,75 +1920,6 @@ export class ApiLogClient {
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(logMessages);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processPost(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processPost(<any>response_);
-                } catch (e) {
-                    return <Observable<void>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<void>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processPost(response: HttpResponseBase): Observable<void> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return _observableOf<void>(<any>null);
-            }));
-        } else if (status === 500) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result500: any = null;
-            let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result500 = ProblemDetails.fromJS(resultData500);
-            return throwException("A server side error occurred.", status, _responseText, _headers, result500);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<void>(<any>null);
-    }
-}
-
-@Injectable({
-    providedIn: 'root'
-})
-export class ApiMessagesClient {
-    private http: HttpClient;
-    private baseUrl: string;
-    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
-
-    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
-        this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
-    }
-
-    post(serviceBusMessage: ServiceBusMessage): Observable<void> {
-        let url_ = this.baseUrl + "/api/Messages";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(serviceBusMessage);
 
         let options_ : any = {
             body: content_,
@@ -3311,8 +3248,8 @@ export interface IGetApplicationSettingsQueryResult {
 }
 
 export class EntityDto implements IEntityDto {
-    id!: string;
     timestamp?: string | undefined;
+    id!: string;
 
     constructor(data?: IEntityDto) {
         if (data) {
@@ -3325,8 +3262,8 @@ export class EntityDto implements IEntityDto {
 
     init(_data?: any) {
         if (_data) {
-            this.id = _data["id"];
             this.timestamp = _data["timestamp"];
+            this.id = _data["id"];
         }
     }
 
@@ -3339,8 +3276,8 @@ export class EntityDto implements IEntityDto {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
         data["timestamp"] = this.timestamp;
+        data["id"] = this.id;
         return data;
     }
 
@@ -3353,8 +3290,8 @@ export class EntityDto implements IEntityDto {
 }
 
 export interface IEntityDto {
-    id: string;
     timestamp?: string | undefined;
+    id: string;
 }
 
 export class AuditableEntityDto extends EntityDto implements IAuditableEntityDto {
@@ -4849,134 +4786,6 @@ export enum CustomerLookupOrderByEnum {
     Name = 1,
 }
 
-/** Properties of an event published to an Event Grid topic using the EventGrid Schema. */
-export class EventGridEvent implements IEventGridEvent {
-    /** Gets or sets the event payload as BinaryData. Using BinaryData,
-one can deserialize the payload into rich data, or access the raw JSON data using ToString. */
-    data?: BinaryData | undefined;
-    /** Gets or sets a unique identifier for the event.  */
-    id?: string | undefined;
-    /** Gets or sets the resource path of the event source.
-            This must be set when publishing the event to a domain, and must not be set when publishing the event to a topic.
-             */
-    topic?: string | undefined;
-    /** Gets or sets a resource path relative to the topic path. */
-    subject?: string | undefined;
-    /** Gets or sets the type of the event that occurred. */
-    eventType?: string | undefined;
-    /** Gets or sets the time (in UTC) the event was generated. */
-    eventTime!: Date;
-    /** Gets or sets the schema version of the data object. */
-    dataVersion?: string | undefined;
-
-    constructor(data?: IEventGridEvent) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.data = _data["data"] ? BinaryData.fromJS(_data["data"]) : <any>undefined;
-            this.id = _data["id"];
-            this.topic = _data["topic"];
-            this.subject = _data["subject"];
-            this.eventType = _data["eventType"];
-            this.eventTime = _data["eventTime"] ? new Date(_data["eventTime"].toString()) : <any>undefined;
-            this.dataVersion = _data["dataVersion"];
-        }
-    }
-
-    static fromJS(data: any): EventGridEvent {
-        data = typeof data === 'object' ? data : {};
-        let result = new EventGridEvent();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["data"] = this.data ? this.data.toJSON() : <any>undefined;
-        data["id"] = this.id;
-        data["topic"] = this.topic;
-        data["subject"] = this.subject;
-        data["eventType"] = this.eventType;
-        data["eventTime"] = this.eventTime ? this.eventTime.toISOString() : <any>undefined;
-        data["dataVersion"] = this.dataVersion;
-        return data;
-    }
-
-    clone(): EventGridEvent {
-        const json = this.toJSON();
-        let result = new EventGridEvent();
-        result.init(json);
-        return result;
-    }
-}
-
-/** Properties of an event published to an Event Grid topic using the EventGrid Schema. */
-export interface IEventGridEvent {
-    /** Gets or sets the event payload as BinaryData. Using BinaryData,
-one can deserialize the payload into rich data, or access the raw JSON data using ToString. */
-    data?: BinaryData | undefined;
-    /** Gets or sets a unique identifier for the event.  */
-    id?: string | undefined;
-    /** Gets or sets the resource path of the event source.
-            This must be set when publishing the event to a domain, and must not be set when publishing the event to a topic.
-             */
-    topic?: string | undefined;
-    /** Gets or sets a resource path relative to the topic path. */
-    subject?: string | undefined;
-    /** Gets or sets the type of the event that occurred. */
-    eventType?: string | undefined;
-    /** Gets or sets the time (in UTC) the event was generated. */
-    eventTime: Date;
-    /** Gets or sets the schema version of the data object. */
-    dataVersion?: string | undefined;
-}
-
-/** A lightweight abstraction for a payload of bytes that supports converting between string, stream, JSON, and bytes. */
-export class BinaryData implements IBinaryData {
-
-    constructor(data?: IBinaryData) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-    }
-
-    static fromJS(data: any): BinaryData {
-        data = typeof data === 'object' ? data : {};
-        let result = new BinaryData();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        return data;
-    }
-
-    clone(): BinaryData {
-        const json = this.toJSON();
-        let result = new BinaryData();
-        result.init(json);
-        return result;
-    }
-}
-
-/** A lightweight abstraction for a payload of bytes that supports converting between string, stream, JSON, and bytes. */
-export interface IBinaryData {
-}
-
 export class GetFeatureFlagSettingsQueryResult implements IGetFeatureFlagSettingsQueryResult {
     featureFlagSettings?: FeatureFlagSettingsDto | undefined;
 
@@ -5953,10 +5762,10 @@ export interface IUpdateInvoiceCommand {
 }
 
 export class UpdateInvoiceCommandInvoiceLineDto implements IUpdateInvoiceCommandInvoiceLineDto {
-    id?: string | undefined;
     quantity!: number;
     description?: string | undefined;
     sellingPrice!: number;
+    id?: string | undefined;
 
     constructor(data?: IUpdateInvoiceCommandInvoiceLineDto) {
         if (data) {
@@ -5969,10 +5778,10 @@ export class UpdateInvoiceCommandInvoiceLineDto implements IUpdateInvoiceCommand
 
     init(_data?: any) {
         if (_data) {
-            this.id = _data["id"];
             this.quantity = _data["quantity"];
             this.description = _data["description"];
             this.sellingPrice = _data["sellingPrice"];
+            this.id = _data["id"];
         }
     }
 
@@ -5985,10 +5794,10 @@ export class UpdateInvoiceCommandInvoiceLineDto implements IUpdateInvoiceCommand
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
         data["quantity"] = this.quantity;
         data["description"] = this.description;
         data["sellingPrice"] = this.sellingPrice;
+        data["id"] = this.id;
         return data;
     }
 
@@ -6001,10 +5810,10 @@ export class UpdateInvoiceCommandInvoiceLineDto implements IUpdateInvoiceCommand
 }
 
 export interface IUpdateInvoiceCommandInvoiceLineDto {
-    id?: string | undefined;
     quantity: number;
     description?: string | undefined;
     sellingPrice: number;
+    id?: string | undefined;
 }
 
 export class DeleteInvoiceCommand implements IDeleteInvoiceCommand {
@@ -6367,6 +6176,110 @@ export class CreditInvoiceCommand implements ICreditInvoiceCommand {
 export interface ICreditInvoiceCommand {
 }
 
+export class InvoiceLookupQueryResult extends BasePaginatedResult implements IInvoiceLookupQueryResult {
+    invoices?: InvoiceLookupDto[] | undefined;
+
+    constructor(data?: IInvoiceLookupQueryResult) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            if (Array.isArray(_data["invoices"])) {
+                this.invoices = [] as any;
+                for (let item of _data["invoices"])
+                    this.invoices!.push(InvoiceLookupDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): InvoiceLookupQueryResult {
+        data = typeof data === 'object' ? data : {};
+        let result = new InvoiceLookupQueryResult();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.invoices)) {
+            data["invoices"] = [];
+            for (let item of this.invoices)
+                data["invoices"].push(item.toJSON());
+        }
+        super.toJSON(data);
+        return data;
+    }
+
+    clone(): InvoiceLookupQueryResult {
+        const json = this.toJSON();
+        let result = new InvoiceLookupQueryResult();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IInvoiceLookupQueryResult extends IBasePaginatedResult {
+    invoices?: InvoiceLookupDto[] | undefined;
+}
+
+export class InvoiceLookupDto implements IInvoiceLookupDto {
+    id!: string;
+    invoiceNumber?: string | undefined;
+    customerId!: string;
+
+    constructor(data?: IInvoiceLookupDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.invoiceNumber = _data["invoiceNumber"];
+            this.customerId = _data["customerId"];
+        }
+    }
+
+    static fromJS(data: any): InvoiceLookupDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new InvoiceLookupDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["invoiceNumber"] = this.invoiceNumber;
+        data["customerId"] = this.customerId;
+        return data;
+    }
+
+    clone(): InvoiceLookupDto {
+        const json = this.toJSON();
+        let result = new InvoiceLookupDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IInvoiceLookupDto {
+    id: string;
+    invoiceNumber?: string | undefined;
+    customerId: string;
+}
+
+export enum InvoiceLookupOrderByEnum {
+    InvoiceNumber = 0,
+    InvoiceDate = 1,
+}
+
 export class LogMessage implements ILogMessage {
     logLevel!: LogLevel;
     eventId!: number;
@@ -6431,145 +6344,6 @@ export enum LogLevel {
     Error = 4,
     Critical = 5,
     None = 6,
-}
-
-/** The ServiceBusMessage is used to send data to Service Bus Queues and Topics. When receiving messages, the ServiceBusReceivedMessage is used. */
-export class ServiceBusMessage implements IServiceBusMessage {
-    /** Gets or sets the body of the message. */
-    body?: BinaryData | undefined;
-    /** Gets or sets the MessageId to identify the message. */
-    messageId?: string | undefined;
-    /** Gets or sets a partition key for sending a message to a partitioned entity. */
-    partitionKey?: string | undefined;
-    /** Gets or sets a partition key for sending a message into an entity via a partitioned transfer queue. */
-    transactionPartitionKey?: string | undefined;
-    /** Gets or sets the session identifier for a session-aware entity. */
-    sessionId?: string | undefined;
-    /** Gets or sets a session identifier augmenting the ReplyTo address. */
-    replyToSessionId?: string | undefined;
-    /** Gets or sets the message’s "time to live" value. */
-    timeToLive!: string;
-    /** Gets or sets the a correlation identifier. */
-    correlationId?: string | undefined;
-    /** Gets or sets an application specific subject. */
-    subject?: string | undefined;
-    /** Gets or sets the "to" address. */
-    to?: string | undefined;
-    /** Gets or sets the content type descriptor. */
-    contentType?: string | undefined;
-    /** Gets or sets the address of an entity to send replies to. */
-    replyTo?: string | undefined;
-    /** Gets or sets the date and time in UTC at which the message will be enqueued. This
-property returns the time in UTC; when setting the property, the supplied DateTime value must also be in UTC. */
-    scheduledEnqueueTime!: Date;
-    /** Gets the application properties bag, which can be used for custom message metadata. */
-    applicationProperties?: { [key: string]: any; } | undefined;
-
-    constructor(data?: IServiceBusMessage) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.body = _data["body"] ? BinaryData.fromJS(_data["body"]) : <any>undefined;
-            this.messageId = _data["messageId"];
-            this.partitionKey = _data["partitionKey"];
-            this.transactionPartitionKey = _data["transactionPartitionKey"];
-            this.sessionId = _data["sessionId"];
-            this.replyToSessionId = _data["replyToSessionId"];
-            this.timeToLive = _data["timeToLive"];
-            this.correlationId = _data["correlationId"];
-            this.subject = _data["subject"];
-            this.to = _data["to"];
-            this.contentType = _data["contentType"];
-            this.replyTo = _data["replyTo"];
-            this.scheduledEnqueueTime = _data["scheduledEnqueueTime"] ? new Date(_data["scheduledEnqueueTime"].toString()) : <any>undefined;
-            if (_data["applicationProperties"]) {
-                this.applicationProperties = {} as any;
-                for (let key in _data["applicationProperties"]) {
-                    if (_data["applicationProperties"].hasOwnProperty(key))
-                        (<any>this.applicationProperties)![key] = _data["applicationProperties"][key];
-                }
-            }
-        }
-    }
-
-    static fromJS(data: any): ServiceBusMessage {
-        data = typeof data === 'object' ? data : {};
-        let result = new ServiceBusMessage();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["body"] = this.body ? this.body.toJSON() : <any>undefined;
-        data["messageId"] = this.messageId;
-        data["partitionKey"] = this.partitionKey;
-        data["transactionPartitionKey"] = this.transactionPartitionKey;
-        data["sessionId"] = this.sessionId;
-        data["replyToSessionId"] = this.replyToSessionId;
-        data["timeToLive"] = this.timeToLive;
-        data["correlationId"] = this.correlationId;
-        data["subject"] = this.subject;
-        data["to"] = this.to;
-        data["contentType"] = this.contentType;
-        data["replyTo"] = this.replyTo;
-        data["scheduledEnqueueTime"] = this.scheduledEnqueueTime ? this.scheduledEnqueueTime.toISOString() : <any>undefined;
-        if (this.applicationProperties) {
-            data["applicationProperties"] = {};
-            for (let key in this.applicationProperties) {
-                if (this.applicationProperties.hasOwnProperty(key))
-                    (<any>data["applicationProperties"])[key] = this.applicationProperties[key];
-            }
-        }
-        return data;
-    }
-
-    clone(): ServiceBusMessage {
-        const json = this.toJSON();
-        let result = new ServiceBusMessage();
-        result.init(json);
-        return result;
-    }
-}
-
-/** The ServiceBusMessage is used to send data to Service Bus Queues and Topics. When receiving messages, the ServiceBusReceivedMessage is used. */
-export interface IServiceBusMessage {
-    /** Gets or sets the body of the message. */
-    body?: BinaryData | undefined;
-    /** Gets or sets the MessageId to identify the message. */
-    messageId?: string | undefined;
-    /** Gets or sets a partition key for sending a message to a partitioned entity. */
-    partitionKey?: string | undefined;
-    /** Gets or sets a partition key for sending a message into an entity via a partitioned transfer queue. */
-    transactionPartitionKey?: string | undefined;
-    /** Gets or sets the session identifier for a session-aware entity. */
-    sessionId?: string | undefined;
-    /** Gets or sets a session identifier augmenting the ReplyTo address. */
-    replyToSessionId?: string | undefined;
-    /** Gets or sets the message’s "time to live" value. */
-    timeToLive: string;
-    /** Gets or sets the a correlation identifier. */
-    correlationId?: string | undefined;
-    /** Gets or sets an application specific subject. */
-    subject?: string | undefined;
-    /** Gets or sets the "to" address. */
-    to?: string | undefined;
-    /** Gets or sets the content type descriptor. */
-    contentType?: string | undefined;
-    /** Gets or sets the address of an entity to send replies to. */
-    replyTo?: string | undefined;
-    /** Gets or sets the date and time in UTC at which the message will be enqueued. This
-property returns the time in UTC; when setting the property, the supplied DateTime value must also be in UTC. */
-    scheduledEnqueueTime: Date;
-    /** Gets the application properties bag, which can be used for custom message metadata. */
-    applicationProperties?: { [key: string]: any; } | undefined;
 }
 
 export class SearchRolesQueryResult extends BasePaginatedResult implements ISearchRolesQueryResult {
