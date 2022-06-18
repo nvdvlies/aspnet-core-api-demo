@@ -333,7 +333,7 @@ export abstract class DomainEntityBase<T extends IDomainEntity<T>>
   }
 
   protected patchFormToEntity(): void {
-    this.entity.next(Object.assign(this.entity.value, this.form.getRawValue()));
+    this.entity.next(Object.assign(this.entity.value ?? {}, this.form.getRawValue()));
   }
 
   protected setProblemDetailsAndRethrow(
