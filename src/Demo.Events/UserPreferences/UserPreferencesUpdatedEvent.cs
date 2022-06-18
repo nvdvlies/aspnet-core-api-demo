@@ -8,9 +8,7 @@ namespace Demo.Events.UserPreferences
         {
             var data = new UserPreferencesUpdatedEventData
             {
-                CorrelationId = correlationId,
-                Id = id,
-                UpdatedBy = updatedBy
+                CorrelationId = correlationId, Id = id, UpdatedBy = updatedBy
             };
             return new UserPreferencesUpdatedEvent
             {

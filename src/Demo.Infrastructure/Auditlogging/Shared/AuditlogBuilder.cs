@@ -204,25 +204,12 @@ namespace Demo.Infrastructure.Auditlogging.Shared
             var updated = currentValue
                 .Join(previousValue, x => x.Id, x => x.Id, (current, previous) =>
                 {
-                    return new AuditlogPair<T3>
-                    {
-                        Id = current.Id,
-                        CurrentValue = current,
-                        PreviousValue = previous
-                    };
+                    return new AuditlogPair<T3> { Id = current.Id, CurrentValue = current, PreviousValue = previous };
                 });
             var added = currentValue.Where(x => !previousValue.Any(y => y.Id == x.Id))
-                .Select(x => new AuditlogPair<T3>
-                {
-                    Id = x.Id,
-                    CurrentValue = x
-                });
+                .Select(x => new AuditlogPair<T3> { Id = x.Id, CurrentValue = x });
             var removed = previousValue.Where(x => !currentValue.Any(y => y.Id == x.Id))
-                .Select(previous => new AuditlogPair<T3>
-                {
-                    Id = previous.Id,
-                    PreviousValue = previous
-                });
+                .Select(previous => new AuditlogPair<T3> { Id = previous.Id, PreviousValue = previous });
 
             var auditlogPairs = updated.Concat(added).Concat(removed);
 

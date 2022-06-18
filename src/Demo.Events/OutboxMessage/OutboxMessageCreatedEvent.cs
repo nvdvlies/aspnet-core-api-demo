@@ -8,9 +8,7 @@ namespace Demo.Events.OutboxMessage
         {
             var data = new OutboxMessageCreatedEventData
             {
-                CorrelationId = correlationId,
-                Id = id,
-                CreatedBy = createdBy
+                CorrelationId = correlationId, Id = id, CreatedBy = createdBy
             };
             return new OutboxMessageCreatedEvent
             {

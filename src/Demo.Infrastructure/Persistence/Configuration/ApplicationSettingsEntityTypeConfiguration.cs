@@ -14,10 +14,7 @@ namespace Demo.Infrastructure.Persistence.Configuration
 
             builder.Property(x => x.Settings)
                 .HasConversion(
-                    x => JsonSerializer.Serialize(x, new JsonSerializerOptions
-                    {
-                        WriteIndented = true
-                    }),
+                    x => JsonSerializer.Serialize(x, new JsonSerializerOptions { WriteIndented = true }),
                     x => JsonSerializer.Deserialize<ApplicationSettingsSettings>(x, new JsonSerializerOptions())
                 );
 

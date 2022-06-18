@@ -59,8 +59,7 @@ namespace Demo.Application.Invoices.Services
                 //    null;
                 var modelInvoiceLine = new InvoiceToPdfInvoiceLineModel
                 {
-                    Quantity = entityInvoiceLine.Quantity,
-                    Description = entityInvoiceLine.Description
+                    Quantity = entityInvoiceLine.Quantity, Description = entityInvoiceLine.Description
                     //ItemDescription = item?.Description
                 };
                 invoiceToPdfModel.InvoiceLines.Add(modelInvoiceLine);

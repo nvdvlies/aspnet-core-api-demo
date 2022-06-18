@@ -30,10 +30,7 @@ namespace Demo.Application.Customers.Commands.CreateCustomer
 
             await _customerDomainEntity.CreateAsync(cancellationToken);
 
-            return new CreateCustomerResponse
-            {
-                Id = _customerDomainEntity.EntityId
-            };
+            return new CreateCustomerResponse { Id = _customerDomainEntity.EntityId };
         }
     }
 }

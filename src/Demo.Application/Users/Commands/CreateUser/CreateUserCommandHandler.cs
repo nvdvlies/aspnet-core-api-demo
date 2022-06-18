@@ -29,10 +29,7 @@ namespace Demo.Application.Users.Commands.CreateUser
 
             await _userDomainEntity.CreateAsync(cancellationToken);
 
-            return new CreateUserResponse
-            {
-                Id = _userDomainEntity.EntityId
-            };
+            return new CreateUserResponse { Id = _userDomainEntity.EntityId };
         }
     }
 }

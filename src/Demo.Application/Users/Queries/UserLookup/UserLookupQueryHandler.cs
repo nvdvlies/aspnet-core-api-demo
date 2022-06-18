@@ -64,10 +64,7 @@ namespace Demo.Application.Users.Queries.UserLookup
 
             return new UserLookupQueryResult
             {
-                PageIndex = request.PageIndex,
-                PageSize = request.PageSize,
-                TotalItems = totalItems,
-                Users = users
+                PageIndex = request.PageIndex, PageSize = request.PageSize, TotalItems = totalItems, Users = users
             };
         }
     }

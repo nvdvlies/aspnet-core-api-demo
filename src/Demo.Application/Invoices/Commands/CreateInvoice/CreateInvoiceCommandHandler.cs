@@ -30,10 +30,7 @@ namespace Demo.Application.Invoices.Commands.CreateInvoice
 
             await _invoiceDomainEntity.CreateAsync(cancellationToken);
 
-            return new CreateInvoiceResponse
-            {
-                Id = _invoiceDomainEntity.EntityId
-            };
+            return new CreateInvoiceResponse { Id = _invoiceDomainEntity.EntityId };
         }
     }
 }

@@ -22,14 +22,8 @@ namespace Demo.Infrastructure.Tests.Auditlogging
         public async Task CustomerAuditlogger_When_no_changes_are_made_It_should_not_create_auditlog_item()
         {
             // Arrange
-            var previous = new Customer
-            {
-                Name = "Test1"
-            };
-            var current = new Customer
-            {
-                Name = "Test1"
-            };
+            var previous = new Customer { Name = "Test1" };
+            var current = new Customer { Name = "Test1" };
 
             // Act
             await _subject.CreateAuditLogAsync(current, previous, CancellationToken.None);
@@ -42,14 +36,8 @@ namespace Demo.Infrastructure.Tests.Auditlogging
         public async Task CustomerAuditlogger_When_name_is_modified_It_should_create_auditlog_item()
         {
             // Arrange
-            var previous = new Customer
-            {
-                Name = "Test1"
-            };
-            var current = new Customer
-            {
-                Name = "Test2"
-            };
+            var previous = new Customer { Name = "Test1" };
+            var current = new Customer { Name = "Test2" };
 
             // Act
             await _subject.CreateAuditLogAsync(current, previous, CancellationToken.None);

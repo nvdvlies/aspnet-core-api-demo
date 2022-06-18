@@ -30,10 +30,7 @@ namespace Demo.Application.FeatureFlagSettings.Queries.GetFeatureFlagSettings
 
             var featureFlagSettingsDto = _mapper.Map<FeatureFlagSettingsDto>(featureFlagSettings);
 
-            return new GetFeatureFlagSettingsQueryResult
-            {
-                FeatureFlagSettings = featureFlagSettingsDto
-            };
+            return new GetFeatureFlagSettingsQueryResult { FeatureFlagSettings = featureFlagSettingsDto };
         }
     }
 }

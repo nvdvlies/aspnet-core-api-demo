@@ -29,10 +29,7 @@ namespace Demo.Application.UserPreferences.Queries.GetUserPreferences
 
             var userPreferencesDto = _mapper.Map<UserPreferencesDto>(userPreferences);
 
-            return new GetUserPreferencesQueryResult
-            {
-                UserPreferences = userPreferencesDto
-            };
+            return new GetUserPreferencesQueryResult { UserPreferences = userPreferencesDto };
         }
     }
 }

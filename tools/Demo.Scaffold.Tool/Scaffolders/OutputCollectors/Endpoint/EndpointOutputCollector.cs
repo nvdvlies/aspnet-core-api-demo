@@ -11,14 +11,10 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint
     {
         private readonly List<IInputCollector> _inputCollectors = new()
         {
-            new CommandOrQueryInputCollector(),
-            new ControllerNameInputCollector()
+            new CommandOrQueryInputCollector(), new ControllerNameInputCollector()
         };
 
-        private readonly List<IOutputCollector> _outputCollectors = new()
-        {
-            new EndpointTypeOutputCollector()
-        };
+        private readonly List<IOutputCollector> _outputCollectors = new() { new EndpointTypeOutputCollector() };
 
         public IEnumerable<IChange> CollectChanges(ScaffolderContext context)
         {

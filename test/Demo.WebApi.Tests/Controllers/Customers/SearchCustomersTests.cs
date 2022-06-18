@@ -94,8 +94,7 @@ namespace Demo.WebApi.Tests.Controllers.Customers
 
             var query = new SearchCustomersQuery
             {
-                OrderBy = SearchCustomersOrderByEnum.Name,
-                OrderByDescending = false
+                OrderBy = SearchCustomersOrderByEnum.Name, OrderByDescending = false
             };
 
             // Act
@@ -133,10 +132,7 @@ namespace Demo.WebApi.Tests.Controllers.Customers
             var existingCustomers = AutoFixture.CreateMany<Customer>(numberOfExistingCustomers);
             await AddAsExistingEntitiesAsync(existingCustomers);
 
-            var query = new SearchCustomersQuery
-            {
-                PageSize = 10
-            };
+            var query = new SearchCustomersQuery { PageSize = 10 };
 
             // Act
             var response = await Client.CustomersController().SearchAsync(query);
@@ -169,11 +165,7 @@ namespace Demo.WebApi.Tests.Controllers.Customers
             var existingCustomers = AutoFixture.CreateMany<Customer>(numberOfExistingCustomers);
             await AddAsExistingEntitiesAsync(existingCustomers);
 
-            var query = new SearchCustomersQuery
-            {
-                PageIndex = 1,
-                PageSize = 10
-            };
+            var query = new SearchCustomersQuery { PageIndex = 1, PageSize = 10 };
 
             // Act
             var response = await Client.CustomersController().SearchAsync(query);
@@ -205,11 +197,7 @@ namespace Demo.WebApi.Tests.Controllers.Customers
             var existingCustomers = AutoFixture.CreateMany<Customer>(numberOfExistingCustomers);
             await AddAsExistingEntitiesAsync(existingCustomers);
 
-            var query = new SearchCustomersQuery
-            {
-                PageIndex = 1,
-                PageSize = 10
-            };
+            var query = new SearchCustomersQuery { PageIndex = 1, PageSize = 10 };
 
             // Act
             var response = await Client.CustomersController().SearchAsync(query);
@@ -245,8 +233,7 @@ namespace Demo.WebApi.Tests.Controllers.Customers
 
             var query = new SearchCustomersQuery
             {
-                OrderBy = SearchCustomersOrderByEnum.Code,
-                OrderByDescending = false
+                OrderBy = SearchCustomersOrderByEnum.Code, OrderByDescending = false
             };
 
             // Act
@@ -279,8 +266,7 @@ namespace Demo.WebApi.Tests.Controllers.Customers
 
             var query = new SearchCustomersQuery
             {
-                OrderBy = SearchCustomersOrderByEnum.Code,
-                OrderByDescending = true
+                OrderBy = SearchCustomersOrderByEnum.Code, OrderByDescending = true
             };
 
             // Act
@@ -313,8 +299,7 @@ namespace Demo.WebApi.Tests.Controllers.Customers
 
             var query = new SearchCustomersQuery
             {
-                OrderBy = SearchCustomersOrderByEnum.Name,
-                OrderByDescending = false
+                OrderBy = SearchCustomersOrderByEnum.Name, OrderByDescending = false
             };
 
             // Act
@@ -347,8 +332,7 @@ namespace Demo.WebApi.Tests.Controllers.Customers
 
             var query = new SearchCustomersQuery
             {
-                OrderBy = SearchCustomersOrderByEnum.Name,
-                OrderByDescending = true
+                OrderBy = SearchCustomersOrderByEnum.Name, OrderByDescending = true
             };
 
             // Act
@@ -378,10 +362,7 @@ namespace Demo.WebApi.Tests.Controllers.Customers
             var existingCustomer2 = new Customer { Id = Guid.NewGuid(), Name = "Customer without search term in name" };
             await AddAsExistingEntityAsync(existingCustomer2);
 
-            var query = new SearchCustomersQuery
-            {
-                SearchTerm = "hello"
-            };
+            var query = new SearchCustomersQuery { SearchTerm = "hello" };
 
             // Act
             var response = await Client.CustomersController().SearchAsync(query);

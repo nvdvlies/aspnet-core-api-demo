@@ -6,11 +6,7 @@ namespace Demo.Events.Invoice
     {
         public static InvoiceSentEvent Create(Guid correlationId, Guid id)
         {
-            var data = new InvoiceSentEventData
-            {
-                CorrelationId = correlationId,
-                Id = id
-            };
+            var data = new InvoiceSentEventData { CorrelationId = correlationId, Id = id };
             return new InvoiceSentEvent
             {
                 Topic = Topics.Invoice,

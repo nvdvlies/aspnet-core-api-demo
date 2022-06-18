@@ -30,10 +30,7 @@ namespace Demo.Application.ApplicationSettings.Queries.GetApplicationSettings
 
             var applicationSettingsDto = _mapper.Map<ApplicationSettingsDto>(applicationSettings);
 
-            return new GetApplicationSettingsQueryResult
-            {
-                ApplicationSettings = applicationSettingsDto
-            };
+            return new GetApplicationSettingsQueryResult { ApplicationSettings = applicationSettingsDto };
         }
     }
 }

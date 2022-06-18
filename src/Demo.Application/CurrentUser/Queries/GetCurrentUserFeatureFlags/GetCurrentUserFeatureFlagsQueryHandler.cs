@@ -32,10 +32,7 @@ namespace Demo.Application.CurrentUser.Queries.GetCurrentUserFeatureFlags
                 .Select(x => x.Name)
                 .ToList();
 
-            return new GetCurrentUserFeatureFlagsQueryResult
-            {
-                FeatureFlags = userFeatureflags
-            };
+            return new GetCurrentUserFeatureFlagsQueryResult { FeatureFlags = userFeatureflags };
         }
     }
 }

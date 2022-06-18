@@ -35,10 +35,7 @@ namespace Demo.WebApi.Tests.Controllers.Customers
         {
             // Arrange
             await SetTestUserToAuthenticated();
-            var command = new CreateCustomerCommand
-            {
-                Name = "Test"
-            };
+            var command = new CreateCustomerCommand { Name = "Test" };
 
             // Act
             var response = await Client.CustomersController().CreateAsync(command);
@@ -56,10 +53,7 @@ namespace Demo.WebApi.Tests.Controllers.Customers
         {
             // Arrange
             await SetTestUserToAuthenticated();
-            var command = new CreateCustomerCommand
-            {
-                Name = "Test"
-            };
+            var command = new CreateCustomerCommand { Name = "Test" };
 
             // Act
             var response = await Client.CustomersController().CreateAsync(command);
@@ -81,10 +75,7 @@ namespace Demo.WebApi.Tests.Controllers.Customers
         {
             // Arrange
             await SetTestUserToAuthenticated();
-            var command = new CreateCustomerCommand
-            {
-                Name = "Test"
-            };
+            var command = new CreateCustomerCommand { Name = "Test" };
 
             var idFromEvent = Guid.Empty;
             using var subscription = HubConnection.On(nameof(ICustomerEventHub.CustomerCreated),
@@ -118,10 +109,7 @@ namespace Demo.WebApi.Tests.Controllers.Customers
             // });
             await SetTestUserToAuthenticated();
 
-            var command = new CreateCustomerCommand
-            {
-                Name = string.Empty
-            };
+            var command = new CreateCustomerCommand { Name = string.Empty };
 
             // Act
             var response = await Client.CustomersController().CreateAsync(command);
@@ -152,10 +140,7 @@ namespace Demo.WebApi.Tests.Controllers.Customers
             });
             await SetTestUserToAuthenticated();
 
-            var command = new CreateCustomerCommand
-            {
-                Name = "Test"
-            };
+            var command = new CreateCustomerCommand { Name = "Test" };
 
             // Act
             var response = await client.CustomersController().CreateAsync(command);
@@ -185,10 +170,7 @@ namespace Demo.WebApi.Tests.Controllers.Customers
             });
             await SetTestUserToAuthenticated();
 
-            var command = new CreateCustomerCommand
-            {
-                Name = "Test"
-            };
+            var command = new CreateCustomerCommand { Name = "Test" };
 
             // Act
             var response = await client.CustomersController().CreateAsync(command);
@@ -217,10 +199,7 @@ namespace Demo.WebApi.Tests.Controllers.Customers
             });
             await SetTestUserToAuthenticated();
 
-            var command = new CreateCustomerCommand
-            {
-                Name = "Test"
-            };
+            var command = new CreateCustomerCommand { Name = "Test" };
 
             // Act
             var response = await client.CustomersController().CreateAsync(command);
@@ -239,10 +218,7 @@ namespace Demo.WebApi.Tests.Controllers.Customers
         {
             // Arrange
             await SetTestUserToUnauthenticated();
-            var command = new CreateCustomerCommand
-            {
-                Name = "Test"
-            };
+            var command = new CreateCustomerCommand { Name = "Test" };
 
             // Act
             var response = await Client.CustomersController().CreateAsync(command);

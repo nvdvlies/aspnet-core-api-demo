@@ -9,9 +9,7 @@ namespace Demo.Events.FeatureFlagSettings
         {
             var data = new FeatureFlagSettingsUpdatedEventData
             {
-                CorrelationId = correlationId,
-                Id = id,
-                UpdatedBy = updatedBy
+                CorrelationId = correlationId, Id = id, UpdatedBy = updatedBy
             };
             return new FeatureFlagSettingsUpdatedEvent
             {

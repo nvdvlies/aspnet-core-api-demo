@@ -52,10 +52,7 @@ namespace Demo.WebApi.Tests.Helpers
         {
             var webhost = Factory
                 .WithWebHostBuilder(builder => { builder.ConfigureTestServices(servicesConfiguration); });
-            var client = webhost.CreateClient(new WebApplicationFactoryClientOptions
-            {
-                AllowAutoRedirect = false
-            });
+            var client = webhost.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(TestAuthHandler.DefaultScheme);
             ServiceProvider = webhost.Services;
             return client;

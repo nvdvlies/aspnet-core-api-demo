@@ -18,14 +18,10 @@ namespace Demo.Scaffold.Tool.Scaffolders
 
         private readonly List<IInputCollector> _inputCollectors = new()
         {
-            new SolutionDirectoryInputCollector(),
-            new ScaffoldTypeInputCollector()
+            new SolutionDirectoryInputCollector(), new ScaffoldTypeInputCollector()
         };
 
-        private readonly List<IOutputCollector> _outputCollectors = new()
-        {
-            new ScaffolderTypeOutputCollector()
-        };
+        private readonly List<IOutputCollector> _outputCollectors = new() { new ScaffolderTypeOutputCollector() };
 
         public ScaffolderService(AppSettings appSettings)
         {

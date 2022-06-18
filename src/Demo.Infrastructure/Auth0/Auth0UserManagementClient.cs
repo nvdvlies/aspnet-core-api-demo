@@ -63,10 +63,7 @@ namespace Demo.Infrastructure.Auth0
                 .Where(x => internalUser.UserRoles.Any(userRole => userRole.RoleId == x.Id))
                 .Select(x => x.ExternalId)
                 .ToArray();
-            var assignRolesRequest = new AssignRolesRequest
-            {
-                Roles = roles
-            };
+            var assignRolesRequest = new AssignRolesRequest { Roles = roles };
             await client.Users.AssignRolesAsync(user.UserId, assignRolesRequest, cancellationToken);
 
             return user.UserId;
@@ -132,10 +129,7 @@ namespace Demo.Infrastructure.Auth0
                 .ToArray();
             if (rolesToAdd.Length > 0)
             {
-                var assignRolesRequest = new AssignRolesRequest
-                {
-                    Roles = rolesToAdd
-                };
+                var assignRolesRequest = new AssignRolesRequest { Roles = rolesToAdd };
                 await client.Users.AssignRolesAsync(internalUser.ExternalId, assignRolesRequest, cancellationToken);
             }
 
@@ -144,10 +138,7 @@ namespace Demo.Infrastructure.Auth0
                 .ToArray();
             if (rolesToRemove.Length > 0)
             {
-                var removeRolesRequest = new AssignRolesRequest
-                {
-                    Roles = rolesToRemove
-                };
+                var removeRolesRequest = new AssignRolesRequest { Roles = rolesToRemove };
                 await client.Users.RemoveRolesAsync(internalUser.ExternalId, removeRolesRequest, cancellationToken);
             }
         }

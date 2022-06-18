@@ -14,10 +14,7 @@ namespace Demo.Infrastructure.Services
             {
                 IncludeFields = true,
                 ReferenceHandler = ReferenceHandler.Preserve,
-                Converters =
-                {
-                    new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)
-                }
+                Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) }
             };
         }
 

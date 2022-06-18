@@ -31,10 +31,7 @@ namespace Demo.Application.Customers.Queries.GetCustomerById
                 .ProjectTo<CustomerDto>(_mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
-            return new GetCustomerByIdQueryResult
-            {
-                Customer = customer
-            };
+            return new GetCustomerByIdQueryResult { Customer = customer };
         }
     }
 }

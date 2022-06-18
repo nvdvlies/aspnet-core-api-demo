@@ -11,11 +11,7 @@ namespace Demo.Domain.Shared.Extensions
         {
             var validationMessages = new[]
             {
-                new ValidationMessage
-                {
-                    PropertyName = propertyName,
-                    Message = errorMessage
-                }
+                new ValidationMessage { PropertyName = propertyName, Message = errorMessage }
             };
             return validationMessages.AsEnumerable();
         }

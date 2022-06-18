@@ -39,14 +39,8 @@ namespace Demo.Domain
         {
             var interfaces = new[]
             {
-                typeof(IBeforeCreate<>),
-                typeof(IBeforeUpdate<>),
-                typeof(IBeforeDelete<>),
-                typeof(IAfterCreate<>),
-                typeof(IAfterUpdate<>),
-                typeof(IAfterDelete<>),
-                typeof(IValidator<>),
-                typeof(IDefaultValuesSetter<>)
+                typeof(IBeforeCreate<>), typeof(IBeforeUpdate<>), typeof(IBeforeDelete<>), typeof(IAfterCreate<>),
+                typeof(IAfterUpdate<>), typeof(IAfterDelete<>), typeof(IValidator<>), typeof(IDefaultValuesSetter<>)
             };
 
             foreach (var @interface in interfaces)

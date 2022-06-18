@@ -29,10 +29,7 @@ namespace Demo.Application.Users.Queries.IsEmailAvailable
 
             var exists = await query.AnyAsync(x => x.Email == request.Email, cancellationToken);
 
-            return new IsEmailAvailableQueryResult
-            {
-                IsEmailAvailable = !exists
-            };
+            return new IsEmailAvailableQueryResult { IsEmailAvailable = !exists };
         }
     }
 }

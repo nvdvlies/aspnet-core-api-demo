@@ -16,8 +16,7 @@ namespace Demo.Domain.Shared.Extensions
                 {
                     validationMessages.Add(new ValidationMessage
                     {
-                        PropertyName = error.PropertyName,
-                        Message = error.ErrorMessage
+                        PropertyName = error.PropertyName, Message = error.ErrorMessage
                     });
                 }
             }

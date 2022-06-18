@@ -9,9 +9,7 @@ namespace Demo.Events.ApplicationSettings
         {
             var data = new ApplicationSettingsUpdatedEventData
             {
-                CorrelationId = correlationId,
-                Id = id,
-                UpdatedBy = updatedBy
+                CorrelationId = correlationId, Id = id, UpdatedBy = updatedBy
             };
             return new ApplicationSettingsUpdatedEvent
             {

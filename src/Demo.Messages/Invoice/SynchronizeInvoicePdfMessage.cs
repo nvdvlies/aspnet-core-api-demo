@@ -6,11 +6,7 @@ namespace Demo.Messages.Invoice
     {
         public static SynchronizeInvoicePdfMessage Create(Guid correlationId, Guid id)
         {
-            var data = new SynchronizeInvoicePdfMessageData
-            {
-                CorrelationId = correlationId,
-                Id = id
-            };
+            var data = new SynchronizeInvoicePdfMessageData { CorrelationId = correlationId, Id = id };
             return new SynchronizeInvoicePdfMessage
             {
                 Queue = Queues.SynchronizeInvoicePdf,

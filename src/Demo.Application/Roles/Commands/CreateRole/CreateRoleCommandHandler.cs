@@ -29,10 +29,7 @@ namespace Demo.Application.Roles.Commands.CreateRole
 
             await _roleDomainEntity.CreateAsync(cancellationToken);
 
-            return new CreateRoleResponse
-            {
-                Id = _roleDomainEntity.EntityId
-            };
+            return new CreateRoleResponse { Id = _roleDomainEntity.EntityId };
         }
     }
 }

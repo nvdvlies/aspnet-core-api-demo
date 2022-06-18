@@ -8,9 +8,7 @@ namespace Demo.Messages.User
         {
             var data = new SyncAuth0UserMessageData
             {
-                CorrelationId = correlationId,
-                Id = id,
-                EmailChanged = emailChanged
+                CorrelationId = correlationId, Id = id, EmailChanged = emailChanged
             };
             return new SyncAuth0UserMessage
             {

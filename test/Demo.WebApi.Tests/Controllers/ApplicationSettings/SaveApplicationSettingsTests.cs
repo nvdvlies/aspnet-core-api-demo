@@ -24,10 +24,7 @@ namespace Demo.WebApi.Tests.Controllers.ApplicationSettings
             await SetTestUserToAuthenticatedWithAdministratorRole();
             var command = new SaveApplicationSettingsCommand
             {
-                Settings = new SaveApplicationSettingsSettingsDto
-                {
-                    Setting1 = true
-                }
+                Settings = new SaveApplicationSettingsSettingsDto { Setting1 = true }
             };
 
             // Act
@@ -45,10 +42,7 @@ namespace Demo.WebApi.Tests.Controllers.ApplicationSettings
             await SetTestUserToAuthenticated();
             var command = new SaveApplicationSettingsCommand
             {
-                Settings = new SaveApplicationSettingsSettingsDto
-                {
-                    Setting1 = true
-                }
+                Settings = new SaveApplicationSettingsSettingsDto { Setting1 = true }
             };
 
             // Act

@@ -6,12 +6,7 @@ namespace Demo.Events.Role
     {
         public static RoleCreatedEvent Create(Guid correlationId, Guid id, Guid createdBy)
         {
-            var data = new RoleCreatedEventData
-            {
-                CorrelationId = correlationId,
-                Id = id,
-                CreatedBy = createdBy
-            };
+            var data = new RoleCreatedEventData { CorrelationId = correlationId, Id = id, CreatedBy = createdBy };
             return new RoleCreatedEvent
             {
                 Topic = Topics.Role,

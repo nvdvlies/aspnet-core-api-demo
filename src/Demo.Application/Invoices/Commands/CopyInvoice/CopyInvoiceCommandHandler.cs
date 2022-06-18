@@ -22,10 +22,7 @@ namespace Demo.Application.Invoices.Commands.CopyInvoice
 
             await _invoiceDomainEntity.CreateAsync(cancellationToken);
 
-            return new CopyInvoiceResponse
-            {
-                Id = _invoiceDomainEntity.EntityId
-            };
+            return new CopyInvoiceResponse { Id = _invoiceDomainEntity.EntityId };
         }
     }
 }

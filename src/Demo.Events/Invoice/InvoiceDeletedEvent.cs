@@ -6,12 +6,7 @@ namespace Demo.Events.Invoice
     {
         public static InvoiceDeletedEvent Create(Guid correlationId, Guid id, Guid deletedBy)
         {
-            var data = new InvoiceDeletedEventData
-            {
-                CorrelationId = correlationId,
-                Id = id,
-                DeletedBy = deletedBy
-            };
+            var data = new InvoiceDeletedEventData { CorrelationId = correlationId, Id = id, DeletedBy = deletedBy };
             return new InvoiceDeletedEvent
             {
                 Topic = Topics.Invoice,

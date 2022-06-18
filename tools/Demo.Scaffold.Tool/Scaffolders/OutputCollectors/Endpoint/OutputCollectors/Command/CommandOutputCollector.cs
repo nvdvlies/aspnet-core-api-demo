@@ -11,8 +11,7 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint.OutputCollect
     {
         private readonly List<IInputCollector> _inputCollectors = new()
         {
-            new CommandEndpointTypeInputCollector(),
-            new CommandNameInputCollector()
+            new CommandEndpointTypeInputCollector(), new CommandNameInputCollector()
         };
 
         private readonly List<IOutputCollector> _outputCollectors = new()

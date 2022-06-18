@@ -11,8 +11,7 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint.OutputCollect
     {
         private readonly List<IInputCollector> _inputCollectors = new()
         {
-            new QueryNameInputCollector(),
-            new QueryEndpointTypeInputCollector()
+            new QueryNameInputCollector(), new QueryEndpointTypeInputCollector()
         };
 
         private readonly List<IOutputCollector> _outputCollectors = new()

@@ -37,10 +37,7 @@ namespace Demo.WebApi.Tests.Helpers
                 return Task.FromResult(AuthenticateResult.Fail(""));
             }
 
-            var claims = new List<Claim>
-            {
-                new(ClaimTypes.NameIdentifier, _testUser.User.ExternalId)
-            };
+            var claims = new List<Claim> { new(ClaimTypes.NameIdentifier, _testUser.User.ExternalId) };
             claims.AddRange(_testUser.Roles.Select(x => new Claim("permissions", x.Name.ToLower(),
                 ClaimValueTypes.String, _environmentSettings.Auth0.Domain)));
             var identity = new ClaimsIdentity(claims, DefaultScheme);

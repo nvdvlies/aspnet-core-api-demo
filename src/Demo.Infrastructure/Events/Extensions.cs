@@ -11,11 +11,7 @@ namespace Demo.Infrastructure.Events
             var assembly = typeof(Event<IEvent, IEventData>).Assembly;
             var eventType = assembly.GetType(@event.Type);
             var payload = JsonSerializer.Serialize(@event, eventType, new JsonSerializerOptions());
-            return new RabbitMqEvent
-            {
-                ContentType = @event.Type,
-                Payload = payload
-            };
+            return new RabbitMqEvent { ContentType = @event.Type, Payload = payload };
         }
 
         public static IEvent ToEvent(this RabbitMqEvent rabbitMqEvent)

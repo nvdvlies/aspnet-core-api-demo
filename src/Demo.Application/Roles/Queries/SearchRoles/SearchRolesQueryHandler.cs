@@ -58,10 +58,7 @@ namespace Demo.Application.Roles.Queries.SearchRoles
 
             return new SearchRolesQueryResult
             {
-                PageIndex = request.PageIndex,
-                PageSize = request.PageSize,
-                TotalItems = totalItems,
-                Roles = roles
+                PageIndex = request.PageIndex, PageSize = request.PageSize, TotalItems = totalItems, Roles = roles
             };
         }
     }

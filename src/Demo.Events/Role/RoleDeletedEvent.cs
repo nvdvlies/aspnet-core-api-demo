@@ -6,12 +6,7 @@ namespace Demo.Events.Role
     {
         public static RoleDeletedEvent Create(Guid correlationId, Guid id, Guid deletedBy)
         {
-            var data = new RoleDeletedEventData
-            {
-                CorrelationId = correlationId,
-                Id = id,
-                DeletedBy = deletedBy
-            };
+            var data = new RoleDeletedEventData { CorrelationId = correlationId, Id = id, DeletedBy = deletedBy };
             return new RoleDeletedEvent
             {
                 Topic = Topics.Role,

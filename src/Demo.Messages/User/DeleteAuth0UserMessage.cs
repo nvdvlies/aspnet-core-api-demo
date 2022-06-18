@@ -6,11 +6,7 @@ namespace Demo.Messages.User
     {
         public static DeleteAuth0UserMessage Create(Guid correlationId, Guid id)
         {
-            var data = new DeleteAuth0UserMessageData
-            {
-                CorrelationId = correlationId,
-                Id = id
-            };
+            var data = new DeleteAuth0UserMessageData { CorrelationId = correlationId, Id = id };
             return new DeleteAuth0UserMessage
             {
                 Queue = Queues.DeleteAuth0User,

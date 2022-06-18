@@ -7,10 +7,7 @@ namespace Demo.Domain.ApplicationSettings
     {
         public ApplicationSettings()
         {
-            Settings = new ApplicationSettingsSettings
-            {
-                Setting1 = true
-            };
+            Settings = new ApplicationSettingsSettings { Setting1 = true };
         }
 
         [JsonInclude] public ApplicationSettingsSettings Settings { get; internal set; }

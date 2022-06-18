@@ -15,15 +15,7 @@ namespace Demo.WebApi.Tests.Helpers
     {
         public readonly Checkpoint Checkpoint = new()
         {
-            SchemasToInclude = new[]
-            {
-                "demo"
-            },
-            TablesToIgnore = new[]
-            {
-                "Role"
-            },
-            WithReseed = true
+            SchemasToInclude = new[] { "demo" }, TablesToIgnore = new[] { "Role" }, WithReseed = true
         };
 
         public readonly HttpClient Client;
@@ -33,10 +25,7 @@ namespace Demo.WebApi.Tests.Helpers
         public SharedFixture()
         {
             Factory = new CustomWebApplicationFactory();
-            Client = Factory.CreateClient(new WebApplicationFactoryClientOptions
-            {
-                AllowAutoRedirect = false
-            });
+            Client = Factory.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
             Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(TestAuthHandler.DefaultScheme);
 
             HubConnection = new HubConnectionBuilder()

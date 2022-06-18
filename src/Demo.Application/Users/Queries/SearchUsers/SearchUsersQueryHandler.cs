@@ -61,10 +61,7 @@ namespace Demo.Application.Users.Queries.SearchUsers
 
             return new SearchUsersQueryResult
             {
-                PageIndex = request.PageIndex,
-                PageSize = request.PageSize,
-                TotalItems = totalItems,
-                Users = users
+                PageIndex = request.PageIndex, PageSize = request.PageSize, TotalItems = totalItems, Users = users
             };
         }
     }

@@ -6,12 +6,7 @@ namespace Demo.Events.User
     {
         public static UserUpdatedEvent Create(Guid correlationId, Guid id, Guid updatedBy)
         {
-            var data = new UserUpdatedEventData
-            {
-                CorrelationId = correlationId,
-                Id = id,
-                UpdatedBy = updatedBy
-            };
+            var data = new UserUpdatedEventData { CorrelationId = correlationId, Id = id, UpdatedBy = updatedBy };
             return new UserUpdatedEvent
             {
                 Topic = Topics.User,

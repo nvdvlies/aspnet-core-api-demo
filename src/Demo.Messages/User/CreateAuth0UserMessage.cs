@@ -6,11 +6,7 @@ namespace Demo.Messages.User
     {
         public static CreateAuth0UserMessage Create(Guid correlationId, Guid id)
         {
-            var data = new CreateAuth0UserMessageData
-            {
-                CorrelationId = correlationId,
-                Id = id
-            };
+            var data = new CreateAuth0UserMessageData { CorrelationId = correlationId, Id = id };
             return new CreateAuth0UserMessage
             {
                 Queue = Queues.CreateAuth0User,

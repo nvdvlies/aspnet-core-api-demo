@@ -63,10 +63,7 @@ namespace Demo.Application.Roles.Queries.RoleLookup
 
             return new RoleLookupQueryResult
             {
-                PageIndex = request.PageIndex,
-                PageSize = request.PageSize,
-                TotalItems = totalItems,
-                Roles = roles
+                PageIndex = request.PageIndex, PageSize = request.PageSize, TotalItems = totalItems, Roles = roles
             };
         }
     }
