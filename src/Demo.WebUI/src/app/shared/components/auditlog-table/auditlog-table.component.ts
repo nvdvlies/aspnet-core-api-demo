@@ -53,6 +53,14 @@ export class AuditlogTableComponent implements OnInit {
     this.pageIndexChanged.emit(event.pageIndex);
   }
 
+  public expandOrCollapseRow(item: AuditlogDto): void {
+    if (this.expandedRow && this.expandedRow.id === item.id) {
+      this.expandedRow = null;
+    } else {
+      this.expandedRow = item;
+    }
+  }
+
   public trackById(index: number, item: AuditlogDto): string {
     return item.id;
   }

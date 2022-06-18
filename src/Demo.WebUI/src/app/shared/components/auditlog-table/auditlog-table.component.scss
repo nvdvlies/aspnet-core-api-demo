@@ -10,13 +10,11 @@ tr.detail-row {
   border-bottom-width: 0;
 }
 
-tr .mat-icon-button {
-  height: 24px;
-  width: 24px;
-  line-height: 18px;
-}
-
 .detail-row-body {
   overflow: hidden;
   display: flex;
+}
+
+.mat-row:hover:not(.detail-row) {
+  cursor: pointer;
 }
