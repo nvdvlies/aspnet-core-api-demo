@@ -2,6 +2,7 @@
 {
     public class EnvironmentSettings
     {
+        public string DefaultTimeZone { get; set; }
         public ConnectionStrings ConnectionStrings { get; set; } = new();
         public Auth0 Auth0 { get; set; } = new();
         public RabbitMq RabbitMq { get; set; } = new();
