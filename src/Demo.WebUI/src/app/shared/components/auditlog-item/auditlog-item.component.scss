@@ -1,0 +1,23 @@
+tr .mat-icon-button {
+  height: 24px;
+  width: 24px;
+  line-height: 18px;
+}
+
+.box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mark-deleted {
+  background-color: #fecaca;
+}
+
+.mark-added {
+  background-color: #bbf7d0;
+}
+
+.mark-empty {
+  background-color: #e5e7eb;
+}

@@ -6,6 +6,11 @@ tr.detail-row {
   height: 0px !important;
 }
 
+tr mat-icon {
+  display: flex;
+  align-items: center;
+}
+
 .row td {
   border-bottom-width: 0;
 }

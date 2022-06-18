@@ -1,0 +1,22 @@
+<ng-container *ngIf="item">
+  <div class="flex flex-row justify-center items-center gap-2 mb-1">
+    <span>{{ item.propertyName ?? '' }}:</span>
+    <div
+      class="px-1"
+      [class.mark-deleted]="item.status === AuditlogStatusEnum.Updated"
+      [class.mark-empty]="item.status === AuditlogStatusEnum.Added"
+    >
+      {{ item.previousValueAsString ?? 'Empty' }}
+    </div>
+    &#8594;
+    <div
+      class="px-1"
+      [class.mark-added]="
+        item.status === AuditlogStatusEnum.Added || item.status === AuditlogStatusEnum.Updated
+      "
+      [class.mark-empty]="item.status === AuditlogStatusEnum.Removed"
+    >
+      {{ item.currentValueAsString ?? 'Empty' }}
+    </div>
+  </div>
+</ng-container>
