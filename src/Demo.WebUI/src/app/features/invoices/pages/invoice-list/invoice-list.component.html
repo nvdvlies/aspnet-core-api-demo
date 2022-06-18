@@ -5,8 +5,6 @@
     </app-page-header>
 
     <div class="content-container">
-      <app-problem-details [problemDetails]="vm.problemDetails"></app-problem-details>
-
       <mat-card class="pl-3 pr-3 pb-0 shadow-md pt-3 bg-white h-full">
         <div appTableFilterContainer [filterCriteria]="vm.criteria" (filterChange)="search($event)">
           <div class="flex gap-2">
@@ -53,6 +51,7 @@
           </div>
 
           <div class="table-container">
+            <app-problem-details [problemDetails]="vm.problemDetails"></app-problem-details>
             <table
               mat-table
               matSort
@@ -101,11 +100,13 @@
                 }"
               ></tr>
             </table>
-          </div>
 
-          <ng-container *ngIf="vm.isLoading">
-            <app-spinner diameter="50"></app-spinner>
-          </ng-container>
+            <ng-container *ngIf="vm.isLoading">
+              <div class="mt-2">
+                <app-spinner diameter="50"></app-spinner>
+              </div>
+            </ng-container>
+          </div>
 
           <mat-paginator
             [length]="vm.totalItems ?? 0"
@@ -122,5 +123,5 @@
 </ng-container>
 
 <ng-template #loading>
-  <app-spinner diameter="50"></app-spinner>
+  <app-spinner diameter="50" fullHeight="true"></app-spinner>
 </ng-template>
