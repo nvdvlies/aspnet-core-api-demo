@@ -32,6 +32,7 @@ namespace Demo.Application.Users.Queries.GetUserAuditlog
             var query = _query.AsQueryable()
                 .Include(x => x.AuditlogItems)
                 .ThenInclude(y => y.AuditlogItems)
+                .ThenInclude(y => y.AuditlogItems)
                 .Where(x => x.EntityName == nameof(User))
                 .Where(x => x.EntityId == request.UserId);
 

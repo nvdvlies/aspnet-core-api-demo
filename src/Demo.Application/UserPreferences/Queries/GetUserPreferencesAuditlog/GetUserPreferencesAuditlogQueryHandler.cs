@@ -35,6 +35,7 @@ namespace Demo.Application.UserPreferences.Queries.GetUserPreferencesAuditlog
             var query = _query.AsQueryable()
                 .Include(x => x.AuditlogItems)
                 .ThenInclude(y => y.AuditlogItems)
+                .ThenInclude(y => y.AuditlogItems)
                 .Where(x => x.EntityName == nameof(Domain.UserPreferences.UserPreferences))
                 .Where(x => x.EntityId == _currentUser.Id);
 

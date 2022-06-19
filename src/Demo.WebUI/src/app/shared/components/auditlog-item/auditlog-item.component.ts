@@ -11,6 +11,9 @@ export class AuditlogItemComponent implements OnInit {
   @Input()
   public item: AuditlogItemDto | undefined;
 
+  @Input()
+  public indent: number = 0;
+
   public AuditlogStatusEnum = AuditlogStatusEnum;
   public AuditlogTypeEnum = AuditlogTypeEnum;
 

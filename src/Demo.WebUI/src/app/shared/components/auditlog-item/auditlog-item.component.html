@@ -1,22 +1,44 @@
 <ng-container *ngIf="item">
-  <div class="flex flex-row justify-center items-center gap-2 mb-1">
-    <span>{{ item.propertyName ?? '' }}:</span>
+  <div
+    class="flex flex-row justify-start items-center gap-2 mb-1"
+    [style.paddingLeft.px]="indent * 20"
+  >
     <div
       class="px-1"
-      [class.mark-deleted]="item.status === AuditlogStatusEnum.Updated"
-      [class.mark-empty]="item.status === AuditlogStatusEnum.Added"
-    >
-      {{ item.previousValueAsString ?? 'Empty' }}
-    </div>
-    &#8594;
-    <div
-      class="px-1"
-      [class.mark-added]="
-        item.status === AuditlogStatusEnum.Added || item.status === AuditlogStatusEnum.Updated
+      [class.mark-deleted]="
+        item.type === AuditlogTypeEnum.None && item.status === AuditlogStatusEnum.Removed
       "
-      [class.mark-empty]="item.status === AuditlogStatusEnum.Removed"
+      [class.mark-added]="
+        item.type === AuditlogTypeEnum.None && item.status === AuditlogStatusEnum.Added
+      "
     >
-      {{ item.currentValueAsString ?? 'Empty' }}
+      {{ item.propertyName ?? '' }}:
     </div>
+    <ng-container *ngIf="item.type !== AuditlogTypeEnum.None">
+      <div
+        *ngIf="
+          item.status === AuditlogStatusEnum.Updated || item.status === AuditlogStatusEnum.Removed
+        "
+        class="px-1 mark-deleted"
+      >
+        <code>{{ item.previousValueAsString ?? 'Empty' }}</code>
+      </div>
+      <ng-container *ngIf="item.status === AuditlogStatusEnum.Updated"> &#8594; </ng-container>
+      <div
+        *ngIf="
+          item.status === AuditlogStatusEnum.Added || item.status === AuditlogStatusEnum.Updated
+        "
+        class="px-1 mark-added"
+      >
+        <code>{{ item.currentValueAsString ?? 'Empty' }}</code>
+      </div>
+    </ng-container>
   </div>
+  <ng-container *ngIf="item.auditlogItems && item.auditlogItems.length > 0">
+    <ng-container *ngFor="let childItem of item.auditlogItems">
+      <app-auditlog-item [item]="childItem" [indent]="indent + 1"></app-auditlog-item>
+    </ng-container>
+  </ng-container>
+
+  <!-- <pre>{{ item | json }}</pre> -->
 </ng-container>

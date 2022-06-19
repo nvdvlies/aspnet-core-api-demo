@@ -197,6 +197,11 @@ namespace Demo.Infrastructure.Auditlogging.Shared
             var previousValue = _previous != null ? expression.Compile()(_previous) : default;
 
             var status = GetAuditlogStatus(currentValue, previousValue);
+            if (status == AuditlogStatus.Unchanged)
+                // Set status to updated because a child has changes
+            {
+                status = AuditlogStatus.Updated;
+            }
 
             currentValue ??= (T2)Activator.CreateInstance(typeof(List<>).MakeGenericType(typeof(T3)));
             previousValue ??= (T2)Activator.CreateInstance(typeof(List<>).MakeGenericType(typeof(T3)));
@@ -204,12 +209,12 @@ namespace Demo.Infrastructure.Auditlogging.Shared
             var updated = currentValue
                 .Join(previousValue, x => x.Id, x => x.Id, (current, previous) =>
                 {
-                    return new AuditlogPair<T3> { Id = current.Id, CurrentValue = current, PreviousValue = previous };
+                    return new AuditlogPair<T3> { Id = current.Id, CurrentValue = current, PreviousValue = previous, Status = AuditlogStatus.Updated };
                 });
             var added = currentValue.Where(x => !previousValue.Any(y => y.Id == x.Id))
-                .Select(x => new AuditlogPair<T3> { Id = x.Id, CurrentValue = x });
+                .Select(x => new AuditlogPair<T3> { Id = x.Id, CurrentValue = x, Status = AuditlogStatus.Added });
             var removed = previousValue.Where(x => !currentValue.Any(y => y.Id == x.Id))
-                .Select(previous => new AuditlogPair<T3> { Id = previous.Id, PreviousValue = previous });
+                .Select(previous => new AuditlogPair<T3> { Id = previous.Id, PreviousValue = previous, Status = AuditlogStatus.Removed });
 
             var auditlogPairs = updated.Concat(added).Concat(removed);
 
@@ -230,15 +235,13 @@ namespace Demo.Infrastructure.Auditlogging.Shared
                 {
                     i++;
 
-                    var auditlogPairStatus = GetAuditlogStatus(auditlogPair.CurrentValue, auditlogPair.PreviousValue);
-
                     var item2 = new AuditlogItem
                     {
                         PropertyName = collectionItemPropertyname != null
                             ? collectionItemPropertyname.Compile()(auditlogPair.CurrentValue ??
                                                                    auditlogPair.PreviousValue)
                             : i.ToString(),
-                        Status = auditlogPairStatus,
+                        Status = auditlogPair.Status,
                         Type = AuditlogType.None,
                         AuditlogItems = auditLogItems
                     };
