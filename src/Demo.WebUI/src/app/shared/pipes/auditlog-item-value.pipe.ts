@@ -1,12 +1,16 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { CustomerIdToNamePipe } from './customer-id-to-name.pipe';
+import { UserIdsToNamesPipe } from './user-ids-to-names.pipe';
 
 @Pipe({
   name: 'auditlogItemValue'
 })
 export class AuditlogItemValuePipe implements PipeTransform {
-  constructor(private readonly customerIdToNamePipe: CustomerIdToNamePipe) {}
+  constructor(
+    private readonly customerIdToNamePipe: CustomerIdToNamePipe,
+    private readonly userIdsToNamesPipe: UserIdsToNamesPipe
+  ) {}
 
   transform(
     value: string | undefined,
@@ -28,6 +32,11 @@ export class AuditlogItemValuePipe implements PipeTransform {
       case 'UserPreferences':
         if (propertyName === 'Setting4') {
           return this.customerIdToNamePipe.transform(value);
+        }
+        break;
+      case 'FeatureFlagSetting':
+        if (propertyName === 'EnabledForUsers') {
+          return this.userIdsToNamesPipe.transform(value);
         }
         break;
     }
