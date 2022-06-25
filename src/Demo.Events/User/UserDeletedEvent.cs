@@ -13,6 +13,7 @@ namespace Demo.Events.User
                 Subject = $"User/{data.Id}",
                 Data = data,
                 DataVersion = data.EventDataVersion,
+                CreatedBy = deletedBy,
                 CorrelationId = correlationId
             };
         }

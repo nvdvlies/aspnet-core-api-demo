@@ -11,10 +11,10 @@ namespace Demo.Infrastructure.Auditlogging
     internal class CustomerAuditlogger : AuditloggerBase<Customer>, IAuditlogger<Customer>
     {
         public CustomerAuditlogger(
-            ICurrentUser currentUser,
+            ICurrentUserIdProvider currentUserIdProvider,
             IDateTime dateTime,
             IAuditlogDomainEntity auditlogDomainEntity
-        ) : base(currentUser, dateTime, auditlogDomainEntity)
+        ) : base(currentUserIdProvider, dateTime, auditlogDomainEntity)
         {
         }
 

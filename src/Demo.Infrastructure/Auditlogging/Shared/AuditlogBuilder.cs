@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -50,7 +51,7 @@ namespace Demo.Infrastructure.Auditlogging.Shared
         {
             _actions.Add(() =>
                 WithPropertyInternal(expression, type, customFormatter ?? AuditlogFormatters.ListFormatter,
-                    propertyName));
+                    propertyName, compareFormatted: true));
             return this;
         }
 
@@ -136,13 +137,15 @@ namespace Demo.Infrastructure.Auditlogging.Shared
         }
 
         private void WithPropertyInternal<T2>(Expression<Func<T, T2>> expression, AuditlogType type,
-            Func<T2, string> formatter, string propertyName = null)
+            Func<T2, string> formatter, string propertyName = null, bool compareFormatted = false)
         {
             propertyName ??= GetPropertyName(expression);
             var currentValue = _current != null ? expression.Compile()(_current) : default;
             var previousValue = _previous != null ? expression.Compile()(_previous) : default;
 
-            var status = GetAuditlogStatus(currentValue, previousValue);
+            var status = compareFormatted
+                ? GetAuditlogStatus(formatter(currentValue), formatter(previousValue))
+                : GetAuditlogStatus(currentValue, previousValue);
 
             if (status != AuditlogStatus.Unchanged)
             {
@@ -209,12 +212,21 @@ namespace Demo.Infrastructure.Auditlogging.Shared
             var updated = currentValue
                 .Join(previousValue, x => x.Id, x => x.Id, (current, previous) =>
                 {
-                    return new AuditlogPair<T3> { Id = current.Id, CurrentValue = current, PreviousValue = previous, Status = AuditlogStatus.Updated };
+                    return new AuditlogPair<T3>
+                    {
+                        Id = current.Id,
+                        CurrentValue = current,
+                        PreviousValue = previous,
+                        Status = AuditlogStatus.Updated
+                    };
                 });
             var added = currentValue.Where(x => !previousValue.Any(y => y.Id == x.Id))
                 .Select(x => new AuditlogPair<T3> { Id = x.Id, CurrentValue = x, Status = AuditlogStatus.Added });
             var removed = previousValue.Where(x => !currentValue.Any(y => y.Id == x.Id))
-                .Select(previous => new AuditlogPair<T3> { Id = previous.Id, PreviousValue = previous, Status = AuditlogStatus.Removed });
+                .Select(previous => new AuditlogPair<T3>
+                {
+                    Id = previous.Id, PreviousValue = previous, Status = AuditlogStatus.Removed
+                });
 
             var auditlogPairs = updated.Concat(added).Concat(removed);
 
@@ -264,6 +276,11 @@ namespace Demo.Infrastructure.Auditlogging.Shared
             if (comparer.Equals(current, previous))
             {
                 return AuditlogStatus.Unchanged;
+            }
+
+            if (typeof(TType) == typeof(bool))
+            {
+                return AuditlogStatus.Updated;
             }
 
             if (comparer.Equals(current, default) && !comparer.Equals(previous, default))

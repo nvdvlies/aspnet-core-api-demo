@@ -12,10 +12,10 @@ namespace Demo.Infrastructure.Auditlogging
     internal class InvoiceAuditlogger : AuditloggerBase<Invoice>, IAuditlogger<Invoice>
     {
         public InvoiceAuditlogger(
-            ICurrentUser currentUser,
+            ICurrentUserIdProvider currentUserIdProvider,
             IDateTime dateTime,
             IAuditlogDomainEntity auditlogDomainEntity
-        ) : base(currentUser, dateTime, auditlogDomainEntity)
+        ) : base(currentUserIdProvider, dateTime, auditlogDomainEntity)
         {
         }
 

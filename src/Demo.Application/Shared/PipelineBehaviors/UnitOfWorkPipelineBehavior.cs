@@ -23,10 +23,7 @@ namespace Demo.Application.Shared.PipelineBehaviors
         {
             var response = await next();
 
-            if (request is ICommand || request is IMessage)
-            {
-                await _unitOfWork.Value.CommitAsync(cancellationToken);
-            }
+            await _unitOfWork.Value.CommitAsync(cancellationToken);
 
             return response;
         }

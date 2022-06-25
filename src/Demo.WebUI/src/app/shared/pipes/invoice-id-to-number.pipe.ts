@@ -9,7 +9,7 @@ export class InvoiceIdToNumberPipe implements PipeTransform {
   constructor(private readonly invoiceLookupService: InvoiceLookupService) {}
 
   transform(id: string | undefined): Observable<string | undefined> {
-    return id
+    return id && id.length > 0
       ? this.invoiceLookupService.getById(id).pipe(map((x) => x?.invoiceNumber))
       : of(undefined);
   }

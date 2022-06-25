@@ -12,10 +12,10 @@ namespace Demo.Infrastructure.Auditlogging
         IAuditlogger<ApplicationSettings>
     {
         public ApplicationSettingsAuditlogger(
-            ICurrentUser currentUser,
+            ICurrentUserIdProvider currentUserIdProvider,
             IDateTime dateTime,
             IAuditlogDomainEntity auditlogDomainEntity
-        ) : base(currentUser, dateTime, auditlogDomainEntity)
+        ) : base(currentUserIdProvider, dateTime, auditlogDomainEntity)
         {
         }
 

@@ -16,6 +16,7 @@ namespace Demo.Events.UserPreferences
                 Subject = $"UserPreferences/{data.Id}",
                 Data = data,
                 DataVersion = data.EventDataVersion,
+                CreatedBy = updatedBy,
                 CorrelationId = correlationId
             };
         }

@@ -4,7 +4,7 @@ namespace Demo.Events.Invoice
 {
     public class InvoicePdfSynchronizedEvent : Event<InvoicePdfSynchronizedEvent, InvoicePdfSynchronizedEventData>
     {
-        public static InvoicePdfSynchronizedEvent Create(Guid correlationId, Guid id)
+        public static InvoicePdfSynchronizedEvent Create(Guid createdBy, Guid correlationId, Guid id)
         {
             var data = new InvoicePdfSynchronizedEventData { CorrelationId = correlationId, Id = id };
             return new InvoicePdfSynchronizedEvent
@@ -13,6 +13,7 @@ namespace Demo.Events.Invoice
                 Data = data,
                 Subject = $"Invoice/{data.Id}",
                 DataVersion = data.EventDataVersion,
+                CreatedBy = createdBy,
                 CorrelationId = data.CorrelationId
             };
         }

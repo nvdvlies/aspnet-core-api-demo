@@ -9,24 +9,24 @@ using Microsoft.Extensions.Caching.Distributed;
 
 namespace Demo.Infrastructure.Services
 {
-    public class UserPreferencesProvider : IUserPreferencesProvider
+    internal class UserPreferencesProvider : IUserPreferencesProvider
     {
         private const string CacheKeyPrefix = "UserPreferences";
 
         private readonly IDistributedCache _cache;
-        private readonly ICurrentUser _currentUser;
+        private readonly ICurrentUserIdProvider _currentUserIdProvider;
         private readonly IJsonService<UserPreferences> _jsonService;
         private readonly IUserPreferencesDomainEntity _userPreferencesDomainEntity;
 
         public UserPreferencesProvider(
             IDistributedCache cache,
-            ICurrentUser currentUser,
+            ICurrentUserIdProvider currentUserIdProvider,
             IJsonService<UserPreferences> jsonService,
             IUserPreferencesDomainEntity userPreferencesDomainEntity
         )
         {
             _cache = cache;
-            _currentUser = currentUser;
+            _currentUserIdProvider = currentUserIdProvider;
             _jsonService = jsonService;
             _userPreferencesDomainEntity = userPreferencesDomainEntity;
         }
@@ -38,7 +38,7 @@ namespace Demo.Infrastructure.Services
 
         public async Task<UserPreferences> GetAsync(bool refreshCache, CancellationToken cancellationToken)
         {
-            var userId = _currentUser.Id;
+            var userId = _currentUserIdProvider.Id;
             var cacheKey = $"{CacheKeyPrefix}/{userId}";
             var cacheValue = await _cache.GetAsync(cacheKey, cancellationToken);
 
@@ -57,6 +57,12 @@ namespace Demo.Infrastructure.Services
             }
 
             return Decode(cacheValue);
+        }
+
+        public Task RemoveAsync(Guid userId, CancellationToken cancellationToken)
+        {
+            var cacheKey = $"{CacheKeyPrefix}/{userId}";
+            return _cache.RemoveAsync(cacheKey, cancellationToken);
         }
 
         private UserPreferences Decode(byte[] value)

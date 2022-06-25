@@ -13,19 +13,18 @@ namespace Demo.Infrastructure.Auditlogging
         IAuditlogger<FeatureFlagSettings>
     {
         public FeatureFlagSettingsAuditlogger(
-            ICurrentUser currentUser,
+            ICurrentUserIdProvider currentUserIdProvider,
             IDateTime dateTime,
             IAuditlogDomainEntity auditlogDomainEntity
-        ) : base(currentUser, dateTime, auditlogDomainEntity)
+        ) : base(currentUserIdProvider, dateTime, auditlogDomainEntity)
         {
         }
 
         protected override List<AuditlogItem> AuditlogItems(FeatureFlagSettings current, FeatureFlagSettings previous)
         {
             return new AuditlogBuilder<FeatureFlagSettings>()
-                .WithProperty(c => c.Settings.FeatureFlags.Select(x => x.Name).ToList(),
-                    nameof(FeatureFlagSettings.Settings.FeatureFlags))
                 .WithChildEntityCollection(c => c.Settings.FeatureFlags, c => c.Name, new AuditlogBuilder<FeatureFlag>()
+                    .WithProperty(c => c.Description)
                     .WithProperty(c => c.EnabledForAll)
                     .WithProperty(c => c.EnabledForUsers)
                 )

@@ -16,7 +16,7 @@ export class CustomerIdToNamePipe implements PipeTransform {
     id: string | undefined,
     options?: CustomerIdToNamePipeOptions
   ): Observable<string | undefined> {
-    return id
+    return id && id.length > 0
       ? this.customerLookupService
           .getById(id)
           .pipe(map((x) => (options?.includeCode ? `${x?.code} - ${x?.name}` : x?.name)))

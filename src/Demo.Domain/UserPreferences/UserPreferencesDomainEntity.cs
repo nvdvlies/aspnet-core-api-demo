@@ -12,12 +12,12 @@ namespace Demo.Domain.UserPreferences
 {
     internal class UserPreferencesDomainEntity : DomainEntity<UserPreferences>, IUserPreferencesDomainEntity
     {
-        private readonly ICurrentUser _currentUser;
+        private readonly ICurrentUserIdProvider _currentUserIdProvider;
         private readonly IDbCommand<UserPreferences> _dbCommand;
 
         public UserPreferencesDomainEntity(
             ILogger<UserPreferencesDomainEntity> logger,
-            ICurrentUser currentUser,
+            ICurrentUserIdProvider currentUserIdProvider,
             IDateTime dateTime,
             IDbCommand<UserPreferences> dbCommand,
             Lazy<IEnumerable<IDefaultValuesSetter<UserPreferences>>> defaultValuesSetters,
@@ -33,17 +33,18 @@ namespace Demo.Domain.UserPreferences
             Lazy<IJsonService<UserPreferences>> jsonService,
             Lazy<IAuditlogger<UserPreferences>> auditlogger
         )
-            : base(logger, currentUser, dateTime, dbCommand, defaultValuesSetters, validators, beforeCreateHooks,
+            : base(logger, currentUserIdProvider, dateTime, dbCommand, defaultValuesSetters, validators,
+                beforeCreateHooks,
                 afterCreateHooks, beforeUpdateHooks, afterUpdateHooks, beforeDeleteHooks, afterDeleteHooks,
                 outboxEventCreator, outboxMessageCreator, jsonService, auditlogger)
         {
-            _currentUser = currentUser;
+            _currentUserIdProvider = currentUserIdProvider;
             _dbCommand = dbCommand;
         }
 
         public async Task GetAsync(CancellationToken cancellationToken = default)
         {
-            var userId = _currentUser.Id;
+            var userId = _currentUserIdProvider.Id;
             var entity = await _dbCommand.GetAsync(userId, cancellationToken: cancellationToken);
             if (entity == null)
             {

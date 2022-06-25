@@ -12,7 +12,7 @@ namespace Demo.Domain.Role
     {
         public RoleDomainEntity(
             ILogger<RoleDomainEntity> logger,
-            ICurrentUser currentUser,
+            ICurrentUserIdProvider currentUserIdProvider,
             IDateTime dateTime,
             IDbCommand<Role> dbCommand,
             Lazy<IEnumerable<IDefaultValuesSetter<Role>>> defaultValuesSetters,
@@ -28,7 +28,8 @@ namespace Demo.Domain.Role
             Lazy<IJsonService<Role>> jsonService,
             Lazy<IAuditlogger<Role>> auditlogger
         )
-            : base(logger, currentUser, dateTime, dbCommand, defaultValuesSetters, validators, beforeCreateHooks,
+            : base(logger, currentUserIdProvider, dateTime, dbCommand, defaultValuesSetters, validators,
+                beforeCreateHooks,
                 afterCreateHooks, beforeUpdateHooks, afterUpdateHooks, beforeDeleteHooks, afterDeleteHooks,
                 outboxEventCreator, outboxMessageCreator, jsonService, auditlogger)
         {

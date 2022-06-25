@@ -10,16 +10,16 @@ namespace Demo.Application.CurrentUser.Queries.GetCurrentUserFeatureFlags
     public class GetCurrentUserFeatureFlagsQueryHandler : IRequestHandler<GetCurrentUserFeatureFlagsQuery,
         GetCurrentUserFeatureFlagsQueryResult>
     {
-        private readonly ICurrentUser _currentUser;
+        private readonly ICurrentUserIdProvider _currentUserIdProvider;
         private readonly IFeatureFlagSettingsProvider _featureFlagSettingsProvider;
 
         public GetCurrentUserFeatureFlagsQueryHandler(
             IFeatureFlagSettingsProvider featureFlagSettingsProvider,
-            ICurrentUser currentUser
+            ICurrentUserIdProvider currentUserIdProvider
         )
         {
             _featureFlagSettingsProvider = featureFlagSettingsProvider;
-            _currentUser = currentUser;
+            _currentUserIdProvider = currentUserIdProvider;
         }
 
         public async Task<GetCurrentUserFeatureFlagsQueryResult> Handle(GetCurrentUserFeatureFlagsQuery request,
@@ -28,7 +28,7 @@ namespace Demo.Application.CurrentUser.Queries.GetCurrentUserFeatureFlags
             var featureFlagSettings = await _featureFlagSettingsProvider.GetAsync(cancellationToken);
 
             var userFeatureflags = featureFlagSettings.Settings.FeatureFlags
-                .Where(x => x.EnabledForAll || x.EnabledForUsers.Contains(_currentUser.Id))
+                .Where(x => x.EnabledForAll || x.EnabledForUsers.Contains(_currentUserIdProvider.Id))
                 .Select(x => x.Name)
                 .ToList();
 

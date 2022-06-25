@@ -176,7 +176,8 @@ namespace Demo.WebApi.Controllers
         [HttpGet("Lookup")]
         [ProducesResponseType(typeof(InvoiceLookupQueryResult), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
-        public async Task<ActionResult<InvoiceLookupQueryResult>> Lookup([FromQuery] InvoiceLookupQuery query, CancellationToken cancellationToken)
+        public async Task<ActionResult<InvoiceLookupQueryResult>> Lookup([FromQuery] InvoiceLookupQuery query,
+            CancellationToken cancellationToken)
         {
             return await Mediator.Send(query, cancellationToken);
         }

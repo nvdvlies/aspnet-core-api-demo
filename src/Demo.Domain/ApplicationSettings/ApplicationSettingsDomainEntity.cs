@@ -17,7 +17,7 @@ namespace Demo.Domain.ApplicationSettings
 
         public ApplicationSettingsDomainEntity(
             ILogger<ApplicationSettingsDomainEntity> logger,
-            ICurrentUser currentUser,
+            ICurrentUserIdProvider currentUserIdProvider,
             IDateTime dateTime,
             IDbCommandForTableWithSingleRecord<ApplicationSettings> dbCommand,
             Lazy<IEnumerable<IDefaultValuesSetter<ApplicationSettings>>> defaultValuesSetters,
@@ -33,7 +33,8 @@ namespace Demo.Domain.ApplicationSettings
             Lazy<IJsonService<ApplicationSettings>> jsonService,
             Lazy<IAuditlogger<ApplicationSettings>> auditlogger
         )
-            : base(logger, currentUser, dateTime, dbCommand, defaultValuesSetters, validators, beforeCreateHooks,
+            : base(logger, currentUserIdProvider, dateTime, dbCommand, defaultValuesSetters, validators,
+                beforeCreateHooks,
                 afterCreateHooks, beforeUpdateHooks, afterUpdateHooks, beforeDeleteHooks, afterDeleteHooks,
                 outboxEventCreator, outboxMessageCreator, jsonService, auditlogger)
         {

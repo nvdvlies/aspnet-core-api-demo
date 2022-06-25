@@ -10,17 +10,21 @@ namespace Demo.Domain.User.Hooks
     internal class DeleteAuth0UserHook : IAfterDelete<User>
     {
         private readonly ICorrelationIdProvider _correlationIdProvider;
+        private readonly ICurrentUserIdProvider _currentUserIdProvider;
 
         public DeleteAuth0UserHook(
-            ICorrelationIdProvider correlationIdProvider
+            ICorrelationIdProvider correlationIdProvider,
+            ICurrentUserIdProvider currentUserIdProvider
         )
         {
             _correlationIdProvider = correlationIdProvider;
+            _currentUserIdProvider = currentUserIdProvider;
         }
 
         public Task ExecuteAsync(HookType type, IDomainEntityContext<User> context, CancellationToken cancellationToken)
         {
-            context.AddMessageAsync(DeleteAuth0UserMessage.Create(_correlationIdProvider.Id, context.Entity.Id),
+            context.AddMessageAsync(
+                DeleteAuth0UserMessage.Create(_currentUserIdProvider.Id, _correlationIdProvider.Id, context.Entity.Id),
                 cancellationToken);
             return Task.CompletedTask;
         }

@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Demo.Domain.UserPreferences.Interfaces
@@ -7,5 +8,6 @@ namespace Demo.Domain.UserPreferences.Interfaces
     {
         Task<UserPreferences> GetAsync(CancellationToken cancellationToken);
         Task<UserPreferences> GetAsync(bool refreshCache, CancellationToken cancellationToken);
+        Task RemoveAsync(Guid userId, CancellationToken cancellationToken);
     }
 }

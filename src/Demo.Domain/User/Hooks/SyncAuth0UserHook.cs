@@ -11,12 +11,15 @@ namespace Demo.Domain.User.Hooks
     internal class SyncAuth0UserHook : IAfterUpdate<User>
     {
         private readonly ICorrelationIdProvider _correlationIdProvider;
+        private readonly ICurrentUserIdProvider _currentUserIdProvider;
 
         public SyncAuth0UserHook(
-            ICorrelationIdProvider correlationIdProvider
+            ICorrelationIdProvider correlationIdProvider,
+            ICurrentUserIdProvider currentUserIdProvider
         )
         {
             _correlationIdProvider = correlationIdProvider;
+            _currentUserIdProvider = currentUserIdProvider;
         }
 
         public Task ExecuteAsync(HookType type, IDomainEntityContext<User> context, CancellationToken cancellationToken)
@@ -28,7 +31,7 @@ namespace Demo.Domain.User.Hooks
                 ))
             {
                 context.AddMessageAsync(
-                    SyncAuth0UserMessage.Create(_correlationIdProvider.Id, context.Entity.Id,
+                    SyncAuth0UserMessage.Create(_currentUserIdProvider.Id, _correlationIdProvider.Id, context.Entity.Id,
                         context.IsPropertyDirty(x => x.Email)), cancellationToken);
             }
 

@@ -33,20 +33,17 @@ namespace Demo.Application.Shared.PipelineBehaviors
         {
             var response = await next();
 
-            if (request is ICommand or IMessage)
+            try
             {
-                try
+                foreach (var outboxEventCreatedEvent in _outboxEventCreatedEvents.Value)
                 {
-                    foreach (var outboxEventCreatedEvent in _outboxEventCreatedEvents.Value)
-                    {
-                        await _eventPublisher.Value.PublishAsync(outboxEventCreatedEvent, cancellationToken);
-                    }
+                    await _eventPublisher.Value.PublishAsync(outboxEventCreatedEvent, cancellationToken);
                 }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex,
-                        $"Failed to publish {nameof(OutboxEventCreatedEvent)} event(s). The affected event(s) will be processed later by the outbox monitoring service.");
-                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex,
+                    $"Failed to publish {nameof(OutboxEventCreatedEvent)} event(s). The affected event(s) will be processed later by the outbox monitoring service.");
             }
 
             return response;

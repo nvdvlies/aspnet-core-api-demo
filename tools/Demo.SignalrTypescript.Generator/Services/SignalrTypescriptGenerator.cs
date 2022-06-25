@@ -28,6 +28,7 @@ import { HubConnection, IHttpConnectionOptions } from '@microsoft/signalr';
 import { lastValueFrom, Subject } from 'rxjs';
 import * as signalR from '@microsoft/signalr';
 import { AuthService } from '@auth0/auth0-angular';
+import { LoggerService } from '@shared/services/logger.service';
 
 export const SIGNALR_BASE_URL = new InjectionToken<string>('SIGNALR_BASE_URL');
 
@@ -39,7 +40,8 @@ export class SignalRService {
 
   constructor(
     @Inject(SIGNALR_BASE_URL) private readonly baseUrl: string,
-    private readonly authService: AuthService
+    private readonly authService: AuthService,
+    private readonly loggerService: LoggerService
   ) {
     this.hubConnection = new signalR.HubConnectionBuilder()
       .withUrl(this.baseUrl + '/hub', {
@@ -57,14 +59,14 @@ export class SignalRService {
   private connect(): void {
     this.hubConnection
       .start()
-      .catch((err) => console.log('Error while starting connection: ' + err));
+      .catch((err) => this.loggerService.logError('Error while starting SignalR connection', undefined, err));
   }
 
   private disconnect(): void {
     if (this.hubConnection) {
       this.hubConnection
         .stop()
-        .catch((err) => console.log('Error while terminating connection: ' + err));
+        .catch((err) => this.loggerService.logWarning(`Error while terminating SignalR connection: ${err}`));
     }
   }
 }

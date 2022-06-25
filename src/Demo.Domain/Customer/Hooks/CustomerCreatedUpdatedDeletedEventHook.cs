@@ -11,14 +11,14 @@ namespace Demo.Domain.Customer.Hooks
         IAfterDelete<Customer>
     {
         private readonly ICorrelationIdProvider _correlationIdProvider;
-        private readonly ICurrentUser _currentUser;
+        private readonly ICurrentUserIdProvider _currentUserIdProvider;
 
         public CustomerCreatedUpdatedDeletedEventHook(
-            ICurrentUser currentUser,
+            ICurrentUserIdProvider currentUserIdProvider,
             ICorrelationIdProvider correlationIdProvider
         )
         {
-            _currentUser = currentUser;
+            _currentUserIdProvider = currentUserIdProvider;
             _correlationIdProvider = correlationIdProvider;
         }
 
@@ -29,17 +29,20 @@ namespace Demo.Domain.Customer.Hooks
             {
                 case EditMode.Create:
                     await context.AddEventAsync(
-                        CustomerCreatedEvent.Create(_correlationIdProvider.Id, context.Entity.Id, _currentUser.Id),
+                        CustomerCreatedEvent.Create(_correlationIdProvider.Id, context.Entity.Id,
+                            _currentUserIdProvider.Id),
                         cancellationToken);
                     break;
                 case EditMode.Update:
                     await context.AddEventAsync(
-                        CustomerUpdatedEvent.Create(_correlationIdProvider.Id, context.Entity.Id, _currentUser.Id),
+                        CustomerUpdatedEvent.Create(_correlationIdProvider.Id, context.Entity.Id,
+                            _currentUserIdProvider.Id),
                         cancellationToken);
                     break;
                 case EditMode.Delete:
                     await context.AddEventAsync(
-                        CustomerDeletedEvent.Create(_correlationIdProvider.Id, context.Entity.Id, _currentUser.Id),
+                        CustomerDeletedEvent.Create(_correlationIdProvider.Id, context.Entity.Id,
+                            _currentUserIdProvider.Id),
                         cancellationToken);
                     break;
             }

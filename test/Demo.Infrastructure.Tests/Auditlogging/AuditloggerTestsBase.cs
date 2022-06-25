@@ -14,7 +14,7 @@ namespace Demo.Infrastructure.Tests.Auditlogging
         protected readonly Mock<IAuditlogDomainEntity> AuditlogDomainEntityMock = new();
 
         internal readonly Auditlog CapturedAuditlog = new();
-        protected readonly Mock<ICurrentUser> CurrentUserMock = new();
+        protected readonly Mock<ICurrentUserIdProvider> CurrentUserMock = new();
         protected readonly Mock<IDateTime> DateTimeMock = new();
 
         protected AuditloggerTestsBase()

@@ -11,14 +11,14 @@ namespace Demo.Domain.UserPreferences.Hooks
         IAfterUpdate<UserPreferences>, IAfterDelete<UserPreferences>
     {
         private readonly ICorrelationIdProvider _correlationIdProvider;
-        private readonly ICurrentUser _currentUser;
+        private readonly ICurrentUserIdProvider _currentUserIdProvider;
 
         public UserPreferencesCreatedUpdatedDeletedEventHook(
-            ICurrentUser currentUser,
+            ICurrentUserIdProvider currentUserIdProvider,
             ICorrelationIdProvider correlationIdProvider
         )
         {
-            _currentUser = currentUser;
+            _currentUserIdProvider = currentUserIdProvider;
             _correlationIdProvider = correlationIdProvider;
         }
 
@@ -31,12 +31,12 @@ namespace Demo.Domain.UserPreferences.Hooks
                 case EditMode.Update:
                     await context.AddEventAsync(
                         UserPreferencesUpdatedEvent.Create(_correlationIdProvider.Id, context.Entity.Id,
-                            _currentUser.Id), cancellationToken);
+                            _currentUserIdProvider.Id), cancellationToken);
                     break;
                 case EditMode.Delete:
                     await context.AddEventAsync(
                         UserPreferencesDeletedEvent.Create(_correlationIdProvider.Id, context.Entity.Id,
-                            _currentUser.Id), cancellationToken);
+                            _currentUserIdProvider.Id), cancellationToken);
                     break;
             }
         }

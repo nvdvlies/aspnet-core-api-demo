@@ -11,16 +11,16 @@ namespace Demo.Infrastructure.Auditlogging.Shared
     internal abstract class AuditloggerBase<T> where T : IEntity
     {
         private readonly IAuditlogDomainEntity _auditlogDomainEntity;
-        private readonly ICurrentUser _currentUser;
+        private readonly ICurrentUserIdProvider _currentUserIdProvider;
         private readonly IDateTime _dateTime;
 
         public AuditloggerBase(
-            ICurrentUser currentUser,
+            ICurrentUserIdProvider currentUserIdProvider,
             IDateTime dateTime,
             IAuditlogDomainEntity auditlogDomainEntity
         )
         {
-            _currentUser = currentUser;
+            _currentUserIdProvider = currentUserIdProvider;
             _dateTime = dateTime;
             _auditlogDomainEntity = auditlogDomainEntity;
         }
@@ -41,7 +41,7 @@ namespace Demo.Infrastructure.Auditlogging.Shared
             {
                 x.EntityName = current.GetType().Name;
                 x.EntityId = current.Id;
-                x.ModifiedBy = _currentUser.Id;
+                x.ModifiedBy = _currentUserIdProvider.Id;
                 x.ModifiedOn = _dateTime.UtcNow;
                 x.AuditlogItems = auditLogItems;
             });

@@ -32,17 +32,17 @@ namespace Demo.Application
 
         private static void RegisterPipelineBehaviors(this IServiceCollection services)
         {
-            // Please be aware that the order in which PipelineBehaviors are executed 
+            // Please be aware that the order in which PipelineBehaviors are executed
             // is determined by the order in which PipelineBehaviors are registered for
-            // dependency injection.  
+            // dependency injection.
 
             // Current configuration:
 
-            // | direction | logging | validation | send messages | publish events | uow | handler |
-            // |-----------|---------|------------|---------------|----------------|-----|---------|
-            // |   -->     |   1     |     2      |               |                |     |    3    |
-            // |   <--     |   7     |            |       6       |       5        |  4  |         |
-            // |-----------|---------|------------|---------------|----------------|-----|---------|
+            // | direction | logging | validation | send messages | publish events | invalidate caches | uow | handler |
+            // |-----------|---------|------------|---------------|----------------|-------------------|-----|---------|
+            // |   -->     |   1     |     2      |               |                |                   |     |    3    |
+            // |   <--     |   8     |            |       7       |       6        |         5         |  4  |         |
+            // |-----------|---------|------------|---------------|----------------|-------------------|-----|---------|
 
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingPipelineBehavior<,>));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationPipelineBehavior<,>));
@@ -50,6 +50,8 @@ namespace Demo.Application
                 typeof(ProcessOutboxMessageCreatedEventsPipelineBehavior<,>));
             services.AddTransient(typeof(IPipelineBehavior<,>),
                 typeof(ProcessOutboxEventCreatedEventsPipelineBehavior<,>));
+            services.AddTransient(typeof(IPipelineBehavior<,>),
+                typeof(InvalidateCachesPipelineBehavior<,>));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(UnitOfWorkPipelineBehavior<,>));
         }
 

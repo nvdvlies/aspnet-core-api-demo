@@ -1,8 +1,10 @@
 using System;
 using System.Threading.Tasks;
 using Demo.Common.Interfaces;
+using Demo.Domain.Shared.Interfaces;
 using MassTransit;
 using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Serilog.Context;
 
@@ -10,29 +12,33 @@ namespace Demo.Infrastructure.Events
 {
     public class RabbitMqEventConsumer : IConsumer<RabbitMqEvent>
     {
-        private readonly ICorrelationIdProvider _correlationIdProvider;
-        private readonly ILogger<RabbitMqEventConsumer> _logger;
-        private readonly IMediator _mediator;
+        private readonly IServiceProvider _serviceProvider;
 
-        public RabbitMqEventConsumer(
-            IMediator mediator,
-            ILogger<RabbitMqEventConsumer> logger,
-            ICorrelationIdProvider correlationIdProvider)
+        public RabbitMqEventConsumer(IServiceProvider serviceProvider)
         {
-            _mediator = mediator;
-            _logger = logger;
-            _correlationIdProvider = correlationIdProvider;
+            _serviceProvider = serviceProvider;
         }
 
         public async Task Consume(ConsumeContext<RabbitMqEvent> context)
         {
-            _correlationIdProvider.SwitchToCorrelationId(context.CorrelationId ?? Guid.NewGuid());
-            using (LogContext.PushProperty("CorrelationId", _correlationIdProvider.Id))
+            using (var scope = _serviceProvider.CreateScope())
             {
+                var logger = scope.ServiceProvider.GetRequiredService<ILogger<RabbitMqEventConsumer>>();
+                var correlationIdProvider = scope.ServiceProvider.GetRequiredService<ICorrelationIdProvider>();
+                var currentUserIdProvider = scope.ServiceProvider.GetRequiredService<ICurrentUserIdProvider>();
+                var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+
                 var @event = context.Message.ToEvent();
-                _logger.LogInformation("Consuming {0} with type '{1}'", nameof(RabbitMqEvent),
-                    context.Message.ContentType);
-                await _mediator.Publish(@event, context.CancellationToken);
+
+                currentUserIdProvider.SetUserId(@event.CreatedBy);
+
+                correlationIdProvider.SwitchToCorrelationId(context.CorrelationId ?? Guid.NewGuid());
+                using (LogContext.PushProperty("CorrelationId", correlationIdProvider.Id))
+                {
+                    logger.LogInformation("Consuming {0} with type '{1}'", nameof(RabbitMqEvent),
+                        context.Message.ContentType);
+                    await mediator.Publish(@event, context.CancellationToken);
+                }
             }
         }
     }

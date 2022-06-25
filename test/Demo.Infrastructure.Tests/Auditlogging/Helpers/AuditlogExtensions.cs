@@ -9,7 +9,13 @@ namespace Demo.Infrastructure.Tests.Auditlogging.Helpers
         public static void AssertHasAuditlogItem(this Auditlog auditlog, string propertyName, string prevValue,
             string currentValue)
         {
-            var auditlogItem = auditlog.AuditlogItems.FirstOrDefault(x => x.PropertyName == propertyName);
+            AuditlogItem auditlogItem = null;
+            var propertyNameParts = propertyName.Split(".");
+            foreach (var propertyNamePart in propertyNameParts)
+            {
+                auditlogItem = (auditlogItem != null ? auditlogItem.AuditlogItems : auditlog.AuditlogItems)?
+                    .FirstOrDefault(x => x.PropertyName == propertyNamePart);
+            }
             Assert.NotNull(auditlogItem);
             Assert.Equal(prevValue, auditlogItem.PreviousValueAsString);
             Assert.Equal(currentValue, auditlogItem.CurrentValueAsString);

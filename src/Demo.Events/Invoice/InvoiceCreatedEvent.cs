@@ -13,6 +13,7 @@ namespace Demo.Events.Invoice
                 Data = data,
                 Subject = $"Invoice/{data.Id}",
                 DataVersion = data.EventDataVersion,
+                CreatedBy = createdBy,
                 CorrelationId = data.CorrelationId
             };
         }

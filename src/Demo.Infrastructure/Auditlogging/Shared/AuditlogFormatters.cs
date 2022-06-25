@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Demo.Infrastructure.Auditlogging.Shared
 {
     internal static class AuditlogFormatters
     {
-        public static string None(object value)
-        {
-            return null;
-        }
-
         public static string StringFormatter(string value)
         {
             return value;
@@ -72,7 +68,7 @@ namespace Demo.Infrastructure.Auditlogging.Shared
 
         public static string ListFormatter<T>(IList<T> value)
         {
-            if (value == null)
+            if (value == null || !value.Any())
             {
                 return null;
             }

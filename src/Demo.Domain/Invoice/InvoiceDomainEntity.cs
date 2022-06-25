@@ -18,7 +18,7 @@ namespace Demo.Domain.Invoice
     {
         public InvoiceDomainEntity(
             ILogger<InvoiceDomainEntity> logger,
-            ICurrentUser currentUser,
+            ICurrentUserIdProvider currentUserIdProvider,
             IDateTime dateTime,
             IDbCommand<Invoice> dbCommand,
             Lazy<IEnumerable<IDefaultValuesSetter<Invoice>>> defaultValuesSetters,
@@ -34,7 +34,8 @@ namespace Demo.Domain.Invoice
             Lazy<IJsonService<Invoice>> jsonService,
             Lazy<IAuditlogger<Invoice>> auditlogger
         )
-            : base(logger, currentUser, dateTime, dbCommand, defaultValuesSetters, validators, beforeCreateHooks,
+            : base(logger, currentUserIdProvider, dateTime, dbCommand, defaultValuesSetters, validators,
+                beforeCreateHooks,
                 afterCreateHooks, beforeUpdateHooks, afterUpdateHooks, beforeDeleteHooks, afterDeleteHooks,
                 outboxEventCreator, outboxMessageCreator, jsonService, auditlogger)
         {

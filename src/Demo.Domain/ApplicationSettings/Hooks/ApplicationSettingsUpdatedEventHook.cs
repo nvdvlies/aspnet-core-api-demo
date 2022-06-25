@@ -11,14 +11,14 @@ namespace Demo.Domain.ApplicationSettings.Hooks
         IAfterUpdate<ApplicationSettings>
     {
         private readonly ICorrelationIdProvider _correlationIdProvider;
-        private readonly ICurrentUser _currentUser;
+        private readonly ICurrentUserIdProvider _currentUserIdProvider;
 
         public ApplicationSettingsUpdatedEventHook(
-            ICurrentUser currentUser,
+            ICurrentUserIdProvider currentUserIdProvider,
             ICorrelationIdProvider correlationIdProvider
         )
         {
-            _currentUser = currentUser;
+            _currentUserIdProvider = currentUserIdProvider;
             _correlationIdProvider = correlationIdProvider;
         }
 
@@ -26,7 +26,8 @@ namespace Demo.Domain.ApplicationSettings.Hooks
             CancellationToken cancellationToken)
         {
             await context.AddEventAsync(
-                ApplicationSettingsUpdatedEvent.Create(_correlationIdProvider.Id, context.Entity.Id, _currentUser.Id),
+                ApplicationSettingsUpdatedEvent.Create(_correlationIdProvider.Id, context.Entity.Id,
+                    _currentUserIdProvider.Id),
                 cancellationToken);
         }
     }

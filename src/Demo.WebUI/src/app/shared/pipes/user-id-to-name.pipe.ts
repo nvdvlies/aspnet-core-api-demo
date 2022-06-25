@@ -9,6 +9,8 @@ export class UserIdToNamePipe implements PipeTransform {
   constructor(private readonly userLookupService: UserLookupService) {}
 
   transform(id: string | undefined): Observable<string | undefined> {
-    return id ? this.userLookupService.getById(id).pipe(map((x) => x?.fullname)) : of(undefined);
+    return id && id.length > 0
+      ? this.userLookupService.getById(id).pipe(map((x) => x?.fullname))
+      : of(undefined);
   }
 }

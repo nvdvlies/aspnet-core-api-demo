@@ -16,7 +16,7 @@ namespace Demo.Domain.OutboxEvent
     {
         public OutboxEventDomainEntity(
             ILogger<OutboxEventDomainEntity> logger,
-            ICurrentUser currentUser,
+            ICurrentUserIdProvider currentUserIdProvider,
             IDateTime dateTime,
             IDbCommand<OutboxEvent> dbCommand,
             Lazy<IEnumerable<IDefaultValuesSetter<OutboxEvent>>> defaultValuesSetters,
@@ -31,7 +31,8 @@ namespace Demo.Domain.OutboxEvent
             Lazy<IOutboxMessageCreator> outboxMessageCreatorr,
             Lazy<IJsonService<OutboxEvent>> jsonService
         )
-            : base(logger, currentUser, dateTime, dbCommand, defaultValuesSetters, validators, beforeCreateHooks,
+            : base(logger, currentUserIdProvider, dateTime, dbCommand, defaultValuesSetters, validators,
+                beforeCreateHooks,
                 afterCreateHooks, beforeUpdateHooks, afterUpdateHooks, beforeDeleteHooks, afterDeleteHooks,
                 outboxEventCreator, outboxMessageCreatorr, jsonService, null)
         {

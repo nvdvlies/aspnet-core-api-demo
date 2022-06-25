@@ -10,13 +10,13 @@ namespace Demo.WebApi.Controllers
 {
     public class CurrentUserController : ApiControllerBase
     {
-        private readonly ICurrentUser _currentUser;
+        private readonly ICurrentUserIdProvider _currentUserIdProvider;
 
         public CurrentUserController(
-            ICurrentUser currentUser
+            ICurrentUserIdProvider currentUserIdProvider
         )
         {
-            _currentUser = currentUser;
+            _currentUserIdProvider = currentUserIdProvider;
         }
 
         [HttpGet]
@@ -26,7 +26,7 @@ namespace Demo.WebApi.Controllers
         public async Task<ActionResult<GetUserByIdQueryResult>> GetCurrentUserDetails(
             CancellationToken cancellationToken)
         {
-            var query = new GetUserByIdQuery { Id = _currentUser.Id };
+            var query = new GetUserByIdQuery { Id = _currentUserIdProvider.Id };
             var result = await Mediator.Send(query, cancellationToken);
 
             if (result?.User == null)

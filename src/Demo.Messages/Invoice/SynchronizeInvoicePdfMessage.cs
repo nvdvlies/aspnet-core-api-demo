@@ -4,7 +4,7 @@ namespace Demo.Messages.Invoice
 {
     public class SynchronizeInvoicePdfMessage : Message<SynchronizeInvoicePdfMessage, SynchronizeInvoicePdfMessageData>
     {
-        public static SynchronizeInvoicePdfMessage Create(Guid correlationId, Guid id)
+        public static SynchronizeInvoicePdfMessage Create(Guid createdBy, Guid correlationId, Guid id)
         {
             var data = new SynchronizeInvoicePdfMessageData { CorrelationId = correlationId, Id = id };
             return new SynchronizeInvoicePdfMessage
@@ -13,6 +13,7 @@ namespace Demo.Messages.Invoice
                 Data = data,
                 Subject = $"Invoice/{data.Id}",
                 DataVersion = data.MessageDataVersion,
+                CreatedBy = createdBy,
                 CorrelationId = data.CorrelationId
             };
         }

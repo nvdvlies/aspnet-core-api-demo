@@ -26,11 +26,13 @@ namespace Demo.Application.Shared.Mappings
 
         private class AuditlogValueResolver : IMemberValueResolver<AuditlogItem, AuditlogItemDto, string, string>
         {
-            private readonly ICurrentUser _currentUser;
+            private readonly ICultureProvider _cultureProvider;
+            private readonly ITimeZoneProvider _timeZoneProvider;
 
-            public AuditlogValueResolver(ICurrentUser currentUser)
+            public AuditlogValueResolver(ITimeZoneProvider timeZoneProvider, ICultureProvider cultureProvider)
             {
-                _currentUser = currentUser;
+                _timeZoneProvider = timeZoneProvider;
+                _cultureProvider = cultureProvider;
             }
 
             public string Resolve(AuditlogItem source, AuditlogItemDto destination, string sourceValue,
@@ -50,15 +52,15 @@ namespace Demo.Application.Shared.Mappings
                     case AuditlogType.TimeOnly:
                         var sourceValueAsUtcDate = DateTime.Parse(sourceValue);
                         var sourceValueAsLocalDate =
-                            TimeZoneInfo.ConvertTime(sourceValueAsUtcDate, _currentUser.TimeZone);
+                            TimeZoneInfo.ConvertTime(sourceValueAsUtcDate, _timeZoneProvider.TimeZone);
                         switch (source.Type)
                         {
                             case AuditlogType.DateOnly:
-                                return sourceValueAsLocalDate.ToString("d", _currentUser.Culture);
+                                return sourceValueAsLocalDate.ToString("d", _cultureProvider.Culture);
                             case AuditlogType.DateTime:
-                                return sourceValueAsLocalDate.ToString("g", _currentUser.Culture);
+                                return sourceValueAsLocalDate.ToString("g", _cultureProvider.Culture);
                             case AuditlogType.TimeOnly:
-                                return sourceValueAsLocalDate.ToString("t", _currentUser.Culture);
+                                return sourceValueAsLocalDate.ToString("t", _cultureProvider.Culture);
                         }
 
                         return null;
@@ -68,9 +70,9 @@ namespace Demo.Application.Shared.Mappings
                         switch (source.Type)
                         {
                             case AuditlogType.Decimal:
-                                return sourceValueAsDecimal.ToString(_currentUser.Culture);
+                                return sourceValueAsDecimal.ToString(_cultureProvider.Culture);
                             case AuditlogType.Currency:
-                                return sourceValueAsDecimal.ToString("C", _currentUser.Culture);
+                                return sourceValueAsDecimal.ToString("C", _cultureProvider.Culture);
                         }
 
                         return null;
@@ -82,9 +84,9 @@ namespace Demo.Application.Shared.Mappings
                         switch (source.Type)
                         {
                             case AuditlogType.OnOff:
-                                return sourceValueAsBoolean ? "on" : "off";
+                                return sourceValueAsBoolean ? "On" : "Off";
                             case AuditlogType.YesNo:
-                                return sourceValueAsBoolean ? "yes" : "no";
+                                return sourceValueAsBoolean ? "Yes" : "No";
                         }
 
                         return null;

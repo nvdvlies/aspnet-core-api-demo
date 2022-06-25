@@ -15,7 +15,7 @@ namespace Demo.Domain.User
     {
         public UserDomainEntity(
             ILogger<UserDomainEntity> logger,
-            ICurrentUser currentUser,
+            ICurrentUserIdProvider currentUserIdProvider,
             IDateTime dateTime,
             IDbCommand<User> dbCommand,
             Lazy<IEnumerable<IDefaultValuesSetter<User>>> defaultValuesSetters,
@@ -31,7 +31,8 @@ namespace Demo.Domain.User
             Lazy<IJsonService<User>> jsonService,
             Lazy<IAuditlogger<User>> auditlogger
         )
-            : base(logger, currentUser, dateTime, dbCommand, defaultValuesSetters, validators, beforeCreateHooks,
+            : base(logger, currentUserIdProvider, dateTime, dbCommand, defaultValuesSetters, validators,
+                beforeCreateHooks,
                 afterCreateHooks, beforeUpdateHooks, afterUpdateHooks, beforeDeleteHooks, afterDeleteHooks,
                 outboxEventCreator, outboxMessageCreator, jsonService, auditlogger)
         {

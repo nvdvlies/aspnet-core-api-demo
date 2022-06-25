@@ -15,14 +15,17 @@ namespace Demo.Domain.Invoice.Hooks
     internal class SynchronizeInvoicePdfHook : IBeforeCreate<Invoice>, IBeforeUpdate<Invoice>
     {
         private readonly ICorrelationIdProvider _correlationIdProvider;
+        private readonly ICurrentUserIdProvider _currentUserIdProvider;
 
         private readonly IInvoiceToPdfModelMapper _invoiceToPdfModelMapper;
 
         public SynchronizeInvoicePdfHook(IInvoiceToPdfModelMapper invoiceToPdfModelMapper,
-            ICorrelationIdProvider correlationIdProvider)
+            ICorrelationIdProvider correlationIdProvider,
+            ICurrentUserIdProvider currentUserIdProvider)
         {
             _invoiceToPdfModelMapper = invoiceToPdfModelMapper;
             _correlationIdProvider = correlationIdProvider;
+            _currentUserIdProvider = currentUserIdProvider;
         }
 
         public int Order => 99;
@@ -35,7 +38,8 @@ namespace Demo.Domain.Invoice.Hooks
                 // An invoice always has an accompanying PDF document. We can create this by requesting synchronization via a domain event.
                 context.Entity.PdfIsSynced = false;
                 await context.AddMessageAsync(
-                    SynchronizeInvoicePdfMessage.Create(_correlationIdProvider.Id, context.Entity.Id),
+                    SynchronizeInvoicePdfMessage.Create(_currentUserIdProvider.Id, _correlationIdProvider.Id,
+                        context.Entity.Id),
                     cancellationToken);
             }
             else if (type == HookType.BeforeUpdate && context.Pristine.Status == InvoiceStatus.Draft)
@@ -50,7 +54,7 @@ namespace Demo.Domain.Invoice.Hooks
 
                     if (throwIfPdfIsNotSynced)
                         // Prevent a possible infinite loop by not allowing synchronization when in the context of
-                        // updating the invoice directly after PDF synchronization has occured. In this scenario the 
+                        // updating the invoice directly after PDF synchronization has occured. In this scenario the
                         // checksums should have been equal.
                     {
                         throw new DomainException("Expected invoice PDF to have been synced");
@@ -59,7 +63,8 @@ namespace Demo.Domain.Invoice.Hooks
                     // Changes made to entity DO affect PDF content. Requesting synchronization.
                     context.Entity.PdfIsSynced = false;
                     await context.AddMessageAsync(
-                        SynchronizeInvoicePdfMessage.Create(_correlationIdProvider.Id, context.Entity.Id),
+                        SynchronizeInvoicePdfMessage.Create(_currentUserIdProvider.Id, _correlationIdProvider.Id,
+                            context.Entity.Id),
                         cancellationToken);
                 }
                 else
@@ -72,7 +77,8 @@ namespace Demo.Domain.Invoice.Hooks
             if (context.Entity.PdfIsSynced && context.IsPropertyDirty(x => x.PdfIsSynced))
             {
                 await context.AddEventAsync(
-                    InvoicePdfSynchronizedEvent.Create(_correlationIdProvider.Id, context.Entity.Id),
+                    InvoicePdfSynchronizedEvent.Create(_currentUserIdProvider.Id, _correlationIdProvider.Id,
+                        context.Entity.Id),
                     cancellationToken);
             }
         }

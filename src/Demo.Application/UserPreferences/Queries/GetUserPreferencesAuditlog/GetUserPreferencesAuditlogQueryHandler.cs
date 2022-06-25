@@ -14,17 +14,17 @@ namespace Demo.Application.UserPreferences.Queries.GetUserPreferencesAuditlog
     public class GetUserPreferencesAuditlogQueryHandler : IRequestHandler<GetUserPreferencesAuditlogQuery,
         GetUserPreferencesAuditlogQueryResult>
     {
-        private readonly ICurrentUser _currentUser;
+        private readonly ICurrentUserIdProvider _currentUserIdProvider;
         private readonly IMapper _mapper;
         private readonly IDbQuery<Auditlog> _query;
 
         public GetUserPreferencesAuditlogQueryHandler(
-            ICurrentUser currentUser,
+            ICurrentUserIdProvider currentUserIdProvider,
             IDbQuery<Auditlog> query,
             IMapper mapper
         )
         {
-            _currentUser = currentUser;
+            _currentUserIdProvider = currentUserIdProvider;
             _query = query;
             _mapper = mapper;
         }
@@ -37,7 +37,7 @@ namespace Demo.Application.UserPreferences.Queries.GetUserPreferencesAuditlog
                 .ThenInclude(y => y.AuditlogItems)
                 .ThenInclude(y => y.AuditlogItems)
                 .Where(x => x.EntityName == nameof(Domain.UserPreferences.UserPreferences))
-                .Where(x => x.EntityId == _currentUser.Id);
+                .Where(x => x.EntityId == _currentUserIdProvider.Id);
 
             var totalItems = await query.CountAsync(cancellationToken);
 

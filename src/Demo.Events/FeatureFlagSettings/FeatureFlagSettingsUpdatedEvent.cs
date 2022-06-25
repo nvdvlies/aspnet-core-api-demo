@@ -17,6 +17,7 @@ namespace Demo.Events.FeatureFlagSettings
                 Subject = $"FeatureFlagSettings/{data.Id}",
                 Data = data,
                 DataVersion = data.EventDataVersion,
+                CreatedBy = updatedBy,
                 CorrelationId = correlationId
             };
         }

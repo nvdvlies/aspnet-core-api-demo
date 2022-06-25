@@ -17,7 +17,7 @@ namespace Demo.Domain.FeatureFlagSettings
 
         public FeatureFlagSettingsDomainEntity(
             ILogger<FeatureFlagSettingsDomainEntity> logger,
-            ICurrentUser currentUser,
+            ICurrentUserIdProvider currentUserIdProvider,
             IDateTime dateTime,
             IDbCommandForTableWithSingleRecord<FeatureFlagSettings> dbCommand,
             Lazy<IEnumerable<IDefaultValuesSetter<FeatureFlagSettings>>> defaultValuesSetters,
@@ -33,7 +33,8 @@ namespace Demo.Domain.FeatureFlagSettings
             Lazy<IJsonService<FeatureFlagSettings>> jsonService,
             Lazy<IAuditlogger<FeatureFlagSettings>> auditlogger
         )
-            : base(logger, currentUser, dateTime, dbCommand, defaultValuesSetters, validators, beforeCreateHooks,
+            : base(logger, currentUserIdProvider, dateTime, dbCommand, defaultValuesSetters, validators,
+                beforeCreateHooks,
                 afterCreateHooks, beforeUpdateHooks, afterUpdateHooks, beforeDeleteHooks, afterDeleteHooks,
                 outboxEventCreator, outboxMessageCreator, jsonService, auditlogger)
         {

@@ -1,8 +1,8 @@
-using Demo.Application.Shared.Interfaces;
-using MediatR;
 using System;
 using System.Web;
 using Demo.Application.Invoices.Queries.InvoiceLookup.Dtos;
+using Demo.Application.Shared.Interfaces;
+using MediatR;
 
 namespace Demo.Application.Invoices.Queries.InvoiceLookup
 {

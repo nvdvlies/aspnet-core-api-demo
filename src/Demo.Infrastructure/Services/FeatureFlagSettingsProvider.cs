@@ -9,7 +9,7 @@ using Microsoft.Extensions.Caching.Distributed;
 
 namespace Demo.Infrastructure.Services
 {
-    public class FeatureFlagSettingsProvider : IFeatureFlagSettingsProvider
+    internal class FeatureFlagSettingsProvider : IFeatureFlagSettingsProvider
     {
         private const string CacheKey = "FeatureFlagSettings";
 

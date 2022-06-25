@@ -10,14 +10,14 @@ namespace Demo.Domain.User.Hooks
     internal class UserCreatedUpdatedDeletedEventHook : IAfterCreate<User>, IAfterUpdate<User>, IAfterDelete<User>
     {
         private readonly ICorrelationIdProvider _correlationIdProvider;
-        private readonly ICurrentUser _currentUser;
+        private readonly ICurrentUserIdProvider _currentUserIdProvider;
 
         public UserCreatedUpdatedDeletedEventHook(
-            ICurrentUser currentUser,
+            ICurrentUserIdProvider currentUserIdProvider,
             ICorrelationIdProvider correlationIdProvider
         )
         {
-            _currentUser = currentUser;
+            _currentUserIdProvider = currentUserIdProvider;
             _correlationIdProvider = correlationIdProvider;
         }
 
@@ -27,17 +27,20 @@ namespace Demo.Domain.User.Hooks
             {
                 case EditMode.Create:
                     context.AddEventAsync(
-                        UserCreatedEvent.Create(_correlationIdProvider.Id, context.Entity.Id, _currentUser.Id),
+                        UserCreatedEvent.Create(_correlationIdProvider.Id, context.Entity.Id,
+                            _currentUserIdProvider.Id),
                         cancellationToken);
                     break;
                 case EditMode.Update:
                     context.AddEventAsync(
-                        UserUpdatedEvent.Create(_correlationIdProvider.Id, context.Entity.Id, _currentUser.Id),
+                        UserUpdatedEvent.Create(_correlationIdProvider.Id, context.Entity.Id,
+                            _currentUserIdProvider.Id),
                         cancellationToken);
                     break;
                 case EditMode.Delete:
                     context.AddEventAsync(
-                        UserDeletedEvent.Create(_correlationIdProvider.Id, context.Entity.Id, _currentUser.Id),
+                        UserDeletedEvent.Create(_correlationIdProvider.Id, context.Entity.Id,
+                            _currentUserIdProvider.Id),
                         cancellationToken);
                     break;
             }

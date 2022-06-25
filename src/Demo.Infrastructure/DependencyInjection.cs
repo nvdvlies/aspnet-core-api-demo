@@ -46,6 +46,10 @@ namespace Demo.Infrastructure
             services.AddScoped<IFeatureFlagSettingsProvider, FeatureFlagSettingsProvider>();
             services.AddScoped<IFeatureFlagChecker, FeatureFlagChecker>();
             services.AddScoped<IUserIdProvider, UserIdProvider>();
+            services.AddScoped<IExternalUserIdProvider, ExternalUserIdProvider>();
+            services.AddScoped<ICurrentUserIdProvider, CurrentUserIdProvider>();
+            services.AddScoped<ITimeZoneProvider, TimeZoneProvider>();
+            services.AddScoped<ICultureProvider, CultureProvider>();
             services.AddScoped<IUserProvider, UserProvider>();
             services.AddScoped<IRolesProvider, RolesProvider>();
             services.AddScoped<IOutboxEventCreator, OutboxEventCreator>();

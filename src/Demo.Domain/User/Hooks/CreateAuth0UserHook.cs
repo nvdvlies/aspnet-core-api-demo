@@ -10,17 +10,21 @@ namespace Demo.Domain.User.Hooks
     internal class CreateAuth0UserHook : IAfterCreate<User>
     {
         private readonly ICorrelationIdProvider _correlationIdProvider;
+        private readonly ICurrentUserIdProvider _currentUserIdProvider;
 
         public CreateAuth0UserHook(
-            ICorrelationIdProvider correlationIdProvider
+            ICorrelationIdProvider correlationIdProvider,
+            ICurrentUserIdProvider currentUserIdProvider
         )
         {
             _correlationIdProvider = correlationIdProvider;
+            _currentUserIdProvider = currentUserIdProvider;
         }
 
         public Task ExecuteAsync(HookType type, IDomainEntityContext<User> context, CancellationToken cancellationToken)
         {
-            context.AddMessageAsync(CreateAuth0UserMessage.Create(_correlationIdProvider.Id, context.Entity.Id),
+            context.AddMessageAsync(
+                CreateAuth0UserMessage.Create(_currentUserIdProvider.Id, _correlationIdProvider.Id, context.Entity.Id),
                 cancellationToken);
             return Task.CompletedTask;
         }

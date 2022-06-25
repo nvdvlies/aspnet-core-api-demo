@@ -15,7 +15,7 @@ namespace Demo.Domain.Auditlog
     {
         public AuditlogDomainEntity(
             ILogger<AuditlogDomainEntity> logger,
-            ICurrentUser currentUser,
+            ICurrentUserIdProvider currentUserIdProvider,
             IDateTime dateTime,
             IDbCommand<Auditlog> dbCommand,
             Lazy<IEnumerable<IDefaultValuesSetter<Auditlog>>> defaultValuesSetters,
@@ -30,7 +30,8 @@ namespace Demo.Domain.Auditlog
             Lazy<IOutboxMessageCreator> outboxMessageCreator,
             Lazy<IJsonService<Auditlog>> jsonService
         )
-            : base(logger, currentUser, dateTime, dbCommand, defaultValuesSetters, validators, beforeCreateHooks,
+            : base(logger, currentUserIdProvider, dateTime, dbCommand, defaultValuesSetters, validators,
+                beforeCreateHooks,
                 afterCreateHooks, beforeUpdateHooks, afterUpdateHooks, beforeDeleteHooks, afterDeleteHooks,
                 outboxEventCreator, outboxMessageCreator, jsonService, null)
         {

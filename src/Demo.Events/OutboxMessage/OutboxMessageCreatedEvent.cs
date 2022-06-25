@@ -16,6 +16,7 @@ namespace Demo.Events.OutboxMessage
                 Subject = $"OutboxMessage/{data.Id}",
                 Data = data,
                 DataVersion = data.EventDataVersion,
+                CreatedBy = createdBy,
                 CorrelationId = correlationId
             };
         }

@@ -4,7 +4,7 @@ namespace Demo.Events.Invoice
 {
     public class InvoicePaidEvent : Event<InvoicePaidEvent, InvoicePaidEventData>
     {
-        public static InvoicePaidEvent Create(Guid correlationId, Guid id)
+        public static InvoicePaidEvent Create(Guid createdBy, Guid correlationId, Guid id)
         {
             var data = new InvoicePaidEventData { CorrelationId = correlationId, Id = id };
             return new InvoicePaidEvent
@@ -13,6 +13,7 @@ namespace Demo.Events.Invoice
                 Data = data,
                 Subject = $"Invoice/{data.Id}",
                 DataVersion = data.EventDataVersion,
+                CreatedBy = createdBy,
                 CorrelationId = data.CorrelationId
             };
         }

@@ -26,14 +26,14 @@ namespace Demo.Domain.Shared.DomainEntity
         private readonly Lazy<IEnumerable<IDefaultValuesSetter<T>>> _defaultValuesSetters;
         private readonly Lazy<IEnumerable<IValidator<T>>> _validators;
         protected readonly IDomainEntityContext<T> Context;
-        protected readonly ICurrentUser CurrentUser;
+        protected readonly ICurrentUserIdProvider CurrentUserIdProvider;
         protected readonly IDateTime DateTime;
         protected readonly IDbCommand<T> DbCommand;
         protected readonly ILogger Logger;
 
         public DomainEntity(
             ILogger logger,
-            ICurrentUser currentUser,
+            ICurrentUserIdProvider currentUserIdProvider,
             IDateTime dateTime,
             IDbCommand<T> dbCommand,
             Lazy<IEnumerable<IDefaultValuesSetter<T>>> defaultValuesSetters,
@@ -52,7 +52,7 @@ namespace Demo.Domain.Shared.DomainEntity
         {
             Context = new DomainEntityContext<T>(logger, outboxEventCreator, outboxMessageCreator, jsonService);
             Logger = logger;
-            CurrentUser = currentUser;
+            CurrentUserIdProvider = currentUserIdProvider;
             DateTime = dateTime;
             DbCommand = dbCommand;
 
@@ -151,7 +151,7 @@ namespace Demo.Domain.Shared.DomainEntity
 
                 if (Context.Entity is IAuditableEntity auditableEntity)
                 {
-                    auditableEntity.SetCreatedByAndCreatedOn(CurrentUser.Id, DateTime.UtcNow);
+                    auditableEntity.SetCreatedByAndCreatedOn(CurrentUserIdProvider.Id, DateTime.UtcNow);
                 }
 
                 await DbCommand.InsertAsync(Context.Entity, cancellationToken);
@@ -183,7 +183,7 @@ namespace Demo.Domain.Shared.DomainEntity
 
                 if (Context.Entity is IAuditableEntity auditableEntity)
                 {
-                    auditableEntity.SetLastModifiedByAndLastModifiedOn(CurrentUser.Id, DateTime.UtcNow);
+                    auditableEntity.SetLastModifiedByAndLastModifiedOn(CurrentUserIdProvider.Id, DateTime.UtcNow);
                 }
 
                 await DbCommand.UpdateAsync(Context.Entity, cancellationToken);
@@ -232,7 +232,7 @@ namespace Demo.Domain.Shared.DomainEntity
 
                 if (Context.Entity is ISoftDeleteEntity softDeleteEntity && !Options.DisableSoftDelete)
                 {
-                    softDeleteEntity.MarkAsDeleted(CurrentUser.Id, DateTime.UtcNow);
+                    softDeleteEntity.MarkAsDeleted(CurrentUserIdProvider.Id, DateTime.UtcNow);
 
                     await DbCommand.UpdateAsync(Context.Entity, cancellationToken);
                 }

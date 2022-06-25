@@ -9,7 +9,7 @@ using Microsoft.Extensions.Caching.Distributed;
 
 namespace Demo.Infrastructure.Services
 {
-    public class ApplicationSettingsProvider : IApplicationSettingsProvider
+    internal class ApplicationSettingsProvider : IApplicationSettingsProvider
     {
         private const string CacheKey = "ApplicationSettings";
         private readonly IApplicationSettingsDomainEntity _applicationSettingsDomainEntity;

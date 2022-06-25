@@ -13,6 +13,7 @@ namespace Demo.Events.Role
                 Subject = $"Role/{data.Id}",
                 Data = data,
                 DataVersion = data.EventDataVersion,
+                CreatedBy = deletedBy,
                 CorrelationId = correlationId
             };
         }

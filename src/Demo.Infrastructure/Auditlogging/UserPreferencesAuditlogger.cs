@@ -11,10 +11,10 @@ namespace Demo.Infrastructure.Auditlogging
     internal class UserPreferencesAuditlogger : AuditloggerBase<UserPreferences>, IAuditlogger<UserPreferences>
     {
         public UserPreferencesAuditlogger(
-            ICurrentUser currentUser,
+            ICurrentUserIdProvider currentUserIdProvider,
             IDateTime dateTime,
             IAuditlogDomainEntity auditlogDomainEntity
-        ) : base(currentUser, dateTime, auditlogDomainEntity)
+        ) : base(currentUserIdProvider, dateTime, auditlogDomainEntity)
         {
         }
 

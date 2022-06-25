@@ -6,20 +6,20 @@ namespace Demo.Infrastructure.SignalR
 {
     public class SignalrHubContext : IEventHubContext
     {
-        private readonly ICurrentUser _currentUser;
+        private readonly ICurrentUserIdProvider _currentUserIdProvider;
         private readonly IHubContext<SignalrHub, IEventHub> _hubContext;
 
         public SignalrHubContext(
             IHubContext<SignalrHub, IEventHub> hubContext,
-            ICurrentUser currentUser
+            ICurrentUserIdProvider currentUserIdProvider
         )
         {
             _hubContext = hubContext;
-            _currentUser = currentUser;
+            _currentUserIdProvider = currentUserIdProvider;
         }
 
         public IEventHub All => _hubContext.Clients.All;
-        public IEventHub CurrentUser => _hubContext.Clients.User(_currentUser.ExternalId);
+        public IEventHub CurrentUser => _hubContext.Clients.User(_currentUserIdProvider.ExternalId);
 
         public IEventHub User(string externalId)
         {

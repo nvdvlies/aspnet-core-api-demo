@@ -19,6 +19,8 @@ namespace Demo.Events
 
         [JsonInclude] public Topics Topic { get; protected set; }
 
+        [JsonInclude] public Guid CreatedBy { get; protected set; }
+
         [JsonInclude] public DateTime CreatedOn { get; private set; }
 
         [JsonInclude] public string Subject { get; protected set; }

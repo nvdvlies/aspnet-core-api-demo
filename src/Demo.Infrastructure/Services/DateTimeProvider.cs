@@ -3,7 +3,7 @@ using Demo.Common.Interfaces;
 
 namespace Demo.Infrastructure.Services
 {
-    public class DateTimeProvider : IDateTime
+    internal class DateTimeProvider : IDateTime
     {
         public DateTime UtcNow => DateTime.UtcNow;
     }

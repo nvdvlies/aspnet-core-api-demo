@@ -10,17 +10,17 @@ namespace Demo.Domain.OutboxEvent.Hooks
     internal class OutboxEventCreatedHook : IAfterCreate<OutboxEvent>
     {
         private readonly ICorrelationIdProvider _correlationIdProvider;
-        private readonly ICurrentUser _currentUser;
+        private readonly ICurrentUserIdProvider _currentUserIdProvider;
         private readonly IOutboxEventCreatedEvents _outboxEventCreatedEvents;
 
         public OutboxEventCreatedHook(
             IOutboxEventCreatedEvents outboxEventCreatedEvents,
-            ICurrentUser currentUser,
+            ICurrentUserIdProvider currentUserIdProvider,
             ICorrelationIdProvider correlationIdProvider
         )
         {
             _outboxEventCreatedEvents = outboxEventCreatedEvents;
-            _currentUser = currentUser;
+            _currentUserIdProvider = currentUserIdProvider;
             _correlationIdProvider = correlationIdProvider;
         }
 
@@ -28,7 +28,7 @@ namespace Demo.Domain.OutboxEvent.Hooks
             CancellationToken cancellationToken)
         {
             _outboxEventCreatedEvents.Add(OutboxEventCreatedEvent.Create(_correlationIdProvider.Id, context.Entity.Id,
-                _currentUser.Id));
+                _currentUserIdProvider.Id, context.Entity.Type));
             return Task.CompletedTask;
         }
     }

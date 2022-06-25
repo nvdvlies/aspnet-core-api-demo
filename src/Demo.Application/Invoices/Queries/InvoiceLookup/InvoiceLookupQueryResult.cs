@@ -4,7 +4,7 @@ using Demo.Application.Shared.Models;
 
 namespace Demo.Application.Invoices.Queries.InvoiceLookup
 {
-    public class InvoiceLookupQueryResult: BasePaginatedResult
+    public class InvoiceLookupQueryResult : BasePaginatedResult
     {
         public IEnumerable<InvoiceLookupDto> Invoices { get; set; }
     }

@@ -17,6 +17,7 @@ namespace Demo.Events.ApplicationSettings
                 Subject = $"ApplicationSettings/{data.Id}",
                 Data = data,
                 DataVersion = data.EventDataVersion,
+                CreatedBy = updatedBy,
                 CorrelationId = data.CorrelationId
             };
         }

@@ -39,7 +39,7 @@ export class ApiLoggerService implements LoggerService {
     } as LogMessage);
   }
 
-  public logError(message: string, eventId?: number, error?: Error): void {
+  public logError(message: string, eventId?: number, error?: Error | string): void {
     this.logSubject.next({
       logLevel: LogLevel.Error,
       eventId: eventId,
@@ -48,7 +48,7 @@ export class ApiLoggerService implements LoggerService {
     } as LogMessage);
   }
 
-  public logCritical(message: string, eventId?: number, error?: Error): void {
+  public logCritical(message: string, eventId?: number, error?: Error | string): void {
     this.logSubject.next({
       logLevel: LogLevel.Critical,
       eventId: eventId,

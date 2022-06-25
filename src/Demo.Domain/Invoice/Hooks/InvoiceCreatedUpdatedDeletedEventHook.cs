@@ -11,13 +11,13 @@ namespace Demo.Domain.Invoice.Hooks
         IAfterDelete<Invoice>
     {
         private readonly ICorrelationIdProvider _correlationIdProvider;
-        private readonly ICurrentUser _currentUser;
+        private readonly ICurrentUserIdProvider _currentUserIdProvider;
 
         public InvoiceCreatedUpdatedDeletedEventHook(
-            ICurrentUser currentUser,
+            ICurrentUserIdProvider currentUserIdProvider,
             ICorrelationIdProvider correlationIdProvider)
         {
-            _currentUser = currentUser;
+            _currentUserIdProvider = currentUserIdProvider;
             _correlationIdProvider = correlationIdProvider;
         }
 
@@ -28,17 +28,20 @@ namespace Demo.Domain.Invoice.Hooks
             {
                 case EditMode.Create:
                     await context.AddEventAsync(
-                        InvoiceCreatedEvent.Create(_correlationIdProvider.Id, context.Entity.Id, _currentUser.Id),
+                        InvoiceCreatedEvent.Create(_correlationIdProvider.Id, context.Entity.Id,
+                            _currentUserIdProvider.Id),
                         cancellationToken);
                     break;
                 case EditMode.Update:
                     await context.AddEventAsync(
-                        InvoiceUpdatedEvent.Create(_correlationIdProvider.Id, context.Entity.Id, _currentUser.Id),
+                        InvoiceUpdatedEvent.Create(_correlationIdProvider.Id, context.Entity.Id,
+                            _currentUserIdProvider.Id),
                         cancellationToken);
                     break;
                 case EditMode.Delete:
                     await context.AddEventAsync(
-                        InvoiceDeletedEvent.Create(_correlationIdProvider.Id, context.Entity.Id, _currentUser.Id),
+                        InvoiceDeletedEvent.Create(_correlationIdProvider.Id, context.Entity.Id,
+                            _currentUserIdProvider.Id),
                         cancellationToken);
                     break;
             }

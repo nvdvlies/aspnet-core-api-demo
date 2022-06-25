@@ -10,15 +10,15 @@ namespace Demo.Domain.FeatureFlagSettings.Hooks
     internal class SetCreatedOnAndModifiedOnHook : IBeforeCreate<FeatureFlagSettings>,
         IBeforeUpdate<FeatureFlagSettings>
     {
-        private readonly ICurrentUser _currentUser;
+        private readonly ICurrentUserIdProvider _currentUserIdProvider;
         private readonly IDateTime _dateTime;
 
         public SetCreatedOnAndModifiedOnHook(
-            ICurrentUser currentUser,
+            ICurrentUserIdProvider currentUserIdProvider,
             IDateTime dateTime
         )
         {
-            _currentUser = currentUser;
+            _currentUserIdProvider = currentUserIdProvider;
             _dateTime = dateTime;
         }
 
@@ -32,7 +32,8 @@ namespace Demo.Domain.FeatureFlagSettings.Hooks
 
                 if (pristineFeatureFlag == null)
                 {
-                    ((IAuditableEntity)featureFlag).SetCreatedByAndCreatedOn(_currentUser.Id, _dateTime.UtcNow);
+                    ((IAuditableEntity)featureFlag).SetCreatedByAndCreatedOn(_currentUserIdProvider.Id,
+                        _dateTime.UtcNow);
                 }
                 else
                 {
@@ -46,7 +47,7 @@ namespace Demo.Domain.FeatureFlagSettings.Hooks
                         string.Join(",", pristineFeatureFlag.EnabledForUsers)
                     )
                     {
-                        ((IAuditableEntity)featureFlag).SetLastModifiedByAndLastModifiedOn(_currentUser.Id,
+                        ((IAuditableEntity)featureFlag).SetLastModifiedByAndLastModifiedOn(_currentUserIdProvider.Id,
                             _dateTime.UtcNow);
                     }
                     else

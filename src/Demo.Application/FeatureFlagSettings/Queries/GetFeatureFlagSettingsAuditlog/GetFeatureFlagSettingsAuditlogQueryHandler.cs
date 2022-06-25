@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using Demo.Application.Shared.Dtos;
+using Demo.Common.Extensions;
 using Demo.Domain.Auditlog;
 using Demo.Domain.Shared.Interfaces;
 using MediatR;
@@ -33,7 +34,8 @@ namespace Demo.Application.FeatureFlagSettings.Queries.GetFeatureFlagSettingsAud
                 .Include(x => x.AuditlogItems)
                 .ThenInclude(y => y.AuditlogItems)
                 .ThenInclude(y => y.AuditlogItems)
-                .Where(x => x.EntityName == nameof(Domain.FeatureFlagSettings.FeatureFlagSettings));
+                .Where(x => x.EntityName == nameof(Domain.FeatureFlagSettings.FeatureFlagSettings))
+                .Where(x => x.AuditlogItems.Any(y => y.AuditlogItems.Any(z => z.PropertyName == request.Name)));
 
             var totalItems = await query.CountAsync(cancellationToken);
 
@@ -41,6 +43,7 @@ namespace Demo.Application.FeatureFlagSettings.Queries.GetFeatureFlagSettingsAud
                 .OrderByDescending(c => c.ModifiedOn)
                 .Skip(request.PageSize * request.PageIndex)
                 .Take(request.PageSize)
+                .WriteQueryStringToOutputWindowIfInDebugMode()
                 .ToListAsync(cancellationToken);
 
             return new GetFeatureFlagSettingsAuditlogQueryResult

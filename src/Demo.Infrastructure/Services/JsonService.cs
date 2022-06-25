@@ -4,7 +4,7 @@ using Demo.Domain.Shared.Interfaces;
 
 namespace Demo.Infrastructure.Services
 {
-    public class JsonService<T> : IJsonService<T>
+    internal class JsonService<T> : IJsonService<T>
     {
         private readonly JsonSerializerOptions _options;
 

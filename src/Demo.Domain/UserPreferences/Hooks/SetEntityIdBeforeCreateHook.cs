@@ -8,11 +8,11 @@ namespace Demo.Domain.UserPreferences.Hooks
 {
     internal class SetEntityIdBeforeCreateHook : IBeforeCreate<UserPreferences>
     {
-        private readonly ICurrentUser _currentUser;
+        private readonly ICurrentUserIdProvider _currentUserIdProvider;
 
-        public SetEntityIdBeforeCreateHook(ICurrentUser currentUser)
+        public SetEntityIdBeforeCreateHook(ICurrentUserIdProvider currentUserIdProvider)
         {
-            _currentUser = currentUser;
+            _currentUserIdProvider = currentUserIdProvider;
         }
 
         public Task ExecuteAsync(HookType type, IDomainEntityContext<UserPreferences> context,
@@ -20,7 +20,7 @@ namespace Demo.Domain.UserPreferences.Hooks
         {
             if (context.Entity.Id == Guid.Empty)
             {
-                context.Entity.Id = _currentUser.Id;
+                context.Entity.Id = _currentUserIdProvider.Id;
             }
 
             return Task.CompletedTask;

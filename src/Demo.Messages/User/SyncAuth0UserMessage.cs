@@ -4,7 +4,7 @@ namespace Demo.Messages.User
 {
     public class SyncAuth0UserMessage : Message<SyncAuth0UserMessage, SyncAuth0UserMessageData>
     {
-        public static SyncAuth0UserMessage Create(Guid correlationId, Guid id, bool emailChanged)
+        public static SyncAuth0UserMessage Create(Guid createdBy, Guid correlationId, Guid id, bool emailChanged)
         {
             var data = new SyncAuth0UserMessageData
             {
@@ -16,6 +16,7 @@ namespace Demo.Messages.User
                 Data = data,
                 Subject = $"User/{data.Id}",
                 DataVersion = data.MessageDataVersion,
+                CreatedBy = createdBy,
                 CorrelationId = data.CorrelationId
             };
         }

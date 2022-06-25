@@ -3,14 +3,12 @@ using Demo.Application;
 using Demo.Application.Shared.Interfaces;
 using Demo.Common;
 using Demo.Domain;
-using Demo.Domain.Shared.Interfaces;
 using Demo.Infrastructure;
 using Demo.Infrastructure.Settings;
 using Demo.Infrastructure.SignalR;
 using Demo.WebApi.Auth;
 using Demo.WebApi.Extensions;
 using Demo.WebApi.Middleware;
-using Demo.WebApi.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -87,7 +85,6 @@ namespace Demo.WebApi
             services.AddSingleton<IAuthorizationHandler, HasRoleRequirementAuthorizationHandler>();
 
             services.AddHttpContextAccessor();
-            services.AddScoped<ICurrentUser, CurrentUserService>();
             services.AddScoped<IEventHubContext, SignalrHubContext>();
 
             services.AddLogging();
@@ -128,6 +125,7 @@ namespace Demo.WebApi
 
             app.UseExceptionHandler(x => x.Run(GlobalExceptionHandler.Handle(env)));
             app.UseMiddleware<CorrelationIdMiddleware>();
+            app.UseMiddleware<CurrentUserIdMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {
