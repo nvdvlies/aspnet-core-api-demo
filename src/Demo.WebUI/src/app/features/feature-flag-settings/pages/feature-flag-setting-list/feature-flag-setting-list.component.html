@@ -86,10 +86,10 @@
               <tr
                 mat-row
                 *matRowDef="let row; let i = index; columns: displayedColumns"
-                (click)="navigateToDetailsByName(row.name)"
+                (click)="navigateToDetailsByName(row.name, i)"
                 [ngClass]="{
                   'spotlight-row': row.name === vm.spotlightIdentifier,
-                  'bg-stone-50':
+                  'bg-neutral-50':
                     vm.selectedItem &&
                     row.name === vm.selectedItem.name &&
                     !(row.name === vm.spotlightIdentifier)

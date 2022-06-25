@@ -97,7 +97,10 @@ export class InvoiceListComponent implements OnInit, OnDestroy {
     return item.id;
   }
 
-  public navigateToDetailsById(id: string): void {
+  public navigateToDetailsById(id: string, index?: number): void {
+    if (index != undefined) {
+      this.invoiceTableDataService.selectedItemIndex = index;
+    }
     this.router.navigate(['/invoices', id]);
   }
 

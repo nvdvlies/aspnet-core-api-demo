@@ -62,10 +62,10 @@
                 #tableRows
                 mat-row
                 *matRowDef="let row; let i = index; columns: displayedColumns"
-                (click)="navigateToDetailsById(row.id)"
+                (click)="navigateToDetailsById(row.id, i)"
                 [ngClass]="{
                   'spotlight-row': row.id === vm.spotlightIdentifier,
-                  'bg-stone-50':
+                  'bg-neutral-50':
                     vm.selectedItem &&
                     row.id === vm.selectedItem.id &&
                     !(row.id === vm.spotlightIdentifier)

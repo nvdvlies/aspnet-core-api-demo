@@ -979,8 +979,10 @@ export class ApiFeatureFlagSettingsClient {
         return _observableOf<void>(<any>null);
     }
 
-    getFeatureFlagSettingsAuditlog(pageIndex?: number | undefined, pageSize?: number | undefined): Observable<GetFeatureFlagSettingsAuditlogQueryResult> {
+    getFeatureFlagSettingsAuditlog(name?: string | null | undefined, pageIndex?: number | undefined, pageSize?: number | undefined): Observable<GetFeatureFlagSettingsAuditlogQueryResult> {
         let url_ = this.baseUrl + "/api/FeatureFlagSettings/Auditlog?";
+        if (name !== undefined && name !== null)
+            url_ += "Name=" + encodeURIComponent("" + name) + "&";
         if (pageIndex === null)
             throw new Error("The parameter 'pageIndex' cannot be null.");
         else if (pageIndex !== undefined)

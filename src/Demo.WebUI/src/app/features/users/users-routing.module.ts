@@ -5,6 +5,7 @@ import { UserDetailsComponent } from '@users/pages/user-details/user-details.com
 import { UserListComponent } from '@users/pages/user-list/user-list.component';
 import { UnsavedChangesGuard } from '@shared/guards/unsaved-changes.guard';
 import { AppRoutes } from 'src/app/app-routing.module';
+import { UserAuditlogComponent } from '@users/pages/user-auditlog/user-auditlog.component';
 
 const routes: AppRoutes = [
   {
@@ -14,6 +15,10 @@ const routes: AppRoutes = [
       {
         path: '',
         component: UserListComponent
+      },
+      {
+        path: ':id/auditlog',
+        component: UserAuditlogComponent
       },
       {
         path: ':id',

@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ApiInvoicesClient } from '@api/api.generated.clients';
+import { ApiUsersClient } from '@api/api.generated.clients';
 import { AuditlogBase, AuditlogContext, IAuditlog } from '@shared/base/auditlog-base';
 import { UserLookupService } from '@shared/services/user-lookup.service';
 import { BehaviorSubject, combineLatest, debounceTime, map, Observable, tap } from 'rxjs';
@@ -10,15 +10,15 @@ class ViewModel extends AuditlogContext {
 }
 
 @Component({
-  selector: 'app-invoice-auditlog',
-  templateUrl: './invoice-auditlog.component.html',
-  styleUrls: ['./invoice-auditlog.component.scss'],
+  selector: 'app-user-auditlog',
+  templateUrl: './user-auditlog.component.html',
+  styleUrls: ['./user-auditlog.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class InvoiceAuditlogComponent extends AuditlogBase implements OnInit {
-  public entityName = 'Invoice';
+export class UserAuditlogComponent extends AuditlogBase implements OnInit {
+  public entityName = 'User';
   protected searchFunction = (pageIndex?: number) => {
-    return this.apiInvoicesClient.getInvoiceAuditlog(this.id.value!, pageIndex, this.pageSize).pipe(
+    return this.apiUsersClient.getUserAuditlog(this.id.value!, pageIndex, this.pageSize).pipe(
       map((response) => {
         const auditlog: IAuditlog = {
           items: response?.auditlogs ?? [],
@@ -49,7 +49,7 @@ export class InvoiceAuditlogComponent extends AuditlogBase implements OnInit {
 
   constructor(
     private readonly route: ActivatedRoute,
-    private readonly apiInvoicesClient: ApiInvoicesClient,
+    private readonly apiUsersClient: ApiUsersClient,
     userLookupService: UserLookupService
   ) {
     super(userLookupService);

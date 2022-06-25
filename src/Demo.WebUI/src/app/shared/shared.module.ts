@@ -25,6 +25,7 @@ import { AuditlogTableComponent } from '@shared/components/auditlog-table/auditl
 import { HighlightComponent } from './components/highlight/highlight.component';
 import { AuditlogItemComponent } from './components/auditlog-item/auditlog-item.component';
 import { InvoiceIdToNumberPipe } from './pipes/invoice-id-to-number.pipe';
+import { AuditlogItemValuePipe } from './pipes/auditlog-item-value.pipe';
 
 @NgModule({
   declarations: [
@@ -50,7 +51,8 @@ import { InvoiceIdToNumberPipe } from './pipes/invoice-id-to-number.pipe';
     AuditlogTableComponent,
     HighlightComponent,
     AuditlogItemComponent,
-    InvoiceIdToNumberPipe
+    InvoiceIdToNumberPipe,
+    AuditlogItemValuePipe
   ],
   imports: [CommonModule, ReactiveFormsModule, FormsModule, MaterialModule],
   exports: [
@@ -79,7 +81,9 @@ import { InvoiceIdToNumberPipe } from './pipes/invoice-id-to-number.pipe';
     AuditlogTableComponent,
     HighlightComponent,
     AuditlogItemComponent,
-    InvoiceIdToNumberPipe
-  ]
+    InvoiceIdToNumberPipe,
+    AuditlogItemValuePipe
+  ],
+  providers: [CustomerIdToNamePipe, UserIdToNamePipe, InvoiceIdToNumberPipe]
 })
 export class SharedModule {}

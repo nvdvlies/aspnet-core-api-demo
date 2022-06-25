@@ -44,12 +44,15 @@
             class="detail-row-body"
             [@detailExpand]="row == expandedRow ? 'expanded' : 'collapsed'"
           >
-            <div class="p-2">
-              <app-auditlog-item
-                *ngFor="let item of row.auditlogItems"
-                [item]="item"
-              ></app-auditlog-item>
-            </div>
+            <ng-container *ngIf="row == expandedRow">
+              <div class="p-2">
+                <app-auditlog-item
+                  *ngFor="let item of row.auditlogItems"
+                  [entityName]="entityName"
+                  [item]="item"
+                ></app-auditlog-item>
+              </div>
+            </ng-container>
           </div>
         </td>
       </ng-container>

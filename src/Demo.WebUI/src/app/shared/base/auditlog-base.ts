@@ -56,6 +56,8 @@ export abstract class AuditlogBase implements OnDestroy {
   protected auditlog$ = this.auditlog.asObservable();
   protected onDestroy$ = this.onDestroy.asObservable();
 
+  protected abstract entityName: string | undefined;
+
   public context$ = combineLatest([
     this.isLoadingForFirstTime$,
     this.isLoading$,

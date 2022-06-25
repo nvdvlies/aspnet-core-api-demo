@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { SortDirection } from '@angular/material/sort';
+import { LoggerService } from '@shared/services/logger.service';
 import { FeatureFlagSettingSortColumn } from './feature-flag-setting-table-data.service';
 
 export class FeatureFlagSettingListPageSettings {
@@ -11,6 +12,8 @@ export class FeatureFlagSettingListPageSettings {
 @Injectable()
 export class FeatureFlagSettingListPageSettingsService {
   private key = FeatureFlagSettingListPageSettings.name;
+
+  constructor(private readonly loggerService: LoggerService) {}
 
   private _settings: FeatureFlagSettingListPageSettings | undefined;
 
@@ -31,8 +34,13 @@ export class FeatureFlagSettingListPageSettingsService {
   private tryParse(json: string): FeatureFlagSettingListPageSettings {
     try {
       return JSON.parse(json) as FeatureFlagSettingListPageSettings;
-    } catch (error) {
-      console.error(error);
+    } catch (error: any) {
+      this.loggerService.logError(
+        'Failed to parse FeatureFlagSettingListPageSettings',
+        undefined,
+        error
+      );
+      localStorage.removeItem(this.key);
       return new FeatureFlagSettingListPageSettings();
     }
   }

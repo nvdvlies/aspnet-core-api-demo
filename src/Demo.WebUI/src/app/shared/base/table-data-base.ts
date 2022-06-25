@@ -145,6 +145,8 @@ export abstract class TableDataBase<T extends ITableDataSearchResultItem> {
     if (value >= 0 && value < (this.searchResult.value?.items?.length ?? 0)) {
       this._selectedItemIndex = value;
       this.selectedItem.next(this.searchResult.value?.items?.[this._selectedItemIndex]);
+    } else {
+      this.selectedItem.next(undefined);
     }
   }
   public get selectedItemIndex(): number {
@@ -156,7 +158,7 @@ export abstract class TableDataBase<T extends ITableDataSearchResultItem> {
     this.subscribeToEvents();
   }
 
-  public search(criteria?: ITableFilterCriteria): void {
+  public search(criteria?: ITableFilterCriteria, keepSelectedItemIndex?: boolean): void {
     this.isLoading.next(true);
     this.searchResult.next(undefined);
     this.problemDetails.next(undefined);
@@ -185,7 +187,9 @@ export abstract class TableDataBase<T extends ITableDataSearchResultItem> {
       )
       .subscribe((response) => {
         this.searchResult.next(response);
-        this.selectedItemIndex = 0;
+        if (!keepSelectedItemIndex) {
+          this.selectedItemIndex = 0;
+        }
       });
   }
 
@@ -264,6 +268,9 @@ export abstract class TableDataBase<T extends ITableDataSearchResultItem> {
 
   protected subscribeToDeletedEvent(): void {
     this.entityDeletedEvent$?.pipe(filter((event) => this.exists(event.id))).subscribe((event) => {
+      if (this.selectedItem.value && this.selectedItem.value.id === event.id) {
+        this.selectedItemIndex = 0;
+      }
       if (this.searchResult.value?.items != null) {
         const newItems = this.searchResult.value.items.filter((x) => x.id !== event.id);
         this.searchResult.next({

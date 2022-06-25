@@ -9,7 +9,11 @@
     <div class="content-container">
       <app-problem-details [problemDetails]="vm.problemDetails"></app-problem-details>
 
-      <app-auditlog-table [data]="vm" (pageIndexChanged)="search($event)"></app-auditlog-table>
+      <app-auditlog-table
+        [entityName]="entityName"
+        [data]="vm"
+        (pageIndexChanged)="search($event)"
+      ></app-auditlog-table>
     </div>
   </ng-container>
   <!-- <pre>{{ vm | json }}</pre> -->

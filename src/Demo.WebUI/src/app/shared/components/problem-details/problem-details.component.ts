@@ -1,6 +1,7 @@
 import { Component, ChangeDetectionStrategy, Input, OnInit, Optional } from '@angular/core';
 import { ControlContainer, FormControl, FormGroup } from '@angular/forms';
 import { ApiException, ProblemDetails, ValidationProblemDetails } from '@api/api.generated.clients';
+import { LoggerService } from '@shared/services/logger.service';
 
 @Component({
   selector: 'app-problem-details',
@@ -27,7 +28,10 @@ export class ProblemDetailsComponent implements OnInit {
   public errorMessages: string[] = [];
   private form: FormGroup | undefined;
 
-  constructor(@Optional() private readonly controlContainer: ControlContainer) {}
+  constructor(
+    @Optional() private readonly controlContainer: ControlContainer,
+    private readonly loggerService: LoggerService
+  ) {}
 
   ngOnInit(): void {
     this.form = this.controlContainer?.control as FormGroup;
@@ -60,7 +64,7 @@ export class ProblemDetailsComponent implements OnInit {
     } else if (this.problemDetails instanceof ApiException) {
       this.errorMessages.push(this.problemDetails.message);
     } else {
-      console.error(this.problemDetails);
+      this.loggerService.logError('Unhandled ProblemDetails', undefined, this.problemDetails);
       this.errorMessages.push('An unknown exception occured.');
     }
   }

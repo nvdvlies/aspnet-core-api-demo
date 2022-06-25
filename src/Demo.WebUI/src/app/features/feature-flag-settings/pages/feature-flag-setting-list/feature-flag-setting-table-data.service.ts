@@ -142,5 +142,12 @@ export class FeatureFlagSettingTableDataService extends TableDataBase<FeatureFla
     this.setSpotlightIdentifier(id);
   }
 
+  protected override exists(id: string): boolean {
+    return (
+      this.searchResult.value?.items?.find((x) => x?.name?.toLowerCase() === id.toLowerCase()) !=
+      null
+    );
+  }
+
   protected getByIdFunction = undefined;
 }

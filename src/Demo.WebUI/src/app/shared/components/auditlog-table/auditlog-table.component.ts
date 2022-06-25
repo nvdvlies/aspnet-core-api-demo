@@ -37,6 +37,9 @@ export class AuditlogTableComponent implements OnInit {
   @Input()
   public data: AuditlogTableData | undefined;
 
+  @Input()
+  public entityName: string | undefined;
+
   @Output()
   public pageIndexChanged = new EventEmitter<number>();
 

@@ -61,6 +61,13 @@ export class FeatureFlagSettingsStoreService {
     this.updateLock = true;
     return this.apiFeatureFlagSettingsClient.save(command).pipe(
       switchMap(() => this.get(true)),
+      tap((response) => {
+        const event: FeatureFlagSettingsUpdatedEvent = {
+          id: response.id,
+          updatedBy: response.lastModifiedBy!
+        };
+        this.featureFlagSettingsUpdatedInStore.next([event, response]);
+      }),
       finalize(() => (this.updateLock = false))
     );
   }

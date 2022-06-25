@@ -21,7 +21,11 @@
         "
         class="px-1 mark-deleted"
       >
-        <code>{{ item.previousValueAsString ?? 'Empty' }}</code>
+        <code>{{
+          item.previousValueAsString
+            | auditlogItemValue: entityName:item.propertyName:parentPropertyName
+            | async
+        }}</code>
       </div>
       <ng-container *ngIf="item.status === AuditlogStatusEnum.Updated"> &#8594; </ng-container>
       <div
@@ -30,13 +34,22 @@
         "
         class="px-1 mark-added"
       >
-        <code>{{ item.currentValueAsString ?? 'Empty' }}</code>
+        <code>{{
+          item.currentValueAsString
+            | auditlogItemValue: entityName:item.propertyName:parentPropertyName
+            | async
+        }}</code>
       </div>
     </ng-container>
   </div>
   <ng-container *ngIf="item.auditlogItems && item.auditlogItems.length > 0">
     <ng-container *ngFor="let childItem of item.auditlogItems">
-      <app-auditlog-item [item]="childItem" [indent]="indent + 1"></app-auditlog-item>
+      <app-auditlog-item
+        [item]="childItem"
+        [entityName]="entityName"
+        [parentPropertyName]="getParentPropertyName(item)"
+        [indent]="indent + 1"
+      ></app-auditlog-item>
     </ng-container>
   </ng-container>
 

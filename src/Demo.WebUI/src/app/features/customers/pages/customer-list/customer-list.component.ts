@@ -76,7 +76,10 @@ export class CustomerListComponent implements OnInit, OnDestroy {
     return item.id;
   }
 
-  public navigateToDetailsById(id: string): void {
+  public navigateToDetailsById(id: string, index?: number): void {
+    if (index != undefined) {
+      this.customerTableDataService.selectedItemIndex = index;
+    }
     this.router.navigate(['/customers', id]);
   }
 

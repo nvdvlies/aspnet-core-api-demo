@@ -61,6 +61,13 @@ export class UserPreferencesStoreService {
     this.updateLock = true;
     return this.apiUserPreferencesClient.save(command).pipe(
       switchMap(() => this.get(true)),
+      tap((response) => {
+        const event: UserPreferencesUpdatedEvent = {
+          id: response.id,
+          updatedBy: response.lastModifiedBy!
+        };
+        this.userPreferencesUpdatedInStore.next([event, response]);
+      }),
       finalize(() => (this.updateLock = false))
     );
   }

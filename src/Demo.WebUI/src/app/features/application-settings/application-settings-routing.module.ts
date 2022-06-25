@@ -4,6 +4,7 @@ import { AuthGuard } from '@auth0/auth0-angular';
 import { ApplicationSettingsDetailsComponent } from '@application-settings/pages/application-settings-details/application-settings-details.component';
 import { UnsavedChangesGuard } from '@shared/guards/unsaved-changes.guard';
 import { AppRoutes } from 'src/app/app-routing.module';
+import { ApplicationSettingsAuditlogComponent } from '@application-settings//pages/application-settings-auditlog/application-settings-auditlog.component';
 
 const routes: AppRoutes = [
   {
@@ -14,6 +15,10 @@ const routes: AppRoutes = [
         path: '',
         component: ApplicationSettingsDetailsComponent,
         canDeactivate: [UnsavedChangesGuard]
+      },
+      {
+        path: 'auditlog',
+        component: ApplicationSettingsAuditlogComponent
       }
     ] as AppRoutes
   }

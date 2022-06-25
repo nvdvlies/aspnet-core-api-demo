@@ -12,6 +12,12 @@ export class AuditlogItemComponent implements OnInit {
   public item: AuditlogItemDto | undefined;
 
   @Input()
+  public entityName: string | undefined;
+
+  @Input()
+  public parentPropertyName: string | undefined;
+
+  @Input()
   public indent: number = 0;
 
   public AuditlogStatusEnum = AuditlogStatusEnum;
@@ -20,4 +26,10 @@ export class AuditlogItemComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {}
+
+  public getParentPropertyName(parentItem: AuditlogItemDto): string | undefined {
+    return this.parentPropertyName
+      ? `${this.parentPropertyName}.${parentItem.propertyName}`
+      : parentItem.propertyName;
+  }
 }

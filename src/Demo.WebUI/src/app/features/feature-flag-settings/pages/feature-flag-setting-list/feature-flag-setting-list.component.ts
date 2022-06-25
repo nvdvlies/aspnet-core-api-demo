@@ -70,7 +70,7 @@ export class FeatureFlagSettingListComponent implements OnInit, OnDestroy {
       this.featureFlagSettingTableDataService.spotlight(state.spotlightIdentifier);
     }
 
-    this.featureFlagSettingTableDataService.search();
+    this.featureFlagSettingTableDataService.search(undefined, true);
   }
 
   public search(criteria: TableFilterCriteria): void {
@@ -81,7 +81,10 @@ export class FeatureFlagSettingListComponent implements OnInit, OnDestroy {
     return item.name!;
   }
 
-  public navigateToDetailsByName(name: string): void {
+  public navigateToDetailsByName(name: string, index?: number): void {
+    if (index != undefined) {
+      this.featureFlagSettingTableDataService.selectedItemIndex = index;
+    }
     this.router.navigate(['/feature-flag-settings', name]);
   }
 

@@ -5,6 +5,7 @@ import { FeatureFlagSettingDetailsComponent } from '@feature-flag-settings/pages
 import { FeatureFlagSettingListComponent } from '@feature-flag-settings/pages/feature-flag-setting-list/feature-flag-setting-list.component';
 import { UnsavedChangesGuard } from '@shared/guards/unsaved-changes.guard';
 import { AppRoutes } from 'src/app/app-routing.module';
+import { FeatureFlagSettingAuditlogComponent } from '@feature-flag-settings/pages/feature-flag-setting-auditlog/feature-flag-setting-auditlog.component';
 
 const routes: AppRoutes = [
   {
@@ -14,6 +15,10 @@ const routes: AppRoutes = [
       {
         path: '',
         component: FeatureFlagSettingListComponent
+      },
+      {
+        path: ':name/auditlog',
+        component: FeatureFlagSettingAuditlogComponent
       },
       {
         path: ':name',

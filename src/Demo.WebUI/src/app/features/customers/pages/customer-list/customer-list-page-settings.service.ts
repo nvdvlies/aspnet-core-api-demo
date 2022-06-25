@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { SortDirection } from '@angular/material/sort';
+import { LoggerService } from '@shared/services/logger.service';
 import { CustomerSortColumn } from './customer-table-data.service';
 
 export class CustomerListPageSettings {
@@ -11,6 +12,8 @@ export class CustomerListPageSettings {
 @Injectable()
 export class CustomerListPageSettingsService {
   private key = CustomerListPageSettings.name;
+
+  constructor(private readonly loggerService: LoggerService) {}
 
   private _settings: CustomerListPageSettings | undefined;
 
@@ -31,8 +34,9 @@ export class CustomerListPageSettingsService {
   private tryParse(json: string): CustomerListPageSettings {
     try {
       return JSON.parse(json) as CustomerListPageSettings;
-    } catch (error) {
-      console.error(error);
+    } catch (error: any) {
+      this.loggerService.logError('Failed to parse CustomerListPageSettings', undefined, error);
+      localStorage.removeItem(this.key);
       return new CustomerListPageSettings();
     }
   }

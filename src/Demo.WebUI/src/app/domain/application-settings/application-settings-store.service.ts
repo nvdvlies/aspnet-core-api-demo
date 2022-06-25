@@ -59,6 +59,13 @@ export class ApplicationSettingsStoreService {
     this.updateLock = true;
     return this.apiApplicationSettingsClient.save(command).pipe(
       switchMap(() => this.get(true)),
+      tap((response) => {
+        const event: ApplicationSettingsUpdatedEvent = {
+          id: response.id,
+          updatedBy: response.lastModifiedBy!
+        };
+        this.applicationSettingsUpdatedInStore.next([event, response]);
+      }),
       finalize(() => (this.updateLock = false))
     );
   }

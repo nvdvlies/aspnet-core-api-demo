@@ -89,11 +89,11 @@
               <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
               <tr
                 mat-row
-                *matRowDef="let row; columns: displayedColumns"
-                (click)="navigateToDetailsById(row.id)"
+                *matRowDef="let row; let i = index; columns: displayedColumns"
+                (click)="navigateToDetailsById(row.id, i)"
                 [ngClass]="{
                   'spotlight-row': row.id === vm.spotlightIdentifier,
-                  'bg-stone-50':
+                  'bg-neutral-50':
                     vm.selectedItem &&
                     row.id === vm.selectedItem.id &&
                     !(row.id === vm.spotlightIdentifier)
