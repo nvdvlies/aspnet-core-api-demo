@@ -23,6 +23,7 @@ import {
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSelectModule } from '@angular/material/select';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 @NgModule({
   declarations: [],
@@ -47,7 +48,8 @@ import { MatSelectModule } from '@angular/material/select';
     MatMomentDateModule,
     MatTooltipModule,
     MatCheckboxModule,
-    MatSelectModule
+    MatSelectModule,
+    DragDropModule
   ],
   providers: [{ provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } }]
 })

@@ -19,7 +19,7 @@ import {
 import {
   InvoiceListPageSettings,
   InvoiceListPageSettingsService
-} from './invoice-list-page-settings.service';
+} from '../invoice-list-page-settings/invoice-list-page-settings.service';
 
 export declare type InvoiceSortColumn = 'InvoiceNumber' | 'InvoiceDate' | undefined;
 

@@ -27,6 +27,7 @@ import { AuditlogItemComponent } from './components/auditlog-item/auditlog-item.
 import { InvoiceIdToNumberPipe } from './pipes/invoice-id-to-number.pipe';
 import { AuditlogItemValuePipe } from './pipes/auditlog-item-value.pipe';
 import { UserIdsToNamesPipe } from './pipes/user-ids-to-names.pipe';
+import { InvoiceStatusEnumToNamePipe } from './pipes/invoice-status-enum-to-name.pipe';
 
 @NgModule({
   declarations: [
@@ -54,7 +55,8 @@ import { UserIdsToNamesPipe } from './pipes/user-ids-to-names.pipe';
     AuditlogItemComponent,
     InvoiceIdToNumberPipe,
     AuditlogItemValuePipe,
-    UserIdsToNamesPipe
+    UserIdsToNamesPipe,
+    InvoiceStatusEnumToNamePipe
   ],
   imports: [CommonModule, ReactiveFormsModule, FormsModule, MaterialModule],
   exports: [
@@ -85,7 +87,8 @@ import { UserIdsToNamesPipe } from './pipes/user-ids-to-names.pipe';
     AuditlogItemComponent,
     InvoiceIdToNumberPipe,
     AuditlogItemValuePipe,
-    UserIdsToNamesPipe
+    UserIdsToNamesPipe,
+    InvoiceStatusEnumToNamePipe
   ],
   providers: [CustomerIdToNamePipe, UserIdToNamePipe, InvoiceIdToNumberPipe, UserIdsToNamesPipe]
 })

@@ -6,6 +6,7 @@ import { InvoiceListComponent } from '@invoices/pages/invoice-list/invoice-list.
 import { UnsavedChangesGuard } from '@shared/guards/unsaved-changes.guard';
 import { AppRoutes } from 'src/app/app-routing.module';
 import { InvoiceAuditlogComponent } from './pages/invoice-auditlog/invoice-auditlog.component';
+import { InvoicelistPageSettingsComponent } from './pages/invoice-list-page-settings/invoice-list-page-settings.component';
 
 const routes: AppRoutes = [
   {
@@ -15,6 +16,10 @@ const routes: AppRoutes = [
       {
         path: '',
         component: InvoiceListComponent
+      },
+      {
+        path: 'page-settings',
+        component: InvoicelistPageSettingsComponent
       },
       {
         path: ':id/auditlog',

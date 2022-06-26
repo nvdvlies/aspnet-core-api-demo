@@ -1,0 +1,46 @@
+<ng-container *ngIf="vm$ | async as vm; else loading">
+  <app-page-header title="Page settings">
+    <button mat-raised-button color="primary" type="submit" (click)="save()">Save</button>
+    <button mat-raised-button routerLink="/invoices" type="button">Close</button>
+  </app-page-header>
+  <div class="content-container">
+    <mat-card class="card shadow-md bg-white pb-1 pl-3 pr-3 pt-0 mt-1 mb-3">
+      <mat-card-title class="pl-1 pt-1 text-lg">Columns</mat-card-title>
+      <mat-card-content>
+        <div cdkDropListGroup>
+          <div class="list-container">
+            <div class="text-lg">Show</div>
+            <div
+              cdkDropList
+              id="showList"
+              [cdkDropListData]="vm.showColumns"
+              class="list"
+              (cdkDropListDropped)="drop($event)"
+            >
+              <div class="item" *ngFor="let item of vm.showColumns" cdkDrag>{{ item }}</div>
+            </div>
+          </div>
+
+          <div class="list-container">
+            <div class="text-lg">Hide</div>
+
+            <div
+              cdkDropList
+              id="hideList"
+              [cdkDropListData]="vm.hideColumns"
+              class="list"
+              (cdkDropListDropped)="drop($event)"
+            >
+              <div class="item" *ngFor="let item of vm.hideColumns" cdkDrag>{{ item }}</div>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+      <!-- <pre>{{ vm | json }}</pre> -->
+    </mat-card>
+  </div>
+</ng-container>
+
+<ng-template #loading>
+  <app-spinner diameter="50" fullHeight="true"></app-spinner>
+</ng-template>

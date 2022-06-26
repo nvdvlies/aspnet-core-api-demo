@@ -21,8 +21,11 @@ export class CustomerListPageSettingsService {
     if (this._settings) {
       return this._settings;
     }
+    this._settings = new CustomerListPageSettings();
     var json = localStorage.getItem(this.key);
-    this._settings = json ? this.tryParse(json) : new CustomerListPageSettings();
+    if (json) {
+      Object.assign(this._settings, this.tryParse(json));
+    }
     return this._settings;
   }
 
@@ -31,9 +34,9 @@ export class CustomerListPageSettingsService {
     localStorage.setItem(this.key, JSON.stringify(this.settings));
   }
 
-  private tryParse(json: string): CustomerListPageSettings {
+  private tryParse(json: string): Partial<CustomerListPageSettings> {
     try {
-      return JSON.parse(json) as CustomerListPageSettings;
+      return JSON.parse(json) as Partial<CustomerListPageSettings>;
     } catch (error: any) {
       this.loggerService.logError('Failed to parse CustomerListPageSettings', undefined, error);
       localStorage.removeItem(this.key);

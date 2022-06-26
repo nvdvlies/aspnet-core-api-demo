@@ -10,7 +10,7 @@ import {
   ViewChildren
 } from '@angular/core';
 import { Location } from '@angular/common';
-import { BehaviorSubject, combineLatest, map, Observable, tap } from 'rxjs';
+import { combineLatest, map, Observable, tap } from 'rxjs';
 import { InvoiceTableDataSource } from '@invoices/pages/invoice-list/invoice-table-datasource';
 import {
   InvoiceTableDataContext,
@@ -20,6 +20,7 @@ import { InvoiceStatusEnum, SearchInvoiceDto } from '@api/api.generated.clients'
 import { TableFilterCriteria } from '@shared/base/table-data-base';
 import { Router } from '@angular/router';
 import { MatPaginator } from '@angular/material/paginator';
+import { InvoiceListPageSettingsService } from '@invoices/pages/invoice-list-page-settings/invoice-list-page-settings.service';
 
 interface ViewModel extends InvoiceTableDataContext {}
 
@@ -74,10 +75,12 @@ export class InvoiceListComponent implements OnInit, OnDestroy {
   constructor(
     private readonly location: Location,
     private readonly router: Router,
-    private readonly invoiceTableDataService: InvoiceTableDataService
+    private readonly invoiceTableDataService: InvoiceTableDataService,
+    private readonly invoiceListPageSettingsService: InvoiceListPageSettingsService
   ) {}
 
   public ngOnInit(): void {
+    this.displayedColumns = this.invoiceListPageSettingsService.settings.columns;
     this.dataSource = new InvoiceTableDataSource(this.invoiceTableDataService);
     this.spotlight();
   }

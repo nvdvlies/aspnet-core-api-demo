@@ -75,6 +75,12 @@
               ></tr>
             </table>
 
+            <ng-container *ngIf="!vm.isLoading && vm.items?.length === 0">
+              <div class="mt-5 w-full flex justify-center items-center">
+                <span class="text-gray-500 text-lg">No data found.</span>
+              </div>
+            </ng-container>
+
             <ng-container *ngIf="vm.isLoading">
               <div class="mt-2">
                 <app-spinner diameter="50"></app-spinner>

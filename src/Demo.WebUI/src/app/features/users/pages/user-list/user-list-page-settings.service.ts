@@ -21,8 +21,11 @@ export class UserListPageSettingsService {
     if (this._settings) {
       return this._settings;
     }
+    this._settings = new UserListPageSettings();
     var json = localStorage.getItem(this.key);
-    this._settings = json ? this.tryParse(json) : new UserListPageSettings();
+    if (json) {
+      Object.assign(this._settings, this.tryParse(json));
+    }
     return this._settings;
   }
 
@@ -31,9 +34,9 @@ export class UserListPageSettingsService {
     localStorage.setItem(this.key, JSON.stringify(this.settings));
   }
 
-  private tryParse(json: string): UserListPageSettings {
+  private tryParse(json: string): Partial<UserListPageSettings> {
     try {
-      return JSON.parse(json) as UserListPageSettings;
+      return JSON.parse(json) as Partial<UserListPageSettings>;
     } catch (error: any) {
       this.loggerService.logError('Failed to parse UserListPageSettings', undefined, error);
       localStorage.removeItem(this.key);
