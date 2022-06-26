@@ -2,13 +2,13 @@ import { Injectable } from '@angular/core';
 import { SortDirection } from '@angular/material/sort';
 import { LoggerService } from '@shared/services/logger.service';
 import { InvoiceSortColumn } from '../invoice-list/invoice-table-data.service';
-import { defaultColumns } from './invoice-list-page-settings.component';
+import { DEFAULT_COLUMNS } from './invoice-list-page-settings.component';
 
 export class InvoiceListPageSettings {
   public pageSize: number | undefined;
   public sortColumn: InvoiceSortColumn | undefined;
   public sortDirection: SortDirection | undefined;
-  public columns: string[] = defaultColumns;
+  public columns: string[] = DEFAULT_COLUMNS;
 }
 
 @Injectable()

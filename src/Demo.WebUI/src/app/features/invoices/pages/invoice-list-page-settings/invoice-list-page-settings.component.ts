@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { BehaviorSubject, combineLatest, debounceTime, map, Observable, tap } from 'rxjs';
 import { InvoiceListPageSettingsService } from './invoice-list-page-settings.service';
 
-const allColumns = [
+const ALL_COLUMNS = [
   'InvoiceNumber',
   'CustomerName',
   'InvoiceDate',
@@ -13,9 +13,9 @@ const allColumns = [
   'Status'
 ];
 
-const defaultColumns = ['InvoiceNumber', 'CustomerName', 'InvoiceDate'];
+const DEFAULT_COLUMNS = ['InvoiceNumber', 'CustomerName', 'InvoiceDate'];
 
-export { allColumns, defaultColumns };
+export { ALL_COLUMNS, DEFAULT_COLUMNS };
 
 class ViewModel {
   showColumns: string[] = [];
@@ -29,6 +29,9 @@ class ViewModel {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InvoicelistPageSettingsComponent implements OnInit {
+  public showListId = 'showList';
+  public hideListId = 'hideList';
+
   private readonly showColumns = new BehaviorSubject<string[]>([]);
   private readonly hideColumns = new BehaviorSubject<string[]>([]);
 
@@ -57,7 +60,7 @@ export class InvoicelistPageSettingsComponent implements OnInit {
   ngOnInit(): void {
     this.showColumns.next(this.invoiceListPageSettingsService.settings.columns ?? []);
     this.hideColumns.next(
-      allColumns.filter((item) => !(this.showColumns.value ?? []).includes(item))
+      ALL_COLUMNS.filter((item) => !(this.showColumns.value ?? []).includes(item))
     );
   }
 
@@ -66,12 +69,16 @@ export class InvoicelistPageSettingsComponent implements OnInit {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
       let sourceContainer =
-        event.container.id === 'showList' ? this.hideColumns.value : this.showColumns.value;
+        event.container.id === this.showListId ? this.hideColumns.value : this.showColumns.value;
       let targetContainer =
-        event.container.id === 'showList' ? this.showColumns.value : this.hideColumns.value;
+        event.container.id === this.showListId ? this.showColumns.value : this.hideColumns.value;
       transferArrayItem(sourceContainer, targetContainer, event.previousIndex, event.currentIndex);
-      this.showColumns.next(event.container.id === 'showList' ? targetContainer : sourceContainer);
-      this.hideColumns.next(event.container.id === 'showList' ? sourceContainer : targetContainer);
+      this.showColumns.next(
+        event.container.id === this.showListId ? targetContainer : sourceContainer
+      );
+      this.hideColumns.next(
+        event.container.id === this.showListId ? sourceContainer : targetContainer
+      );
     }
   }
 
