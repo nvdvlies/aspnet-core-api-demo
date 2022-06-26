@@ -25,7 +25,6 @@ namespace Demo.Infrastructure.Persistence.Configuration
                 .HasMaxLength(100)
                 .IsRequired();
 
-            builder.Property(p => p.Timestamp).IsRowVersion();
             builder.Property(p => p.CreatedOn).IsRequired();
             builder.Property(p => p.CreatedBy).IsRequired();
             builder.Property(p => p.LastModifiedBy);
@@ -33,6 +32,8 @@ namespace Demo.Infrastructure.Persistence.Configuration
             builder.Property(p => p.Deleted).HasDefaultValue(false);
             builder.Property(p => p.DeletedBy);
             builder.Property(p => p.DeletedOn);
+
+            builder.UseXminAsConcurrencyToken();
 
             builder.HasData(new Role { Id = AdministratorRoleId, Name = "Admin", ExternalId = "rol_N4KEnzIMUDaetcyr" },
                 new Role { Id = UserRoleId, Name = "User", ExternalId = "rol_OUaEQHOTuugOJHwe" });

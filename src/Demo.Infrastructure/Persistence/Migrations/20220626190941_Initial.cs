@@ -29,13 +29,13 @@ namespace Demo.Infrastructure.Persistence.Migrations
                 schema: "demo",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Settings = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Timestamp = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: true),
-                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", maxLength: 64, nullable: false),
-                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    LastModifiedBy = table.Column<Guid>(type: "uniqueidentifier", maxLength: 64, nullable: false),
-                    LastModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Settings = table.Column<string>(type: "text", nullable: true),
+                    xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uuid", maxLength: 64, nullable: false),
+                    CreatedOn = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    LastModifiedBy = table.Column<Guid>(type: "uuid", maxLength: 64, nullable: false),
+                    LastModifiedOn = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -47,12 +47,12 @@ namespace Demo.Infrastructure.Persistence.Migrations
                 schema: "demo",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    EntityName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    EntityId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ModifiedBy = table.Column<Guid>(type: "uniqueidentifier", maxLength: 64, nullable: false),
-                    ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Timestamp = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: true)
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    EntityName = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    EntityId = table.Column<Guid>(type: "uuid", nullable: false),
+                    ModifiedBy = table.Column<Guid>(type: "uuid", maxLength: 64, nullable: false),
+                    ModifiedOn = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -64,18 +64,18 @@ namespace Demo.Infrastructure.Persistence.Migrations
                 schema: "demo",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Code = table.Column<int>(type: "int", maxLength: 10, nullable: false, defaultValueSql: "NEXT VALUE FOR demo.CustomerCode"),
-                    Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    InvoiceEmailAddress = table.Column<string>(type: "nvarchar(320)", maxLength: 320, nullable: true),
-                    Timestamp = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: true),
-                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", maxLength: 64, nullable: false),
-                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    LastModifiedBy = table.Column<Guid>(type: "uniqueidentifier", maxLength: 64, nullable: false),
-                    LastModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Deleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
-                    DeletedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    DeletedOn = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Code = table.Column<int>(type: "integer", maxLength: 10, nullable: false, defaultValueSql: "nextval('demo.\"CustomerCode\"')"),
+                    Name = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
+                    InvoiceEmailAddress = table.Column<string>(type: "character varying(320)", maxLength: 320, nullable: true),
+                    xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uuid", maxLength: 64, nullable: false),
+                    CreatedOn = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    LastModifiedBy = table.Column<Guid>(type: "uuid", maxLength: 64, nullable: false),
+                    LastModifiedOn = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    Deleted = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
+                    DeletedBy = table.Column<Guid>(type: "uuid", nullable: false),
+                    DeletedOn = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -87,13 +87,13 @@ namespace Demo.Infrastructure.Persistence.Migrations
                 schema: "demo",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Settings = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Timestamp = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: true),
-                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    LastModifiedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    LastModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Settings = table.Column<string>(type: "text", nullable: true),
+                    xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),
+                    CreatedOn = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    LastModifiedBy = table.Column<Guid>(type: "uuid", nullable: false),
+                    LastModifiedOn = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -105,13 +105,13 @@ namespace Demo.Infrastructure.Persistence.Migrations
                 schema: "demo",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Type = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
-                    Event = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    LockedUntil = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    LockToken = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    IsPublished = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
-                    Timestamp = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: true)
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Type = table.Column<string>(type: "character varying(250)", maxLength: 250, nullable: false),
+                    Event = table.Column<string>(type: "text", nullable: true),
+                    LockedUntil = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    LockToken = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
+                    IsPublished = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
+                    xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -123,13 +123,13 @@ namespace Demo.Infrastructure.Persistence.Migrations
                 schema: "demo",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Type = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
-                    Message = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    LockedUntil = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    LockToken = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    IsSent = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
-                    Timestamp = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: true)
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Type = table.Column<string>(type: "character varying(250)", maxLength: 250, nullable: false),
+                    Message = table.Column<string>(type: "text", nullable: true),
+                    LockedUntil = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    LockToken = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
+                    IsSent = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
+                    xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -141,17 +141,17 @@ namespace Demo.Infrastructure.Persistence.Migrations
                 schema: "demo",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    ExternalId = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Timestamp = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: true),
-                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    LastModifiedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    LastModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Deleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
-                    DeletedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    DeletedOn = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    ExternalId = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),
+                    CreatedOn = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    LastModifiedBy = table.Column<Guid>(type: "uuid", nullable: false),
+                    LastModifiedOn = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    Deleted = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
+                    DeletedBy = table.Column<Guid>(type: "uuid", nullable: false),
+                    DeletedOn = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -163,25 +163,25 @@ namespace Demo.Infrastructure.Persistence.Migrations
                 schema: "demo",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ExternalId = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    Fullname = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
-                    GivenName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    FamilyName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    MiddleName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    Email = table.Column<string>(type: "nvarchar(320)", maxLength: 320, nullable: false),
-                    Gender = table.Column<int>(type: "int", nullable: true),
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    ExternalId = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
+                    Fullname = table.Column<string>(type: "character varying(250)", maxLength: 250, nullable: false),
+                    GivenName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    FamilyName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    MiddleName = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
+                    Email = table.Column<string>(type: "character varying(320)", maxLength: 320, nullable: false),
+                    Gender = table.Column<int>(type: "integer", nullable: true),
                     BirthDate = table.Column<DateTime>(type: "date", nullable: true),
-                    ZoneInfo = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    Locale = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: true),
-                    Timestamp = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: true),
-                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    LastModifiedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    LastModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Deleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
-                    DeletedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    DeletedOn = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    ZoneInfo = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
+                    Locale = table.Column<string>(type: "character varying(10)", maxLength: 10, nullable: true),
+                    xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),
+                    CreatedOn = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    LastModifiedBy = table.Column<Guid>(type: "uuid", nullable: false),
+                    LastModifiedOn = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    Deleted = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
+                    DeletedBy = table.Column<Guid>(type: "uuid", nullable: false),
+                    DeletedOn = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -193,15 +193,15 @@ namespace Demo.Infrastructure.Persistence.Migrations
                 schema: "demo",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    PropertyName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Status = table.Column<int>(type: "int", nullable: false),
-                    Type = table.Column<int>(type: "int", nullable: false),
-                    CurrentValueAsString = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PreviousValueAsString = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ParentAuditlogItemId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    AuditlogId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    Timestamp = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: true)
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    PropertyName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    Status = table.Column<int>(type: "integer", nullable: false),
+                    Type = table.Column<int>(type: "integer", nullable: false),
+                    CurrentValueAsString = table.Column<string>(type: "text", nullable: true),
+                    PreviousValueAsString = table.Column<string>(type: "text", nullable: true),
+                    ParentAuditlogItemId = table.Column<Guid>(type: "uuid", nullable: true),
+                    AuditlogId = table.Column<Guid>(type: "uuid", nullable: true),
+                    xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -227,23 +227,23 @@ namespace Demo.Infrastructure.Persistence.Migrations
                 schema: "demo",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    InvoiceNumber = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false, defaultValueSql: "CONCAT(YEAR(GETUTCDATE()), NEXT VALUE FOR demo.InvoiceNumber)"),
-                    CustomerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    InvoiceNumber = table.Column<string>(type: "character varying(10)", maxLength: 10, nullable: false, defaultValueSql: "CONCAT(date_part('year', current_date), nextval('demo.\"InvoiceNumber\"'))"),
+                    CustomerId = table.Column<Guid>(type: "uuid", nullable: false),
                     InvoiceDate = table.Column<DateTime>(type: "date", nullable: false),
-                    PaymentTerm = table.Column<int>(type: "int", nullable: false),
-                    OrderReference = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    Status = table.Column<int>(type: "int", nullable: false),
-                    PdfIsSynced = table.Column<bool>(type: "bit", nullable: false),
-                    PdfChecksum = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Timestamp = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: true),
-                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", maxLength: 64, nullable: false),
-                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    LastModifiedBy = table.Column<Guid>(type: "uniqueidentifier", maxLength: 64, nullable: false),
-                    LastModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Deleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
-                    DeletedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    DeletedOn = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    PaymentTerm = table.Column<int>(type: "integer", nullable: false),
+                    OrderReference = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
+                    Status = table.Column<int>(type: "integer", nullable: false),
+                    PdfIsSynced = table.Column<bool>(type: "boolean", nullable: false),
+                    PdfChecksum = table.Column<string>(type: "varchar", nullable: true),
+                    xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uuid", maxLength: 64, nullable: false),
+                    CreatedOn = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    LastModifiedBy = table.Column<Guid>(type: "uuid", maxLength: 64, nullable: false),
+                    LastModifiedOn = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    Deleted = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
+                    DeletedBy = table.Column<Guid>(type: "uuid", nullable: false),
+                    DeletedOn = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -262,13 +262,13 @@ namespace Demo.Infrastructure.Persistence.Migrations
                 schema: "demo",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Preferences = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Timestamp = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: true),
-                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    LastModifiedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    LastModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Preferences = table.Column<string>(type: "text", nullable: true),
+                    xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),
+                    CreatedOn = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    LastModifiedBy = table.Column<Guid>(type: "uuid", nullable: false),
+                    LastModifiedOn = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -287,8 +287,8 @@ namespace Demo.Infrastructure.Persistence.Migrations
                 schema: "demo",
                 columns: table => new
                 {
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    RoleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
+                    RoleId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -314,13 +314,13 @@ namespace Demo.Infrastructure.Persistence.Migrations
                 schema: "demo",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    LineNumber = table.Column<int>(type: "int", nullable: false),
-                    Quantity = table.Column<int>(type: "int", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    SellingPrice = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
-                    InvoiceId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Timestamp = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: true)
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    LineNumber = table.Column<int>(type: "integer", nullable: false),
+                    Quantity = table.Column<int>(type: "integer", nullable: false),
+                    Description = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
+                    SellingPrice = table.Column<decimal>(type: "numeric(18,2)", precision: 18, scale: 2, nullable: false),
+                    InvoiceId = table.Column<Guid>(type: "uuid", nullable: false),
+                    xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -338,13 +338,11 @@ namespace Demo.Infrastructure.Persistence.Migrations
                 schema: "demo",
                 table: "Role",
                 columns: new[] { "Id", "CreatedBy", "CreatedOn", "DeletedBy", "DeletedOn", "ExternalId", "LastModifiedBy", "LastModifiedOn", "Name" },
-                values: new object[] { new Guid("7c20005d-d5f8-4079-af26-434d69b43c82"), new Guid("00000000-0000-0000-0000-000000000000"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("00000000-0000-0000-0000-000000000000"), null, "rol_N4KEnzIMUDaetcyr", new Guid("00000000-0000-0000-0000-000000000000"), null, "Admin" });
-
-            migrationBuilder.InsertData(
-                schema: "demo",
-                table: "Role",
-                columns: new[] { "Id", "CreatedBy", "CreatedOn", "DeletedBy", "DeletedOn", "ExternalId", "LastModifiedBy", "LastModifiedOn", "Name" },
-                values: new object[] { new Guid("d8a81cd5-d828-47ac-9f72-2e660f43a176"), new Guid("00000000-0000-0000-0000-000000000000"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("00000000-0000-0000-0000-000000000000"), null, "rol_OUaEQHOTuugOJHwe", new Guid("00000000-0000-0000-0000-000000000000"), null, "User" });
+                values: new object[,]
+                {
+                    { new Guid("7c20005d-d5f8-4079-af26-434d69b43c82"), new Guid("00000000-0000-0000-0000-000000000000"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("00000000-0000-0000-0000-000000000000"), null, "rol_N4KEnzIMUDaetcyr", new Guid("00000000-0000-0000-0000-000000000000"), null, "Admin" },
+                    { new Guid("d8a81cd5-d828-47ac-9f72-2e660f43a176"), new Guid("00000000-0000-0000-0000-000000000000"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("00000000-0000-0000-0000-000000000000"), null, "rol_OUaEQHOTuugOJHwe", new Guid("00000000-0000-0000-0000-000000000000"), null, "User" }
+                });
 
             migrationBuilder.InsertData(
                 schema: "demo",

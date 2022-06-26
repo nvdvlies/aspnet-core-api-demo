@@ -116,7 +116,7 @@ export class InvoiceDomainEntityService extends DomainEntityBase<InvoiceDto> imp
       createdOn: new FormControl(super.readonlyFormState),
       lastModifiedBy: new FormControl(super.readonlyFormState),
       lastModifiedOn: new FormControl(super.readonlyFormState),
-      timestamp: new FormControl(super.readonlyFormState)
+      xmin: new FormControl(super.readonlyFormState)
     };
     return new FormGroup(controls) as InvoiceFormGroup;
   }
@@ -128,7 +128,7 @@ export class InvoiceDomainEntityService extends DomainEntityBase<InvoiceDto> imp
       quantity: new FormControl(null, [Validators.required], []),
       sellingPrice: new FormControl(null, [Validators.required], []),
       description: new FormControl(null, [Validators.required], []),
-      timestamp: new FormControl(super.readonlyFormState)
+      xmin: new FormControl(super.readonlyFormState)
     };
     return new FormGroup(controls) as InvoiceLineFormGroup;
   }

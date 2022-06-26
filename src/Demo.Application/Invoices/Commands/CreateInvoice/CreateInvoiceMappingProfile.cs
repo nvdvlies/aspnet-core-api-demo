@@ -13,7 +13,7 @@ namespace Demo.Application.Invoices.Commands.CreateInvoice
                 .ForMember(x => x.InvoiceId, opt => opt.Ignore())
                 .ForMember(x => x.Invoice, opt => opt.Ignore())
                 .ForMember(x => x.Id, opt => opt.Ignore())
-                .ForMember(x => x.Timestamp, opt => opt.Ignore());
+                .ForMember(x => x.xmin, opt => opt.Ignore());
 
             CreateMap<CreateInvoiceCommand, Invoice>()
                 .ForMember(x => x.InvoiceNumber, opt => opt.Ignore())
@@ -29,7 +29,7 @@ namespace Demo.Application.Invoices.Commands.CreateInvoice
                 .ForMember(x => x.LastModifiedBy, opt => opt.Ignore())
                 .ForMember(x => x.LastModifiedOn, opt => opt.Ignore())
                 .ForMember(x => x.Id, opt => opt.Ignore())
-                .ForMember(x => x.Timestamp, opt => opt.Ignore());
+                .ForMember(x => x.xmin, opt => opt.Ignore());
         }
     }
 }

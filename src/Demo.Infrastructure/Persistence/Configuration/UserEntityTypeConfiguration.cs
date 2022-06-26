@@ -51,7 +51,6 @@ namespace Demo.Infrastructure.Persistence.Configuration
             builder.Property(x => x.Locale)
                 .HasMaxLength(10);
 
-            builder.Property(p => p.Timestamp).IsRowVersion();
             builder.Property(p => p.CreatedOn).IsRequired();
             builder.Property(p => p.CreatedBy).IsRequired();
             builder.Property(p => p.LastModifiedBy);
@@ -59,6 +58,8 @@ namespace Demo.Infrastructure.Persistence.Configuration
             builder.Property(p => p.Deleted).HasDefaultValue(false);
             builder.Property(p => p.DeletedBy);
             builder.Property(p => p.DeletedOn);
+
+            builder.UseXminAsConcurrencyToken();
 
             builder.HasData(new User
             {

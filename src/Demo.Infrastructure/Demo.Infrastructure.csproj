@@ -6,31 +6,31 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Auth0.ManagementApi" Version="7.15.0"/>
-        <PackageReference Include="MassTransit" Version="7.3.1"/>
-        <PackageReference Include="MassTransit.AspNetCore" Version="7.3.1"/>
-        <PackageReference Include="MassTransit.RabbitMQ" Version="7.3.1"/>
-        <PackageReference Include="MassTransit.SignalR" Version="7.3.1"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.5"/>
+        <PackageReference Include="Auth0.ManagementApi" Version="7.15.0" />
+        <PackageReference Include="MassTransit" Version="7.3.1" />
+        <PackageReference Include="MassTransit.AspNetCore" Version="7.3.1" />
+        <PackageReference Include="MassTransit.RabbitMQ" Version="7.3.1" />
+        <PackageReference Include="MassTransit.SignalR" Version="7.3.1" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.5" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.5">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.5"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.5">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="5.0.1"/>
-        <PackageReference Include="Serilog.Extensions.Logging" Version="3.1.0"/>
+        <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="5.0.1" />
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="5.0.5.1" />
+        <PackageReference Include="Serilog.Extensions.Logging" Version="3.1.0" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Demo.Application\Demo.Application.csproj"/>
-        <ProjectReference Include="..\Demo.Common\Demo.Common.csproj"/>
-        <ProjectReference Include="..\Demo.Domain\Demo.Domain.csproj"/>
-        <ProjectReference Include="..\Demo.Events\Demo.Events.csproj"/>
-        <ProjectReference Include="..\Demo.Messages\Demo.Messages.csproj"/>
+        <ProjectReference Include="..\Demo.Application\Demo.Application.csproj" />
+        <ProjectReference Include="..\Demo.Common\Demo.Common.csproj" />
+        <ProjectReference Include="..\Demo.Domain\Demo.Domain.csproj" />
+        <ProjectReference Include="..\Demo.Events\Demo.Events.csproj" />
+        <ProjectReference Include="..\Demo.Messages\Demo.Messages.csproj" />
     </ItemGroup>
 
     <ItemGroup>
@@ -46,8 +46,8 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Persistence\Migrations"/>
-        <Folder Include="Persistence\Migrations\"/>
+        <Folder Include="Persistence\Migrations" />
+        <Folder Include="Persistence\Migrations\" />
     </ItemGroup>
 
 </Project>

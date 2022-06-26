@@ -2,6 +2,6 @@
 {
     public class ConnectionStrings
     {
-        public string SqlDatabase { get; set; }
+        public string PostgresDatabase { get; set; }
     }
 }

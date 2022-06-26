@@ -120,7 +120,7 @@ export class UserDomainEntityService extends DomainEntityBase<UserDto> implement
       createdOn: new FormControl(super.readonlyFormState),
       lastModifiedBy: new FormControl(super.readonlyFormState),
       lastModifiedOn: new FormControl(super.readonlyFormState),
-      timestamp: new FormControl(super.readonlyFormState)
+      xmin: new FormControl(super.readonlyFormState)
     };
     return new FormGroup(controls) as UserFormGroup;
   }

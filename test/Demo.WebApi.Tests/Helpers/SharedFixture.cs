@@ -15,7 +15,7 @@ namespace Demo.WebApi.Tests.Helpers
     {
         public readonly Checkpoint Checkpoint = new()
         {
-            SchemasToInclude = new[] { "demo" }, TablesToIgnore = new[] { "Role" }, WithReseed = true
+            SchemasToInclude = new[] { "demo" }, TablesToIgnore = new[] { "Role" }, WithReseed = true, DbAdapter = DbAdapter.Postgres
         };
 
         public readonly HttpClient Client;

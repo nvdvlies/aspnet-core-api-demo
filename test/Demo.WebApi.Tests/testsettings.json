@@ -1,5 +1,5 @@
 {
   "ConnectionStrings": {
-    "SqlDatabase": "Data Source=localhost;initial catalog=Demo_IntegrationTest;Integrated Security=True; MultipleActiveResultSets=True"
+    "PostgresDatabase": "Server=localhost;Port=5502;Database=Demo_IntegrationTest;User Id=postgres;Password=postgres;"
   }
 }

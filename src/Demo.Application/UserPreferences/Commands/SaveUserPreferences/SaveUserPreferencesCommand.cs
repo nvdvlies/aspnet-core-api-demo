@@ -6,7 +6,8 @@ namespace Demo.Application.UserPreferences.Commands.SaveUserPreferences
 {
     public class SaveUserPreferencesCommand : ICommand, IRequest<Unit>
     {
-        public byte[] Timestamp { get; set; }
+        // ReSharper disable once InconsistentNaming
+        public uint xmin { get; set; }
         public SaveUserPreferencesPreferencesDto Preferences { get; set; }
     }
 }

@@ -5,6 +5,7 @@ namespace Demo.Domain.Shared.Interfaces
     public interface IEntity
     {
         public Guid Id { get; set; }
-        public byte[] Timestamp { get; set; }
+        // ReSharper disable once InconsistentNaming
+        public uint xmin { get; set; }
     }
 }

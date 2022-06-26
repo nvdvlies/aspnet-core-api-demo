@@ -24,8 +24,8 @@ namespace Demo.Infrastructure.Persistence.Configuration
                 .IsConcurrencyToken();
             builder.Property(x => x.IsSent)
                 .HasDefaultValue(false);
-            builder.Property(x => x.Timestamp)
-                .IsRowVersion();
+
+            builder.UseXminAsConcurrencyToken();
         }
     }
 }

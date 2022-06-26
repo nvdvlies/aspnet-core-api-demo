@@ -63,7 +63,7 @@ Authorization: Bearer {{access_token}}
           "roleId": "7C20005D-D5F8-4079-AF26-434D69B43C82"
       }
     ],
-    "timestamp": "AAAAAAAAJxM="
+    "xmin": 0
 }
 
 ###

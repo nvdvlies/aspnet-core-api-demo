@@ -6,7 +6,8 @@ namespace Demo.Application.ApplicationSettings.Commands.SaveApplicationSettings
 {
     public class SaveApplicationSettingsCommand : ICommand, IRequest<Unit>
     {
-        public byte[] Timestamp { get; set; }
+        // ReSharper disable once InconsistentNaming
+        public uint xmin { get; set; }
         public SaveApplicationSettingsSettingsDto Settings { get; set; }
     }
 }

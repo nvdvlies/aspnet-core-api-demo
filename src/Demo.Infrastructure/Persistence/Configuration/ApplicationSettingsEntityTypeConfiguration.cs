@@ -18,11 +18,12 @@ namespace Demo.Infrastructure.Persistence.Configuration
                     x => JsonSerializer.Deserialize<ApplicationSettingsSettings>(x, new JsonSerializerOptions())
                 );
 
-            builder.Property(x => x.Timestamp).IsRowVersion();
             builder.Property(x => x.CreatedOn).IsRequired();
             builder.Property(x => x.CreatedBy).HasMaxLength(64).IsRequired();
             builder.Property(x => x.LastModifiedBy).HasMaxLength(64);
             builder.Property(x => x.LastModifiedOn);
+
+            builder.UseXminAsConcurrencyToken();
         }
     }
 }

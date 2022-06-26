@@ -9,7 +9,8 @@ namespace Demo.Application.Invoices.Commands.UpdateInvoice
     public class UpdateInvoiceCommand : ICommand, IRequest<Unit>
     {
         internal Guid Id { get; set; }
-        public byte[] Timestamp { get; set; }
+        // ReSharper disable once InconsistentNaming
+        public uint xmin { get; set; }
         public Guid CustomerId { get; set; }
         public DateTime InvoiceDate { get; set; }
         public int PaymentTerm { get; set; }

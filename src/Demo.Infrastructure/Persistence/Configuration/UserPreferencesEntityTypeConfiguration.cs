@@ -22,11 +22,12 @@ namespace Demo.Infrastructure.Persistence.Configuration
                     x => JsonSerializer.Deserialize<UserPreferencesPreferences>(x, new JsonSerializerOptions())
                 );
 
-            builder.Property(p => p.Timestamp).IsRowVersion();
             builder.Property(p => p.CreatedOn).IsRequired();
             builder.Property(p => p.CreatedBy).IsRequired();
             builder.Property(p => p.LastModifiedBy);
             builder.Property(p => p.LastModifiedOn);
+
+            builder.UseXminAsConcurrencyToken();
         }
     }
 }

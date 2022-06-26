@@ -54,7 +54,7 @@ namespace Demo.Application.%CONTROLLERNAME%.Commands.%COMMANDNAME%
                 .ForMember(x => x.LastModifiedBy, opt => opt.Ignore())
                 .ForMember(x => x.LastModifiedOn, opt => opt.Ignore())
                 .ForMember(x => x.Id, opt => opt.Ignore())
-                .ForMember(x => x.Timestamp, opt => opt.Ignore());
+                .ForMember(x => x.xmin, opt => opt.Ignore());
         }
     }
 }

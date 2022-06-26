@@ -35,11 +35,11 @@ Authorization: Bearer {{access_token}}
         "enabledForAll": true,
         "enabledForUsers": [],
         "id": "bed3b6fa-6a09-4389-a9ab-73a5c698d111",
-        "timestamp": ""
+        "xmin": 0,
       }
     ]
   },
-  "timestamp": "AAAAAAAAJxE="
+  "xmin": 0
 }
 
 ###

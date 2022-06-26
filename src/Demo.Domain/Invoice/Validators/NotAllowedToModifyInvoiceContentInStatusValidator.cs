@@ -39,7 +39,7 @@ namespace Demo.Domain.Invoice.Validators
                         options => options
                             .Excluding(x => x.Invoice)
                             //.Excluding(x => x.Item)
-                            .Excluding(x => x.Timestamp)
+                            .Excluding(x => x.xmin)
                     );
                 }
                 catch (Exception ex)

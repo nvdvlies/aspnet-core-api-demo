@@ -3250,7 +3250,7 @@ export interface IGetApplicationSettingsQueryResult {
 }
 
 export class EntityDto implements IEntityDto {
-    timestamp?: string | undefined;
+    xmin!: number;
     id!: string;
 
     constructor(data?: IEntityDto) {
@@ -3264,7 +3264,7 @@ export class EntityDto implements IEntityDto {
 
     init(_data?: any) {
         if (_data) {
-            this.timestamp = _data["timestamp"];
+            this.xmin = _data["xmin"];
             this.id = _data["id"];
         }
     }
@@ -3278,7 +3278,7 @@ export class EntityDto implements IEntityDto {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["timestamp"] = this.timestamp;
+        data["xmin"] = this.xmin;
         data["id"] = this.id;
         return data;
     }
@@ -3292,7 +3292,7 @@ export class EntityDto implements IEntityDto {
 }
 
 export interface IEntityDto {
-    timestamp?: string | undefined;
+    xmin: number;
     id: string;
 }
 
@@ -3596,7 +3596,7 @@ export interface IValidationProblemDetails extends IProblemDetails {
 }
 
 export class SaveApplicationSettingsCommand implements ISaveApplicationSettingsCommand {
-    timestamp?: string | undefined;
+    xmin!: number;
     settings?: SaveApplicationSettingsSettingsDto | undefined;
 
     constructor(data?: ISaveApplicationSettingsCommand) {
@@ -3610,7 +3610,7 @@ export class SaveApplicationSettingsCommand implements ISaveApplicationSettingsC
 
     init(_data?: any) {
         if (_data) {
-            this.timestamp = _data["timestamp"];
+            this.xmin = _data["xmin"];
             this.settings = _data["settings"] ? SaveApplicationSettingsSettingsDto.fromJS(_data["settings"]) : <any>undefined;
         }
     }
@@ -3624,7 +3624,7 @@ export class SaveApplicationSettingsCommand implements ISaveApplicationSettingsC
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["timestamp"] = this.timestamp;
+        data["xmin"] = this.xmin;
         data["settings"] = this.settings ? this.settings.toJSON() : <any>undefined;
         return data;
     }
@@ -3638,7 +3638,7 @@ export class SaveApplicationSettingsCommand implements ISaveApplicationSettingsC
 }
 
 export interface ISaveApplicationSettingsCommand {
-    timestamp?: string | undefined;
+    xmin: number;
     settings?: SaveApplicationSettingsSettingsDto | undefined;
 }
 
@@ -4549,7 +4549,7 @@ export interface ICreateCustomerCommand {
 }
 
 export class UpdateCustomerCommand implements IUpdateCustomerCommand {
-    timestamp?: string | undefined;
+    xmin!: number;
     name?: string | undefined;
 
     constructor(data?: IUpdateCustomerCommand) {
@@ -4563,7 +4563,7 @@ export class UpdateCustomerCommand implements IUpdateCustomerCommand {
 
     init(_data?: any) {
         if (_data) {
-            this.timestamp = _data["timestamp"];
+            this.xmin = _data["xmin"];
             this.name = _data["name"];
         }
     }
@@ -4577,7 +4577,7 @@ export class UpdateCustomerCommand implements IUpdateCustomerCommand {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["timestamp"] = this.timestamp;
+        data["xmin"] = this.xmin;
         data["name"] = this.name;
         return data;
     }
@@ -4591,7 +4591,7 @@ export class UpdateCustomerCommand implements IUpdateCustomerCommand {
 }
 
 export interface IUpdateCustomerCommand {
-    timestamp?: string | undefined;
+    xmin: number;
     name?: string | undefined;
 }
 
@@ -5020,7 +5020,7 @@ export interface IGetFeatureFlagSettingsQuery {
 }
 
 export class SaveFeatureFlagSettingsCommand implements ISaveFeatureFlagSettingsCommand {
-    timestamp?: string | undefined;
+    xmin!: number;
     settings?: SaveFeatureFlagSettingsCommandSettingsDto | undefined;
 
     constructor(data?: ISaveFeatureFlagSettingsCommand) {
@@ -5034,7 +5034,7 @@ export class SaveFeatureFlagSettingsCommand implements ISaveFeatureFlagSettingsC
 
     init(_data?: any) {
         if (_data) {
-            this.timestamp = _data["timestamp"];
+            this.xmin = _data["xmin"];
             this.settings = _data["settings"] ? SaveFeatureFlagSettingsCommandSettingsDto.fromJS(_data["settings"]) : <any>undefined;
         }
     }
@@ -5048,7 +5048,7 @@ export class SaveFeatureFlagSettingsCommand implements ISaveFeatureFlagSettingsC
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["timestamp"] = this.timestamp;
+        data["xmin"] = this.xmin;
         data["settings"] = this.settings ? this.settings.toJSON() : <any>undefined;
         return data;
     }
@@ -5062,7 +5062,7 @@ export class SaveFeatureFlagSettingsCommand implements ISaveFeatureFlagSettingsC
 }
 
 export interface ISaveFeatureFlagSettingsCommand {
-    timestamp?: string | undefined;
+    xmin: number;
     settings?: SaveFeatureFlagSettingsCommandSettingsDto | undefined;
 }
 
@@ -5693,7 +5693,7 @@ export interface ICreateInvoiceCommandInvoiceLine {
 }
 
 export class UpdateInvoiceCommand implements IUpdateInvoiceCommand {
-    timestamp?: string | undefined;
+    xmin!: number;
     customerId!: string;
     invoiceDate!: Date;
     paymentTerm!: number;
@@ -5711,7 +5711,7 @@ export class UpdateInvoiceCommand implements IUpdateInvoiceCommand {
 
     init(_data?: any) {
         if (_data) {
-            this.timestamp = _data["timestamp"];
+            this.xmin = _data["xmin"];
             this.customerId = _data["customerId"];
             this.invoiceDate = _data["invoiceDate"] ? new Date(_data["invoiceDate"].toString()) : <any>undefined;
             this.paymentTerm = _data["paymentTerm"];
@@ -5733,7 +5733,7 @@ export class UpdateInvoiceCommand implements IUpdateInvoiceCommand {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["timestamp"] = this.timestamp;
+        data["xmin"] = this.xmin;
         data["customerId"] = this.customerId;
         data["invoiceDate"] = this.invoiceDate ? this.invoiceDate.toISOString() : <any>undefined;
         data["paymentTerm"] = this.paymentTerm;
@@ -5755,7 +5755,7 @@ export class UpdateInvoiceCommand implements IUpdateInvoiceCommand {
 }
 
 export interface IUpdateInvoiceCommand {
-    timestamp?: string | undefined;
+    xmin: number;
     customerId: string;
     invoiceDate: Date;
     paymentTerm: number;
@@ -7036,7 +7036,7 @@ export interface IGetUserPreferencesQuery {
 }
 
 export class SaveUserPreferencesCommand implements ISaveUserPreferencesCommand {
-    timestamp?: string | undefined;
+    xmin!: number;
     preferences?: SaveUserPreferencesPreferencesDto | undefined;
 
     constructor(data?: ISaveUserPreferencesCommand) {
@@ -7050,7 +7050,7 @@ export class SaveUserPreferencesCommand implements ISaveUserPreferencesCommand {
 
     init(_data?: any) {
         if (_data) {
-            this.timestamp = _data["timestamp"];
+            this.xmin = _data["xmin"];
             this.preferences = _data["preferences"] ? SaveUserPreferencesPreferencesDto.fromJS(_data["preferences"]) : <any>undefined;
         }
     }
@@ -7064,7 +7064,7 @@ export class SaveUserPreferencesCommand implements ISaveUserPreferencesCommand {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["timestamp"] = this.timestamp;
+        data["xmin"] = this.xmin;
         data["preferences"] = this.preferences ? this.preferences.toJSON() : <any>undefined;
         return data;
     }
@@ -7078,7 +7078,7 @@ export class SaveUserPreferencesCommand implements ISaveUserPreferencesCommand {
 }
 
 export interface ISaveUserPreferencesCommand {
-    timestamp?: string | undefined;
+    xmin: number;
     preferences?: SaveUserPreferencesPreferencesDto | undefined;
 }
 

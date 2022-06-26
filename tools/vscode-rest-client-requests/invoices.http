@@ -81,7 +81,7 @@ Authorization: Bearer {{access_token}}
   }
   ],
   "id": "c2e085af-7218-4b4f-7caa-08d90f2dd32a",
-  "timestamp": "AAAAAAABX5I="
+  "xmin": 0
 }
 
 ###

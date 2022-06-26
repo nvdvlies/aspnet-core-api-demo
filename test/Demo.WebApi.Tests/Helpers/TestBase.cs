@@ -62,7 +62,7 @@ namespace Demo.WebApi.Tests.Helpers
         {
             using var scope = ServiceProvider.CreateScope();
             var environmentSettings = scope.ServiceProvider.GetRequiredService<EnvironmentSettings>();
-            await _fixture.Checkpoint.Reset(environmentSettings.ConnectionStrings.SqlDatabase);
+            await _fixture.Checkpoint.Reset(environmentSettings.ConnectionStrings.PostgresDatabase);
         }
 
         protected async Task SetTestUserToUnauthenticated()

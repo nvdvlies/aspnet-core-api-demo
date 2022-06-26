@@ -9,8 +9,8 @@ namespace Demo.Infrastructure.Persistence
         {
             var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
             var connectionString =
-                "Data Source=localhost;initial catalog=Demo;Integrated Security=True; MultipleActiveResultSets=True";
-            optionsBuilder.UseSqlServer(connectionString, b => b.MigrationsAssembly("Demo.Infrastructure"));
+                "Server=localhost;Port=5502;Database=Demo_Migrations;User Id=postgres;Password=postgres;";
+            optionsBuilder.UseNpgsql(connectionString, b => b.MigrationsAssembly("Demo.Infrastructure"));
 
             return new ApplicationDbContext(optionsBuilder.Options);
         }

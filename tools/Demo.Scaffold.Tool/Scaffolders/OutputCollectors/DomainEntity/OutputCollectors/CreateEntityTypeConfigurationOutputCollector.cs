@@ -39,12 +39,13 @@ namespace Demo.Infrastructure.Persistence.Configuration
             builder.ToTable(nameof(%ENTITY%))
                 .HasKey(x => x.Id);
 
-            builder.Property(p => p.Timestamp).IsRowVersion();
             builder.Property(p => p.CreatedOn).IsRequired();
             builder.Property(p => p.CreatedBy).IsRequired();
             builder.Property(p => p.LastModifiedBy);
             builder.Property(p => p.LastModifiedOn);
             %SOFT_DELETE_PROPERTIES%
+
+            builder.UseXminAsConcurrencyToken();
         }
     }
 }

@@ -20,7 +20,7 @@ namespace Demo.Infrastructure.Persistence.Configuration
             builder.Property(x => x.InvoiceNumber)
                 .HasMaxLength(10)
                 .HasDefaultValueSql(
-                    $"CONCAT(YEAR(GETUTCDATE()), NEXT VALUE FOR {Constants.SchemaName}.{Sequences.InvoiceNumber})")
+                    $"CONCAT(date_part('year', current_date), nextval('{Constants.SchemaName}.\"{Sequences.InvoiceNumber}\"'))")
                 .IsRequired();
 
             builder.Property(x => x.CustomerId)
@@ -42,7 +42,7 @@ namespace Demo.Infrastructure.Persistence.Configuration
             builder.Property(t => t.PdfIsSynced);
 
             builder.Property(t => t.PdfChecksum)
-                .HasColumnType("nvarchar(max)");
+                .HasColumnType("varchar");
 
             builder.HasOne(x => x.Customer)
                 .WithMany(x => x.Invoices)
@@ -52,7 +52,6 @@ namespace Demo.Infrastructure.Persistence.Configuration
                 .WithOne(x => x.Invoice)
                 .HasForeignKey(x => x.InvoiceId);
 
-            builder.Property(x => x.Timestamp).IsRowVersion();
             builder.Property(x => x.CreatedOn).IsRequired();
             builder.Property(x => x.CreatedBy).HasMaxLength(64).IsRequired();
             builder.Property(x => x.LastModifiedBy).HasMaxLength(64);
@@ -60,6 +59,8 @@ namespace Demo.Infrastructure.Persistence.Configuration
             builder.Property(x => x.Deleted).HasDefaultValue(false);
             builder.Property(x => x.DeletedBy);
             builder.Property(x => x.DeletedOn);
+
+            builder.UseXminAsConcurrencyToken();
         }
     }
 }

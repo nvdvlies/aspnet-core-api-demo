@@ -36,8 +36,7 @@ namespace Demo.Infrastructure.Persistence.Configuration
             //    .HasForeignKey(x => x.ItemId)
             //    .IsRequired();
 
-            builder.Property(x => x.Timestamp)
-                .IsRowVersion();
+            builder.UseXminAsConcurrencyToken();
         }
     }
 }

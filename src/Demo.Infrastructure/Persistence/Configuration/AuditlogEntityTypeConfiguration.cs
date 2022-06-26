@@ -28,12 +28,11 @@ namespace Demo.Infrastructure.Persistence.Configuration
             builder.Property(t => t.ModifiedOn)
                 .IsRequired();
 
-            builder.Property(p => p.Timestamp)
-                .IsRowVersion();
-
             builder.HasMany(x => x.AuditlogItems)
                 .WithOne(x => x.Auditlog)
                 .HasForeignKey(x => x.AuditlogId);
+
+            builder.UseXminAsConcurrencyToken();
         }
     }
 }

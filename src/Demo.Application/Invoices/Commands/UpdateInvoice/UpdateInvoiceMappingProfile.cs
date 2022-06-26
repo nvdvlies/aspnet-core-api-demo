@@ -15,7 +15,7 @@ namespace Demo.Application.Invoices.Commands.UpdateInvoice
                 .ForMember(x => x.InvoiceId, opt => opt.Ignore())
                 .ForMember(x => x.Invoice, opt => opt.Ignore())
                 .ForMember(x => x.Id, opt => opt.Ignore())
-                .ForMember(x => x.Timestamp, opt => opt.Ignore());
+                .ForMember(x => x.xmin, opt => opt.Ignore());
 
             CreateMap<UpdateInvoiceCommand, Invoice>()
                 .ForMember(dest => dest.InvoiceLines,

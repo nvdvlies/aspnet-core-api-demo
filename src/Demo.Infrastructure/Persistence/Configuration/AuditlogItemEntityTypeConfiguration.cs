@@ -25,9 +25,6 @@ namespace Demo.Infrastructure.Persistence.Configuration
 
             builder.Property(t => t.PreviousValueAsString);
 
-            builder.Property(p => p.Timestamp)
-                .IsRowVersion();
-
             builder.HasOne(x => x.Auditlog)
                 .WithMany(x => x.AuditlogItems)
                 .HasForeignKey(x => x.AuditlogId);
@@ -35,6 +32,8 @@ namespace Demo.Infrastructure.Persistence.Configuration
             builder.HasOne(x => x.ParentAuditlogItem)
                 .WithMany(x => x.AuditlogItems)
                 .HasForeignKey(x => x.ParentAuditlogItemId);
+
+            builder.UseXminAsConcurrencyToken();
         }
     }
 }

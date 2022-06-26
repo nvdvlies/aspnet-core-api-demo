@@ -34,7 +34,7 @@ Authorization: Bearer {{access_token}}
     "setting4": "986ce6ee-90c9-406d-9161-a329d3f65d91",
     "setting5": 10.5
   },
-  "timestamp": "AAAAAAABAeI="
+  "xmin": 0
 }
 
 ###

@@ -5,7 +5,8 @@ namespace Demo.Application.Shared.Dtos
 {
     public class EntityDto : IEntityDto
     {
-        public byte[] Timestamp { get; set; }
+        // ReSharper disable once InconsistentNaming
+        public uint xmin { get; set; }
         public Guid Id { get; set; }
     }
 }

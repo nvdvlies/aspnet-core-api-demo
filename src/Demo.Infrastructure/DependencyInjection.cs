@@ -131,7 +131,7 @@ namespace Demo.Infrastructure
             services.AddSingleton<IMessageSender, RabbitMqMessageSender>();
 
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(configuration.GetConnectionString("SqlDatabase"))
+                options.UseNpgsql(configuration.GetConnectionString("PostgresDatabase"))
             );
 
             services.AddScoped<IApplicationDbContext>(provider => provider.GetService<ApplicationDbContext>());

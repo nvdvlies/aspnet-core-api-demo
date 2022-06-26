@@ -18,7 +18,7 @@ namespace Demo.Application.FeatureFlagSettings.Commands.SaveFeatureFlagSettings
             CreateMap<SaveFeatureFlagSettingsCommandSettingsDto, FeatureFlagSettingsSettings>();
 
             CreateMap<SaveFeatureFlagSettingsCommandSettingsFeatureFlagDto, FeatureFlag>()
-                .ForMember(x => x.Timestamp, opt => opt.Ignore());
+                .ForMember(x => x.xmin, opt => opt.Ignore());
         }
     }
 }

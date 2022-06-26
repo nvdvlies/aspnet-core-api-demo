@@ -17,7 +17,7 @@ namespace Demo.Infrastructure.Persistence.Configuration
 
             builder.Property(x => x.Code)
                 .HasMaxLength(10)
-                .HasDefaultValueSql($"NEXT VALUE FOR {Constants.SchemaName}.{Sequences.CustomerCode}")
+                .HasDefaultValueSql($"nextval('{Constants.SchemaName}.\"{Sequences.CustomerCode}\"')")
                 .IsRequired();
 
             builder.Property(x => x.Name)
@@ -27,7 +27,6 @@ namespace Demo.Infrastructure.Persistence.Configuration
             builder.Property(x => x.InvoiceEmailAddress)
                 .HasMaxLength(320);
 
-            builder.Property(x => x.Timestamp).IsRowVersion();
             builder.Property(x => x.CreatedOn).IsRequired();
             builder.Property(x => x.CreatedBy).HasMaxLength(64).IsRequired();
             builder.Property(x => x.LastModifiedBy).HasMaxLength(64);
@@ -35,6 +34,8 @@ namespace Demo.Infrastructure.Persistence.Configuration
             builder.Property(x => x.Deleted).HasDefaultValue(false);
             builder.Property(x => x.DeletedBy);
             builder.Property(x => x.DeletedOn);
+
+            builder.UseXminAsConcurrencyToken();
         }
     }
 }
