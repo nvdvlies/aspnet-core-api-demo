@@ -4,6 +4,19 @@ import { Router } from '@angular/router';
 import { BehaviorSubject, combineLatest, debounceTime, map, Observable, tap } from 'rxjs';
 import { InvoiceListPageSettingsService } from './invoice-list-page-settings.service';
 
+const allColumns = [
+  'InvoiceNumber',
+  'CustomerName',
+  'InvoiceDate',
+  'PaymentTerm',
+  'OrderReference',
+  'Status'
+];
+
+const defaultColumns = ['InvoiceNumber', 'CustomerName', 'InvoiceDate'];
+
+export { allColumns, defaultColumns };
+
 class ViewModel {
   showColumns: string[] = [];
   hideColumns: string[] = [];
@@ -16,15 +29,6 @@ class ViewModel {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InvoicelistPageSettingsComponent implements OnInit {
-  private allColumns = [
-    'InvoiceNumber',
-    'CustomerName',
-    'InvoiceDate',
-    'PaymentTerm',
-    'OrderReference',
-    'Status'
-  ];
-
   private readonly showColumns = new BehaviorSubject<string[]>([]);
   private readonly hideColumns = new BehaviorSubject<string[]>([]);
 
@@ -53,7 +57,7 @@ export class InvoicelistPageSettingsComponent implements OnInit {
   ngOnInit(): void {
     this.showColumns.next(this.invoiceListPageSettingsService.settings.columns ?? []);
     this.hideColumns.next(
-      this.allColumns.filter((item) => !(this.showColumns.value ?? []).includes(item))
+      allColumns.filter((item) => !(this.showColumns.value ?? []).includes(item))
     );
   }
 
