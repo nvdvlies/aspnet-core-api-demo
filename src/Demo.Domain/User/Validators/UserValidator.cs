@@ -21,13 +21,13 @@ namespace Demo.Domain.User.Validators
             RuleForEach(user => user.UserRoles).ChildRules(userRole => { userRole.RuleFor(x => x.RoleId).NotEmpty(); });
             RuleFor(user => user.UserRoles)
                 .Must(userRoles => HasUniqueRoles(userRoles))
-                .WithMessage(x => "UserRoles cannot contain duplicate roles");
+                .WithMessage(_ => "UserRoles cannot contain duplicate roles");
 
             var validationResult = await ValidateAsync(context.Entity, cancellationToken);
             return validationResult.ToValidationMessage();
         }
 
-        private static bool HasUniqueRoles(IEnumerable<UserRole> userRoles)
+        private static bool HasUniqueRoles(IList<UserRole> userRoles)
         {
             return userRoles.GroupBy(x => x.RoleId).Count() == userRoles.Count();
         }

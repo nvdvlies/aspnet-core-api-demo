@@ -35,7 +35,7 @@ namespace Demo.Application.Roles.Queries.SearchRoles
             if (!string.IsNullOrWhiteSpace(request.SearchTerm))
             {
                 query = query.Where(x =>
-                    EF.Functions.Like(x.Name, $"%{request.SearchTerm}%")
+                    EF.Functions.ILike(x.Name, $"%{request.SearchTerm}%")
                 );
             }
 

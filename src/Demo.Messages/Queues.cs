@@ -5,6 +5,7 @@
         SynchronizeInvoicePdf,
         CreateAuth0User,
         SyncAuth0User,
-        DeleteAuth0User
+        DeleteAuth0User,
+        SendUserInvitationEmail
     }
 }

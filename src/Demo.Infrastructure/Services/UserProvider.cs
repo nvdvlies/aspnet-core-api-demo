@@ -47,7 +47,7 @@ namespace Demo.Infrastructure.Services
                 var user = _userDomainEntity.Entity;
 
                 var cacheEntryOptions = new DistributedCacheEntryOptions()
-                    .SetSlidingExpiration(TimeSpan.FromMinutes(10));
+                    .SetAbsoluteExpiration(TimeSpan.FromHours(8));
 
                 await _cache.SetAsync(cacheKey, Encode(user), cacheEntryOptions, cancellationToken);
 

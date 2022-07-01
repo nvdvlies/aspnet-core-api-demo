@@ -46,7 +46,7 @@ namespace Demo.Infrastructure.Services
                 var applicationSettings = _applicationSettingsDomainEntity.Entity;
 
                 var cacheEntryOptions = new DistributedCacheEntryOptions()
-                    .SetSlidingExpiration(TimeSpan.FromMinutes(10));
+                    .SetAbsoluteExpiration(TimeSpan.FromHours(8));
                 await _cache.SetAsync(CacheKey, Encode(applicationSettings), cacheEntryOptions, cancellationToken);
 
                 return applicationSettings;

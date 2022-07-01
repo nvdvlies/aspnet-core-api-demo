@@ -40,12 +40,12 @@ namespace Demo.Application.Invoices.Queries.SearchInvoices
             {
                 var isValidDate = DateTime.TryParse(request.SearchTerm, CultureInfo.GetCultureInfo("nl-NL"),
                     DateTimeStyles.None, out var dateValue);
-                var isValidAmount = decimal.TryParse(request.SearchTerm, NumberStyles.Number,
-                    CultureInfo.GetCultureInfo("nl-NL"), out var amountValue);
+                // var isValidAmount = decimal.TryParse(request.SearchTerm, NumberStyles.Number,
+                //     CultureInfo.GetCultureInfo("nl-NL"), out _);
 
                 query = query.Where(x =>
-                        EF.Functions.Like(x.InvoiceNumber, $"%{request.SearchTerm}%")
-                        || EF.Functions.Like(x.Customer.Name, $"%{request.SearchTerm}%")
+                        EF.Functions.ILike(x.InvoiceNumber, $"%{request.SearchTerm}%")
+                        || EF.Functions.ILike(x.Customer.Name, $"%{request.SearchTerm}%")
                         || (isValidDate && x.InvoiceDate == dateValue)
                     // || (isValidAmount && x.Amount == amountValue)
                 );

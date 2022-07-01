@@ -1,6 +1,8 @@
 ﻿using System.Reflection;
 using Demo.Application.Invoices.Services;
+using Demo.Application.Shared.Interfaces;
 using Demo.Application.Shared.PipelineBehaviors;
+using Demo.Application.Shared.Services;
 using Demo.Domain.Invoice.Interfaces;
 using FluentValidation;
 using MediatR;
@@ -58,6 +60,7 @@ namespace Demo.Application
         private static void RegisterServices(this IServiceCollection services)
         {
             services.AddTransient<IInvoiceToPdfModelMapper, InvoiceToPdfModelMapper>();
+            services.AddTransient<IRazorViewRenderer, RazorViewRenderer>();
         }
     }
 }

@@ -1,31 +1,25 @@
 .message {
   padding: 10px;
-  border-width: 1px;
-  border-style: solid;
   border-radius: 4px;
   margin-bottom: 5px;
 }
 
 .info {
-  color: #204a8e;
-  background: #c9ddff;
-  border-color: #4c699b;
+  color: #0369a1;
+  background: #e0f2fe;
 }
 
 .success {
-  color: rgb(21 128 61);
-  background: rgb(220 252 231);
-  border-color: rgb(21 128 61);
+  color: #15803d;
+  background: #dcfce7;
 }
 
 .warning {
-  color: #756e15;
-  background: #fffbd1;
-  border-color: #87803e;
+  color: #a16207;
+  background: #fef9c3;
 }
 
 .error {
   color: #ba3939;
   background: #ffe0e0;
-  border-color: #a33a3a;
 }

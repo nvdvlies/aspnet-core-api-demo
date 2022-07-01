@@ -15,10 +15,10 @@ namespace Demo.Application.Users.Commands.UpdateUser
             RuleForEach(user => user.UserRoles).ChildRules(userRole => { userRole.RuleFor(x => x.RoleId).NotEmpty(); });
             RuleFor(user => user.UserRoles)
                 .Must(userRoles => HasUniqueRoles(userRoles))
-                .WithMessage(x => "UserRoles cannot contain duplicate roles");
+                .WithMessage(_ => "UserRoles cannot contain duplicate roles");
         }
 
-        private static bool HasUniqueRoles(IEnumerable<UpdateUserCommandUserRoleDto> userRoles)
+        private static bool HasUniqueRoles(IList<UpdateUserCommandUserRoleDto> userRoles)
         {
             return userRoles.GroupBy(x => x.RoleId).Count() == userRoles.Count();
         }

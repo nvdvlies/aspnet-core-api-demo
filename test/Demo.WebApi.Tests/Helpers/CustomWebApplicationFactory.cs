@@ -34,11 +34,12 @@ namespace Demo.WebApi.Tests.Helpers
                         options.DefaultScheme = TestAuthHandler.DefaultScheme;
                     })
                     .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>(
-                        TestAuthHandler.DefaultScheme, options => { }
+                        TestAuthHandler.DefaultScheme, _ => { }
                     );
 
                 services.AddTransient<IEventPublisher, FakeEventPublisher>();
                 services.AddTransient<IMessageSender, FakeMessageSender>();
+                services.AddTransient<IEmailSender, FakeEmailSender>();
             });
         }
     }

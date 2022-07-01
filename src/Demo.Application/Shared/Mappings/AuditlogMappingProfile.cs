@@ -92,7 +92,6 @@ namespace Demo.Application.Shared.Mappings
                         return null;
                 }
 
-                ;
                 return null;
             }
         }

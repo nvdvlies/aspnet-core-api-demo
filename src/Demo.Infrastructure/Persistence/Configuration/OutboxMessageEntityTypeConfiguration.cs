@@ -17,7 +17,8 @@ namespace Demo.Infrastructure.Persistence.Configuration
             builder.Property(x => x.Type)
                 .HasMaxLength(250)
                 .IsRequired();
-            builder.Property(x => x.Message);
+            builder.Property(x => x.Message)
+                .HasColumnType("jsonb");
             builder.Property(x => x.LockedUntil);
             builder.Property(x => x.LockToken)
                 .HasMaxLength(50)

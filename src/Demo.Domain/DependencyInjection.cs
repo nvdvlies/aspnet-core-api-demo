@@ -28,8 +28,8 @@ namespace Demo.Domain
                 {
                     var nonGenericInterfaceType = type.GetInterfaces()
                         .Where(i => !i.GetTypeInfo().IsGenericType)
-                        .Where(i => i.GetInterfaces().Any(i =>
-                            i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IDomainEntity<>)))
+                        .Where(i => i.GetInterfaces().Any(j =>
+                            j.IsGenericType && j.GetGenericTypeDefinition() == typeof(IDomainEntity<>)))
                         .FirstOrDefault();
                     services.AddTransient(nonGenericInterfaceType, type);
                 });

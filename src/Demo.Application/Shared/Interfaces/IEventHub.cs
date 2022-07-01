@@ -1,4 +1,5 @@
 ﻿using Demo.Application.ApplicationSettings.Events;
+using Demo.Application.CurrentUser.Events;
 using Demo.Application.Customers.Events;
 using Demo.Application.FeatureFlagSettings.Events;
 using Demo.Application.Invoices.Events;
@@ -15,7 +16,8 @@ namespace Demo.Application.Shared.Interfaces
         IUserEventHub,
         IRoleEventHub,
         IFeatureFlagSettingsEventHub,
-        IUserPreferencesEventHub // SCAFFOLD-MARKER: EVENTHUB_INTERFACE
+        IUserPreferencesEventHub,
+        ICurrentUserEventHub // SCAFFOLD-MARKER: EVENTHUB_INTERFACE
     {
     }
 }

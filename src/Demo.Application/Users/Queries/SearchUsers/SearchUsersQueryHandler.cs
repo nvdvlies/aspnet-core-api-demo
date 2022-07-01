@@ -35,8 +35,8 @@ namespace Demo.Application.Users.Queries.SearchUsers
             if (!string.IsNullOrWhiteSpace(request.SearchTerm))
             {
                 query = query.Where(x =>
-                    EF.Functions.Like(x.Fullname, $"%{request.SearchTerm}%")
-                    || EF.Functions.Like(x.Email, $"%{request.SearchTerm}%")
+                    EF.Functions.ILike(x.Fullname, $"%{request.SearchTerm}%")
+                    || EF.Functions.ILike(x.Email, $"%{request.SearchTerm}%")
                 );
             }
 

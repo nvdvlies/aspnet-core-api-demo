@@ -11,13 +11,13 @@ namespace Demo.Domain.Shared.Exceptions
         {
         }
 
-        public DomainValidationException(IEnumerable<ValidationMessage> validationMessages)
+        public DomainValidationException(IList<ValidationMessage> validationMessages)
             : base(validationMessages.AsString())
         {
             ValidationMessages = validationMessages;
         }
 
-        public DomainValidationException(IEnumerable<ValidationMessage> validationMessages, Exception innerException)
+        public DomainValidationException(IList<ValidationMessage> validationMessages, Exception innerException)
             : base(validationMessages.AsString(), innerException)
         {
             ValidationMessages = validationMessages;

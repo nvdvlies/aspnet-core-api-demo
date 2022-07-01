@@ -1,40 +1,41 @@
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Demo.Application.CurrentUser.Commands.UpdateCurrentUser;
+using Demo.Application.CurrentUser.Queries.GetCurrentUser;
 using Demo.Application.CurrentUser.Queries.GetCurrentUserFeatureFlags;
-using Demo.Application.Users.Queries.GetUserById;
-using Demo.Domain.Shared.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Demo.WebApi.Controllers
 {
     public class CurrentUserController : ApiControllerBase
     {
-        private readonly ICurrentUserIdProvider _currentUserIdProvider;
-
-        public CurrentUserController(
-            ICurrentUserIdProvider currentUserIdProvider
-        )
-        {
-            _currentUserIdProvider = currentUserIdProvider;
-        }
-
         [HttpGet]
-        [ProducesResponseType(typeof(GetUserByIdQueryResult), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(GetCurrentUserQueryResult), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
-        public async Task<ActionResult<GetUserByIdQueryResult>> GetCurrentUserDetails(
-            CancellationToken cancellationToken)
+        public async Task<ActionResult<GetCurrentUserQueryResult>> GetCurrentUser(CancellationToken cancellationToken)
         {
-            var query = new GetUserByIdQuery { Id = _currentUserIdProvider.Id };
+            var query = new GetCurrentUserQuery();
             var result = await Mediator.Send(query, cancellationToken);
 
-            if (result?.User == null)
+            if (result?.CurrentUser == null)
             {
                 return NotFound();
             }
 
             return Ok(result);
+        }
+
+        [HttpPut]
+        [ProducesResponseType((int)HttpStatusCode.NoContent)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
+        public async Task<ActionResult> Update(UpdateCurrentUserCommand command, CancellationToken cancellationToken)
+        {
+            await Mediator.Send(command, cancellationToken);
+
+            return NoContent();
         }
 
         [HttpGet("FeatureFlags")]

@@ -7,14 +7,11 @@ namespace Demo.Common.Helpers
 {
     public class ClassFinder
     {
-        private readonly IEnumerable<Assembly> _assemblies;
         private IEnumerable<Type> _types;
 
         public ClassFinder(IEnumerable<Assembly> assemblies)
         {
-            _assemblies = assemblies;
-
-            _types = _assemblies
+            _types = assemblies
                 .SelectMany(x => x.DefinedTypes.Distinct())
                 .Where(t => t.IsClass)
                 .Where(t => !t.IsInterface)

@@ -1,4 +1,3 @@
-using System.Text.Json;
 using Demo.Domain.UserPreferences;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -17,10 +16,7 @@ namespace Demo.Infrastructure.Persistence.Configuration
                 .HasForeignKey<UserPreferences>(x => x.Id);
 
             builder.Property(x => x.Preferences)
-                .HasConversion(
-                    x => JsonSerializer.Serialize(x, new JsonSerializerOptions { WriteIndented = true }),
-                    x => JsonSerializer.Deserialize<UserPreferencesPreferences>(x, new JsonSerializerOptions())
-                );
+                .HasColumnType("jsonb");
 
             builder.Property(p => p.CreatedOn).IsRequired();
             builder.Property(p => p.CreatedBy).IsRequired();

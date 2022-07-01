@@ -1,3 +1,4 @@
+// @ts-nocheck
 /* tslint:disable */
 /* eslint-disable */
 //----------------------
@@ -6,7 +7,6 @@
 // </auto-generated>
 //----------------------
 // ReSharper disable InconsistentNaming
-// @ts-nocheck
 
 import { mergeMap as _observableMergeMap, catchError as _observableCatch } from 'rxjs/operators';
 import { Observable, throwError as _observableThrow, of as _observableOf } from 'rxjs';
@@ -224,7 +224,7 @@ export class ApiCurrentUserClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
     }
 
-    getCurrentUserDetails(): Observable<GetUserByIdQueryResult> {
+    getCurrentUser(): Observable<GetCurrentUserQueryResult> {
         let url_ = this.baseUrl + "/api/CurrentUser";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -237,20 +237,20 @@ export class ApiCurrentUserClient {
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetCurrentUserDetails(response_);
+            return this.processGetCurrentUser(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processGetCurrentUserDetails(<any>response_);
+                    return this.processGetCurrentUser(<any>response_);
                 } catch (e) {
-                    return <Observable<GetUserByIdQueryResult>><any>_observableThrow(e);
+                    return <Observable<GetCurrentUserQueryResult>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<GetUserByIdQueryResult>><any>_observableThrow(response_);
+                return <Observable<GetCurrentUserQueryResult>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGetCurrentUserDetails(response: HttpResponseBase): Observable<GetUserByIdQueryResult> {
+    protected processGetCurrentUser(response: HttpResponseBase): Observable<GetCurrentUserQueryResult> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -261,7 +261,7 @@ export class ApiCurrentUserClient {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = GetUserByIdQueryResult.fromJS(resultData200);
+            result200 = GetCurrentUserQueryResult.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 404) {
@@ -283,7 +283,69 @@ export class ApiCurrentUserClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<GetUserByIdQueryResult>(<any>null);
+        return _observableOf<GetCurrentUserQueryResult>(<any>null);
+    }
+
+    update(command: UpdateCurrentUserCommand): Observable<void> {
+        let url_ = this.baseUrl + "/api/CurrentUser";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdate(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpdate(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ValidationProblemDetails.fromJS(resultData400);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status === 500) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result500: any = null;
+            let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result500 = ProblemDetails.fromJS(resultData500);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result500);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
     }
 
     getCurrentUserFeatureFlags(query?: GetCurrentUserFeatureFlagsQuery | null | undefined): Observable<GetCurrentUserFeatureFlagsQueryResult> {
@@ -3956,10 +4018,10 @@ export enum AuditlogTypeEnum {
     YesNo = 9,
 }
 
-export class GetUserByIdQueryResult implements IGetUserByIdQueryResult {
-    user?: UserDto | undefined;
+export class GetCurrentUserQueryResult implements IGetCurrentUserQueryResult {
+    currentUser?: CurrentUserDto | undefined;
 
-    constructor(data?: IGetUserByIdQueryResult) {
+    constructor(data?: IGetCurrentUserQueryResult) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -3970,33 +4032,33 @@ export class GetUserByIdQueryResult implements IGetUserByIdQueryResult {
 
     init(_data?: any) {
         if (_data) {
-            this.user = _data["user"] ? UserDto.fromJS(_data["user"]) : <any>undefined;
+            this.currentUser = _data["currentUser"] ? CurrentUserDto.fromJS(_data["currentUser"]) : <any>undefined;
         }
     }
 
-    static fromJS(data: any): GetUserByIdQueryResult {
+    static fromJS(data: any): GetCurrentUserQueryResult {
         data = typeof data === 'object' ? data : {};
-        let result = new GetUserByIdQueryResult();
+        let result = new GetCurrentUserQueryResult();
         result.init(data);
         return result;
     }
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["user"] = this.user ? this.user.toJSON() : <any>undefined;
+        data["currentUser"] = this.currentUser ? this.currentUser.toJSON() : <any>undefined;
         return data;
     }
 
-    clone(): GetUserByIdQueryResult {
+    clone(): GetCurrentUserQueryResult {
         const json = this.toJSON();
-        let result = new GetUserByIdQueryResult();
+        let result = new GetCurrentUserQueryResult();
         result.init(json);
         return result;
     }
 }
 
-export interface IGetUserByIdQueryResult {
-    user?: UserDto | undefined;
+export interface IGetCurrentUserQueryResult {
+    currentUser?: CurrentUserDto | undefined;
 }
 
 export class SoftDeleteEntityDto extends AuditableEntityDto implements ISoftDeleteEntityDto {
@@ -4047,7 +4109,7 @@ export interface ISoftDeleteEntityDto extends IAuditableEntityDto {
     deletedOn?: Date | undefined;
 }
 
-export class UserDto extends SoftDeleteEntityDto implements IUserDto {
+export class CurrentUserDto extends SoftDeleteEntityDto implements ICurrentUserDto {
     externalId?: string | undefined;
     fullname?: string | undefined;
     givenName?: string | undefined;
@@ -4060,7 +4122,7 @@ export class UserDto extends SoftDeleteEntityDto implements IUserDto {
     locale?: string | undefined;
     userRoles?: UserRoleDto[] | undefined;
 
-    constructor(data?: IUserDto) {
+    constructor(data?: ICurrentUserDto) {
         super(data);
     }
 
@@ -4085,9 +4147,9 @@ export class UserDto extends SoftDeleteEntityDto implements IUserDto {
         }
     }
 
-    static fromJS(data: any): UserDto {
+    static fromJS(data: any): CurrentUserDto {
         data = typeof data === 'object' ? data : {};
-        let result = new UserDto();
+        let result = new CurrentUserDto();
         result.init(data);
         return result;
     }
@@ -4113,15 +4175,15 @@ export class UserDto extends SoftDeleteEntityDto implements IUserDto {
         return data;
     }
 
-    clone(): UserDto {
+    clone(): CurrentUserDto {
         const json = this.toJSON();
-        let result = new UserDto();
+        let result = new CurrentUserDto();
         result.init(json);
         return result;
     }
 }
 
-export interface IUserDto extends ISoftDeleteEntityDto {
+export interface ICurrentUserDto extends ISoftDeleteEntityDto {
     externalId?: string | undefined;
     fullname?: string | undefined;
     givenName?: string | undefined;
@@ -4181,6 +4243,57 @@ export class UserRoleDto implements IUserRoleDto {
 
 export interface IUserRoleDto {
     roleId: string;
+}
+
+export class UpdateCurrentUserCommand implements IUpdateCurrentUserCommand {
+    givenName?: string | undefined;
+    familyName?: string | undefined;
+    middleName?: string | undefined;
+
+    constructor(data?: IUpdateCurrentUserCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.givenName = _data["givenName"];
+            this.familyName = _data["familyName"];
+            this.middleName = _data["middleName"];
+        }
+    }
+
+    static fromJS(data: any): UpdateCurrentUserCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateCurrentUserCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["givenName"] = this.givenName;
+        data["familyName"] = this.familyName;
+        data["middleName"] = this.middleName;
+        return data;
+    }
+
+    clone(): UpdateCurrentUserCommand {
+        const json = this.toJSON();
+        let result = new UpdateCurrentUserCommand();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUpdateCurrentUserCommand {
+    givenName?: string | undefined;
+    familyName?: string | undefined;
+    middleName?: string | undefined;
 }
 
 export class GetCurrentUserFeatureFlagsQueryResult implements IGetCurrentUserFeatureFlagsQueryResult {
@@ -7285,6 +7398,137 @@ export enum SearchUserOrderByEnum {
     FamilyName = 0,
     Fullname = 1,
     Email = 2,
+}
+
+export class GetUserByIdQueryResult implements IGetUserByIdQueryResult {
+    user?: UserDto | undefined;
+
+    constructor(data?: IGetUserByIdQueryResult) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.user = _data["user"] ? UserDto.fromJS(_data["user"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): GetUserByIdQueryResult {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetUserByIdQueryResult();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["user"] = this.user ? this.user.toJSON() : <any>undefined;
+        return data;
+    }
+
+    clone(): GetUserByIdQueryResult {
+        const json = this.toJSON();
+        let result = new GetUserByIdQueryResult();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IGetUserByIdQueryResult {
+    user?: UserDto | undefined;
+}
+
+export class UserDto extends SoftDeleteEntityDto implements IUserDto {
+    externalId?: string | undefined;
+    fullname?: string | undefined;
+    givenName?: string | undefined;
+    familyName?: string | undefined;
+    middleName?: string | undefined;
+    email?: string | undefined;
+    gender?: GenderEnum | undefined;
+    birthDate?: Date | undefined;
+    zoneInfo?: string | undefined;
+    locale?: string | undefined;
+    userRoles?: UserRoleDto[] | undefined;
+
+    constructor(data?: IUserDto) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.externalId = _data["externalId"];
+            this.fullname = _data["fullname"];
+            this.givenName = _data["givenName"];
+            this.familyName = _data["familyName"];
+            this.middleName = _data["middleName"];
+            this.email = _data["email"];
+            this.gender = _data["gender"];
+            this.birthDate = _data["birthDate"] ? new Date(_data["birthDate"].toString()) : <any>undefined;
+            this.zoneInfo = _data["zoneInfo"];
+            this.locale = _data["locale"];
+            if (Array.isArray(_data["userRoles"])) {
+                this.userRoles = [] as any;
+                for (let item of _data["userRoles"])
+                    this.userRoles!.push(UserRoleDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): UserDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["externalId"] = this.externalId;
+        data["fullname"] = this.fullname;
+        data["givenName"] = this.givenName;
+        data["familyName"] = this.familyName;
+        data["middleName"] = this.middleName;
+        data["email"] = this.email;
+        data["gender"] = this.gender;
+        data["birthDate"] = this.birthDate ? this.birthDate.toISOString() : <any>undefined;
+        data["zoneInfo"] = this.zoneInfo;
+        data["locale"] = this.locale;
+        if (Array.isArray(this.userRoles)) {
+            data["userRoles"] = [];
+            for (let item of this.userRoles)
+                data["userRoles"].push(item.toJSON());
+        }
+        super.toJSON(data);
+        return data;
+    }
+
+    clone(): UserDto {
+        const json = this.toJSON();
+        let result = new UserDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUserDto extends ISoftDeleteEntityDto {
+    externalId?: string | undefined;
+    fullname?: string | undefined;
+    givenName?: string | undefined;
+    familyName?: string | undefined;
+    middleName?: string | undefined;
+    email?: string | undefined;
+    gender?: GenderEnum | undefined;
+    birthDate?: Date | undefined;
+    zoneInfo?: string | undefined;
+    locale?: string | undefined;
+    userRoles?: UserRoleDto[] | undefined;
 }
 
 export class CreateUserResponse implements ICreateUserResponse {

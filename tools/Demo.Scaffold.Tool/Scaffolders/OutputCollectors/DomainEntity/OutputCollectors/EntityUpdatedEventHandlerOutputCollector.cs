@@ -37,15 +37,20 @@ namespace Demo.Application.%COLLECTIONNAME%.Events.%ENTITY%Updated
 {
     public class %ENTITY%UpdatedEventHandler : INotificationHandler<%ENTITY%UpdatedEvent>
     {
+        private readonly ILogger<%ENTITY%UpdatedEventHandler> _logger;
         private readonly IEventHubContext _eventHubContext;
 
-        public %ENTITY%UpdatedEventHandler(IEventHubContext eventHubContext)
+        public %ENTITY%UpdatedEventHandler(
+            ILogger<%ENTITY%UpdatedEventHandler> logger,
+            IEventHubContext eventHubContext
+        )
         {
             _eventHubContext = eventHubContext;
         }
 
         public async Task Handle(%ENTITY%UpdatedEvent @event, CancellationToken cancellationToken)
         {
+            _logger.LogInformation($""Handling {nameof(%ENTITY%UpdatedEvent)}"");
             await _eventHubContext.All.%ENTITY%Updated(@event.Data.Id, @event.Data.UpdatedBy);
         }
     }

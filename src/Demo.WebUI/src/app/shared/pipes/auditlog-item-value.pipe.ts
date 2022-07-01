@@ -1,6 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { CustomerIdToNamePipe } from './customer-id-to-name.pipe';
+import { RoleIdsToNamesPipe } from './roles-ids-to-names.pipe';
 import { UserIdsToNamesPipe } from './user-ids-to-names.pipe';
 
 @Pipe({
@@ -9,7 +10,8 @@ import { UserIdsToNamesPipe } from './user-ids-to-names.pipe';
 export class AuditlogItemValuePipe implements PipeTransform {
   constructor(
     private readonly customerIdToNamePipe: CustomerIdToNamePipe,
-    private readonly userIdsToNamesPipe: UserIdsToNamesPipe
+    private readonly userIdsToNamesPipe: UserIdsToNamesPipe,
+    private readonly rolesIdsToNamesPipe: RoleIdsToNamesPipe
   ) {}
 
   transform(
@@ -37,6 +39,11 @@ export class AuditlogItemValuePipe implements PipeTransform {
       case 'FeatureFlagSetting':
         if (propertyName === 'EnabledForUsers') {
           return this.userIdsToNamesPipe.transform(value);
+        }
+        break;
+      case 'User':
+        if (propertyName === 'UserRoles') {
+          return this.rolesIdsToNamesPipe.transform(value);
         }
         break;
     }

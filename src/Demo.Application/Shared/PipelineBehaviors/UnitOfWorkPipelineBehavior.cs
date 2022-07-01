@@ -2,7 +2,6 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Demo.Application.Shared.Interfaces;
-using Demo.Messages;
 using MediatR;
 
 namespace Demo.Application.Shared.PipelineBehaviors

@@ -7,7 +7,7 @@ namespace Demo.Application.FeatureFlagSettings.Commands.SaveFeatureFlagSettings
     public class SaveFeatureFlagSettingsCommand : ICommand, IRequest<Unit>
     {
         // ReSharper disable once InconsistentNaming
-public uint xmin { get; set; }
+        public uint xmin { get; set; }
         public SaveFeatureFlagSettingsCommandSettingsDto Settings { get; set; }
     }
 }

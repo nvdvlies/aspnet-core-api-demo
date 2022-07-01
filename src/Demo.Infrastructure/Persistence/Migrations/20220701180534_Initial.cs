@@ -1,4 +1,7 @@
 ﻿using System;
+using Demo.Domain.ApplicationSettings;
+using Demo.Domain.FeatureFlagSettings;
+using Demo.Domain.UserPreferences;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Demo.Infrastructure.Persistence.Migrations
@@ -30,7 +33,7 @@ namespace Demo.Infrastructure.Persistence.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Settings = table.Column<string>(type: "text", nullable: true),
+                    Settings = table.Column<ApplicationSettingsSettings>(type: "jsonb", nullable: true),
                     xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false),
                     CreatedBy = table.Column<Guid>(type: "uuid", maxLength: 64, nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
@@ -88,7 +91,7 @@ namespace Demo.Infrastructure.Persistence.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Settings = table.Column<string>(type: "text", nullable: true),
+                    Settings = table.Column<FeatureFlagSettingsSettings>(type: "jsonb", nullable: true),
                     xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false),
                     CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
@@ -107,7 +110,7 @@ namespace Demo.Infrastructure.Persistence.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Type = table.Column<string>(type: "character varying(250)", maxLength: 250, nullable: false),
-                    Event = table.Column<string>(type: "text", nullable: true),
+                    Event = table.Column<string>(type: "jsonb", nullable: true),
                     LockedUntil = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
                     LockToken = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
                     IsPublished = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
@@ -125,7 +128,7 @@ namespace Demo.Infrastructure.Persistence.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Type = table.Column<string>(type: "character varying(250)", maxLength: 250, nullable: false),
-                    Message = table.Column<string>(type: "text", nullable: true),
+                    Message = table.Column<string>(type: "jsonb", nullable: true),
                     LockedUntil = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
                     LockToken = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
                     IsSent = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
@@ -263,7 +266,7 @@ namespace Demo.Infrastructure.Persistence.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Preferences = table.Column<string>(type: "text", nullable: true),
+                    Preferences = table.Column<UserPreferencesPreferences>(type: "jsonb", nullable: true),
                     xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false),
                     CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),

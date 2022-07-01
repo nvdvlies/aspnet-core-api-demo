@@ -28,12 +28,9 @@ namespace Demo.Application.Users.Messages.CreateAuth0User
 
             var externalId = await _auth0UserManagementClient.CreateAsync(_userDomainEntity.Entity, cancellationToken);
 
-            _userDomainEntity.With(x => { x.ExternalId = externalId; });
-            await _userDomainEntity.UpdateAsync(cancellationToken);
+            _userDomainEntity.With(x => x.ExternalId = externalId);
 
-            var changePasswordUrl =
-                await _auth0UserManagementClient.GetChangePasswordUrl(_userDomainEntity.Entity, cancellationToken);
-            // TODO: Send invitation email with changePasswordUrl
+            await _userDomainEntity.UpdateAsync(cancellationToken);
 
             return Unit.Value;
         }

@@ -6,6 +6,7 @@ namespace Demo.Domain.Shared.Entities
     public abstract class Entity : IEntity, IEquatable<IEntity>
     {
         public Guid Id { get; set; }
+
         // ReSharper disable once InconsistentNaming
         public uint xmin { get; set; }
 

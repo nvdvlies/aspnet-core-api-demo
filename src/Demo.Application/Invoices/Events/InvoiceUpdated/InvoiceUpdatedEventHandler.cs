@@ -3,20 +3,26 @@ using System.Threading.Tasks;
 using Demo.Application.Shared.Interfaces;
 using Demo.Events.Invoice;
 using MediatR;
+using Microsoft.Extensions.Logging;
 
 namespace Demo.Application.Invoices.Events.InvoiceUpdated
 {
     public class InvoiceUpdatedEventHandler : INotificationHandler<InvoiceUpdatedEvent>
     {
         private readonly IEventHubContext _eventHubContext;
+        private readonly ILogger<InvoiceUpdatedEventHandler> _logger;
 
-        public InvoiceUpdatedEventHandler(IEventHubContext eventHubContext)
+        public InvoiceUpdatedEventHandler(
+            ILogger<InvoiceUpdatedEventHandler> logger,
+            IEventHubContext eventHubContext)
         {
+            _logger = logger;
             _eventHubContext = eventHubContext;
         }
 
         public async Task Handle(InvoiceUpdatedEvent @event, CancellationToken cancellationToken)
         {
+            _logger.LogInformation($"Handling {nameof(InvoiceUpdatedEvent)}");
             await _eventHubContext.All.InvoiceUpdated(@event.Data.Id, @event.Data.UpdatedBy);
         }
     }

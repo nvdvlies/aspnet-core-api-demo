@@ -1,0 +1,53 @@
+{{ read$ | async }}
+
+<ng-container *ngIf="vm$ | async as vm; else loading">
+  <ng-container *ngIf="!vm.isLoading; else loading">
+    <ng-container *ngIf="vm.loadingEntityFailed && vm.problemDetails">
+      <div class="page-load-error-container">
+        <app-problem-details [problemDetails]="vm.problemDetails"></app-problem-details>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="!vm.loadingEntityFailed">
+      <form [formGroup]="form" novalidate (ngSubmit)="save()">
+        <app-page-header title="Profile: {{ vm.id! | userIdToName | async }}">
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            [disabled]="vm.isSaving"
+            [class.button-spinner]="vm.isSaving"
+          >
+            Save
+          </button>
+        </app-page-header>
+        <div class="content-container">
+          <app-problem-details [problemDetails]="vm.problemDetails"></app-problem-details>
+          <app-message *ngIf="vm.saved && !vm.problemDetails" type="success"
+            >Changes have been saved.</app-message
+          >
+
+          <mat-card class="card shadow-md bg-white pb-1 pl-3 pr-3 pt-0 mt-1 mb-3">
+            <mat-card-title class="pl-1 pt-1 text-lg">General</mat-card-title>
+            <mat-card-content>
+              <div class="row">
+                <div class="col">
+                  <mat-form-field appearance="fill" class="full-width">
+                    <mat-label>Lastname</mat-label>
+                    <input matInput placeholder="Lastname" formControlName="familyName" />
+                    <mat-error appDomainEntityErrorMessage></mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+        <!-- <pre>{{ form.value | json }}</pre> -->
+      </form>
+    </ng-container>
+  </ng-container>
+  <!-- <pre>{{ vm | json }}</pre> -->
+</ng-container>
+
+<ng-template #loading>
+  <app-spinner diameter="50" fullHeight="true"></app-spinner>
+</ng-template>

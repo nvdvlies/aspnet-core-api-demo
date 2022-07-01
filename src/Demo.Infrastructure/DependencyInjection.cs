@@ -14,6 +14,7 @@ using Demo.Domain.Shared.Interfaces;
 using Demo.Domain.UserPreferences.Interfaces;
 using Demo.Infrastructure.Auditlogging;
 using Demo.Infrastructure.Auth0;
+using Demo.Infrastructure.Email;
 using Demo.Infrastructure.Events;
 using Demo.Infrastructure.Messages;
 using Demo.Infrastructure.Messages.Consumers;
@@ -59,6 +60,7 @@ namespace Demo.Infrastructure
             services.AddScoped<IOutboxEventPublisher, OutboxEventPublisher>();
             services.AddScoped<IOutboxMessageSender, OutboxMessageSender>();
             services.AddSingleton<Microsoft.AspNetCore.SignalR.IUserIdProvider, SignalRUserIdProvider>();
+            services.AddScoped<IEmailSender, EmailSender>();
 
             services.AddMassTransit(s =>
             {
@@ -122,6 +124,13 @@ namespace Demo.Infrastructure
                         e.Durable = true;
                         e.UseRetry(DefaultRetryPolicy);
                         e.Consumer<DeleteAuth0UserMessageConsumer>(context);
+                    });
+
+                    config.ReceiveEndpoint(Queues.SendUserInvitationEmail.ToString().PascalToKebabCase(), e =>
+                    {
+                        e.Durable = true;
+                        e.UseRetry(DefaultRetryPolicy);
+                        e.Consumer<SendUserInvitationEmailMessageConsumer>(context);
                     });
                 });
             });

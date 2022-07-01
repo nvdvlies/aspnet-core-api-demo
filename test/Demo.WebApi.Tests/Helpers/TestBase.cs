@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Npgsql;
 using Xunit;
 
 namespace Demo.WebApi.Tests.Helpers
@@ -62,7 +63,10 @@ namespace Demo.WebApi.Tests.Helpers
         {
             using var scope = ServiceProvider.CreateScope();
             var environmentSettings = scope.ServiceProvider.GetRequiredService<EnvironmentSettings>();
-            await _fixture.Checkpoint.Reset(environmentSettings.ConnectionStrings.PostgresDatabase);
+
+            await using var connection = new NpgsqlConnection(environmentSettings.ConnectionStrings.PostgresDatabase);
+            await connection.OpenAsync();
+            await _fixture.Checkpoint.Reset(connection);
         }
 
         protected async Task SetTestUserToUnauthenticated()
@@ -81,7 +85,7 @@ namespace Demo.WebApi.Tests.Helpers
                 new[] { RoleEntityTypeConfiguration.UserRoleId, RoleEntityTypeConfiguration.AdministratorRoleId });
         }
 
-        private async Task SetTestUser(bool isAuthenticated, IEnumerable<Guid> roleIds)
+        private async Task SetTestUser(bool isAuthenticated, IList<Guid> roleIds)
         {
             var testUser = ServiceProvider.GetRequiredService<TestUser>();
             testUser.IsAuthenticated = isAuthenticated;

@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Demo.Application.Shared.Interfaces;
 using Demo.Domain.Shared.Interfaces;
 using Demo.Events.OutboxEvent;
-using Demo.Messages;
 using MediatR;
 using Microsoft.Extensions.Logging;
 

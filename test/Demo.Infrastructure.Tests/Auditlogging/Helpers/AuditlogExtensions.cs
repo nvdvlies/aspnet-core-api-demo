@@ -16,6 +16,7 @@ namespace Demo.Infrastructure.Tests.Auditlogging.Helpers
                 auditlogItem = (auditlogItem != null ? auditlogItem.AuditlogItems : auditlog.AuditlogItems)?
                     .FirstOrDefault(x => x.PropertyName == propertyNamePart);
             }
+
             Assert.NotNull(auditlogItem);
             Assert.Equal(prevValue, auditlogItem.PreviousValueAsString);
             Assert.Equal(currentValue, auditlogItem.CurrentValueAsString);

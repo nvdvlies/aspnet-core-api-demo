@@ -1,5 +1,4 @@
-﻿using System.Text.Json;
-using Demo.Domain.ApplicationSettings;
+﻿using Demo.Domain.ApplicationSettings;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -13,10 +12,7 @@ namespace Demo.Infrastructure.Persistence.Configuration
                 .HasKey(x => x.Id);
 
             builder.Property(x => x.Settings)
-                .HasConversion(
-                    x => JsonSerializer.Serialize(x, new JsonSerializerOptions { WriteIndented = true }),
-                    x => JsonSerializer.Deserialize<ApplicationSettingsSettings>(x, new JsonSerializerOptions())
-                );
+                .HasColumnType("jsonb");
 
             builder.Property(x => x.CreatedOn).IsRequired();
             builder.Property(x => x.CreatedBy).HasMaxLength(64).IsRequired();

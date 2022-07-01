@@ -36,7 +36,7 @@ namespace Demo.Application.Users.Queries.UserLookup
 
             if (!string.IsNullOrWhiteSpace(request.SearchTerm))
             {
-                query = query.Where(x => EF.Functions.Like(x.Fullname, $"%{request.SearchTerm}%"));
+                query = query.Where(x => EF.Functions.ILike(x.Fullname, $"%{request.SearchTerm}%"));
             }
 
             if (request.Ids is { Length: > 0 })

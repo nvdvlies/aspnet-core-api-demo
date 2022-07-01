@@ -38,8 +38,8 @@ namespace Demo.Application.Invoices.Queries.InvoiceLookup
             if (!string.IsNullOrWhiteSpace(request.SearchTerm))
             {
                 query = query.Where(x =>
-                    EF.Functions.Like(x.InvoiceNumber, $"%{request.SearchTerm}%")
-                    || EF.Functions.Like(x.Customer.Name, $"%{request.SearchTerm}%"));
+                    EF.Functions.ILike(x.InvoiceNumber, $"%{request.SearchTerm}%")
+                    || EF.Functions.ILike(x.Customer.Name, $"%{request.SearchTerm}%"));
             }
 
             if (request.Ids is { Length: > 0 })

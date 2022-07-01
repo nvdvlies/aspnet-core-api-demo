@@ -35,7 +35,7 @@ namespace Demo.Infrastructure.Auth0
             global::Auth0.ManagementApi.Models.User user = null;
             try
             {
-                user = await client.Users.GetAsync(string.Concat("auth0|", internalUser.Id.ToString()),
+                user = await client.Users.GetAsync(string.Concat("auth0|", internalUser.Id.ToString("N")),
                     cancellationToken: cancellationToken);
                 // we're likely in a retry for an exception that occured after the user was successfully created in auth0.
             }
@@ -48,7 +48,7 @@ namespace Demo.Infrastructure.Auth0
                 var userCreateRequest = new UserCreateRequest
                 {
                     Connection = _environmentSettings.Auth0.Management.UserDatabaseIdentifier,
-                    UserId = internalUser.Id.ToString(),
+                    UserId = internalUser.Id.ToString("N"),
                     Email = internalUser.Email,
                     EmailVerified = false,
                     Password = string.Concat(internalUser.Id.ToString(), "@", new Random().Next(9999)),
@@ -105,10 +105,10 @@ namespace Demo.Infrastructure.Auth0
             await SyncRolesAsync(internalUser, cancellationToken);
         }
 
-        public async Task DeleteAsync(Guid id, CancellationToken cancellationToken = default)
+        public async Task DeleteAsync(User internalUser, CancellationToken cancellationToken = default)
         {
             var client = await _auth0ManagementApiClientCreator.GetClient(cancellationToken);
-            await client.Users.DeleteAsync(id.ToString());
+            await client.Users.DeleteAsync(internalUser.ExternalId);
         }
 
         private async Task SyncRolesAsync(User internalUser, CancellationToken cancellationToken = default)

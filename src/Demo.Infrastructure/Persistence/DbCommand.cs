@@ -10,12 +10,12 @@ namespace Demo.Infrastructure.Persistence
 {
     internal class DbCommand<T> : IDbCommand<T> where T : class, IEntity
     {
-        protected readonly IApplicationDbContext _dbContext;
+        protected readonly IApplicationDbContext DbContext;
         protected readonly IDbCommandOptions Options;
 
         public DbCommand(IApplicationDbContext dbContext)
         {
-            _dbContext = dbContext;
+            DbContext = dbContext;
             Options = new DbCommandOptions();
         }
 
@@ -30,8 +30,8 @@ namespace Demo.Infrastructure.Persistence
             CancellationToken cancellationToken = default)
         {
             var query = Options.AsNoTracking
-                ? _dbContext.Set<T>().AsNoTracking().AsQueryable()
-                : _dbContext.Set<T>().AsQueryable();
+                ? DbContext.Set<T>().AsNoTracking().AsQueryable()
+                : DbContext.Set<T>().AsQueryable();
 
             if (include != null)
             {
@@ -43,19 +43,19 @@ namespace Demo.Infrastructure.Persistence
 
         public virtual Task InsertAsync(T entity, CancellationToken cancellationToken)
         {
-            _dbContext.Set<T>().Add(entity);
+            DbContext.Set<T>().Add(entity);
             return Task.CompletedTask;
         }
 
         public virtual Task UpdateAsync(T entity, CancellationToken cancellationToken)
         {
-            _dbContext.Set<T>().Update(entity);
+            DbContext.Set<T>().Update(entity);
             return Task.CompletedTask;
         }
 
         public virtual Task DeleteAsync(T entity, CancellationToken cancellationToken)
         {
-            _dbContext.Set<T>().Remove(entity);
+            DbContext.Set<T>().Remove(entity);
             return Task.CompletedTask;
         }
     }

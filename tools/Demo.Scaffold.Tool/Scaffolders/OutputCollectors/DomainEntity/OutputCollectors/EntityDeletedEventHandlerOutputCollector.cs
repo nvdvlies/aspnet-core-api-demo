@@ -37,15 +37,20 @@ namespace Demo.Application.%COLLECTIONNAME%.Events.%ENTITY%Deleted
 {
     public class %ENTITY%DeletedEventHandler : INotificationHandler<%ENTITY%DeletedEvent>
     {
+        private readonly ILogger<%ENTITY%DeletedEventHandler> _logger;
         private readonly IEventHubContext _eventHubContext;
 
-        public %ENTITY%DeletedEventHandler(IEventHubContext eventHubContext)
+        public %ENTITY%DeletedEventHandler(
+            ILogger<%ENTITY%DeletedEventHandler> logger,
+            IEventHubContext eventHubContext
+        )
         {
             _eventHubContext = eventHubContext;
         }
 
         public async Task Handle(%ENTITY%DeletedEvent @event, CancellationToken cancellationToken)
         {
+            _logger.LogInformation($""Handling {nameof(%ENTITY%DeletedEvent)}"");
             await _eventHubContext.All.%ENTITY%Deleted(@event.Data.Id, @event.Data.DeletedBy);
         }
     }

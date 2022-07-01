@@ -28,6 +28,8 @@ import { InvoiceIdToNumberPipe } from './pipes/invoice-id-to-number.pipe';
 import { AuditlogItemValuePipe } from './pipes/auditlog-item-value.pipe';
 import { UserIdsToNamesPipe } from './pipes/user-ids-to-names.pipe';
 import { InvoiceStatusEnumToNamePipe } from './pipes/invoice-status-enum-to-name.pipe';
+import { RoleIdToNamePipe } from './pipes/role-id-to-name.pipe';
+import { RoleIdsToNamesPipe } from './pipes/roles-ids-to-names.pipe';
 
 @NgModule({
   declarations: [
@@ -56,7 +58,9 @@ import { InvoiceStatusEnumToNamePipe } from './pipes/invoice-status-enum-to-name
     InvoiceIdToNumberPipe,
     AuditlogItemValuePipe,
     UserIdsToNamesPipe,
-    InvoiceStatusEnumToNamePipe
+    InvoiceStatusEnumToNamePipe,
+    RoleIdToNamePipe,
+    RoleIdsToNamesPipe
   ],
   imports: [CommonModule, ReactiveFormsModule, FormsModule, MaterialModule],
   exports: [
@@ -88,8 +92,17 @@ import { InvoiceStatusEnumToNamePipe } from './pipes/invoice-status-enum-to-name
     InvoiceIdToNumberPipe,
     AuditlogItemValuePipe,
     UserIdsToNamesPipe,
-    InvoiceStatusEnumToNamePipe
+    InvoiceStatusEnumToNamePipe,
+    RoleIdToNamePipe,
+    RoleIdsToNamesPipe
   ],
-  providers: [CustomerIdToNamePipe, UserIdToNamePipe, InvoiceIdToNumberPipe, UserIdsToNamesPipe]
+  providers: [
+    CustomerIdToNamePipe,
+    UserIdToNamePipe,
+    InvoiceIdToNumberPipe,
+    UserIdsToNamesPipe,
+    RoleIdToNamePipe,
+    RoleIdsToNamesPipe
+  ]
 })
 export class SharedModule {}

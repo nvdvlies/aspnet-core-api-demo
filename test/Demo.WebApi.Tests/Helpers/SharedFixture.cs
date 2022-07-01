@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Respawn;
+using Respawn.Graph;
 using Xunit;
 
 namespace Demo.WebApi.Tests.Helpers
@@ -15,7 +16,10 @@ namespace Demo.WebApi.Tests.Helpers
     {
         public readonly Checkpoint Checkpoint = new()
         {
-            SchemasToInclude = new[] { "demo" }, TablesToIgnore = new[] { "Role" }, WithReseed = true, DbAdapter = DbAdapter.Postgres
+            SchemasToInclude = new[] { "demo" },
+            TablesToIgnore = new[] { new Table("Role") },
+            WithReseed = true,
+            DbAdapter = DbAdapter.Postgres
         };
 
         public readonly HttpClient Client;
@@ -28,14 +32,14 @@ namespace Demo.WebApi.Tests.Helpers
             Client = Factory.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
             Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(TestAuthHandler.DefaultScheme);
 
+            MigrateDatabaseAsync().Wait();
+
             HubConnection = new HubConnectionBuilder()
                 .WithAutomaticReconnect()
                 .WithUrl("http://localhost/hub",
                     o => { o.HttpMessageHandlerFactory = _ => Factory.Server.CreateHandler(); })
                 .Build();
             HubConnection.StartAsync().Wait();
-
-            MigrateDatabaseAsync().Wait();
         }
 
         private async Task MigrateDatabaseAsync()

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Demo.Application.Shared.Interfaces;
+using Demo.Common.Extensions;
 using Demo.Messages;
 using MassTransit;
 using IMessageData = Demo.Messages.IMessageData;
@@ -22,7 +23,7 @@ namespace Demo.Infrastructure.Messages
         {
             var assembly = typeof(Message<IMessage, IMessageData>).Assembly;
             var messageType = assembly.GetType(message.Type);
-            var endpoint = await _bus.GetSendEndpoint(new Uri($"queue:{message.Queue.ToString()}"));
+            var endpoint = await _bus.GetSendEndpoint(new Uri($"queue:{message.Queue.ToString().PascalToKebabCase()}"));
             await endpoint.Send(message, messageType, context => context.CorrelationId = message.CorrelationId,
                 cancellationToken);
         }
@@ -33,7 +34,8 @@ namespace Demo.Infrastructure.Messages
             foreach (var message in messages)
             {
                 var messageType = assembly.GetType(message.Type);
-                var endpoint = await _bus.GetSendEndpoint(new Uri($"queue:{message.Queue.ToString()}"));
+                var endpoint =
+                    await _bus.GetSendEndpoint(new Uri($"queue:{message.Queue.ToString().PascalToKebabCase()}"));
                 await endpoint.Send(message, messageType, context => context.CorrelationId = message.CorrelationId,
                     cancellationToken);
             }

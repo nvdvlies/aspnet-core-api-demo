@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -51,7 +50,7 @@ namespace Demo.Infrastructure.Auditlogging.Shared
         {
             _actions.Add(() =>
                 WithPropertyInternal(expression, type, customFormatter ?? AuditlogFormatters.ListFormatter,
-                    propertyName, compareFormatted: true));
+                    propertyName, true));
             return this;
         }
 

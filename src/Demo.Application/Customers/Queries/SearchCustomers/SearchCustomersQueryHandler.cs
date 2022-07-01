@@ -35,11 +35,11 @@ namespace Demo.Application.Customers.Queries.SearchCustomers
 
             if (!string.IsNullOrWhiteSpace(request.SearchTerm))
             {
-                var isValidInteger = int.TryParse(request.SearchTerm, out var integerValue);
+                var isValidInteger = int.TryParse(request.SearchTerm, out _);
 
                 query = query.Where(x =>
-                    EF.Functions.Like(x.Name, $"%{request.SearchTerm}%")
-                    || (isValidInteger && EF.Functions.Like(x.Code.ToString(), $"%{request.SearchTerm}%"))
+                    EF.Functions.ILike(x.Name, $"%{request.SearchTerm}%")
+                    || (isValidInteger && EF.Functions.ILike(x.Code.ToString(), $"%{request.SearchTerm}%"))
                 );
             }
 

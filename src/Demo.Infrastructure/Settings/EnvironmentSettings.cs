@@ -8,5 +8,6 @@
         public RabbitMq RabbitMq { get; set; } = new();
         public Redis Redis { get; set; } = new();
         public ElasticSearch ElasticSearch { get; set; } = new();
+        public Email Email { get; set; } = new();
     }
 }

@@ -13,8 +13,8 @@ namespace Demo.Scaffold.Tool
         public static void Main(string[] args)
         {
             using var host = new HostBuilder()
-                .ConfigureLogging((context, builder) => { builder.AddConsole(); })
-                .ConfigureServices((context, services) =>
+                .ConfigureLogging((_, builder) => { builder.AddConsole(); })
+                .ConfigureServices((_, services) =>
                 {
                     var configuration = new ConfigurationBuilder()
                         .SetBasePath(Directory.GetCurrentDirectory())

@@ -50,7 +50,7 @@ namespace Demo.Infrastructure.Services
                 var userPreferences = _userPreferencesDomainEntity.Entity;
 
                 var cacheEntryOptions = new DistributedCacheEntryOptions()
-                    .SetSlidingExpiration(TimeSpan.FromMinutes(10));
+                    .SetAbsoluteExpiration(TimeSpan.FromHours(8));
                 await _cache.SetAsync(cacheKey, Encode(userPreferences), cacheEntryOptions, cancellationToken);
 
                 return userPreferences;

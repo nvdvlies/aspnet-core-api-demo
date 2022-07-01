@@ -1,11 +1,7 @@
 import { Injectable } from '@angular/core';
-import {
-  ApiCurrentUserClient,
-  ApiException,
-  ProblemDetails,
-  UserDto
-} from '@api/api.generated.clients';
+import { ApiException, CurrentUserDto, ProblemDetails } from '@api/api.generated.clients';
 import { AuthService } from '@auth0/auth0-angular';
+import { CurrentUserStoreService } from '@domain/current-user/current-user-store.service';
 import { Role } from '@shared/enums/role.enum';
 import { BehaviorSubject, catchError, Observable, of, switchMap, tap, throwError } from 'rxjs';
 import { RoleService } from './role.service';
@@ -14,7 +10,7 @@ import { RoleService } from './role.service';
   providedIn: 'root'
 })
 export class CurrentUserService {
-  private user: UserDto | undefined;
+  private currentUser: CurrentUserDto | undefined;
 
   private isInitialized = new BehaviorSubject<boolean>(false);
   private initializationProblemDetails = new BehaviorSubject<
@@ -25,26 +21,26 @@ export class CurrentUserService {
   public initializationProblemDetails$ = this.initializationProblemDetails.asObservable();
 
   constructor(
-    private readonly apiCurrentUserClient: ApiCurrentUserClient,
+    private readonly currentUserStoreService: CurrentUserStoreService,
     private readonly roleService: RoleService,
     private readonly authService: AuthService
   ) {
     this.authService.isAuthenticated$.subscribe((isAuthenticated) => {
       if (!isAuthenticated) {
-        this.user = undefined;
+        this.currentUser = undefined;
         this.isInitialized.next(false);
       }
     });
   }
 
   public init(skipCache: boolean = false): Observable<boolean> {
-    if (skipCache || this.user == undefined) {
-      return this.apiCurrentUserClient.getCurrentUserDetails().pipe(
+    if (skipCache || this.currentUser == undefined) {
+      return this.currentUserStoreService.get().pipe(
         catchError((error: ProblemDetails | ApiException) => {
           this.initializationProblemDetails.next(error);
           return throwError(() => new Error('An error occured while initializing current user'));
         }),
-        tap((response) => (this.user = response.user)),
+        tap((currentUser) => (this.currentUser = currentUser)),
         tap(() => this.isInitialized.next(true)),
         switchMap(() => of(true))
       );
@@ -54,26 +50,26 @@ export class CurrentUserService {
   }
 
   public get id(): string | undefined {
-    return this.user?.id;
+    return this.currentUser?.id;
   }
 
   public get externalId(): string | undefined {
-    return this.user?.externalId;
+    return this.currentUser?.externalId;
   }
 
   public get fullname(): string | undefined {
-    return this.user?.fullname;
+    return this.currentUser?.fullname;
   }
 
   public get email(): string | undefined {
-    return this.user?.email;
+    return this.currentUser?.email;
   }
 
   public hasRole(roleName: keyof typeof Role): boolean {
     return this.roleService.roles.some(
       (role) =>
         role.name === roleName &&
-        this.user?.userRoles?.some((userRole) => userRole.roleId === role.id)
+        this.currentUser?.userRoles?.some((userRole) => userRole.roleId === role.id)
     );
   }
 
@@ -81,7 +77,7 @@ export class CurrentUserService {
     return this.roleService.roles.some(
       (role) =>
         roleNames.some((roleName) => roleName === role.name) &&
-        this.user?.userRoles?.some((userRole) => userRole.roleId === role.id)
+        this.currentUser?.userRoles?.some((userRole) => userRole.roleId === role.id)
     );
   }
 
@@ -90,7 +86,7 @@ export class CurrentUserService {
       this.roleService.roles.some(
         (role) =>
           role.name === roleName &&
-          this.user?.userRoles?.some((userRole) => userRole.roleId === role.id)
+          this.currentUser?.userRoles?.some((userRole) => userRole.roleId === role.id)
       )
     );
   }

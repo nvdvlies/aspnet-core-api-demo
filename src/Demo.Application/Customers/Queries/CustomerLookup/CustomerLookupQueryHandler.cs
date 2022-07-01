@@ -39,11 +39,11 @@ namespace Demo.Application.Customers.Queries.CustomerLookup
             if (!string.IsNullOrWhiteSpace(request.SearchTerm))
             {
                 var isValidInteger = int.TryParse(request.SearchTerm, NumberStyles.Integer,
-                    CultureInfo.GetCultureInfo("nl-NL"), out var integerValue);
+                    CultureInfo.GetCultureInfo("nl-NL"), out _);
 
                 query = query.Where(x =>
-                    EF.Functions.Like(x.Name, $"%{request.SearchTerm}%")
-                    || (isValidInteger && EF.Functions.Like(x.Code.ToString(), $"%{request.SearchTerm}%"))
+                    EF.Functions.ILike(x.Name, $"%{request.SearchTerm}%")
+                    || (isValidInteger && EF.Functions.ILike(x.Code.ToString(), $"%{request.SearchTerm}%"))
                 );
             }
 

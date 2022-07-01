@@ -1,4 +1,3 @@
-using System.Text.Json;
 using Demo.Domain.FeatureFlagSettings;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -13,10 +12,7 @@ namespace Demo.Infrastructure.Persistence.Configuration
                 .HasKey(x => x.Id);
 
             builder.Property(x => x.Settings)
-                .HasConversion(
-                    x => JsonSerializer.Serialize(x, new JsonSerializerOptions { WriteIndented = true }),
-                    x => JsonSerializer.Deserialize<FeatureFlagSettingsSettings>(x, new JsonSerializerOptions())
-                );
+                .HasColumnType("jsonb");
 
             builder.Property(p => p.CreatedOn).IsRequired();
             builder.Property(p => p.CreatedBy).IsRequired();

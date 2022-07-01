@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Demo.Application.Customers.Commands.CreateCustomer;
+using Demo.Application.Customers.Commands.UpdateCustomer;
 using Demo.Application.Customers.Queries.SearchCustomers;
 
 namespace Demo.WebApi.Tests.Controllers.Customers.Helpers
@@ -29,6 +30,11 @@ namespace Demo.WebApi.Tests.Controllers.Customers.Helpers
         public async Task<HttpResponseMessage> CreateAsync(CreateCustomerCommand command)
         {
             return await _httpClient.PostAsJsonAsync("/api/customers", command);
+        }
+
+        public async Task<HttpResponseMessage> UpdateAsync(UpdateCustomerCommand command)
+        {
+            return await _httpClient.PutAsJsonAsync($"/api/customers/{command.Id}", command);
         }
     }
 }

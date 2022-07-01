@@ -42,7 +42,7 @@ namespace Demo.Infrastructure.Services
                     .FirstOrDefault();
 
                 var cacheEntryOptions = new DistributedCacheEntryOptions()
-                    .SetSlidingExpiration(TimeSpan.FromMinutes(10));
+                    .SetAbsoluteExpiration(TimeSpan.FromHours(8));
 
                 _cache.Set(cacheKey, Encode(userId), cacheEntryOptions);
 

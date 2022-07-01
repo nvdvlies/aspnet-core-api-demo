@@ -16,12 +16,12 @@ namespace Demo.Application.Shared.PipelineBehaviors
 {
     public class InvalidateCachesPipelineBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     {
+        private readonly Lazy<IApplicationSettingsProvider> _applicationSettingsProvider;
+        private readonly Lazy<ICurrentUserIdProvider> _currentUserIdProvider;
+        private readonly Lazy<IFeatureFlagSettingsProvider> _featureFlagSettingsProvider;
         private readonly ILogger<InvalidateCachesPipelineBehavior<TRequest, TResponse>> _logger;
         private readonly Lazy<IOutboxEventCreatedEvents> _outboxEventCreatedEvents;
-        private readonly Lazy<IApplicationSettingsProvider> _applicationSettingsProvider;
         private readonly Lazy<IUserPreferencesProvider> _userPreferencesProvider;
-        private readonly Lazy<IFeatureFlagSettingsProvider> _featureFlagSettingsProvider;
-        private readonly Lazy<ICurrentUserIdProvider> _currentUserIdProvider;
 
         public InvalidateCachesPipelineBehavior(
             ILogger<InvalidateCachesPipelineBehavior<TRequest, TResponse>> logger,
@@ -45,19 +45,23 @@ namespace Demo.Application.Shared.PipelineBehaviors
         {
             var response = await next();
 
-            if (_outboxEventCreatedEvents.Value.Any(x => x.Data.EventType == typeof(ApplicationSettingsUpdatedEvent).FullName))
+            if (_outboxEventCreatedEvents.Value.Any(x =>
+                    x.Data.EventType == typeof(ApplicationSettingsUpdatedEvent).FullName))
             {
                 _logger.LogInformation("Refreshing application settings cache");
                 await _applicationSettingsProvider.Value.GetAsync(true, cancellationToken);
             }
 
-            if (_outboxEventCreatedEvents.Value.Any(x => x.Data.EventType == typeof(UserPreferencesUpdatedEvent).FullName))
+            if (_outboxEventCreatedEvents.Value.Any(x =>
+                    x.Data.EventType == typeof(UserPreferencesUpdatedEvent).FullName))
             {
-                _logger.LogInformation("Refreshing user preferences cache for user id '{userId}'", _currentUserIdProvider.Value.Id);
+                _logger.LogInformation("Refreshing user preferences cache for user id '{userId}'",
+                    _currentUserIdProvider.Value.Id);
                 await _userPreferencesProvider.Value.GetAsync(true, cancellationToken);
             }
 
-            if (_outboxEventCreatedEvents.Value.Any(x => x.Data.EventType == typeof(FeatureFlagSettingsUpdatedEvent).FullName))
+            if (_outboxEventCreatedEvents.Value.Any(x =>
+                    x.Data.EventType == typeof(FeatureFlagSettingsUpdatedEvent).FullName))
             {
                 _logger.LogInformation("Refreshing feature flag settings cache");
                 await _featureFlagSettingsProvider.Value.GetAsync(true, cancellationToken);

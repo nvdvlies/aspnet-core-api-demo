@@ -25,7 +25,7 @@ namespace Demo.Infrastructure.Messages.Consumers
         protected IMediator Mediator { get; private set; }
         protected abstract Task ConsumeInternal(ConsumeContext<TMessage> context);
 
-        public Task Consume(ConsumeContext<TMessage> context)
+        public async Task Consume(ConsumeContext<TMessage> context)
         {
             using (var scope = _serviceProvider.CreateScope())
             {
@@ -38,7 +38,7 @@ namespace Demo.Infrastructure.Messages.Consumers
                 correlationIdProvider.SwitchToCorrelationId(context.CorrelationId ?? Guid.NewGuid());
                 using (LogContext.PushProperty("CorrelationId", correlationIdProvider.Id))
                 {
-                    return ConsumeInternal(context);
+                    await ConsumeInternal(context);
                 }
             }
         }

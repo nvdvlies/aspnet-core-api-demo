@@ -68,6 +68,12 @@
       <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="detail-row"></tr>
     </table>
 
+    <ng-container *ngIf="data.items?.length === 0">
+      <div class="mt-5 w-full flex justify-center items-center">
+        <span class="text-gray-500 text-lg">No data found.</span>
+      </div>
+    </ng-container>
+
     <ng-container *ngIf="data.isLoading">
       <app-spinner diameter="50"></app-spinner>
     </ng-container>

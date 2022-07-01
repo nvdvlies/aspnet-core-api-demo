@@ -91,6 +91,7 @@ export abstract class StoreBase<T extends IEntity<T>> extends CacheBase<T> {
     return deleteFunction(id).pipe(
       tap(() => {
         this.removeFromCache(id);
+        this.entityDeletedFromStore.next({ id } as IEntityDeletedEvent);
       })
     );
   }

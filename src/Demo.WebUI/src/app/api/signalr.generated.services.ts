@@ -29,7 +29,7 @@ export class SignalRService {
         accessTokenFactory: () => lastValueFrom(this.authService.getAccessTokenSilently())
       } as IHttpConnectionOptions)
       .withAutomaticReconnect()
-      .configureLogging(signalR.LogLevel.Information)
+      .configureLogging(signalR.LogLevel.Warning)
       .build();
 
     this.authService.isAuthenticated$.subscribe((isAuthenticated) =>
@@ -288,11 +288,6 @@ export class FeatureFlagSettingsEventsService {
   }
 }
 
-export interface UserPreferencesCreatedEvent {
-  id: string;
-  createdBy: string;
-}
-
 export interface UserPreferencesUpdatedEvent {
   id: string;
   updatedBy: string;
@@ -307,23 +302,37 @@ export interface UserPreferencesDeletedEvent {
   providedIn: 'root'
 })
 export class UserPreferencesEventsService {
-  private userPreferencesCreated = new Subject<UserPreferencesCreatedEvent>();
   private userPreferencesUpdated = new Subject<UserPreferencesUpdatedEvent>();
   private userPreferencesDeleted = new Subject<UserPreferencesDeletedEvent>();
 
-  public userPreferencesCreated$ = this.userPreferencesCreated.asObservable();
   public userPreferencesUpdated$ = this.userPreferencesUpdated.asObservable();
   public userPreferencesDeleted$ = this.userPreferencesDeleted.asObservable();
 
   constructor(private signalRService: SignalRService) {
-    this.signalRService.hubConnection.on('UserPreferencesCreated', (id: string, createdBy: string) =>
-      this.userPreferencesCreated.next({ id, createdBy })
-    );
     this.signalRService.hubConnection.on('UserPreferencesUpdated', (id: string, updatedBy: string) =>
       this.userPreferencesUpdated.next({ id, updatedBy })
     );
     this.signalRService.hubConnection.on('UserPreferencesDeleted', (id: string, deletedBy: string) =>
       this.userPreferencesDeleted.next({ id, deletedBy })
+    );
+  }
+}
+
+export interface CurrentUserUpdatedEvent {
+  updatedBy: string;
+}
+
+@Injectable({
+  providedIn: 'root'
+})
+export class CurrentUserEventsService {
+  private currentUserUpdated = new Subject<CurrentUserUpdatedEvent>();
+
+  public currentUserUpdated$ = this.currentUserUpdated.asObservable();
+
+  constructor(private signalRService: SignalRService) {
+    this.signalRService.hubConnection.on('CurrentUserUpdated', (updatedBy: string) =>
+      this.currentUserUpdated.next({ updatedBy })
     );
   }
 }

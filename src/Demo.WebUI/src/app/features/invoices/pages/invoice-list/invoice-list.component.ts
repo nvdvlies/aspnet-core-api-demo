@@ -21,7 +21,10 @@ import { TableFilterCriteria } from '@shared/base/table-data-base';
 import { Router } from '@angular/router';
 import { MatPaginator } from '@angular/material/paginator';
 import { InvoiceListPageSettingsService } from '@invoices/pages/invoice-list-page-settings/invoice-list-page-settings.service';
-import { ALL_COLUMNS } from '../invoice-list-page-settings/invoice-list-page-settings.component';
+import {
+  ALL_COLUMNS,
+  DEFAULT_COLUMNS
+} from '../invoice-list-page-settings/invoice-list-page-settings.component';
 
 interface ViewModel extends InvoiceTableDataContext {}
 
@@ -81,9 +84,9 @@ export class InvoiceListComponent implements OnInit, OnDestroy {
   ) {}
 
   public ngOnInit(): void {
-    this.displayedColumns = ALL_COLUMNS.filter((column) =>
-      (this.invoiceListPageSettingsService.settings.columns ?? []).includes(column)
-    );
+    this.displayedColumns = (
+      this.invoiceListPageSettingsService.settings.columns ?? DEFAULT_COLUMNS
+    ).filter((column) => ALL_COLUMNS.includes(column));
     this.dataSource = new InvoiceTableDataSource(this.invoiceTableDataService);
     this.spotlight();
   }

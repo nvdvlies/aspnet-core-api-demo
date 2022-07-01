@@ -115,7 +115,7 @@ namespace Demo.Domain.Shared.DomainEntity
                 Context.Entity = await DbCommand.GetAsync(id, Includes, cancellationToken);
 
                 if (Context.Entity == null
-                    || (Context.Entity is ISoftDeleteEntity softDeleteEntity && !Options.IncludeDeleted &&
+                    || (Context.Entity is ISoftDeleteEntity && !Options.IncludeDeleted &&
                         ((ISoftDeleteEntity)Context.Entity).Deleted))
                 {
                     throw new DomainEntityNotFoundException($"Entity with id '{id}' not found");
@@ -147,7 +147,7 @@ namespace Demo.Domain.Shared.DomainEntity
 
                 await ExecuteBeforeCreateHooks(cancellationToken);
 
-                await ValidateAsync(Context.EditMode, cancellationToken);
+                await ValidateAsync(cancellationToken);
 
                 if (Context.Entity is IAuditableEntity auditableEntity)
                 {
@@ -179,7 +179,7 @@ namespace Demo.Domain.Shared.DomainEntity
 
                 await ExecuteBeforeUpdateHooks(cancellationToken);
 
-                await ValidateAsync(Context.EditMode, cancellationToken);
+                await ValidateAsync(cancellationToken);
 
                 if (Context.Entity is IAuditableEntity auditableEntity)
                 {
@@ -228,7 +228,7 @@ namespace Demo.Domain.Shared.DomainEntity
 
                 await ExecuteBeforeDeleteHooks(cancellationToken);
 
-                await ValidateAsync(Context.EditMode, cancellationToken);
+                await ValidateAsync(cancellationToken);
 
                 if (Context.Entity is ISoftDeleteEntity softDeleteEntity && !Options.DisableSoftDelete)
                 {
@@ -260,7 +260,7 @@ namespace Demo.Domain.Shared.DomainEntity
             await Context.AddMessageAsync(message, cancellationToken);
         }
 
-        private async Task ValidateAsync(EditMode editMode, CancellationToken cancellationToken = default)
+        private async Task ValidateAsync(CancellationToken cancellationToken = default)
         {
             var stopwatch = Context.PerformanceMeasurements.Start(nameof(ValidateAsync));
             try

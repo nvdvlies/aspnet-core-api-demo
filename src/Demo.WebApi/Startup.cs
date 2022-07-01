@@ -1,4 +1,6 @@
+using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Demo.Application;
 using Demo.Application.Shared.Interfaces;
 using Demo.Common;
@@ -13,8 +15,10 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using NSwag;
 using NSwag.Generation.Processors.Security;
@@ -67,6 +71,23 @@ namespace Demo.WebApi
             {
                 options.Authority = environmentSettings.Auth0.Domain;
                 options.Audience = environmentSettings.Auth0.Audience;
+
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        var accessToken = context.Request.Query["access_token"];
+
+                        var path = context.HttpContext.Request.Path;
+                        if (!string.IsNullOrEmpty(accessToken) &&
+                            path.StartsWithSegments("/hub"))
+                        {
+                            context.Token = accessToken;
+                        }
+
+                        return Task.CompletedTask;
+                    }
+                };
             });
 
             services.AddAuthorization(options =>
@@ -92,6 +113,14 @@ namespace Demo.WebApi
             services.AddSignalR()
                 .AddStackExchangeRedis(environmentSettings.Redis.Connection,
                     options => { options.Configuration.ChannelPrefix = "SignalrHub"; });
+
+            services.AddControllersWithViews();
+            services.Configure<MvcRazorRuntimeCompilationOptions>(options =>
+            {
+                options.FileProviders.Clear();
+                options.FileProviders.Add(new PhysicalFileProvider(AppContext.BaseDirectory));
+            });
+            services.AddRazorPages().AddRazorRuntimeCompilation();
 
             services.AddApplication();
             services.AddDomain();

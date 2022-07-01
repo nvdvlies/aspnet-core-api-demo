@@ -52,7 +52,6 @@ export class ApplicationSettingsDetailsComponent implements OnInit, IHasForm {
   public form: ApplicationSettingsFormGroup = this.applicationSettingsDomainEntityService.form;
 
   constructor(
-    private readonly router: Router,
     private readonly applicationSettingsDomainEntityService: ApplicationSettingsDomainEntityService
   ) {}
 

@@ -1,0 +1,49 @@
+@baseUrl = https://localhost:5001
+@access_token = {{ auth.response.body.$.access_token}}
+
+# @name auth
+POST https://dev-spke9m2i.us.auth0.com/oauth/token
+Content-Type: application/json
+
+{ 
+  "client_id": "{{client_id}}",
+  "client_secret": "{{client_secret}}",
+  "audience": "{{audience}}",
+  "grant_type": "client_credentials"
+}
+
+###
+
+# @name get
+GET {{baseUrl}}/api/applicationsettings
+Accept: application/json
+Authorization: Bearer {{access_token}}
+
+###
+
+# @name update
+PUT {{baseUrl}}/api/applicationsettings
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "settings": {
+    "setting1": true,
+    "setting2": "test3",
+    "setting3": "2021-01-01T00:00:00Z",
+    "setting4": "986ce6ee-90c9-406d-9161-a329d3f65d91",
+    "setting5": 10.5
+  },
+  "xmin": 0
+}
+
+###
+
+# @name auditlog
+GET {{baseUrl}}/api/applicationsettings/auditlog
+  ?pageIndex=0
+  &pageSize=10
+Accept: application/json
+Authorization: Bearer {{access_token}}
+
+###

@@ -26,13 +26,17 @@ namespace Demo.WebApi
         {
             return Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); })
-                .ConfigureAppConfiguration(configuration =>
+                .ConfigureAppConfiguration((hostContext, configuration) =>
                 {
                     configuration.AddJsonFile("appsettings.json", false, true);
                     configuration.AddJsonFile(
                         $"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json",
                         true);
                     configuration.AddEnvironmentVariables();
+                    if (hostContext.HostingEnvironment.IsDevelopment())
+                    {
+                        configuration.AddUserSecrets<Startup>();
+                    }
                 })
                 .UseSerilog();
         }

@@ -26,14 +26,13 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint.OutputCollect
             changes.Add(new CreateNewClass(
                 context.GetCommandDirectory(controllerName, commandName),
                 $"{commandName}MappingProfile.cs",
-                GetTemplate(controllerName, commandName, commandEndpointType)
+                GetTemplate(controllerName, commandName)
             ));
 
             return changes;
         }
 
-        private static string GetTemplate(string controllerName, string commandName,
-            CommandEndpointTypes commandEndpointType)
+        private static string GetTemplate(string controllerName, string commandName)
         {
             var code = @"
 using AutoMapper;

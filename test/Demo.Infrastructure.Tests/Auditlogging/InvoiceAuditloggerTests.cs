@@ -24,7 +24,6 @@ namespace Demo.Infrastructure.Tests.Auditlogging
         public async Task InvoiceAuditlogger_When_no_changes_are_made_It_should_not_create_auditlog_item()
         {
             // Arrange
-            var today = DateTime.Today;
             var previous = new Invoice { InvoiceLines = new List<InvoiceLine> { new() { LineNumber = 1 } } };
             var current = new Invoice { InvoiceLines = new List<InvoiceLine> { new() { LineNumber = 1 } } };
 
@@ -48,7 +47,8 @@ namespace Demo.Infrastructure.Tests.Auditlogging
             // Assert
             Assert.Equal(nameof(Invoice), CapturedAuditlog.EntityName);
             Assert.Single(CapturedAuditlog.AuditlogItems);
-            CapturedAuditlog.AssertHasAuditlogItem(nameof(Invoice.OrderReference), previous.OrderReference, current.OrderReference);
+            CapturedAuditlog.AssertHasAuditlogItem(nameof(Invoice.OrderReference), previous.OrderReference,
+                current.OrderReference);
             VerifyCreateAsyncCall(Times.Once);
         }
 
@@ -72,7 +72,8 @@ namespace Demo.Infrastructure.Tests.Auditlogging
             // Assert
             Assert.Equal(nameof(Invoice), CapturedAuditlog.EntityName);
             Assert.Single(CapturedAuditlog.AuditlogItems);
-            CapturedAuditlog.AssertHasAuditlogItem($"{nameof(Invoice.InvoiceLines)}.1.{nameof(InvoiceLine.LineNumber)}", "1", "2");
+            CapturedAuditlog.AssertHasAuditlogItem($"{nameof(Invoice.InvoiceLines)}.1.{nameof(InvoiceLine.LineNumber)}",
+                "1", "2");
             VerifyCreateAsyncCall(Times.Once);
         }
 
@@ -93,7 +94,8 @@ namespace Demo.Infrastructure.Tests.Auditlogging
             // Assert
             Assert.Equal(nameof(Invoice), CapturedAuditlog.EntityName);
             Assert.Single(CapturedAuditlog.AuditlogItems);
-            CapturedAuditlog.AssertHasAuditlogItem($"{nameof(Invoice.InvoiceLines)}.1.{nameof(InvoiceLine.LineNumber)}", "1", "0");
+            CapturedAuditlog.AssertHasAuditlogItem($"{nameof(Invoice.InvoiceLines)}.1.{nameof(InvoiceLine.LineNumber)}",
+                "1", "0");
             VerifyCreateAsyncCall(Times.Once);
         }
 
@@ -113,7 +115,8 @@ namespace Demo.Infrastructure.Tests.Auditlogging
             // Assert
             Assert.Equal(nameof(Invoice), CapturedAuditlog.EntityName);
             Assert.Single(CapturedAuditlog.AuditlogItems);
-            CapturedAuditlog.AssertHasAuditlogItem($"{nameof(Invoice.InvoiceLines)}.1.{nameof(InvoiceLine.LineNumber)}", "0", "1");
+            CapturedAuditlog.AssertHasAuditlogItem($"{nameof(Invoice.InvoiceLines)}.1.{nameof(InvoiceLine.LineNumber)}",
+                "0", "1");
             VerifyCreateAsyncCall(Times.Once);
         }
     }
