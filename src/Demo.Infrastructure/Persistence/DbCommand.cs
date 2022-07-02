@@ -49,6 +49,7 @@ namespace Demo.Infrastructure.Persistence
 
         public virtual Task UpdateAsync(T entity, CancellationToken cancellationToken)
         {
+            DbContext.Entry(entity).OriginalValues[nameof(entity.xmin)] = entity.xmin;
             DbContext.Set<T>().Update(entity);
             return Task.CompletedTask;
         }
