@@ -4,7 +4,7 @@ using Demo.Domain.Shared.Interfaces;
 
 namespace Demo.Domain.Shared.Entities
 {
-    public abstract class SoftDeleteEntity : AuditableEntity, ISoftDeleteEntity, IAuditableEntity, IEntity
+    public abstract class SoftDeleteEntity : AuditableEntity, ISoftDeleteEntity
     {
         [JsonInclude] public bool Deleted { get; private set; }
 

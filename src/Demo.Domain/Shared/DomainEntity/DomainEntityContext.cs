@@ -12,7 +12,6 @@ namespace Demo.Domain.Shared.DomainEntity
     {
         private readonly object _entityLock = new();
         private readonly Lazy<IJsonService<T>> _jsonService;
-        private readonly ILogger _logger;
         private readonly Lazy<IOutboxEventCreator> _outboxEventCreator;
         private readonly Lazy<IOutboxMessageCreator> _outboxMessageCreator;
         private T _entity;
@@ -23,7 +22,6 @@ namespace Demo.Domain.Shared.DomainEntity
             Lazy<IOutboxMessageCreator> outboxMessageCreator,
             Lazy<IJsonService<T>> jsonService)
         {
-            _logger = logger;
             _outboxEventCreator = outboxEventCreator;
             _outboxMessageCreator = outboxMessageCreator;
             _jsonService = jsonService;

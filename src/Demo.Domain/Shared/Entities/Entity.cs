@@ -27,6 +27,7 @@ namespace Demo.Domain.Shared.Entities
 
         public override int GetHashCode()
         {
+            // ReSharper disable once NonReadonlyMemberInGetHashCode
             return Id.GetHashCode();
         }
     }

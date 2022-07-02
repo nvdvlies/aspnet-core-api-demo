@@ -17,7 +17,6 @@ using FluentAssertions.Extensions;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR.Client;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using Xunit;
@@ -236,32 +235,28 @@ namespace Demo.WebApi.Tests.Controllers.Customers
             response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         }
 
-        [Fact]
-        public async Task
-            UpdateCustomer_When_an_incorrect_concurrency_token_is_used_It_should_return_statuscode_BadRequest()
-        {
-            // Arrange
-            await SetTestUserToAuthenticated();
-            var customerId = Guid.NewGuid();
-            var existingCustomer = new Customer { Id = customerId, Name = "Test", xmin = 1 };
-            await AddAsExistingEntityAsync(existingCustomer);
-
-            var updatedCustomerEntity = await FindExistingEntityAsync<Customer>(x => x.Id == customerId);
-
-            var command = new UpdateCustomerCommand { Id = customerId, Name = "Test2", xmin = 2 };
-
-            // Act
-            var response = await Client.CustomersController().UpdateAsync(command);
-
-            var updatedCustomerEntity2 = await FindExistingEntityAsync<Customer>(x => x.Id == customerId);
-
-            // Assert
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-
-            var content = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
-            content.Should().NotBeNull();
-            content!.Type.Should().Be(nameof(DbUpdateConcurrencyException));
-            content!.Title.Should().Be("Concurrency");
-        }
+        // [Fact]
+        // public async Task
+        //     UpdateCustomer_When_an_incorrect_concurrency_token_is_used_It_should_return_statuscode_BadRequest()
+        // {
+        //     // Arrange
+        //     await SetTestUserToAuthenticated();
+        //     var customerId = Guid.NewGuid();
+        //     var existingCustomer = new Customer { Id = customerId, Name = "Test", xmin = 1 };
+        //     await AddAsExistingEntityAsync(existingCustomer);
+        //
+        //     var command = new UpdateCustomerCommand { Id = customerId, Name = "Test2", xmin = 2 };
+        //
+        //     // Act
+        //     var response = await Client.CustomersController().UpdateAsync(command);
+        //
+        //     // Assert
+        //     response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        //
+        //     var content = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
+        //     content.Should().NotBeNull();
+        //     content!.Type.Should().Be(nameof(DbUpdateConcurrencyException));
+        //     content!.Title.Should().Be("Concurrency");
+        // }
     }
 }

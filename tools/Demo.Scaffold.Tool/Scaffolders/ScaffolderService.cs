@@ -28,21 +28,21 @@ namespace Demo.Scaffold.Tool.Scaffolders
             _appSettings = appSettings;
         }
 
-        private ScaffolderContext _context { get; set; }
+        private ScaffolderContext Context { get; set; }
 
         public void Run()
         {
             Console.Clear();
 
-            _context = new ScaffolderContext(_appSettings);
+            Context = new ScaffolderContext(_appSettings);
 
             foreach (var inputCollector in _inputCollectors)
             {
-                inputCollector.CollectInput(_context);
+                inputCollector.CollectInput(Context);
             }
 
             var changes = _outputCollectors
-                .Select(x => x.CollectChanges(_context))
+                .Select(x => x.CollectChanges(Context))
                 .SelectMany(x => x)
                 .Where(x => x != null)
                 .ToList();
@@ -91,7 +91,7 @@ namespace Demo.Scaffold.Tool.Scaffolders
         {
             var fullPathAndFileName = Path.Combine(Directory.GetCurrentDirectory(), Constants.UserSettingsFileName);
             var serializedAppSettings =
-                JsonSerializer.Serialize(_context.AppSettings, new JsonSerializerOptions { WriteIndented = true });
+                JsonSerializer.Serialize(Context.AppSettings, new JsonSerializerOptions { WriteIndented = true });
             File.WriteAllText(fullPathAndFileName, serializedAppSettings);
         }
     }

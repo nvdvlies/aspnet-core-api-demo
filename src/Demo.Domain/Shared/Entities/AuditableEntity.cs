@@ -4,7 +4,7 @@ using Demo.Domain.Shared.Interfaces;
 
 namespace Demo.Domain.Shared.Entities
 {
-    public abstract class AuditableEntity : Entity, IAuditableEntity, IEntity
+    public abstract class AuditableEntity : Entity, IAuditableEntity
     {
         [JsonInclude] public Guid CreatedBy { get; private set; }
 

@@ -38,7 +38,7 @@ namespace Demo.Domain.User
         {
         }
 
-        internal override Func<IQueryable<User>, IIncludableQueryable<User, object>> Includes => _ => _
+        protected override Func<IQueryable<User>, IIncludableQueryable<User, object>> Includes => _ => _
             .Include(user => user.UserRoles);
     }
 }

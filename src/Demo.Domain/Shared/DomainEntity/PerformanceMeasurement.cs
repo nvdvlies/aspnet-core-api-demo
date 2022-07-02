@@ -12,7 +12,7 @@ namespace Demo.Domain.Shared.DomainEntity
             _stopwatch = new Stopwatch();
         }
 
-        private Stopwatch _stopwatch { get; }
+        private readonly Stopwatch _stopwatch;
 
         public void Start()
         {

@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using MediatR;
 
 namespace Demo.Events
 {
-    public abstract class Event<E, D> : IEvent, INotification where E : IEvent where D : IEventData
+    public abstract class Event<E, D> : IEvent where E : IEvent where D : IEventData
     {
         public Event()
         {

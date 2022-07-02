@@ -71,9 +71,9 @@ namespace Demo.Domain.Shared.DomainEntity
 
         protected IReadonlyDomainEntityOptions Options => _options;
 
-        private DomainEntityOptions _options { get; }
+        private readonly DomainEntityOptions _options;
 
-        internal virtual Func<IQueryable<T>, IIncludableQueryable<T, object>> Includes => null;
+        protected virtual Func<IQueryable<T>, IIncludableQueryable<T, object>> Includes => null;
 
         public T Entity => Context.Entity;
 

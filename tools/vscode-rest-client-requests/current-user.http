@@ -15,26 +15,21 @@ Content-Type: application/json
 ###
 
 # @name get
-GET {{baseUrl}}/api/applicationsettings
+GET {{baseUrl}}/api/currentuser
 Accept: application/json
 Authorization: Bearer {{access_token}}
 
 ###
 
 # @name update
-PUT {{baseUrl}}/api/applicationsettings
+PUT {{baseUrl}}/api/currentuser
 Content-Type: application/json
 Authorization: Bearer {{access_token}}
 
 {
-  "settings": {
-    "setting1": true,
-    "setting2": "test3",
-    "setting3": "2021-01-01T00:00:00Z",
-    "setting4": "986ce6ee-90c9-406d-9161-a329d3f65d91",
-    "setting5": 10.5
-  },
-  "xmin": 0
+  "givenName": "string",
+  "middleName": "string",
+  "familyName": "string"
 }
 
 ###

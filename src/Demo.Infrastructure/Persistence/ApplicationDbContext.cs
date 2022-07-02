@@ -1,6 +1,4 @@
 using System.Reflection;
-using System.Threading;
-using System.Threading.Tasks;
 using Demo.Domain.ApplicationSettings;
 using Demo.Domain.Auditlog;
 using Demo.Domain.Customer;
@@ -34,11 +32,6 @@ namespace Demo.Infrastructure.Persistence
 
         public DbSet<UserPreferences> UserPreferences { get; set; }
         // SCAFFOLD-MARKER: DBSET
-
-        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new())
-        {
-            return base.SaveChangesAsync(cancellationToken);
-        }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
