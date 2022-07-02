@@ -33,9 +33,6 @@ namespace Demo.Application.UserPreferences.Queries.GetUserPreferencesAuditlog
             CancellationToken cancellationToken)
         {
             var query = _query.AsQueryable()
-                .Include(x => x.AuditlogItems)
-                .ThenInclude(y => y.AuditlogItems)
-                .ThenInclude(y => y.AuditlogItems)
                 .Where(x => x.EntityName == nameof(Domain.UserPreferences.UserPreferences))
                 .Where(x => x.EntityId == _currentUserIdProvider.Id);
 

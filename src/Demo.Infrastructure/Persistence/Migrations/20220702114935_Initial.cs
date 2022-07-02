@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using Demo.Domain.ApplicationSettings;
+using Demo.Domain.Auditlog;
 using Demo.Domain.FeatureFlagSettings;
 using Demo.Domain.UserPreferences;
 using Microsoft.EntityFrameworkCore.Migrations;
@@ -55,6 +57,7 @@ namespace Demo.Infrastructure.Persistence.Migrations
                     EntityId = table.Column<Guid>(type: "uuid", nullable: false),
                     ModifiedBy = table.Column<Guid>(type: "uuid", maxLength: 64, nullable: false),
                     ModifiedOn = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    AuditlogItems = table.Column<List<AuditlogItem>>(type: "jsonb", nullable: true),
                     xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false)
                 },
                 constraints: table =>
@@ -189,40 +192,6 @@ namespace Demo.Infrastructure.Persistence.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_User", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AuditlogItem",
-                schema: "demo",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    PropertyName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    Status = table.Column<int>(type: "integer", nullable: false),
-                    Type = table.Column<int>(type: "integer", nullable: false),
-                    CurrentValueAsString = table.Column<string>(type: "text", nullable: true),
-                    PreviousValueAsString = table.Column<string>(type: "text", nullable: true),
-                    ParentAuditlogItemId = table.Column<Guid>(type: "uuid", nullable: true),
-                    AuditlogId = table.Column<Guid>(type: "uuid", nullable: true),
-                    xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AuditlogItem", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_AuditlogItem_Auditlog_AuditlogId",
-                        column: x => x.AuditlogId,
-                        principalSchema: "demo",
-                        principalTable: "Auditlog",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_AuditlogItem_AuditlogItem_ParentAuditlogItemId",
-                        column: x => x.ParentAuditlogItemId,
-                        principalSchema: "demo",
-                        principalTable: "AuditlogItem",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -372,18 +341,6 @@ namespace Demo.Infrastructure.Persistence.Migrations
                 column: "EntityName");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AuditlogItem_AuditlogId",
-                schema: "demo",
-                table: "AuditlogItem",
-                column: "AuditlogId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AuditlogItem_ParentAuditlogItemId",
-                schema: "demo",
-                table: "AuditlogItem",
-                column: "ParentAuditlogItemId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Customer_Code",
                 schema: "demo",
                 table: "Customer",
@@ -496,7 +453,7 @@ namespace Demo.Infrastructure.Persistence.Migrations
                 schema: "demo");
 
             migrationBuilder.DropTable(
-                name: "AuditlogItem",
+                name: "Auditlog",
                 schema: "demo");
 
             migrationBuilder.DropTable(
@@ -521,10 +478,6 @@ namespace Demo.Infrastructure.Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "UserRole",
-                schema: "demo");
-
-            migrationBuilder.DropTable(
-                name: "Auditlog",
                 schema: "demo");
 
             migrationBuilder.DropTable(

@@ -31,9 +31,6 @@ namespace Demo.Application.Invoices.Queries.GetInvoiceAuditlog
             CancellationToken cancellationToken)
         {
             var query = _query.AsQueryable()
-                .Include(x => x.AuditlogItems)
-                .ThenInclude(y => y.AuditlogItems)
-                .ThenInclude(y => y.AuditlogItems)
                 .Where(x => x.EntityName == nameof(Invoice))
                 .Where(x => x.EntityId == request.InvoiceId);
 

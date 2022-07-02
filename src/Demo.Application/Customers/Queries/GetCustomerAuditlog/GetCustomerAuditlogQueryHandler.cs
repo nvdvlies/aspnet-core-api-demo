@@ -31,9 +31,6 @@ namespace Demo.Application.Customers.Queries.GetCustomerAuditlog
             CancellationToken cancellationToken)
         {
             var query = _query.AsQueryable()
-                .Include(x => x.AuditlogItems)
-                .ThenInclude(y => y.AuditlogItems)
-                .ThenInclude(y => y.AuditlogItems)
                 .Where(x => x.EntityName == nameof(Customer))
                 .Where(x => x.EntityId == request.CustomerId);
 

@@ -31,11 +31,8 @@ namespace Demo.Application.FeatureFlagSettings.Queries.GetFeatureFlagSettingsAud
             CancellationToken cancellationToken)
         {
             var query = _query.AsQueryable()
-                .Include(x => x.AuditlogItems)
-                .ThenInclude(y => y.AuditlogItems)
-                .ThenInclude(y => y.AuditlogItems)
                 .Where(x => x.EntityName == nameof(Domain.FeatureFlagSettings.FeatureFlagSettings))
-                .Where(x => x.AuditlogItems.Any(y => y.AuditlogItems.Any(z => z.PropertyName == request.Name)));
+                .Where(x => EF.Functions.JsonContains(x.AuditlogItems, @$"[ {{ ""{nameof(Auditlog.AuditlogItems)}"": [ {{ ""{nameof(AuditlogItem.PropertyName)}"": ""{request.Name}"" }} ] }} ]"));
 
             var totalItems = await query.CountAsync(cancellationToken);
 

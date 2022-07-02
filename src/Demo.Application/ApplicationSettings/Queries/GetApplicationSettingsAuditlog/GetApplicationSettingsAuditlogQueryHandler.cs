@@ -30,9 +30,6 @@ namespace Demo.Application.ApplicationSettings.Queries.GetApplicationSettingsAud
             CancellationToken cancellationToken)
         {
             var query = _query.AsQueryable()
-                .Include(x => x.AuditlogItems)
-                .ThenInclude(y => y.AuditlogItems)
-                .ThenInclude(y => y.AuditlogItems)
                 .Where(x => x.EntityName == nameof(Domain.ApplicationSettings.ApplicationSettings));
 
             var totalItems = await query.CountAsync(cancellationToken);

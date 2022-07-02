@@ -14,23 +14,22 @@ namespace Demo.Infrastructure.Persistence.Configuration
             builder.HasIndex(x => x.EntityName);
             builder.HasIndex(x => x.EntityId);
 
-            builder.Property(t => t.EntityName)
+            builder.Property(x => x.EntityName)
                 .HasMaxLength(50)
                 .IsRequired();
 
-            builder.Property(t => t.EntityId)
+            builder.Property(x => x.EntityId)
                 .IsRequired();
 
-            builder.Property(t => t.ModifiedBy)
+            builder.Property(x => x.ModifiedBy)
                 .HasMaxLength(64)
                 .IsRequired();
 
-            builder.Property(t => t.ModifiedOn)
+            builder.Property(x => x.ModifiedOn)
                 .IsRequired();
 
-            builder.HasMany(x => x.AuditlogItems)
-                .WithOne(x => x.Auditlog)
-                .HasForeignKey(x => x.AuditlogId);
+            builder.Property(x => x.AuditlogItems)
+                .HasColumnType("jsonb");
 
             builder.UseXminAsConcurrencyToken();
         }

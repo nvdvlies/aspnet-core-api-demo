@@ -30,9 +30,6 @@ namespace Demo.Application.Roles.Queries.GetRoleAuditlog
             CancellationToken cancellationToken)
         {
             var query = _query.AsQueryable()
-                .Include(x => x.AuditlogItems)
-                .ThenInclude(y => y.AuditlogItems)
-                .ThenInclude(y => y.AuditlogItems)
                 .Where(x => x.EntityName == nameof(Role))
                 .Where(x => x.EntityId == request.RoleId);
 
