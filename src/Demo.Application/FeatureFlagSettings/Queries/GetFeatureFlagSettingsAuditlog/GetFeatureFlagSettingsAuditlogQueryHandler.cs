@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -30,9 +31,10 @@ namespace Demo.Application.FeatureFlagSettings.Queries.GetFeatureFlagSettingsAud
         public async Task<GetFeatureFlagSettingsAuditlogQueryResult> Handle(GetFeatureFlagSettingsAuditlogQuery request,
             CancellationToken cancellationToken)
         {
+            var encodedName = JsonEncodedText.Encode(request.Name);
             var query = _query.AsQueryable()
                 .Where(x => x.EntityName == nameof(Domain.FeatureFlagSettings.FeatureFlagSettings))
-                .Where(x => EF.Functions.JsonContains(x.AuditlogItems, @$"[ {{ ""{nameof(Auditlog.AuditlogItems)}"": [ {{ ""{nameof(AuditlogItem.PropertyName)}"": ""{request.Name}"" }} ] }} ]"));
+                .Where(x => EF.Functions.JsonContains(x.AuditlogItems, @$"[ {{ ""{nameof(Auditlog.AuditlogItems)}"": [ {{ ""{nameof(AuditlogItem.PropertyName)}"": ""{encodedName}"" }} ] }} ]"));
 
             var totalItems = await query.CountAsync(cancellationToken);
 
