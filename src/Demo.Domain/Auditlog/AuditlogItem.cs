@@ -4,7 +4,7 @@ using Demo.Domain.Shared.Entities;
 
 namespace Demo.Domain.Auditlog
 {
-    public class AuditlogItem : Entity
+    public class AuditlogItem
     {
         public string PropertyName { get; set; }
         public AuditlogStatus Status { get; set; }

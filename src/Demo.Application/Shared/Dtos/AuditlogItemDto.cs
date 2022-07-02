@@ -2,7 +2,7 @@
 
 namespace Demo.Application.Shared.Dtos
 {
-    public class AuditlogItemDto : EntityDto
+    public class AuditlogItemDto
     {
         public string PropertyName { get; set; }
         public AuditlogStatusEnum Status { get; set; }
