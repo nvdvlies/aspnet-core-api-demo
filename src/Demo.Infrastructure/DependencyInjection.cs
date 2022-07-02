@@ -132,6 +132,13 @@ namespace Demo.Infrastructure
                         e.UseRetry(DefaultRetryPolicy);
                         e.Consumer<SendUserInvitationEmailMessageConsumer>(context);
                     });
+
+                    config.ReceiveEndpoint(Queues.SendChangePasswordEmail.ToString().PascalToKebabCase(), e =>
+                    {
+                        e.Durable = true;
+                        e.UseRetry(DefaultRetryPolicy);
+                        e.Consumer<SendChangePasswordEmailMessageConsumer>(context);
+                    });
                 });
             });
             services.AddMassTransitHostedService();

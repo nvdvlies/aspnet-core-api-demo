@@ -1,3 +1,4 @@
+using Demo.Application.CurrentUser.Commands.ChangePassword;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -45,6 +46,18 @@ namespace Demo.WebApi.Controllers
             [FromQuery] GetCurrentUserFeatureFlagsQuery query, CancellationToken cancellationToken)
         {
             return await Mediator.Send(query, cancellationToken);
+        }
+
+
+        [HttpPost("ChangePassword")]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
+        public async Task<ActionResult> ChangePassword(ChangePasswordCommand command, CancellationToken cancellationToken)
+        {
+            await Mediator.Send(command, cancellationToken);
+
+            return Ok();
         }
 
         // SCAFFOLD-MARKER: ENDPOINT

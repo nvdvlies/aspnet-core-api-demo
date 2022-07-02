@@ -6,6 +6,7 @@
         CreateAuth0User,
         SyncAuth0User,
         DeleteAuth0User,
-        SendUserInvitationEmail
+        SendUserInvitationEmail,
+        SendChangePasswordEmail
     }
 }

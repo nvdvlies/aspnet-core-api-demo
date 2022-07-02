@@ -404,6 +404,68 @@ export class ApiCurrentUserClient {
         }
         return _observableOf<GetCurrentUserFeatureFlagsQueryResult>(<any>null);
     }
+
+    changePassword(command: ChangePasswordCommand): Observable<void> {
+        let url_ = this.baseUrl + "/api/CurrentUser/ChangePassword";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processChangePassword(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processChangePassword(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processChangePassword(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ValidationProblemDetails.fromJS(resultData400);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status === 500) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result500: any = null;
+            let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result500 = ProblemDetails.fromJS(resultData500);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result500);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
 }
 
 @Injectable({
@@ -4247,8 +4309,8 @@ export interface IUserRoleDto {
 
 export class UpdateCurrentUserCommand implements IUpdateCurrentUserCommand {
     givenName?: string | undefined;
-    familyName?: string | undefined;
     middleName?: string | undefined;
+    familyName?: string | undefined;
 
     constructor(data?: IUpdateCurrentUserCommand) {
         if (data) {
@@ -4262,8 +4324,8 @@ export class UpdateCurrentUserCommand implements IUpdateCurrentUserCommand {
     init(_data?: any) {
         if (_data) {
             this.givenName = _data["givenName"];
-            this.familyName = _data["familyName"];
             this.middleName = _data["middleName"];
+            this.familyName = _data["familyName"];
         }
     }
 
@@ -4277,8 +4339,8 @@ export class UpdateCurrentUserCommand implements IUpdateCurrentUserCommand {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["givenName"] = this.givenName;
-        data["familyName"] = this.familyName;
         data["middleName"] = this.middleName;
+        data["familyName"] = this.familyName;
         return data;
     }
 
@@ -4292,8 +4354,8 @@ export class UpdateCurrentUserCommand implements IUpdateCurrentUserCommand {
 
 export interface IUpdateCurrentUserCommand {
     givenName?: string | undefined;
-    familyName?: string | undefined;
     middleName?: string | undefined;
+    familyName?: string | undefined;
 }
 
 export class GetCurrentUserFeatureFlagsQueryResult implements IGetCurrentUserFeatureFlagsQueryResult {
@@ -4382,6 +4444,43 @@ export class GetCurrentUserFeatureFlagsQuery implements IGetCurrentUserFeatureFl
 }
 
 export interface IGetCurrentUserFeatureFlagsQuery {
+}
+
+export class ChangePasswordCommand implements IChangePasswordCommand {
+
+    constructor(data?: IChangePasswordCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+    }
+
+    static fromJS(data: any): ChangePasswordCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new ChangePasswordCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        return data;
+    }
+
+    clone(): ChangePasswordCommand {
+        const json = this.toJSON();
+        let result = new ChangePasswordCommand();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IChangePasswordCommand {
 }
 
 export class SearchCustomersQueryResult extends BasePaginatedResult implements ISearchCustomersQueryResult {

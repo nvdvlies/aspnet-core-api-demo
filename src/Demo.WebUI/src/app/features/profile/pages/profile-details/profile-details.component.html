@@ -19,6 +19,16 @@
           >
             Save
           </button>
+          <button
+            mat-raised-button
+            (click)="changePassword()"
+            type="button"
+            *ngIf="vm.id != null"
+            [disabled]="vm.isChangingPassword"
+            [class.button-spinner]="vm.isChangingPassword"
+          >
+            Change password
+          </button>
         </app-page-header>
         <div class="content-container">
           <app-problem-details [problemDetails]="vm.problemDetails"></app-problem-details>
