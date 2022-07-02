@@ -1,6 +1,16 @@
 import { ChangeDetectionStrategy, Component, HostListener, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { combineLatest, debounceTime, EMPTY, map, Observable, switchMap, tap } from 'rxjs';
+import {
+  combineLatest,
+  debounceTime,
+  EMPTY,
+  map,
+  Observable,
+  switchMap,
+  tap,
+  finalize,
+  BehaviorSubject
+} from 'rxjs';
 import { DomainEntityService } from '@domain/shared/domain-entity-base';
 import {
   UserDomainEntityService,
@@ -13,8 +23,11 @@ import { UserListRouteState } from '@users/pages/user-list/user-list.component';
 import { ModalService } from '@shared/services/modal.service';
 import { ConfirmDeleteModalComponent } from '@shared/modals/confirm-delete-modal/confirm-delete-modal.component';
 import { FormControl } from '@angular/forms';
+import { ApiUsersClient, ResetPasswordCommand } from '@api/api.generated.clients';
 
-interface ViewModel extends IUserDomainEntityContext {}
+interface ViewModel extends IUserDomainEntityContext {
+  isResettingPassword: boolean;
+}
 
 @Component({
   templateUrl: './user-details.component.html',
@@ -31,13 +44,21 @@ interface ViewModel extends IUserDomainEntityContext {}
 export class UserDetailsComponent implements OnInit, IHasForm {
   public initFromRoute$ = this.userDomainEntityService.initFromRoute();
 
+  public readonly isResettingPassword = new BehaviorSubject<boolean>(false);
+
+  public isResettingPassword$ = this.isResettingPassword.asObservable();
+
   private vm: Readonly<ViewModel> | undefined;
 
-  public vm$: Observable<ViewModel> = combineLatest([this.userDomainEntityService.observe$]).pipe(
+  public vm$: Observable<ViewModel> = combineLatest([
+    this.userDomainEntityService.observe$,
+    this.isResettingPassword$
+  ]).pipe(
     debounceTime(0),
-    map(([domainEntityContext]) => {
+    map(([domainEntityContext, isResettingPassword]) => {
       const context: ViewModel = {
-        ...domainEntityContext
+        ...domainEntityContext,
+        isResettingPassword
       };
       return context;
     }),
@@ -52,7 +73,8 @@ export class UserDetailsComponent implements OnInit, IHasForm {
   constructor(
     private readonly router: Router,
     private readonly userDomainEntityService: UserDomainEntityService,
-    private readonly modalService: ModalService
+    private readonly modalService: ModalService,
+    private readonly apiUsersClient: ApiUsersClient
   ) {}
 
   public ngOnInit(): void {}
@@ -114,5 +136,18 @@ export class UserDetailsComponent implements OnInit, IHasForm {
   public closeShortcut(event: KeyboardEvent) {
     this.router.navigateByUrl('/users');
     event.preventDefault();
+  }
+
+  public resetPassword(): void {
+    this.isResettingPassword.next(true);
+    this.apiUsersClient
+      .resetPassword(this.vm?.id!, new ResetPasswordCommand())
+      .pipe(finalize(() => this.isResettingPassword.next(false)))
+      .subscribe(() =>
+        this.modalService.showMessage(
+          `An e-mail with a reset password link will be sent to ${this.vm?.pristine?.email} within a few minutes.`,
+          'Reset password'
+        )
+      );
   }
 }

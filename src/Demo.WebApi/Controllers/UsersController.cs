@@ -1,3 +1,4 @@
+using Demo.Application.Users.Commands.ResetPassword;
 using System;
 using System.Net;
 using System.Threading;
@@ -119,6 +120,19 @@ namespace Demo.WebApi.Controllers
             [FromQuery] IsEmailAvailableQuery query, CancellationToken cancellationToken)
         {
             return await Mediator.Send(query, cancellationToken);
+        }
+
+        [HttpPost("{id:guid}/ResetPassword")]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
+        public async Task<ActionResult> ResetPassword([FromRoute] Guid id, ResetPasswordCommand command, CancellationToken cancellationToken)
+        {
+            command.SetUserId(id);
+
+            await Mediator.Send(command, cancellationToken);
+
+            return Ok();
         }
 
         // SCAFFOLD-MARKER: ENDPOINT

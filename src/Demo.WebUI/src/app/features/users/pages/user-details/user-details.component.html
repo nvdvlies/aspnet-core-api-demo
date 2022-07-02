@@ -32,6 +32,16 @@
           </button>
           <button
             mat-raised-button
+            (click)="resetPassword()"
+            type="button"
+            *ngIf="vm.id != null"
+            [disabled]="vm.isResettingPassword"
+            [class.button-spinner]="vm.isResettingPassword"
+          >
+            Reset password
+          </button>
+          <button
+            mat-raised-button
             (click)="delete()"
             type="button"
             *ngIf="vm.id != null"
