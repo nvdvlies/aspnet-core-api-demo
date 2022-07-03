@@ -1,5 +1,6 @@
 using System;
 using Demo.Domain.Role;
+using Demo.Domain.Role.Seed;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -7,9 +8,6 @@ namespace Demo.Infrastructure.Persistence.Configuration
 {
     public class RoleEntityTypeConfiguration : IEntityTypeConfiguration<Role>
     {
-        public static readonly Guid AdministratorRoleId = Guid.Parse("7C20005D-D5F8-4079-AF26-434D69B43C82");
-        public static readonly Guid UserRoleId = Guid.Parse("D8A81CD5-D828-47AC-9F72-2E660F43A176");
-
         public void Configure(EntityTypeBuilder<Role> builder)
         {
             builder.ToTable(nameof(Role))
@@ -35,8 +33,7 @@ namespace Demo.Infrastructure.Persistence.Configuration
 
             builder.UseXminAsConcurrencyToken();
 
-            builder.HasData(new Role { Id = AdministratorRoleId, Name = "Admin", ExternalId = "rol_N4KEnzIMUDaetcyr" },
-                new Role { Id = UserRoleId, Name = "User", ExternalId = "rol_OUaEQHOTuugOJHwe" });
+            builder.HasData(DefaultAdministratorRole.Create(), DefaultUserRole.Create());
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿using Demo.Domain.User;
+﻿using Demo.Domain.Role.Seed;
+using Demo.Domain.User;
+using Demo.Domain.User.Seed;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -21,8 +23,8 @@ namespace Demo.Infrastructure.Persistence.Configuration
 
             builder.HasData(new UserRole
             {
-                UserId = UserEntityTypeConfiguration.AdministratorUserId,
-                RoleId = RoleEntityTypeConfiguration.AdministratorRoleId
+                UserId = DefaultAdministratorUser.UserId,
+                RoleId = DefaultAdministratorRole.RoleId
             });
         }
     }

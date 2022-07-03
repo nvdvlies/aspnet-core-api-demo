@@ -1,5 +1,7 @@
 using System;
+using Demo.Domain.Shared.Interfaces;
 using Demo.Domain.User;
+using Demo.Domain.User.Seed;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -7,9 +9,6 @@ namespace Demo.Infrastructure.Persistence.Configuration
 {
     public class UserEntityTypeConfiguration : IEntityTypeConfiguration<User>
     {
-        public static readonly Guid AdministratorUserId = Guid.Parse("08463267-7065-4631-9944-08DA09D992D6");
-        public static readonly string AdministratorExternalId = "auth0|08463267-7065-4631-9944-08da09d992d6";
-
         public void Configure(EntityTypeBuilder<User> builder)
         {
             builder.ToTable(nameof(User))
@@ -61,14 +60,7 @@ namespace Demo.Infrastructure.Persistence.Configuration
 
             builder.UseXminAsConcurrencyToken();
 
-            builder.HasData(new User
-            {
-                Id = AdministratorUserId,
-                ExternalId = AdministratorExternalId,
-                FamilyName = "Administrator",
-                Fullname = "Administrator",
-                Email = "demo@demo.com"
-            });
+            builder.HasData(DefaultAdministratorUser.Create());
         }
     }
 }

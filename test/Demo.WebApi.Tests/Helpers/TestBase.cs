@@ -7,6 +7,7 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using AutoFixture;
 using Demo.Domain.Role;
+using Demo.Domain.Role.Seed;
 using Demo.Domain.User;
 using Demo.Infrastructure.Persistence;
 using Demo.Infrastructure.Persistence.Configuration;
@@ -76,13 +77,13 @@ namespace Demo.WebApi.Tests.Helpers
 
         protected async Task SetTestUserToAuthenticated()
         {
-            await SetTestUser(true, new[] { RoleEntityTypeConfiguration.UserRoleId });
+            await SetTestUser(true, new[] { DefaultUserRole.RoleId });
         }
 
         protected async Task SetTestUserToAuthenticatedWithAdministratorRole()
         {
             await SetTestUser(true,
-                new[] { RoleEntityTypeConfiguration.UserRoleId, RoleEntityTypeConfiguration.AdministratorRoleId });
+                new[] { DefaultUserRole.RoleId, DefaultAdministratorRole.RoleId });
         }
 
         private async Task SetTestUser(bool isAuthenticated, IList<Guid> roleIds)
