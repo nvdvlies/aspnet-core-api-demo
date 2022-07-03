@@ -48,5 +48,28 @@ body {
 
 .mat-header-row,
 .mat-row {
-  height: 29px !important;
+  height: 27px !important;
+}
+
+.mat-row .mat-icon {
+  font-size: 21px !important;
+  vertical-align: middle !important;
+}
+
+.mat-form-field-appearance-fill .mat-form-field-infix {
+  padding-bottom: 0.4em !important;
+}
+
+.mat-form-field-appearance-fill .mat-form-field-flex {
+  padding-top: 0.3em !important;
+  padding-left: 0.5em !important;
+  padding-right: 0.5em !important;
+}
+
+.mat-form-field-wrapper {
+  padding-bottom: 1em !important;
+}
+
+.mat-form-field-underline {
+  bottom: 1em !important;
 }
