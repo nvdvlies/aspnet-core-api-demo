@@ -1,5 +1,6 @@
 export const environment = {
   production: false,
+  appName: 'Demo',
   apiBaseUrl: 'http://localhost:5500',
   auth: {
     domain: 'dev-spke9m2i.us.auth0.com',

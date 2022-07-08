@@ -106,8 +106,6 @@ export class UserDomainEntityService extends DomainEntityBase<UserDto> implement
       ),
       gender: new FormControl(null),
       birthDate: new FormControl(null),
-      zoneInfo: new FormControl(null),
-      locale: new FormControl(null),
       userRoles: new FormArray(
         [] as UserRoleFormGroup[],
         [Validators.required, this.uniqueRolesValidator()],

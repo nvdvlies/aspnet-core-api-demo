@@ -1,6 +1,16 @@
-import { ChangeDetectionStrategy, Component, HostListener, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
-import { combineLatest, debounceTime, EMPTY, map, Observable, switchMap, tap } from 'rxjs';
+import {
+  BehaviorSubject,
+  combineLatest,
+  debounceTime,
+  EMPTY,
+  finalize,
+  map,
+  Observable,
+  switchMap,
+  tap
+} from 'rxjs';
 import { DomainEntityService } from '@domain/shared/domain-entity-base';
 import {
   InvoiceDomainEntityService,
@@ -14,7 +24,11 @@ import { ModalService } from '@shared/services/modal.service';
 import { ConfirmDeleteModalComponent } from '@shared/modals/confirm-delete-modal/confirm-delete-modal.component';
 import { InvoiceStatusEnum } from '@api/api.generated.clients';
 
-interface ViewModel extends IInvoiceDomainEntityContext {}
+interface ViewModel extends IInvoiceDomainEntityContext {
+  isMarkingAsSent: boolean;
+  isMarkingAsCancelled: boolean;
+  isMarkingAsPaid: boolean;
+}
 
 @Component({
   templateUrl: './invoice-details.component.html',
@@ -28,20 +42,34 @@ interface ViewModel extends IInvoiceDomainEntityContext {}
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class InvoiceDetailsComponent implements OnInit, IHasForm {
+export class InvoiceDetailsComponent implements IHasForm {
   public initFromRoute$ = this.invoiceDomainEntityService.initFromRoute();
+
+  public readonly isMarkingAsSent = new BehaviorSubject<boolean>(false);
+  public readonly isMarkingAsCancelled = new BehaviorSubject<boolean>(false);
+  public readonly isMarkingAsPaid = new BehaviorSubject<boolean>(false);
+
+  public isMarkingAsSent$ = this.isMarkingAsSent.asObservable();
+  public isMarkingAsCancelled$ = this.isMarkingAsCancelled.asObservable();
+  public isMarkingAsPaid$ = this.isMarkingAsPaid.asObservable();
 
   public InvoiceStatusEnum = InvoiceStatusEnum;
 
   private vm: Readonly<ViewModel> | undefined;
 
   public vm$: Observable<ViewModel> = combineLatest([
-    this.invoiceDomainEntityService.observe$
+    this.invoiceDomainEntityService.observe$,
+    this.isMarkingAsSent$,
+    this.isMarkingAsCancelled$,
+    this.isMarkingAsPaid$
   ]).pipe(
     debounceTime(0),
-    map(([domainEntityContext]) => {
+    map(([domainEntityContext, isMarkingAsSent, isMarkingAsCancelled, isMarkingAsPaid]) => {
       const context: ViewModel = {
-        ...domainEntityContext
+        ...domainEntityContext,
+        isMarkingAsSent,
+        isMarkingAsCancelled,
+        isMarkingAsPaid
       };
       return context;
     }),
@@ -58,8 +86,6 @@ export class InvoiceDetailsComponent implements OnInit, IHasForm {
     private readonly invoiceDomainEntityService: InvoiceDomainEntityService,
     private readonly modalService: ModalService
   ) {}
-
-  public ngOnInit(): void {}
 
   public save(): void {
     if (!this.form.valid) {
@@ -83,13 +109,67 @@ export class InvoiceDetailsComponent implements OnInit, IHasForm {
 
   public delete(): void {
     this.modalService
-      .confirm(ConfirmDeleteModalComponent)
+      .confirmWithModal(ConfirmDeleteModalComponent)
       .pipe(
         switchMap((confirmed) => (confirmed ? this.invoiceDomainEntityService.delete() : EMPTY))
       )
       .subscribe(() => {
         this.router.navigateByUrl('/invoices');
       });
+  }
+
+  public markAsSent(): void {
+    this.modalService
+      .confirmWithMessage('Are you sure you want to mark this invoice as sent?', 'Mark as sent')
+      .pipe(
+        switchMap((confirmed) => {
+          if (confirmed) {
+            this.isMarkingAsSent.next(true);
+            return this.invoiceDomainEntityService.markAsSent();
+          } else {
+            return EMPTY;
+          }
+        }),
+        finalize(() => this.isMarkingAsSent.next(false))
+      )
+      .subscribe();
+  }
+
+  public markAsCancelled(): void {
+    this.modalService
+      .confirmWithMessage(
+        'Are you sure you want to mark this invoice as cancelled?',
+        'Mark as cancelled'
+      )
+      .pipe(
+        switchMap((confirmed) => {
+          if (confirmed) {
+            this.isMarkingAsCancelled.next(true);
+            return this.invoiceDomainEntityService.markAsCancelled();
+          } else {
+            return EMPTY;
+          }
+        }),
+        finalize(() => this.isMarkingAsCancelled.next(false))
+      )
+      .subscribe();
+  }
+
+  public markAsPaid(): void {
+    this.modalService
+      .confirmWithMessage('Are you sure you want to mark this invoice as paid?', 'Mark as paid')
+      .pipe(
+        switchMap((confirmed) => {
+          if (confirmed) {
+            this.isMarkingAsPaid.next(true);
+            return this.invoiceDomainEntityService.markAsPaid();
+          } else {
+            return EMPTY;
+          }
+        }),
+        finalize(() => this.isMarkingAsPaid.next(false))
+      )
+      .subscribe();
   }
 
   public resolveMergeConflictWithTakeTheirs(): void {

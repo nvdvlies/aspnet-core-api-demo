@@ -6,7 +6,7 @@
 .page-header-title {
   display: flex;
   box-sizing: border-box;
-  padding: 0 4px 0 12px;
+  padding: 0 4px 0 10px;
   width: 100%;
   flex-direction: row;
   align-items: center;
@@ -14,7 +14,7 @@
   height: 40px;
   background-color: var(--default-theme-accent-color);
 
-  .title {
+  .header-title {
     font-size: 16px;
     color: var(--default-theme-accent-contrast);
   }

@@ -145,7 +145,8 @@ export abstract class TableDataBase<T extends ITableDataSearchResultItem> {
     if (value >= 0 && value < (this.searchResult.value?.items?.length ?? 0)) {
       this._selectedItemIndex = value;
       this.selectedItem.next(this.searchResult.value?.items?.[this._selectedItemIndex]);
-    } else {
+    } else if (this.searchResult.value?.items?.length === 0) {
+    } else if (this.searchResult.value?.items?.length === 0) {
       this.selectedItem.next(undefined);
     }
   }

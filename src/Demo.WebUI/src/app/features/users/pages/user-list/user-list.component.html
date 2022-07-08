@@ -1,11 +1,19 @@
 <ng-container *ngIf="vm$ | async as vm; else loading">
   <ng-container *ngIf="!vm.isLoadingForFirstTime; else loading">
-    <app-page-header title="Users">
+    <app-page-header headerTitle="Users">
       <button mat-raised-button routerLink="/users/new" type="button">New user</button>
+      <button
+        mat-raised-button
+        routerLink="/users/new"
+        [state]="{ isMachineToMachineUser: true }"
+        type="button"
+      >
+        New machine user
+      </button>
     </app-page-header>
 
     <div class="content-container">
-      <mat-card class="pl-3 pr-3 pb-0 shadow-md pt-3 bg-white h-full">
+      <mat-card class="pl-3 pr-3 pb-0 pt-3 bg-white h-full">
         <div appTableFilterContainer [filterCriteria]="vm.criteria" (filterChange)="search($event)">
           <mat-form-field appearance="fill" class="w-full">
             <mat-label>Search</mat-label>

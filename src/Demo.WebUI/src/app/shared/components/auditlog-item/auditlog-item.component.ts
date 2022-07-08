@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { AuditlogItemDto, AuditlogStatusEnum, AuditlogTypeEnum } from '@api/api.generated.clients';
 
 @Component({
@@ -7,7 +7,7 @@ import { AuditlogItemDto, AuditlogStatusEnum, AuditlogTypeEnum } from '@api/api.
   styleUrls: ['./auditlog-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AuditlogItemComponent implements OnInit {
+export class AuditlogItemComponent {
   @Input()
   public item: AuditlogItemDto | undefined;
 
@@ -24,8 +24,6 @@ export class AuditlogItemComponent implements OnInit {
   public AuditlogTypeEnum = AuditlogTypeEnum;
 
   constructor() {}
-
-  ngOnInit(): void {}
 
   public getParentPropertyName(parentItem: AuditlogItemDto): string | undefined {
     return this.parentPropertyName

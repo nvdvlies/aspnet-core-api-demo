@@ -10,7 +10,7 @@
     <ng-container *ngIf="!vm.loadingEntityFailed">
       <form [formGroup]="form" novalidate (ngSubmit)="save()">
         <app-page-header
-          title="{{
+          headerTitle="{{
             vm.id != null
               ? 'Customer: ' + vm.pristine?.code + ' - ' + vm.pristine?.name
               : 'New customer'
@@ -74,7 +74,7 @@
               </button>
             </div>
           </app-message>
-          <mat-card class="card shadow-md bg-white pb-1 pl-3 pr-3 pt-0 mt-1">
+          <mat-card class="card bg-white pb-1 pl-3 pr-3 pt-0 mt-1">
             <mat-card-title class="pl-1 pt-1 mb-1 text-lg">General</mat-card-title>
             <mat-card-content>
               <div class="row">

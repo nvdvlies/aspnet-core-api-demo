@@ -6,7 +6,8 @@ import {
   SkipSelf,
   Self,
   ChangeDetectionStrategy,
-  ViewChild
+  ViewChild,
+  OnInit
 } from '@angular/core';
 import { ControlContainer, FormControl, NgControl } from '@angular/forms';
 import { FocusMonitor } from '@angular/cdk/a11y';
@@ -29,7 +30,10 @@ export interface ViewModel {}
     }
   ]
 })
-export class CurrencyFormFieldControlComponent extends MatFormFieldControlBase<string> {
+export class CurrencyFormFieldControlComponent
+  extends MatFormFieldControlBase<string>
+  implements OnInit
+{
   @ViewChild('input', { static: true })
   public inputElementRef!: ElementRef;
 

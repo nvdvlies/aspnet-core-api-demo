@@ -4057,7 +4057,7 @@ export interface IAuditlogDto extends IEntityDto {
     auditlogItems?: AuditlogItemDto[] | undefined;
 }
 
-export class AuditlogItemDto extends EntityDto implements IAuditlogItemDto {
+export class AuditlogItemDto implements IAuditlogItemDto {
     propertyName?: string | undefined;
     status!: AuditlogStatusEnum;
     type!: AuditlogTypeEnum;
@@ -4066,11 +4066,15 @@ export class AuditlogItemDto extends EntityDto implements IAuditlogItemDto {
     auditlogItems?: AuditlogItemDto[] | undefined;
 
     constructor(data?: IAuditlogItemDto) {
-        super(data);
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
     }
 
     init(_data?: any) {
-        super.init(_data);
         if (_data) {
             this.propertyName = _data["propertyName"];
             this.status = _data["status"];
@@ -4104,7 +4108,6 @@ export class AuditlogItemDto extends EntityDto implements IAuditlogItemDto {
             for (let item of this.auditlogItems)
                 data["auditlogItems"].push(item.toJSON());
         }
-        super.toJSON(data);
         return data;
     }
 
@@ -4116,7 +4119,7 @@ export class AuditlogItemDto extends EntityDto implements IAuditlogItemDto {
     }
 }
 
-export interface IAuditlogItemDto extends IEntityDto {
+export interface IAuditlogItemDto {
     propertyName?: string | undefined;
     status: AuditlogStatusEnum;
     type: AuditlogTypeEnum;
@@ -4245,8 +4248,6 @@ export class CurrentUserDto extends SoftDeleteEntityDto implements ICurrentUserD
     email?: string | undefined;
     gender?: GenderEnum | undefined;
     birthDate?: Date | undefined;
-    zoneInfo?: string | undefined;
-    locale?: string | undefined;
     userRoles?: UserRoleDto[] | undefined;
 
     constructor(data?: ICurrentUserDto) {
@@ -4264,8 +4265,6 @@ export class CurrentUserDto extends SoftDeleteEntityDto implements ICurrentUserD
             this.email = _data["email"];
             this.gender = _data["gender"];
             this.birthDate = _data["birthDate"] ? new Date(_data["birthDate"].toString()) : <any>undefined;
-            this.zoneInfo = _data["zoneInfo"];
-            this.locale = _data["locale"];
             if (Array.isArray(_data["userRoles"])) {
                 this.userRoles = [] as any;
                 for (let item of _data["userRoles"])
@@ -4291,8 +4290,6 @@ export class CurrentUserDto extends SoftDeleteEntityDto implements ICurrentUserD
         data["email"] = this.email;
         data["gender"] = this.gender;
         data["birthDate"] = this.birthDate ? this.birthDate.toISOString() : <any>undefined;
-        data["zoneInfo"] = this.zoneInfo;
-        data["locale"] = this.locale;
         if (Array.isArray(this.userRoles)) {
             data["userRoles"] = [];
             for (let item of this.userRoles)
@@ -4319,8 +4316,6 @@ export interface ICurrentUserDto extends ISoftDeleteEntityDto {
     email?: string | undefined;
     gender?: GenderEnum | undefined;
     birthDate?: Date | undefined;
-    zoneInfo?: string | undefined;
-    locale?: string | undefined;
     userRoles?: UserRoleDto[] | undefined;
 }
 
@@ -7616,8 +7611,6 @@ export class UserDto extends SoftDeleteEntityDto implements IUserDto {
     email?: string | undefined;
     gender?: GenderEnum | undefined;
     birthDate?: Date | undefined;
-    zoneInfo?: string | undefined;
-    locale?: string | undefined;
     userRoles?: UserRoleDto[] | undefined;
 
     constructor(data?: IUserDto) {
@@ -7635,8 +7628,6 @@ export class UserDto extends SoftDeleteEntityDto implements IUserDto {
             this.email = _data["email"];
             this.gender = _data["gender"];
             this.birthDate = _data["birthDate"] ? new Date(_data["birthDate"].toString()) : <any>undefined;
-            this.zoneInfo = _data["zoneInfo"];
-            this.locale = _data["locale"];
             if (Array.isArray(_data["userRoles"])) {
                 this.userRoles = [] as any;
                 for (let item of _data["userRoles"])
@@ -7662,8 +7653,6 @@ export class UserDto extends SoftDeleteEntityDto implements IUserDto {
         data["email"] = this.email;
         data["gender"] = this.gender;
         data["birthDate"] = this.birthDate ? this.birthDate.toISOString() : <any>undefined;
-        data["zoneInfo"] = this.zoneInfo;
-        data["locale"] = this.locale;
         if (Array.isArray(this.userRoles)) {
             data["userRoles"] = [];
             for (let item of this.userRoles)
@@ -7690,8 +7679,6 @@ export interface IUserDto extends ISoftDeleteEntityDto {
     email?: string | undefined;
     gender?: GenderEnum | undefined;
     birthDate?: Date | undefined;
-    zoneInfo?: string | undefined;
-    locale?: string | undefined;
     userRoles?: UserRoleDto[] | undefined;
 }
 
@@ -7745,8 +7732,6 @@ export class CreateUserCommand implements ICreateUserCommand {
     email?: string | undefined;
     gender?: GenderEnum | undefined;
     birthDate?: Date | undefined;
-    zoneInfo?: string | undefined;
-    locale?: string | undefined;
     userRoles?: CreateUserCommandUserRole[] | undefined;
 
     constructor(data?: ICreateUserCommand) {
@@ -7766,8 +7751,6 @@ export class CreateUserCommand implements ICreateUserCommand {
             this.email = _data["email"];
             this.gender = _data["gender"];
             this.birthDate = _data["birthDate"] ? new Date(_data["birthDate"].toString()) : <any>undefined;
-            this.zoneInfo = _data["zoneInfo"];
-            this.locale = _data["locale"];
             if (Array.isArray(_data["userRoles"])) {
                 this.userRoles = [] as any;
                 for (let item of _data["userRoles"])
@@ -7791,8 +7774,6 @@ export class CreateUserCommand implements ICreateUserCommand {
         data["email"] = this.email;
         data["gender"] = this.gender;
         data["birthDate"] = this.birthDate ? this.birthDate.toISOString() : <any>undefined;
-        data["zoneInfo"] = this.zoneInfo;
-        data["locale"] = this.locale;
         if (Array.isArray(this.userRoles)) {
             data["userRoles"] = [];
             for (let item of this.userRoles)
@@ -7816,8 +7797,6 @@ export interface ICreateUserCommand {
     email?: string | undefined;
     gender?: GenderEnum | undefined;
     birthDate?: Date | undefined;
-    zoneInfo?: string | undefined;
-    locale?: string | undefined;
     userRoles?: CreateUserCommandUserRole[] | undefined;
 }
 
@@ -7871,8 +7850,6 @@ export class UpdateUserCommand implements IUpdateUserCommand {
     email?: string | undefined;
     gender?: GenderEnum | undefined;
     birthDate?: Date | undefined;
-    zoneInfo?: string | undefined;
-    locale?: string | undefined;
     userRoles?: UpdateUserCommandUserRoleDto[] | undefined;
 
     constructor(data?: IUpdateUserCommand) {
@@ -7892,8 +7869,6 @@ export class UpdateUserCommand implements IUpdateUserCommand {
             this.email = _data["email"];
             this.gender = _data["gender"];
             this.birthDate = _data["birthDate"] ? new Date(_data["birthDate"].toString()) : <any>undefined;
-            this.zoneInfo = _data["zoneInfo"];
-            this.locale = _data["locale"];
             if (Array.isArray(_data["userRoles"])) {
                 this.userRoles = [] as any;
                 for (let item of _data["userRoles"])
@@ -7917,8 +7892,6 @@ export class UpdateUserCommand implements IUpdateUserCommand {
         data["email"] = this.email;
         data["gender"] = this.gender;
         data["birthDate"] = this.birthDate ? this.birthDate.toISOString() : <any>undefined;
-        data["zoneInfo"] = this.zoneInfo;
-        data["locale"] = this.locale;
         if (Array.isArray(this.userRoles)) {
             data["userRoles"] = [];
             for (let item of this.userRoles)
@@ -7942,8 +7915,6 @@ export interface IUpdateUserCommand {
     email?: string | undefined;
     gender?: GenderEnum | undefined;
     birthDate?: Date | undefined;
-    zoneInfo?: string | undefined;
-    locale?: string | undefined;
     userRoles?: UpdateUserCommandUserRoleDto[] | undefined;
 }
 

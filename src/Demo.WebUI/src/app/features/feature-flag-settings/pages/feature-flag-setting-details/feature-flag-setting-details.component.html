@@ -13,7 +13,7 @@
           novalidate
           (ngSubmit)="save()"
         >
-          <app-page-header title="{{ 'Feature flag: ' + vm.featureFlagName }}">
+          <app-page-header headerTitle="{{ 'Feature flag: ' + vm.featureFlagName }}">
             <button
               mat-icon-button
               type="button"
@@ -65,7 +65,7 @@
                 </button>
               </div>
             </app-message>
-            <mat-card class="card shadow-md bg-white pb-1 pl-3 pr-3 pt-0 mt-1">
+            <mat-card class="card bg-white pb-1 pl-3 pr-3 pt-0 mt-1">
               <mat-card-title class="pl-1 pt-1 mb-1 text-lg">{{
                 featureFlagFormGroup.getRawValue().name
               }}</mat-card-title>
@@ -99,7 +99,7 @@
             </mat-card>
 
             <ng-container *ngIf="!featureFlagFormGroup.getRawValue().enabledForAll">
-              <mat-card class="card shadow-md bg-white pb-2 pl-3 pr-3 pt-0 mt-1">
+              <mat-card class="card bg-white pb-2 pl-3 pr-3 pt-0 mt-1">
                 <mat-card-title class="pl-1 pt-1 mb-1 text-lg"
                   >Enabled for specific users</mat-card-title
                 >

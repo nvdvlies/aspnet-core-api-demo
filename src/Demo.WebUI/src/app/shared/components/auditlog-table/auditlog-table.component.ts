@@ -1,12 +1,5 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import {
-  Component,
-  OnInit,
-  ChangeDetectionStrategy,
-  Input,
-  Output,
-  EventEmitter
-} from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { AuditlogDto } from '@api/api.generated.clients';
 
@@ -33,7 +26,7 @@ export interface AuditlogTableData {
     ])
   ]
 })
-export class AuditlogTableComponent implements OnInit {
+export class AuditlogTableComponent {
   @Input()
   public data: AuditlogTableData | undefined;
 
@@ -47,8 +40,6 @@ export class AuditlogTableComponent implements OnInit {
   public expandedRow: AuditlogDto | null = null;
 
   constructor() {}
-
-  ngOnInit(): void {}
 
   public pageChange(event: PageEvent): void {
     if (event.pageIndex !== event.previousPageIndex) {

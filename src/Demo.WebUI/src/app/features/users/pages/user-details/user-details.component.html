@@ -10,7 +10,7 @@
     <ng-container *ngIf="!vm.loadingEntityFailed">
       <form [formGroup]="form" novalidate (ngSubmit)="save()">
         <app-page-header
-          title="{{ vm.id != null ? 'User: ' + vm.pristine?.fullname : 'New user' }}"
+          headerTitle="{{ vm.id != null ? 'User: ' + vm.pristine?.fullname : 'New user' }}"
         >
           <button
             mat-icon-button
@@ -80,20 +80,33 @@
               </button>
             </div>
           </app-message>
-          <mat-card class="card shadow-md bg-white pb-1 pl-3 pr-3 pt-0 mt-1 mb-3">
+          <mat-card class="card bg-white pb-1 pl-3 pr-3 pt-0 mt-1 mb-3">
             <mat-card-title class="pl-1 pt-1 mb-1 text-lg">General</mat-card-title>
             <mat-card-content>
               <div class="row">
                 <div class="col">
                   <mat-form-field appearance="fill" class="full-width">
-                    <mat-label>Lastname</mat-label>
+                    <mat-label>First name</mat-label>
                     <input
                       matInput
+                      placeholder="First name"
+                      formControlName="givenName"
                       [appSetFocus]="vm.id == null"
-                      placeholder="Lastname"
-                      formControlName="familyName"
-                      type="text"
                     />
+                    <mat-error appDomainEntityErrorMessage></mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="col">
+                  <mat-form-field appearance="fill" class="full-width">
+                    <mat-label>Middle name</mat-label>
+                    <input matInput placeholder="Middle name" formControlName="middleName" />
+                    <mat-error appDomainEntityErrorMessage></mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="col">
+                  <mat-form-field appearance="fill" class="full-width">
+                    <mat-label>Last name</mat-label>
+                    <input matInput placeholder="Last name" formControlName="familyName" />
                     <mat-error appDomainEntityErrorMessage></mat-error>
                   </mat-form-field>
                 </div>
@@ -107,10 +120,24 @@
                   </mat-form-field>
                 </div>
               </div>
+              <div class="row" *ngIf="vm.id != null">
+                <div class="col">
+                  <mat-form-field appearance="fill" class="full-width">
+                    <mat-label>External Id</mat-label>
+                    <input
+                      matInput
+                      placeholder="External Id"
+                      formControlName="externalId"
+                      type="text"
+                    />
+                    <mat-error appDomainEntityErrorMessage></mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
             </mat-card-content>
           </mat-card>
 
-          <mat-card class="card shadow-md bg-white pb-1 pl-3 pr-3 pt-0 pb-3 mt-1 mb-3">
+          <mat-card class="card bg-white pb-1 pl-3 pr-3 pt-0 pb-3 mt-1 mb-3">
             <mat-card-title class="pl-1 pt-1 mb-1 text-lg">Roles</mat-card-title>
             <mat-card-content>
               <ng-container formArrayName="userRoles">

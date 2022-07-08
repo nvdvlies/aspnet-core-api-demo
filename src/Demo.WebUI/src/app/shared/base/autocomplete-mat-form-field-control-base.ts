@@ -7,7 +7,8 @@ import {
   Self,
   Output,
   EventEmitter,
-  ViewChild
+  ViewChild,
+  OnInit
 } from '@angular/core';
 import { ControlContainer, FormControl, NgControl } from '@angular/forms';
 import { MatFormFieldControlBase } from '@shared/base/mat-form-field-control-base';
@@ -43,7 +44,10 @@ export class AutocompleteOption implements IAutocompleteOption {
 @Component({
   template: ''
 })
-export abstract class AutocompleteMatFormFieldControlBase extends MatFormFieldControlBase<string> {
+export abstract class AutocompleteMatFormFieldControlBase
+  extends MatFormFieldControlBase<string>
+  implements OnInit
+{
   @ViewChild(MatInput) matInput!: MatInput;
 
   @Output()

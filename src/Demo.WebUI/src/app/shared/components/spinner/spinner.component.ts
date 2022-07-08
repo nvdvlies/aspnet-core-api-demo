@@ -12,7 +12,7 @@ import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core
   styleUrls: ['./spinner.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SpinnerComponent implements OnInit {
+export class SpinnerComponent {
   private _diameter = 50;
   @Input()
   get diameter() {
@@ -32,6 +32,4 @@ export class SpinnerComponent implements OnInit {
   }
 
   constructor() {}
-
-  ngOnInit(): void {}
 }

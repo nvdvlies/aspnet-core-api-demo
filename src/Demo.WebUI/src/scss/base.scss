@@ -62,7 +62,7 @@ body {
 
 .mat-form-field-appearance-fill .mat-form-field-flex {
   padding-top: 0.3em !important;
-  padding-left: 0.5em !important;
+  padding-left: 0.6em !important;
   padding-right: 0.5em !important;
 }
 
@@ -72,4 +72,18 @@ body {
 
 .mat-form-field-underline {
   bottom: 1em !important;
+}
+
+th.mat-header-cell:first-of-type,
+td.mat-cell:first-of-type,
+td.mat-footer-cell:first-of-type {
+  padding-left: 6px !important;
+}
+
+.mat-input-element:disabled {
+  color: inherit !important;
+}
+
+.mat-form-field-appearance-fill.mat-form-field-disabled .mat-form-field-label {
+  color: rgba(0, 0, 0, 0.6) !important;
 }

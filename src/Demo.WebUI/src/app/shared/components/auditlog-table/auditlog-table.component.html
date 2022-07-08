@@ -1,5 +1,5 @@
 <ng-container *ngIf="data">
-  <mat-card class="shadow-md bg-white">
+  <mat-card class="bg-white">
     <table
       mat-table
       class="w-full bg-inherit"
@@ -42,9 +42,9 @@
         >
           <div
             class="detail-row-body"
-            [@detailExpand]="row == expandedRow ? 'expanded' : 'collapsed'"
+            [@detailExpand]="row === expandedRow ? 'expanded' : 'collapsed'"
           >
-            <ng-container *ngIf="row == expandedRow">
+            <ng-container *ngIf="row === expandedRow">
               <div class="p-2">
                 <app-auditlog-item
                   *ngFor="let item of row.auditlogItems"

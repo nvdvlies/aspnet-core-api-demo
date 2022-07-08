@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, HostListener, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import {
   combineLatest,
@@ -41,7 +41,7 @@ interface ViewModel extends IUserDomainEntityContext {
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class UserDetailsComponent implements OnInit, IHasForm {
+export class UserDetailsComponent implements IHasForm {
   public initFromRoute$ = this.userDomainEntityService.initFromRoute();
 
   public readonly isResettingPassword = new BehaviorSubject<boolean>(false);
@@ -77,8 +77,6 @@ export class UserDetailsComponent implements OnInit, IHasForm {
     private readonly apiUsersClient: ApiUsersClient
   ) {}
 
-  public ngOnInit(): void {}
-
   public save(): void {
     if (!this.form.valid) {
       return;
@@ -105,7 +103,7 @@ export class UserDetailsComponent implements OnInit, IHasForm {
 
   public delete(): void {
     this.modalService
-      .confirm(ConfirmDeleteModalComponent)
+      .confirmWithModal(ConfirmDeleteModalComponent)
       .pipe(switchMap((confirmed) => (confirmed ? this.userDomainEntityService.delete() : EMPTY)))
       .subscribe(() => {
         this.router.navigateByUrl('/users');

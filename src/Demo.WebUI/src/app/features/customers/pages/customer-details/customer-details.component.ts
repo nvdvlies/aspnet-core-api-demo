@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, HostListener, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { combineLatest, debounceTime, EMPTY, map, Observable, switchMap, tap } from 'rxjs';
 import { DomainEntityService } from '@domain/shared/domain-entity-base';
@@ -26,7 +26,7 @@ interface ViewModel extends ICustomerDomainEntityContext {}
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CustomerDetailsComponent implements OnInit, IHasForm {
+export class CustomerDetailsComponent implements IHasForm {
   public initFromRoute$ = this.customerDomainEntityService.initFromRoute();
 
   private vm: Readonly<ViewModel> | undefined;
@@ -50,8 +50,6 @@ export class CustomerDetailsComponent implements OnInit, IHasForm {
     private readonly modalService: ModalService
   ) {}
 
-  public ngOnInit(): void {}
-
   public save(): void {
     if (!this.form.valid) {
       return;
@@ -66,7 +64,7 @@ export class CustomerDetailsComponent implements OnInit, IHasForm {
 
   public delete(): void {
     this.modalService
-      .confirm(ConfirmDeleteModalComponent)
+      .confirmWithModal(ConfirmDeleteModalComponent)
       .pipe(
         switchMap((confirmed) => (confirmed ? this.customerDomainEntityService.delete() : EMPTY))
       )

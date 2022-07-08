@@ -1,6 +1,6 @@
 <ng-container *ngIf="vm$ | async as vm; else loading">
   <ng-container *ngIf="!vm.isLoadingForFirstTime; else loading">
-    <app-page-header title="Auditlog: Application settings">
+    <app-page-header headerTitle="Auditlog: Application settings">
       <button mat-raised-button routerLink="/application-settings" type="button">Close</button>
     </app-page-header>
 

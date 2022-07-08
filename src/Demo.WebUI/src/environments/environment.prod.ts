@@ -1,5 +1,6 @@
 export const environment = {
   production: true,
+  appName: 'Demo',
   apiBaseUrl: '',
   auth: {
     domain: '',

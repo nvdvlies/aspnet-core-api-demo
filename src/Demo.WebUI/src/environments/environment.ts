@@ -4,6 +4,7 @@
 
 export const environment = {
   production: false,
+  appName: 'Demo',
   apiBaseUrl: 'https://localhost:5001',
   auth: {
     domain: 'dev-spke9m2i.us.auth0.com',

@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy, OnInit } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { CacheBase } from '@shared/base/cache-base';
 import { map, Observable, of, Subject, takeUntil, tap } from 'rxjs';
 
@@ -7,17 +7,15 @@ export interface ILookupItem {
 }
 
 @Injectable()
-export abstract class LookupBase<T extends ILookupItem>
-  extends CacheBase<T>
-  implements OnInit, OnDestroy
-{
+export abstract class LookupBase<T extends ILookupItem> extends CacheBase<T> implements OnDestroy {
   protected abstract lookupFunction: (ids: string[]) => Observable<T[]>;
   protected abstract itemUpdatedEvent$: Observable<string>;
 
   private readonly onDestroy = new Subject<void>();
   private onDestroy$ = this.onDestroy.asObservable();
 
-  public ngOnInit(): void {
+  constructor() {
+    super();
     this.subscribeToItemUpdatedEvent();
   }
 

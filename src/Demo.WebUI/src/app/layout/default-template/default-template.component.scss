@@ -9,3 +9,14 @@
 :host ::ng-deep .mat-paginator-page-size-select {
   margin-top: 1px !important;
 }
+
+.mat-menu-item {
+  line-height: 38px;
+  height: 38px;
+}
+
+.mat-toolbar-single-row {
+  height: 47px;
+  padding-left: 10px;
+  padding-right: 4px;
+}

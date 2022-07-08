@@ -1,5 +1,4 @@
-import { ChangeDetectionStrategy, Component, HostListener, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ChangeDetectionStrategy, Component, HostListener } from '@angular/core';
 import { BehaviorSubject, combineLatest, debounceTime, map, Observable, tap } from 'rxjs';
 import { DomainEntityService } from '@domain/shared/domain-entity-base';
 import {
@@ -25,7 +24,7 @@ interface ViewModel extends IApplicationSettingsDomainEntityContext {
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ApplicationSettingsDetailsComponent implements OnInit, IHasForm {
+export class ApplicationSettingsDetailsComponent implements IHasForm {
   public read$ = this.applicationSettingsDomainEntityService.read();
 
   public readonly settingsSaved = new BehaviorSubject<boolean>(false);
@@ -54,8 +53,6 @@ export class ApplicationSettingsDetailsComponent implements OnInit, IHasForm {
   constructor(
     private readonly applicationSettingsDomainEntityService: ApplicationSettingsDomainEntityService
   ) {}
-
-  public ngOnInit(): void {}
 
   public save(): void {
     this.settingsSaved.next(false);

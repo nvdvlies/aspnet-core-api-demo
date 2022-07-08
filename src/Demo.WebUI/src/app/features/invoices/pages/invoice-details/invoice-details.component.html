@@ -10,7 +10,9 @@
     <ng-container *ngIf="!vm.loadingEntityFailed">
       <form [formGroup]="form" novalidate (ngSubmit)="save()">
         <app-page-header
-          title="{{ vm.id != null ? 'Invoice: ' + vm.pristine?.invoiceNumber : 'New invoice' }}"
+          headerTitle="{{
+            vm.id != null ? 'Invoice: ' + vm.pristine?.invoiceNumber : 'New invoice'
+          }}"
         >
           <button
             mat-icon-button
@@ -25,10 +27,48 @@
             mat-raised-button
             color="primary"
             type="submit"
-            [disabled]="vm.isSaving"
-            [class.button-spinner]="vm.isSaving"
+            [disabled]="
+              vm.isSaving && !vm.isMarkingAsSent && !vm.isMarkingAsCancelled && !vm.isMarkingAsPaid
+            "
+            [class.button-spinner]="
+              vm.isSaving && !vm.isMarkingAsSent && !vm.isMarkingAsCancelled && !vm.isMarkingAsPaid
+            "
           >
             Save
+          </button>
+          <button
+            mat-raised-button
+            (click)="markAsSent()"
+            type="button"
+            *ngIf="vm.id != null && vm.entity?.status === InvoiceStatusEnum.Draft"
+            [disabled]="vm.isMarkingAsSent"
+            [class.button-spinner]="vm.isMarkingAsSent"
+          >
+            Mark as sent
+          </button>
+          <button
+            mat-raised-button
+            (click)="markAsCancelled()"
+            type="button"
+            *ngIf="
+              vm.id != null &&
+              (vm.entity?.status === InvoiceStatusEnum.Draft ||
+                vm.entity?.status === InvoiceStatusEnum.Sent)
+            "
+            [disabled]="vm.isMarkingAsCancelled"
+            [class.button-spinner]="vm.isMarkingAsCancelled"
+          >
+            Mark as cancelled
+          </button>
+          <button
+            mat-raised-button
+            (click)="markAsPaid()"
+            type="button"
+            *ngIf="vm.id != null && vm.entity?.status === InvoiceStatusEnum.Sent"
+            [disabled]="vm.isMarkingAsPaid"
+            [class.button-spinner]="vm.isMarkingAsPaid"
+          >
+            Mark as paid
           </button>
           <button
             mat-raised-button
@@ -70,7 +110,7 @@
               </button>
             </div>
           </app-message>
-          <mat-card class="card shadow-md bg-white pb-1 pl-3 pr-3 pt-0 mt-1 mb-3">
+          <mat-card class="card bg-white pb-1 pl-3 pr-3 pt-0 mt-1 mb-3">
             <mat-card-title class="pl-1 pt-1 mb-1 text-lg">General</mat-card-title>
             <mat-card-content>
               <div class="row">
@@ -90,8 +130,7 @@
                     <mat-error appDomainEntityErrorMessage></mat-error>
                   </mat-form-field>
                 </div>
-              </div>
-              <div class="row">
+
                 <div class="col">
                   <mat-form-field appearance="fill" class="full-width">
                     <mat-label>Customer</mat-label>
@@ -101,6 +140,7 @@
                       matPrefix
                       mat-icon-button
                       (click)="customerAutocomplete.focus()"
+                      *ngIf="!customerAutocomplete.disabled"
                     >
                       <mat-icon>search</mat-icon>
                     </button>
@@ -112,21 +152,19 @@
                     >
                     </app-customer-autocomplete-form-field-control>
                     <button
-                      *ngIf="customerAutocomplete.value != null"
+                      *ngIf="customerAutocomplete.value != null && !customerAutocomplete.disabled"
                       type="button"
                       mat-button
                       mat-icon-button
                       matSuffix
                       (click)="customerAutocomplete.clearSearchField()"
-                      [disabled]="customerAutocomplete.disabled"
                     >
                       <mat-icon>close</mat-icon>
                     </button>
                     <mat-error appDomainEntityErrorMessage></mat-error>
                   </mat-form-field>
                 </div>
-              </div>
-              <div class="row">
+
                 <div class="col">
                   <mat-form-field appearance="fill" class="full-width">
                     <mat-label>Order reference</mat-label>
@@ -139,11 +177,26 @@
                     <mat-error appDomainEntityErrorMessage></mat-error>
                   </mat-form-field>
                 </div>
+
+                <div class="col" *ngIf="vm.id != null">
+                  <mat-form-field appearance="fill" class="full-width">
+                    <mat-label>Status</mat-label>
+                    <input
+                      matInput
+                      placeholder="Status"
+                      type="text"
+                      disabled="true"
+                      [value]="
+                        vm.entity?.status ?? InvoiceStatusEnum.Draft | invoiceStatusEnumToName
+                      "
+                    />
+                  </mat-form-field>
+                </div>
               </div>
             </mat-card-content>
           </mat-card>
 
-          <mat-card class="card shadow-md bg-white pb-3 pl-3 pr-3 pt-0 pb-2 mt-1 mb-2">
+          <mat-card class="card bg-white pb-3 pl-3 pr-3 pt-0 pb-2 mt-1 mb-2">
             <mat-card-title class="pl-1 pt-1 mb-1 text-lg">Invoice lines</mat-card-title>
             <mat-card-content>
               <ng-container formArrayName="invoiceLines">
@@ -223,7 +276,7 @@
                 mat-raised-button
                 type="button"
                 (click)="addInvoiceLine()"
-                [disabled]="!vm.canEditInvoiceContent"
+                *ngIf="vm.canEditInvoiceContent"
               >
                 <mat-icon>add</mat-icon> Add line
               </button>

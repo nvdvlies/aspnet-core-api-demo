@@ -31,6 +31,7 @@ import { InvoiceStatusEnumToNamePipe } from './pipes/invoice-status-enum-to-name
 import { RoleIdToNamePipe } from './pipes/role-id-to-name.pipe';
 import { RoleIdsToNamesPipe } from './pipes/roles-ids-to-names.pipe';
 import { MessageModalComponent } from './modals/message-modal/message-modal.component';
+import { ConfirmModalComponent } from './modals/confirm-modal/confirm-modal.component';
 
 @NgModule({
   declarations: [
@@ -62,7 +63,8 @@ import { MessageModalComponent } from './modals/message-modal/message-modal.comp
     InvoiceStatusEnumToNamePipe,
     RoleIdToNamePipe,
     RoleIdsToNamesPipe,
-    MessageModalComponent
+    MessageModalComponent,
+    ConfirmModalComponent
   ],
   imports: [CommonModule, ReactiveFormsModule, FormsModule, MaterialModule],
   exports: [
@@ -97,7 +99,8 @@ import { MessageModalComponent } from './modals/message-modal/message-modal.comp
     InvoiceStatusEnumToNamePipe,
     RoleIdToNamePipe,
     RoleIdsToNamesPipe,
-    MessageModalComponent
+    MessageModalComponent,
+    ConfirmModalComponent
   ],
   providers: [
     CustomerIdToNamePipe,

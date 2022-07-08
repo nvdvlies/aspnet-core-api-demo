@@ -25,7 +25,7 @@ interface ViewModel extends IUserPreferencesDomainEntityContext {
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class UserPreferencesDetailsComponent implements OnInit, IHasForm {
+export class UserPreferencesDetailsComponent implements IHasForm {
   public read$ = this.userPreferencesDomainEntityService.read();
 
   public readonly settingsSaved = new BehaviorSubject<boolean>(false);
@@ -55,8 +55,6 @@ export class UserPreferencesDetailsComponent implements OnInit, IHasForm {
     private readonly router: Router,
     private readonly userPreferencesDomainEntityService: UserPreferencesDomainEntityService
   ) {}
-
-  public ngOnInit(): void {}
 
   public save(): void {
     this.settingsSaved.next(false);

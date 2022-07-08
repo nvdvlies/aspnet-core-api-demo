@@ -68,25 +68,31 @@ export class InvoiceStoreService extends StoreBase<InvoiceDto> {
     return super.update(invoice);
   }
 
-  public markAsSent(invoice: InvoiceDto): Observable<InvoiceDto> {
+  protected markAsSentFunction = (invoice: InvoiceDto) => {
     const command = new MarkInvoiceAsSentCommand();
-    return super.update(invoice, (invoice: InvoiceDto) =>
-      this.apiInvoicesClient.markAsSent(invoice.id, command)
-    );
+    return this.apiInvoicesClient.markAsSent(invoice.id, command);
+  };
+
+  public markAsSent(invoice: InvoiceDto): Observable<InvoiceDto> {
+    return super.update(invoice, this.markAsSentFunction);
   }
+
+  protected markAsPaidFunction = (invoice: InvoiceDto) => {
+    const command = new MarkInvoiceAsPaidCommand();
+    return this.apiInvoicesClient.markAsPaid(invoice.id, command);
+  };
 
   public markAsPaid(invoice: InvoiceDto): Observable<InvoiceDto> {
-    const command = new MarkInvoiceAsPaidCommand();
-    return super.update(invoice, (invoice: InvoiceDto) =>
-      this.apiInvoicesClient.markAsPaid(invoice.id, command)
-    );
+    return super.update(invoice, this.markAsPaidFunction);
   }
 
-  public markAsCancelled(invoice: InvoiceDto): Observable<InvoiceDto> {
+  protected markAsCancelledFunction = (invoice: InvoiceDto) => {
     const command = new MarkInvoiceAsCancelledCommand();
-    return super.update(invoice, (invoice: InvoiceDto) =>
-      this.apiInvoicesClient.markAsCancelled(invoice.id, command)
-    );
+    return this.apiInvoicesClient.markAsCancelled(invoice.id, command);
+  };
+
+  public markAsCancelled(invoice: InvoiceDto): Observable<InvoiceDto> {
+    return super.update(invoice, this.markAsCancelledFunction);
   }
 
   protected deleteFunction = (id: string) => {

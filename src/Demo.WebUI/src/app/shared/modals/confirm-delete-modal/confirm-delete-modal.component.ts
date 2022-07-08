@@ -7,7 +7,7 @@ import { MatDialogRef } from '@angular/material/dialog';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ConfirmDeleteModalComponent {
-  constructor(public dialogRef: MatDialogRef<ConfirmDeleteModalComponent>) {}
+  constructor(public readonly dialogRef: MatDialogRef<ConfirmDeleteModalComponent>) {}
 
   public confirmDelete(): void {
     this.dialogRef.close(true);

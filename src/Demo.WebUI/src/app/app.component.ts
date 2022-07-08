@@ -7,6 +7,7 @@ import { FeatureFlagService } from '@shared/services/feature-flag.service';
 import { BehaviorSubject, combineLatest, map, Observable } from 'rxjs';
 import { UserPreferencesService } from '@shared/services/user-preferences.service';
 import { RoleService } from '@shared/services/role.service';
+import { environment } from '@env/environment';
 
 interface ViewModel {
   resolversAreInitialized: boolean;
@@ -53,7 +54,7 @@ export class AppComponent implements OnInit {
   public ngOnInit(): void {
     this.authService.isAuthenticated$.subscribe((isAuthenticated) => {
       if (!isAuthenticated) {
-        this.authService.loginWithRedirect();
+        this.authService.loginWithRedirect({ redirect_uri: environment.auth.redirectUri });
       }
     });
 

@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, HostListener } from '@angular/core';
+import { Component, ChangeDetectionStrategy, HostListener } from '@angular/core';
 import { ApiCurrentUserClient, ChangePasswordCommand } from '@api/api.generated.clients';
 import {
   CurrentUserDomainEntityService,
@@ -28,7 +28,7 @@ interface ViewModel extends ICurrentUserDomainEntityContext {
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ProfileDetailsComponent implements OnInit, IHasForm {
+export class ProfileDetailsComponent implements IHasForm {
   public read$ = this.currentUserDomainEntityService.read();
 
   public readonly saved = new BehaviorSubject<boolean>(false);
@@ -63,8 +63,6 @@ export class ProfileDetailsComponent implements OnInit, IHasForm {
     private readonly apiCurrentUserClient: ApiCurrentUserClient,
     private readonly modalService: ModalService
   ) {}
-
-  ngOnInit(): void {}
 
   public save(): void {
     this.saved.next(false);
