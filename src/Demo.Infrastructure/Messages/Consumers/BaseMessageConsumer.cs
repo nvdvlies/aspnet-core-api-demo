@@ -12,11 +12,11 @@ using Serilog.Context;
 
 namespace Demo.Infrastructure.Messages.Consumers
 {
-    public abstract class BaseConsumer<TMessage> where TMessage : class, IMessage
+    public abstract class BaseMessageConsumer<TMessage> where TMessage : class, IMessage
     {
         private readonly IServiceProvider _serviceProvider;
 
-        protected BaseConsumer(IServiceProvider serviceProvider)
+        protected BaseMessageConsumer(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
         }

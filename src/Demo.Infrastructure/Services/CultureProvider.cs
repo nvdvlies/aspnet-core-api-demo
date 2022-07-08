@@ -1,7 +1,5 @@
 ﻿using System.Globalization;
-using Demo.Domain.ApplicationSettings.Interfaces;
 using Demo.Domain.Shared.Interfaces;
-using Demo.Domain.UserPreferences.Interfaces;
 using Demo.Infrastructure.Settings;
 
 namespace Demo.Infrastructure.Services
@@ -9,13 +7,10 @@ namespace Demo.Infrastructure.Services
     internal class CultureProvider : ICultureProvider
     {
         public CultureProvider(
-            EnvironmentSettings environmentSettings,
-            IApplicationSettingsProvider applicationSettingsProvider,
-            IUserPreferencesProvider userPreferencesProvider
+            EnvironmentSettings environmentSettings
         )
         {
-            Culture = CultureInfo
-                .CreateSpecificCulture("nl-NL"); // TODO: UserPreferences ?? ApplicationSettings ?? EnvironmentSettings
+            Culture = CultureInfo.CreateSpecificCulture(environmentSettings.DefaultCulture ?? "nl-NL");
         }
 
         public CultureInfo Culture { get; }

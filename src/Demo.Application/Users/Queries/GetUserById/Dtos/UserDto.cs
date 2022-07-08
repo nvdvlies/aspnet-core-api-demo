@@ -14,8 +14,6 @@ namespace Demo.Application.Users.Queries.GetUserById.Dtos
         public string Email { get; set; }
         public GenderEnum? Gender { get; set; }
         public DateTime? BirthDate { get; set; }
-        public string ZoneInfo { get; set; }
-        public string Locale { get; set; }
         public List<UserRoleDto> UserRoles { get; set; }
     }
 }

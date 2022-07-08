@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Demo.Infrastructure.Messages.Consumers
 {
-    public class CreateAuth0UserMessageConsumer : BaseConsumer<CreateAuth0UserMessage>,
+    public class CreateAuth0UserMessageConsumer : BaseMessageConsumer<CreateAuth0UserMessage>,
         IConsumer<CreateAuth0UserMessage>
     {
         public CreateAuth0UserMessageConsumer(IServiceProvider serviceProvider) : base(serviceProvider)

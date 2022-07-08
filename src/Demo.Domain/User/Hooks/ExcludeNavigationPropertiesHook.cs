@@ -14,4 +14,14 @@ namespace Demo.Domain.User.Hooks
             return Task.CompletedTask;
         }
     }
+
+    internal class DisallowDeleteAdministratorHook : IBeforeDelete<User>
+    {
+        public Task ExecuteAsync(HookType type, IDomainEntityContext<User> context, CancellationToken cancellationToken)
+        {
+            context.Entity.UserRoles?.ForEach(x => { x.Role = null; });
+
+            return Task.CompletedTask;
+        }
+    }
 }

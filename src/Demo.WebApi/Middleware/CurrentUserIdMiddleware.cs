@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Demo.Domain.Shared.Interfaces;
 using Microsoft.AspNetCore.Http;
+using Serilog.Context;
 
 namespace Demo.WebApi.Middleware
 {
@@ -23,7 +24,10 @@ namespace Demo.WebApi.Middleware
 
             currentUserIdProvider.SetUserId(externalId);
 
-            await _next.Invoke(httpContext);
+            using (LogContext.PushProperty("ExternalUserId", externalId))
+            {
+                await _next.Invoke(httpContext);
+            }
         }
     }
 }

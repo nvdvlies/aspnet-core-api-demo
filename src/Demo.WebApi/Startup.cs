@@ -150,11 +150,12 @@ namespace Demo.WebApi
             app.UseCors();
 
             app.UseAuthentication();
-            app.UseAuthorization();
 
             app.UseExceptionHandler(x => x.Run(GlobalExceptionHandler.Handle(env)));
             app.UseMiddleware<CorrelationIdMiddleware>();
             app.UseMiddleware<CurrentUserIdMiddleware>();
+
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Demo.Infrastructure.Messages.Consumers
 {
-    public class SendChangePasswordEmailMessageConsumer : BaseConsumer<SendChangePasswordEmailMessage>,
+    public class SendChangePasswordEmailMessageConsumer : BaseMessageConsumer<SendChangePasswordEmailMessage>,
         IConsumer<SendChangePasswordEmailMessage>
     {
         public SendChangePasswordEmailMessageConsumer(IServiceProvider serviceProvider) : base(serviceProvider)

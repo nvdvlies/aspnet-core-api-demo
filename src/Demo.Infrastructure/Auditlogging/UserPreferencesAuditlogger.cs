@@ -24,7 +24,7 @@ namespace Demo.Infrastructure.Auditlogging
                 .WithChildEntity(x => x.Preferences, new AuditlogBuilder<UserPreferencesPreferences>()
                     .WithProperty(c => c.Setting1)
                     .WithProperty(c => c.Setting2)
-                    .WithProperty(c => c.Setting3)
+                    .WithProperty(c => c.Setting3, AuditlogType.DateOnly)
                     .WithProperty(c => c.Setting4)
                     .WithProperty(c => c.Setting5)
                 )

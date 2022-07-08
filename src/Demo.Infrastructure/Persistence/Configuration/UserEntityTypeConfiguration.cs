@@ -44,12 +44,6 @@ namespace Demo.Infrastructure.Persistence.Configuration
                 .HasColumnType("date")
                 .IsUtc();
 
-            builder.Property(x => x.ZoneInfo)
-                .HasMaxLength(50);
-
-            builder.Property(x => x.Locale)
-                .HasMaxLength(10);
-
             builder.Property(p => p.CreatedOn).IsRequired();
             builder.Property(p => p.CreatedBy).IsRequired();
             builder.Property(p => p.LastModifiedBy);

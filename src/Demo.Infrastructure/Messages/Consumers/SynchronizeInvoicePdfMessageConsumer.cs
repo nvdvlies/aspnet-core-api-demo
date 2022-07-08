@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Demo.Infrastructure.Messages.Consumers
 {
-    public class SynchronizeInvoicePdfMessageConsumer : BaseConsumer<SynchronizeInvoicePdfMessage>,
+    public class SynchronizeInvoicePdfMessageConsumer : BaseMessageConsumer<SynchronizeInvoicePdfMessage>,
         IConsumer<SynchronizeInvoicePdfMessage>
     {
         public SynchronizeInvoicePdfMessageConsumer(IServiceProvider serviceProvider) : base(serviceProvider)

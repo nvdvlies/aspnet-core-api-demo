@@ -26,8 +26,6 @@ namespace Demo.Infrastructure.Auditlogging
                 .WithProperty(x => x.BirthDate, AuditlogType.DateOnly)
                 .WithProperty(x => x.Gender)
                 .WithProperty(x => x.Email)
-                .WithProperty(x => x.Locale)
-                .WithProperty(x => x.ZoneInfo)
                 .WithProperty(c => c.UserRoles.Select(x => x.RoleId).ToList(), nameof(User.UserRoles))
                 .Build(current, previous);
         }

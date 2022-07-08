@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Demo.Infrastructure.Messages.Consumers
 {
-    public class SendUserInvitationEmailMessageConsumer : BaseConsumer<SendUserInvitationEmailMessage>,
+    public class SendUserInvitationEmailMessageConsumer : BaseMessageConsumer<SendUserInvitationEmailMessage>,
         IConsumer<SendUserInvitationEmailMessage>
     {
         public SendUserInvitationEmailMessageConsumer(IServiceProvider serviceProvider) : base(serviceProvider)

@@ -15,8 +15,6 @@ namespace Demo.Application.Users.Commands.CreateUser
         public string Email { get; set; }
         public GenderEnum? Gender { get; set; }
         public DateTime? BirthDate { get; set; }
-        public string ZoneInfo { get; set; }
-        public string Locale { get; set; }
         public List<CreateUserCommandUserRole> UserRoles { get; set; }
     }
 }
