@@ -14,18 +14,23 @@ export abstract class LookupBase<T extends ILookupItem> extends CacheBase<T> imp
   private readonly onDestroy = new Subject<void>();
   private onDestroy$ = this.onDestroy.asObservable();
 
+  private isSubscribedToUpdateEvents = false;
+
   constructor() {
     super();
-    this.subscribeToItemUpdatedEvent();
   }
 
   private subscribeToItemUpdatedEvent(): void {
-    this.itemUpdatedEvent$.pipe(takeUntil(this.onDestroy$)).subscribe((id) => {
-      this.removeFromCache(id);
-    });
+    if (!this.isSubscribedToUpdateEvents) {
+      this.itemUpdatedEvent$.pipe(takeUntil(this.onDestroy$)).subscribe((id) => {
+        this.removeFromCache(id);
+      });
+      this.isSubscribedToUpdateEvents = true;
+    }
   }
 
   public getById(id: string, skipCache: boolean = false): Observable<T | undefined> {
+    this.subscribeToItemUpdatedEvent();
     const itemInCache = !skipCache
       ? this.cache.value.find(
           (item) => item?.id != null && id != null && item.id.toLowerCase() === id.toLowerCase()
@@ -46,6 +51,7 @@ export abstract class LookupBase<T extends ILookupItem> extends CacheBase<T> imp
   }
 
   public getByIds(ids: string[], skipCache: boolean = false): Observable<T[]> {
+    this.subscribeToItemUpdatedEvent();
     const itemsInCache = !skipCache
       ? this.cache.value.filter((item) =>
           ids.some(
