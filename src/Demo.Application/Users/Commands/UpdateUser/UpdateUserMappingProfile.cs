@@ -19,8 +19,7 @@ namespace Demo.Application.Users.Commands.UpdateUser
                 .ForMember(x => x.CreatedOn, opt => opt.Ignore())
                 .ForMember(x => x.LastModifiedBy, opt => opt.Ignore())
                 .ForMember(x => x.LastModifiedOn, opt => opt.Ignore())
-                .ForMember(x => x.Id, opt => opt.Ignore())
-                .ForMember(x => x.xmin, opt => opt.Ignore());
+                .ForMember(x => x.Id, opt => opt.Ignore());
 
             CreateMap<UpdateUserCommandUserRoleDto, UserRole>()
                 .ForMember(x => x.UserId, opt => opt.Ignore())

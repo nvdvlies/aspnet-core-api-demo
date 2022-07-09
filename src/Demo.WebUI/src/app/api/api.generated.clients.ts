@@ -6896,6 +6896,7 @@ export interface ICreateRoleCommand {
 export class UpdateRoleCommand implements IUpdateRoleCommand {
     name?: string | undefined;
     externalId?: string | undefined;
+    xmin!: number;
 
     constructor(data?: IUpdateRoleCommand) {
         if (data) {
@@ -6910,6 +6911,7 @@ export class UpdateRoleCommand implements IUpdateRoleCommand {
         if (_data) {
             this.name = _data["name"];
             this.externalId = _data["externalId"];
+            this.xmin = _data["xmin"];
         }
     }
 
@@ -6924,6 +6926,7 @@ export class UpdateRoleCommand implements IUpdateRoleCommand {
         data = typeof data === 'object' ? data : {};
         data["name"] = this.name;
         data["externalId"] = this.externalId;
+        data["xmin"] = this.xmin;
         return data;
     }
 
@@ -6938,6 +6941,7 @@ export class UpdateRoleCommand implements IUpdateRoleCommand {
 export interface IUpdateRoleCommand {
     name?: string | undefined;
     externalId?: string | undefined;
+    xmin: number;
 }
 
 export class DeleteRoleCommand implements IDeleteRoleCommand {
@@ -7870,6 +7874,7 @@ export class UpdateUserCommand implements IUpdateUserCommand {
     userType!: UserTypeEnum;
     birthDate?: Date | undefined;
     userRoles?: UpdateUserCommandUserRoleDto[] | undefined;
+    xmin!: number;
 
     constructor(data?: IUpdateUserCommand) {
         if (data) {
@@ -7895,6 +7900,7 @@ export class UpdateUserCommand implements IUpdateUserCommand {
                 for (let item of _data["userRoles"])
                     this.userRoles!.push(UpdateUserCommandUserRoleDto.fromJS(item));
             }
+            this.xmin = _data["xmin"];
         }
     }
 
@@ -7920,6 +7926,7 @@ export class UpdateUserCommand implements IUpdateUserCommand {
             for (let item of this.userRoles)
                 data["userRoles"].push(item.toJSON());
         }
+        data["xmin"] = this.xmin;
         return data;
     }
 
@@ -7941,6 +7948,7 @@ export interface IUpdateUserCommand {
     userType: UserTypeEnum;
     birthDate?: Date | undefined;
     userRoles?: UpdateUserCommandUserRoleDto[] | undefined;
+    xmin: number;
 }
 
 export class UpdateUserCommandUserRoleDto implements IUpdateUserCommandUserRoleDto {

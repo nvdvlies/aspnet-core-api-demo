@@ -52,7 +52,7 @@ namespace Demo.Infrastructure.Auth0
                     Email = internalUser.Email,
                     EmailVerified = false,
                     Password = string.Concat(internalUser.Id.ToString(), "@", new Random().Next(9999)),
-                    FirstName = internalUser.GivenName,
+                    FirstName = string.IsNullOrWhiteSpace(internalUser.GivenName) ? null : internalUser.GivenName,
                     LastName = $"{internalUser.MiddleName} {internalUser.FamilyName}".Trim(),
                     VerifyEmail = false
                 };
