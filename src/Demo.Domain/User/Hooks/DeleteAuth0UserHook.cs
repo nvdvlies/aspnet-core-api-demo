@@ -23,6 +23,11 @@ namespace Demo.Domain.User.Hooks
 
         public Task ExecuteAsync(HookType type, IDomainEntityContext<User> context, CancellationToken cancellationToken)
         {
+            if (context.Entity.UserType == UserType.System)
+            {
+                return Task.CompletedTask;
+            }
+
             context.AddMessageAsync(
                 DeleteAuth0UserMessage.Create(_currentUserIdProvider.Id, _correlationIdProvider.Id, context.Entity.Id),
                 cancellationToken);

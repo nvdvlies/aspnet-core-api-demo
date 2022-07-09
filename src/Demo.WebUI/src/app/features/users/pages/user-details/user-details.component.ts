@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, HostListener } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostListener, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 import {
   combineLatest,
@@ -16,7 +17,8 @@ import {
   UserDomainEntityService,
   UserFormGroup,
   IUserDomainEntityContext,
-  UserRoleFormArray
+  UserRoleFormArray,
+  UserInitFromRouteOptions
 } from '@domain/user/user-domain-entity.service';
 import { IHasForm } from '@shared/guards/unsaved-changes.guard';
 import { UserListRouteState } from '@users/pages/user-list/user-list.component';
@@ -27,6 +29,10 @@ import { ApiUsersClient, ResetPasswordCommand } from '@api/api.generated.clients
 
 interface ViewModel extends IUserDomainEntityContext {
   isResettingPassword: boolean;
+}
+
+export interface UserDetailsRouteState {
+  createNewSystemUser: boolean;
 }
 
 @Component({
@@ -41,8 +47,8 @@ interface ViewModel extends IUserDomainEntityContext {
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class UserDetailsComponent implements IHasForm {
-  public initFromRoute$ = this.userDomainEntityService.initFromRoute();
+export class UserDetailsComponent implements OnInit, IHasForm {
+  public initFromRoute$: Observable<null> | undefined;
 
   public readonly isResettingPassword = new BehaviorSubject<boolean>(false);
 
@@ -72,10 +78,20 @@ export class UserDetailsComponent implements IHasForm {
 
   constructor(
     private readonly router: Router,
+    private readonly location: Location,
     private readonly userDomainEntityService: UserDomainEntityService,
     private readonly modalService: ModalService,
     private readonly apiUsersClient: ApiUsersClient
   ) {}
+
+  ngOnInit(): void {
+    const initFromRouteOptions = new UserInitFromRouteOptions();
+    const state = this.location.getState() as UserDetailsRouteState;
+    if (state && state.createNewSystemUser) {
+      initFromRouteOptions.isSystemUser = true;
+    }
+    this.initFromRoute$ = this.userDomainEntityService.initFromRoute(initFromRouteOptions);
+  }
 
   public save(): void {
     if (!this.form.valid) {

@@ -15,6 +15,7 @@ namespace Demo.Domain.User
         public string Email { get; set; }
         public Gender? Gender { get; set; }
         public DateTime? BirthDate { get; set; }
+        public UserType UserType { get; set; }
         public List<UserRole> UserRoles { get; set; }
     }
 }

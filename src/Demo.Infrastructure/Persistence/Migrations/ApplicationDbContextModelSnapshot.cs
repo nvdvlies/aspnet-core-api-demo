@@ -457,12 +457,12 @@ namespace Demo.Infrastructure.Persistence.Migrations
                         {
                             Id = new Guid("7c20005d-d5f8-4079-af26-434d69b43c82"),
                             CreatedBy = new Guid("08463267-7065-4631-9944-08da09d992d6"),
-                            CreatedOn = new DateTime(2022, 7, 5, 17, 44, 17, 978, DateTimeKind.Utc).AddTicks(4652),
+                            CreatedOn = new DateTime(2022, 7, 8, 18, 49, 1, 303, DateTimeKind.Utc).AddTicks(668),
                             Deleted = false,
                             DeletedBy = new Guid("00000000-0000-0000-0000-000000000000"),
                             ExternalId = "rol_N4KEnzIMUDaetcyr",
                             LastModifiedBy = new Guid("08463267-7065-4631-9944-08da09d992d6"),
-                            LastModifiedOn = new DateTime(2022, 7, 5, 17, 44, 17, 978, DateTimeKind.Utc).AddTicks(4652),
+                            LastModifiedOn = new DateTime(2022, 7, 8, 18, 49, 1, 303, DateTimeKind.Utc).AddTicks(668),
                             Name = "Admin",
                             xmin = 0u
                         },
@@ -470,12 +470,12 @@ namespace Demo.Infrastructure.Persistence.Migrations
                         {
                             Id = new Guid("d8a81cd5-d828-47ac-9f72-2e660f43a176"),
                             CreatedBy = new Guid("08463267-7065-4631-9944-08da09d992d6"),
-                            CreatedOn = new DateTime(2022, 7, 5, 17, 44, 17, 978, DateTimeKind.Utc).AddTicks(7044),
+                            CreatedOn = new DateTime(2022, 7, 8, 18, 49, 1, 303, DateTimeKind.Utc).AddTicks(3108),
                             Deleted = false,
                             DeletedBy = new Guid("00000000-0000-0000-0000-000000000000"),
                             ExternalId = "rol_OUaEQHOTuugOJHwe",
                             LastModifiedBy = new Guid("08463267-7065-4631-9944-08da09d992d6"),
-                            LastModifiedOn = new DateTime(2022, 7, 5, 17, 44, 17, 978, DateTimeKind.Utc).AddTicks(7044),
+                            LastModifiedOn = new DateTime(2022, 7, 8, 18, 49, 1, 303, DateTimeKind.Utc).AddTicks(3108),
                             Name = "User",
                             xmin = 0u
                         });
@@ -544,6 +544,11 @@ namespace Demo.Infrastructure.Persistence.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
+                    b.Property<int>("UserType")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(1);
+
                     b.Property<uint>("xmin")
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate()
@@ -562,7 +567,7 @@ namespace Demo.Infrastructure.Persistence.Migrations
                         {
                             Id = new Guid("08463267-7065-4631-9944-08da09d992d6"),
                             CreatedBy = new Guid("08463267-7065-4631-9944-08da09d992d6"),
-                            CreatedOn = new DateTime(2022, 7, 5, 17, 44, 17, 981, DateTimeKind.Utc).AddTicks(8038),
+                            CreatedOn = new DateTime(2022, 7, 8, 18, 49, 1, 305, DateTimeKind.Utc).AddTicks(9572),
                             Deleted = false,
                             DeletedBy = new Guid("00000000-0000-0000-0000-000000000000"),
                             Email = "demo@demo.com",
@@ -570,7 +575,8 @@ namespace Demo.Infrastructure.Persistence.Migrations
                             FamilyName = "Administrator",
                             Fullname = "Administrator",
                             LastModifiedBy = new Guid("08463267-7065-4631-9944-08da09d992d6"),
-                            LastModifiedOn = new DateTime(2022, 7, 5, 17, 44, 17, 981, DateTimeKind.Utc).AddTicks(8038),
+                            LastModifiedOn = new DateTime(2022, 7, 8, 18, 49, 1, 305, DateTimeKind.Utc).AddTicks(9572),
+                            UserType = 0,
                             xmin = 0u
                         });
                 });

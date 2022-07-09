@@ -10,7 +10,13 @@
     <ng-container *ngIf="!vm.loadingEntityFailed">
       <form [formGroup]="form" novalidate (ngSubmit)="save()">
         <app-page-header
-          headerTitle="{{ vm.id != null ? 'User: ' + vm.pristine?.fullname : 'New user' }}"
+          headerTitle="{{
+            vm.id != null
+              ? 'User: ' + vm.pristine?.fullname
+              : vm.isSystemUser
+              ? 'New system user'
+              : 'New user'
+          }}"
         >
           <button
             mat-icon-button
@@ -34,7 +40,7 @@
             mat-raised-button
             (click)="resetPassword()"
             type="button"
-            *ngIf="vm.id != null"
+            *ngIf="vm.id != null && !vm.isSystemUser"
             [disabled]="vm.isResettingPassword"
             [class.button-spinner]="vm.isResettingPassword"
           >
@@ -84,7 +90,7 @@
             <mat-card-title class="pl-1 pt-1 mb-1 text-lg">General</mat-card-title>
             <mat-card-content>
               <div class="row">
-                <div class="col">
+                <div class="col" *ngIf="!vm.isSystemUser">
                   <mat-form-field appearance="fill" class="full-width">
                     <mat-label>First name</mat-label>
                     <input
@@ -96,7 +102,7 @@
                     <mat-error appDomainEntityErrorMessage></mat-error>
                   </mat-form-field>
                 </div>
-                <div class="col">
+                <div class="col" *ngIf="!vm.isSystemUser">
                   <mat-form-field appearance="fill" class="full-width">
                     <mat-label>Middle name</mat-label>
                     <input matInput placeholder="Middle name" formControlName="middleName" />
@@ -105,8 +111,12 @@
                 </div>
                 <div class="col">
                   <mat-form-field appearance="fill" class="full-width">
-                    <mat-label>Last name</mat-label>
-                    <input matInput placeholder="Last name" formControlName="familyName" />
+                    <mat-label>{{ vm.isSystemUser ? 'Name' : 'Last name' }}</mat-label>
+                    <input
+                      matInput
+                      [placeholder]="vm.isSystemUser ? 'Name' : 'Last name'"
+                      formControlName="familyName"
+                    />
                     <mat-error appDomainEntityErrorMessage></mat-error>
                   </mat-form-field>
                 </div>
@@ -120,7 +130,7 @@
                   </mat-form-field>
                 </div>
               </div>
-              <div class="row" *ngIf="vm.id != null">
+              <div class="row" *ngIf="vm.id != null || vm.isSystemUser">
                 <div class="col">
                   <mat-form-field appearance="fill" class="full-width">
                     <mat-label>External Id</mat-label>
@@ -130,6 +140,10 @@
                       formControlName="externalId"
                       type="text"
                     />
+                    <mat-hint *ngIf="vm.isSystemUser"
+                      >In case of a machine to machine application this should have value
+                      CLIENT_ID@clients</mat-hint
+                    >
                     <mat-error appDomainEntityErrorMessage></mat-error>
                   </mat-form-field>
                 </div>

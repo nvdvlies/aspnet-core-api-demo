@@ -1,5 +1,6 @@
 using AutoMapper;
 using Demo.Application.Users.Commands.UpdateUser.Dtos;
+using Demo.Application.Users.Queries.GetUserById.Dtos;
 using Demo.Domain.User;
 
 namespace Demo.Application.Users.Commands.UpdateUser
@@ -9,7 +10,8 @@ namespace Demo.Application.Users.Commands.UpdateUser
         public UpdateUserMappingProfile()
         {
             CreateMap<UpdateUserCommand, User>()
-                .ForMember(x => x.ExternalId, opt => opt.Ignore())
+                .ForMember(x => x.ExternalId, opt => opt.Condition(src => (src.UserType == UserTypeEnum.System)))
+                .ForMember(x => x.UserType, opt => opt.Ignore())
                 .ForMember(x => x.Deleted, opt => opt.Ignore())
                 .ForMember(x => x.DeletedBy, opt => opt.Ignore())
                 .ForMember(x => x.DeletedOn, opt => opt.Ignore())

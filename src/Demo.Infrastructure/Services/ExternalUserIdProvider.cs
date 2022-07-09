@@ -41,6 +41,11 @@ namespace Demo.Infrastructure.Services
                     .Select(x => x.ExternalId)
                     .FirstOrDefault();
 
+                if (string.IsNullOrEmpty(externalUserId))
+                {
+                    return null;
+                }
+
                 var cacheEntryOptions = new DistributedCacheEntryOptions()
                     .SetAbsoluteExpiration(TimeSpan.FromHours(8));
 

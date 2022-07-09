@@ -7610,6 +7610,7 @@ export class UserDto extends SoftDeleteEntityDto implements IUserDto {
     middleName?: string | undefined;
     email?: string | undefined;
     gender?: GenderEnum | undefined;
+    userType!: UserTypeEnum;
     birthDate?: Date | undefined;
     userRoles?: UserRoleDto[] | undefined;
 
@@ -7627,6 +7628,7 @@ export class UserDto extends SoftDeleteEntityDto implements IUserDto {
             this.middleName = _data["middleName"];
             this.email = _data["email"];
             this.gender = _data["gender"];
+            this.userType = _data["userType"];
             this.birthDate = _data["birthDate"] ? new Date(_data["birthDate"].toString()) : <any>undefined;
             if (Array.isArray(_data["userRoles"])) {
                 this.userRoles = [] as any;
@@ -7652,6 +7654,7 @@ export class UserDto extends SoftDeleteEntityDto implements IUserDto {
         data["middleName"] = this.middleName;
         data["email"] = this.email;
         data["gender"] = this.gender;
+        data["userType"] = this.userType;
         data["birthDate"] = this.birthDate ? this.birthDate.toISOString() : <any>undefined;
         if (Array.isArray(this.userRoles)) {
             data["userRoles"] = [];
@@ -7678,8 +7681,14 @@ export interface IUserDto extends ISoftDeleteEntityDto {
     middleName?: string | undefined;
     email?: string | undefined;
     gender?: GenderEnum | undefined;
+    userType: UserTypeEnum;
     birthDate?: Date | undefined;
     userRoles?: UserRoleDto[] | undefined;
+}
+
+export enum UserTypeEnum {
+    Regular = 1,
+    System = 2,
 }
 
 export class CreateUserResponse implements ICreateUserResponse {
@@ -7730,7 +7739,9 @@ export class CreateUserCommand implements ICreateUserCommand {
     familyName?: string | undefined;
     middleName?: string | undefined;
     email?: string | undefined;
+    externalId?: string | undefined;
     gender?: GenderEnum | undefined;
+    userType!: UserTypeEnum;
     birthDate?: Date | undefined;
     userRoles?: CreateUserCommandUserRole[] | undefined;
 
@@ -7749,7 +7760,9 @@ export class CreateUserCommand implements ICreateUserCommand {
             this.familyName = _data["familyName"];
             this.middleName = _data["middleName"];
             this.email = _data["email"];
+            this.externalId = _data["externalId"];
             this.gender = _data["gender"];
+            this.userType = _data["userType"];
             this.birthDate = _data["birthDate"] ? new Date(_data["birthDate"].toString()) : <any>undefined;
             if (Array.isArray(_data["userRoles"])) {
                 this.userRoles = [] as any;
@@ -7772,7 +7785,9 @@ export class CreateUserCommand implements ICreateUserCommand {
         data["familyName"] = this.familyName;
         data["middleName"] = this.middleName;
         data["email"] = this.email;
+        data["externalId"] = this.externalId;
         data["gender"] = this.gender;
+        data["userType"] = this.userType;
         data["birthDate"] = this.birthDate ? this.birthDate.toISOString() : <any>undefined;
         if (Array.isArray(this.userRoles)) {
             data["userRoles"] = [];
@@ -7795,7 +7810,9 @@ export interface ICreateUserCommand {
     familyName?: string | undefined;
     middleName?: string | undefined;
     email?: string | undefined;
+    externalId?: string | undefined;
     gender?: GenderEnum | undefined;
+    userType: UserTypeEnum;
     birthDate?: Date | undefined;
     userRoles?: CreateUserCommandUserRole[] | undefined;
 }
@@ -7848,7 +7865,9 @@ export class UpdateUserCommand implements IUpdateUserCommand {
     familyName?: string | undefined;
     middleName?: string | undefined;
     email?: string | undefined;
+    externalId?: string | undefined;
     gender?: GenderEnum | undefined;
+    userType!: UserTypeEnum;
     birthDate?: Date | undefined;
     userRoles?: UpdateUserCommandUserRoleDto[] | undefined;
 
@@ -7867,7 +7886,9 @@ export class UpdateUserCommand implements IUpdateUserCommand {
             this.familyName = _data["familyName"];
             this.middleName = _data["middleName"];
             this.email = _data["email"];
+            this.externalId = _data["externalId"];
             this.gender = _data["gender"];
+            this.userType = _data["userType"];
             this.birthDate = _data["birthDate"] ? new Date(_data["birthDate"].toString()) : <any>undefined;
             if (Array.isArray(_data["userRoles"])) {
                 this.userRoles = [] as any;
@@ -7890,7 +7911,9 @@ export class UpdateUserCommand implements IUpdateUserCommand {
         data["familyName"] = this.familyName;
         data["middleName"] = this.middleName;
         data["email"] = this.email;
+        data["externalId"] = this.externalId;
         data["gender"] = this.gender;
+        data["userType"] = this.userType;
         data["birthDate"] = this.birthDate ? this.birthDate.toISOString() : <any>undefined;
         if (Array.isArray(this.userRoles)) {
             data["userRoles"] = [];
@@ -7913,7 +7936,9 @@ export interface IUpdateUserCommand {
     familyName?: string | undefined;
     middleName?: string | undefined;
     email?: string | undefined;
+    externalId?: string | undefined;
     gender?: GenderEnum | undefined;
+    userType: UserTypeEnum;
     birthDate?: Date | undefined;
     userRoles?: UpdateUserCommandUserRoleDto[] | undefined;
 }

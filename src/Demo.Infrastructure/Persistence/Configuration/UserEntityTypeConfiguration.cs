@@ -44,6 +44,10 @@ namespace Demo.Infrastructure.Persistence.Configuration
                 .HasColumnType("date")
                 .IsUtc();
 
+            builder.Property(t => t.UserType)
+                .HasDefaultValue(UserType.Regular)
+                .IsRequired();
+
             builder.Property(p => p.CreatedOn).IsRequired();
             builder.Property(p => p.CreatedBy).IsRequired();
             builder.Property(p => p.LastModifiedBy);

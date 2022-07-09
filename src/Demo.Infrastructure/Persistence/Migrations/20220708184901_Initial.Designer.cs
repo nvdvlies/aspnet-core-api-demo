@@ -15,7 +15,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Demo.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220702114935_Initial")]
+    [Migration("20220708184901_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -458,24 +458,26 @@ namespace Demo.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = new Guid("7c20005d-d5f8-4079-af26-434d69b43c82"),
-                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
-                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = new Guid("08463267-7065-4631-9944-08da09d992d6"),
+                            CreatedOn = new DateTime(2022, 7, 8, 18, 49, 1, 303, DateTimeKind.Utc).AddTicks(668),
                             Deleted = false,
                             DeletedBy = new Guid("00000000-0000-0000-0000-000000000000"),
                             ExternalId = "rol_N4KEnzIMUDaetcyr",
-                            LastModifiedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            LastModifiedBy = new Guid("08463267-7065-4631-9944-08da09d992d6"),
+                            LastModifiedOn = new DateTime(2022, 7, 8, 18, 49, 1, 303, DateTimeKind.Utc).AddTicks(668),
                             Name = "Admin",
                             xmin = 0u
                         },
                         new
                         {
                             Id = new Guid("d8a81cd5-d828-47ac-9f72-2e660f43a176"),
-                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
-                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = new Guid("08463267-7065-4631-9944-08da09d992d6"),
+                            CreatedOn = new DateTime(2022, 7, 8, 18, 49, 1, 303, DateTimeKind.Utc).AddTicks(3108),
                             Deleted = false,
                             DeletedBy = new Guid("00000000-0000-0000-0000-000000000000"),
                             ExternalId = "rol_OUaEQHOTuugOJHwe",
-                            LastModifiedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            LastModifiedBy = new Guid("08463267-7065-4631-9944-08da09d992d6"),
+                            LastModifiedOn = new DateTime(2022, 7, 8, 18, 49, 1, 303, DateTimeKind.Utc).AddTicks(3108),
                             Name = "User",
                             xmin = 0u
                         });
@@ -540,17 +542,14 @@ namespace Demo.Infrastructure.Persistence.Migrations
                     b.Property<DateTime?>("LastModifiedOn")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<string>("Locale")
-                        .HasMaxLength(10)
-                        .HasColumnType("character varying(10)");
-
                     b.Property<string>("MiddleName")
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
-                    b.Property<string>("ZoneInfo")
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                    b.Property<int>("UserType")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(1);
 
                     b.Property<uint>("xmin")
                         .IsConcurrencyToken()
@@ -569,15 +568,17 @@ namespace Demo.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = new Guid("08463267-7065-4631-9944-08da09d992d6"),
-                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
-                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = new Guid("08463267-7065-4631-9944-08da09d992d6"),
+                            CreatedOn = new DateTime(2022, 7, 8, 18, 49, 1, 305, DateTimeKind.Utc).AddTicks(9572),
                             Deleted = false,
                             DeletedBy = new Guid("00000000-0000-0000-0000-000000000000"),
                             Email = "demo@demo.com",
                             ExternalId = "auth0|08463267-7065-4631-9944-08da09d992d6",
                             FamilyName = "Administrator",
                             Fullname = "Administrator",
-                            LastModifiedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            LastModifiedBy = new Guid("08463267-7065-4631-9944-08da09d992d6"),
+                            LastModifiedOn = new DateTime(2022, 7, 8, 18, 49, 1, 305, DateTimeKind.Utc).AddTicks(9572),
+                            UserType = 0,
                             xmin = 0u
                         });
                 });

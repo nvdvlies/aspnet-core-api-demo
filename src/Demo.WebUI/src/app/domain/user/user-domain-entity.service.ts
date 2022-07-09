@@ -10,15 +10,16 @@ import {
   Validators
 } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { combineLatest, Observable, of } from 'rxjs';
-import { debounceTime, delay, map, switchMap } from 'rxjs/operators';
+import { combineLatest, Observable, of, BehaviorSubject } from 'rxjs';
+import { debounceTime, delay, map, switchMap, tap } from 'rxjs/operators';
 import {
   UserDto,
   IUserDto,
   IUserRoleDto,
   ApiUsersClient,
   IsEmailAvailableQueryResult,
-  UserRoleDto
+  UserRoleDto,
+  UserTypeEnum
 } from '@api/api.generated.clients';
 import { UserStoreService } from '@domain/user/user-store.service';
 import {
@@ -28,7 +29,9 @@ import {
   InitFromRouteOptions
 } from '@domain/shared/domain-entity-base';
 
-export interface IUserDomainEntityContext extends IDomainEntityContext<UserDto> {}
+export interface IUserDomainEntityContext extends IDomainEntityContext<UserDto> {
+  isSystemUser: boolean;
+}
 
 export class UserDomainEntityContext
   extends DomainEntityContext<UserDto>
@@ -37,6 +40,8 @@ export class UserDomainEntityContext
   constructor() {
     super();
   }
+
+  public isSystemUser: boolean = false;
 }
 
 type UserControls = { [key in keyof IUserDto]-?: AbstractControl };
@@ -51,6 +56,10 @@ export type UserRoleFormArray = FormArray & {
   controls: UserRoleFormGroup[];
 };
 
+export class UserInitFromRouteOptions extends InitFromRouteOptions {
+  public isSystemUser: boolean | undefined;
+}
+
 @Injectable()
 export class UserDomainEntityService extends DomainEntityBase<UserDto> implements OnDestroy {
   protected createFunction = (user: UserDto) => this.userStoreService.create(user);
@@ -59,13 +68,19 @@ export class UserDomainEntityService extends DomainEntityBase<UserDto> implement
   protected deleteFunction = (id?: string) => this.userStoreService.delete(id!);
   protected entityUpdatedEvent$ = this.userStoreService.userUpdatedInStore$;
 
+  protected readonly isSystemUser = new BehaviorSubject<boolean>(false);
+
+  protected isSystemUser$ = this.isSystemUser.asObservable();
+
   public observe$: Observable<UserDomainEntityContext> = combineLatest([
-    this.observeInternal$
+    this.observeInternal$,
+    this.isSystemUser$
   ]).pipe(
     debounceTime(0),
-    map(([baseContext]) => {
+    map(([baseContext, isSystemUser]) => {
       const context: UserDomainEntityContext = {
-        ...baseContext
+        ...baseContext,
+        isSystemUser
       };
       return context;
     })
@@ -105,6 +120,7 @@ export class UserDomainEntityService extends DomainEntityBase<UserDto> implement
         [this.uniqueEmailValidator()]
       ),
       gender: new FormControl(null),
+      userType: new FormControl(null),
       birthDate: new FormControl(null),
       userRoles: new FormArray(
         [] as UserRoleFormGroup[],
@@ -144,6 +160,7 @@ export class UserDomainEntityService extends DomainEntityBase<UserDto> implement
   protected instantiateNewEntity(): Observable<UserDto> {
     const user = new UserDto();
     user.userRoles = [new UserRoleDto()];
+    user.userType = this.isSystemUser.value ? UserTypeEnum.System : UserTypeEnum.Regular;
     return of(user);
   }
 
@@ -155,15 +172,44 @@ export class UserDomainEntityService extends DomainEntityBase<UserDto> implement
     return this.form.controls.userRoles as FormArray;
   }
 
-  public override new(): Observable<null> {
-    return super.new();
+  public override new(isSystemUser?: boolean): Observable<null> {
+    if (isSystemUser) {
+      this.isSystemUser.next(true);
+    }
+    return super.new().pipe(
+      tap(() => {
+        if (this.entity.value?.userType === UserTypeEnum.System) {
+          this.updateFormForSystemUserType();
+          this.isSystemUser.next(true);
+        } else {
+          this.isSystemUser.next(false);
+        }
+      })
+    );
   }
 
   public override read(id: string): Observable<null> {
-    return super.read(id);
+    return super.read(id).pipe(
+      tap(() => {
+        if (this.entity.value?.userType === UserTypeEnum.System) {
+          this.updateFormForSystemUserType();
+          this.isSystemUser.next(true);
+        } else {
+          this.isSystemUser.next(false);
+        }
+      })
+    );
   }
 
-  public override initFromRoute(options?: InitFromRouteOptions | undefined): Observable<null> {
+  private updateFormForSystemUserType(): void {
+    this.form.controls.externalId.addValidators(Validators.required);
+    this.form.controls.externalId.enable();
+  }
+
+  public override initFromRoute(options?: UserInitFromRouteOptions | undefined): Observable<null> {
+    if (options?.isSystemUser) {
+      this.isSystemUser.next(true);
+    }
     return super.initFromRoute(options);
   }
 

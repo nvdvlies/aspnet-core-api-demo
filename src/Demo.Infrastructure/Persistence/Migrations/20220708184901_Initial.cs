@@ -178,8 +178,7 @@ namespace Demo.Infrastructure.Persistence.Migrations
                     Email = table.Column<string>(type: "character varying(320)", maxLength: 320, nullable: false),
                     Gender = table.Column<int>(type: "integer", nullable: true),
                     BirthDate = table.Column<DateTime>(type: "date", nullable: true),
-                    ZoneInfo = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
-                    Locale = table.Column<string>(type: "character varying(10)", maxLength: 10, nullable: true),
+                    UserType = table.Column<int>(type: "integer", nullable: false, defaultValue: 1),
                     xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false),
                     CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
@@ -312,15 +311,15 @@ namespace Demo.Infrastructure.Persistence.Migrations
                 columns: new[] { "Id", "CreatedBy", "CreatedOn", "DeletedBy", "DeletedOn", "ExternalId", "LastModifiedBy", "LastModifiedOn", "Name" },
                 values: new object[,]
                 {
-                    { new Guid("7c20005d-d5f8-4079-af26-434d69b43c82"), new Guid("00000000-0000-0000-0000-000000000000"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("00000000-0000-0000-0000-000000000000"), null, "rol_N4KEnzIMUDaetcyr", new Guid("00000000-0000-0000-0000-000000000000"), null, "Admin" },
-                    { new Guid("d8a81cd5-d828-47ac-9f72-2e660f43a176"), new Guid("00000000-0000-0000-0000-000000000000"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("00000000-0000-0000-0000-000000000000"), null, "rol_OUaEQHOTuugOJHwe", new Guid("00000000-0000-0000-0000-000000000000"), null, "User" }
+                    { new Guid("7c20005d-d5f8-4079-af26-434d69b43c82"), new Guid("08463267-7065-4631-9944-08da09d992d6"), new DateTime(2022, 7, 8, 18, 49, 1, 303, DateTimeKind.Utc).AddTicks(668), new Guid("00000000-0000-0000-0000-000000000000"), null, "rol_N4KEnzIMUDaetcyr", new Guid("08463267-7065-4631-9944-08da09d992d6"), new DateTime(2022, 7, 8, 18, 49, 1, 303, DateTimeKind.Utc).AddTicks(668), "Admin" },
+                    { new Guid("d8a81cd5-d828-47ac-9f72-2e660f43a176"), new Guid("08463267-7065-4631-9944-08da09d992d6"), new DateTime(2022, 7, 8, 18, 49, 1, 303, DateTimeKind.Utc).AddTicks(3108), new Guid("00000000-0000-0000-0000-000000000000"), null, "rol_OUaEQHOTuugOJHwe", new Guid("08463267-7065-4631-9944-08da09d992d6"), new DateTime(2022, 7, 8, 18, 49, 1, 303, DateTimeKind.Utc).AddTicks(3108), "User" }
                 });
 
             migrationBuilder.InsertData(
                 schema: "demo",
                 table: "User",
-                columns: new[] { "Id", "BirthDate", "CreatedBy", "CreatedOn", "DeletedBy", "DeletedOn", "Email", "ExternalId", "FamilyName", "Fullname", "Gender", "GivenName", "LastModifiedBy", "LastModifiedOn", "Locale", "MiddleName", "ZoneInfo" },
-                values: new object[] { new Guid("08463267-7065-4631-9944-08da09d992d6"), null, new Guid("00000000-0000-0000-0000-000000000000"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("00000000-0000-0000-0000-000000000000"), null, "demo@demo.com", "auth0|08463267-7065-4631-9944-08da09d992d6", "Administrator", "Administrator", null, null, new Guid("00000000-0000-0000-0000-000000000000"), null, null, null, null });
+                columns: new[] { "Id", "BirthDate", "CreatedBy", "CreatedOn", "DeletedBy", "DeletedOn", "Email", "ExternalId", "FamilyName", "Fullname", "Gender", "GivenName", "LastModifiedBy", "LastModifiedOn", "MiddleName" },
+                values: new object[] { new Guid("08463267-7065-4631-9944-08da09d992d6"), null, new Guid("08463267-7065-4631-9944-08da09d992d6"), new DateTime(2022, 7, 8, 18, 49, 1, 305, DateTimeKind.Utc).AddTicks(9572), new Guid("00000000-0000-0000-0000-000000000000"), null, "demo@demo.com", "auth0|08463267-7065-4631-9944-08da09d992d6", "Administrator", "Administrator", null, null, new Guid("08463267-7065-4631-9944-08da09d992d6"), new DateTime(2022, 7, 8, 18, 49, 1, 305, DateTimeKind.Utc).AddTicks(9572), null });
 
             migrationBuilder.InsertData(
                 schema: "demo",

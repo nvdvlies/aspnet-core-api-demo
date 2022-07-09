@@ -13,6 +13,7 @@ namespace Demo.Application.Users.Queries.GetUserById.Dtos
         public string MiddleName { get; set; }
         public string Email { get; set; }
         public GenderEnum? Gender { get; set; }
+        public UserTypeEnum UserType { get; set; }
         public DateTime? BirthDate { get; set; }
         public List<UserRoleDto> UserRoles { get; set; }
     }

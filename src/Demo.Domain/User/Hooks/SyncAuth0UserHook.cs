@@ -24,6 +24,11 @@ namespace Demo.Domain.User.Hooks
 
         public Task ExecuteAsync(HookType type, IDomainEntityContext<User> context, CancellationToken cancellationToken)
         {
+            if (context.Entity.UserType == UserType.System)
+            {
+                return Task.CompletedTask;
+            }
+
             if (context.IsPropertyDirty(x => x.Email)
                 || context.IsPropertyDirty(x => x.Fullname)
                 || !context.Entity.UserRoles.OrderBy(x => x.RoleId).Select(x => x.RoleId).SequenceEqual(

@@ -24,6 +24,11 @@ namespace Demo.Domain.User.Hooks
 
         public Task ExecuteAsync(HookType type, IDomainEntityContext<User> context, CancellationToken cancellationToken)
         {
+            if (context.Entity.UserType == UserType.System)
+            {
+                return Task.CompletedTask;
+            }
+
             if (!string.IsNullOrEmpty(context.Entity.ExternalId) && context.IsPropertyDirty(x => x.ExternalId))
             {
                 context.State.TryGet(UserStateKeys.SkipInvitationEmailOnExternalIdChange,

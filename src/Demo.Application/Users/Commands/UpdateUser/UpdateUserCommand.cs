@@ -14,7 +14,9 @@ namespace Demo.Application.Users.Commands.UpdateUser
         public string FamilyName { get; set; }
         public string MiddleName { get; set; }
         public string Email { get; set; }
+        public string ExternalId { get; set; }
         public GenderEnum? Gender { get; set; }
+        public UserTypeEnum UserType { get; set; }
         public DateTime? BirthDate { get; set; }
         public List<UpdateUserCommandUserRoleDto> UserRoles { get; set; }
 

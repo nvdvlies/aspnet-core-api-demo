@@ -41,10 +41,13 @@ namespace Demo.Infrastructure.Services
                     .Select(x => x.Id)
                     .FirstOrDefault();
 
-                var cacheEntryOptions = new DistributedCacheEntryOptions()
-                    .SetAbsoluteExpiration(TimeSpan.FromHours(8));
+                if (userId != Guid.Empty)
+                {
+                    var cacheEntryOptions = new DistributedCacheEntryOptions()
+                        .SetAbsoluteExpiration(TimeSpan.FromHours(8));
 
-                _cache.Set(cacheKey, Encode(userId), cacheEntryOptions);
+                    _cache.Set(cacheKey, Encode(userId), cacheEntryOptions);
+                }
 
                 return userId;
             }

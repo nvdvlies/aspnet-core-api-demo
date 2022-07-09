@@ -29,8 +29,8 @@ export class ProblemDetailsError extends Error {
 }
 
 export class InitFromRouteOptions {
-  parameterName: string = 'id';
-  newValue: string = 'new';
+  public parameterName: string = 'id';
+  public newValue: string = 'new';
 }
 
 export interface IDomainEntityContext<T> {
