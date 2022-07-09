@@ -9,7 +9,11 @@ import { FeatureFlagSettingListPageSettingsService } from './pages/feature-flag-
 import { FeatureFlagSettingAuditlogComponent } from './pages/feature-flag-setting-auditlog/feature-flag-setting-auditlog.component';
 
 @NgModule({
-  declarations: [FeatureFlagSettingListComponent, FeatureFlagSettingDetailsComponent, FeatureFlagSettingAuditlogComponent],
+  declarations: [
+    FeatureFlagSettingListComponent,
+    FeatureFlagSettingDetailsComponent,
+    FeatureFlagSettingAuditlogComponent
+  ],
   imports: [CommonModule, SharedModule, FeatureFlagsSettingsRoutingModule],
   providers: [FeatureFlagSettingTableDataService, FeatureFlagSettingListPageSettingsService]
 })
