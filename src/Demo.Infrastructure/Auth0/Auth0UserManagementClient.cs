@@ -91,7 +91,7 @@ namespace Demo.Infrastructure.Auth0
             {
                 Connection = _environmentSettings.Auth0.Management.UserDatabaseIdentifier,
                 Email = internalUser.Email,
-                FirstName = internalUser.GivenName,
+                FirstName = string.IsNullOrWhiteSpace(internalUser.GivenName) ? null : internalUser.GivenName,
                 LastName = $"{internalUser.MiddleName} {internalUser.FamilyName}".Trim()
             };
             if (verifyEmail)
