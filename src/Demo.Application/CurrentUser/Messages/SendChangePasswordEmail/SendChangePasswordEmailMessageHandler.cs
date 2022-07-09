@@ -37,7 +37,7 @@ namespace Demo.Application.Users.Messages.SendChangePasswordEmail
             var subject = "Reset password";
 
             var changePasswordUrl =
-                await _auth0UserManagementClient.GetChangePasswordUrl(_userDomainEntity.Entity, cancellationToken);
+                await _auth0UserManagementClient.GetChangePasswordUrlAsync(_userDomainEntity.Entity, cancellationToken);
 
             var emailTemplateModel = new ChangePasswordEmailBodyTemplateModel
             {

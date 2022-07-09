@@ -69,7 +69,7 @@ namespace Demo.Infrastructure.Auth0
             return user.UserId;
         }
 
-        public async Task<string> GetChangePasswordUrl(User internalUser, CancellationToken cancellationToken = default)
+        public async Task<string> GetChangePasswordUrlAsync(User internalUser, CancellationToken cancellationToken = default)
         {
             var client = await _auth0ManagementApiClientCreator.GetClient(cancellationToken);
             var passwordChangeTicketRequest = new PasswordChangeTicketRequest
