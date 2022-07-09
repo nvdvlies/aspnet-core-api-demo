@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, HostListener } from '@angular/core'
 import { Router } from '@angular/router';
 import {
   BehaviorSubject,
+  catchError,
   combineLatest,
   debounceTime,
   EMPTY,
@@ -9,7 +10,8 @@ import {
   map,
   Observable,
   switchMap,
-  tap
+  tap,
+  throwError
 } from 'rxjs';
 import { DomainEntityService } from '@domain/shared/domain-entity-base';
 import {
@@ -22,12 +24,26 @@ import { IHasForm } from '@shared/guards/unsaved-changes.guard';
 import { InvoiceListRouteState } from '@invoices/pages/invoice-list/invoice-list.component';
 import { ModalService } from '@shared/services/modal.service';
 import { ConfirmDeleteModalComponent } from '@shared/modals/confirm-delete-modal/confirm-delete-modal.component';
-import { InvoiceStatusEnum } from '@api/api.generated.clients';
+import {
+  ApiException,
+  ApiInvoicesClient,
+  CopyInvoiceCommand,
+  CopyInvoiceResponse,
+  CreditInvoiceCommand,
+  CreditInvoiceResponse,
+  InvoiceStatusEnum,
+  ProblemDetails,
+  ValidationProblemDetails
+} from '@api/api.generated.clients';
 
 interface ViewModel extends IInvoiceDomainEntityContext {
   isMarkingAsSent: boolean;
   isMarkingAsCancelled: boolean;
   isMarkingAsPaid: boolean;
+  isCopying: boolean;
+  isCreatingCredit: boolean;
+  copyProblemDetails: ValidationProblemDetails | ProblemDetails | ApiException | undefined;
+  creditProblemDetails: ValidationProblemDetails | ProblemDetails | ApiException | undefined;
 }
 
 @Component({
@@ -48,10 +64,22 @@ export class InvoiceDetailsComponent implements IHasForm {
   public readonly isMarkingAsSent = new BehaviorSubject<boolean>(false);
   public readonly isMarkingAsCancelled = new BehaviorSubject<boolean>(false);
   public readonly isMarkingAsPaid = new BehaviorSubject<boolean>(false);
+  public readonly isCopying = new BehaviorSubject<boolean>(false);
+  public readonly isCreatingCredit = new BehaviorSubject<boolean>(false);
+  public readonly copyProblemDetails = new BehaviorSubject<
+    ValidationProblemDetails | ProblemDetails | ApiException | undefined
+  >(undefined);
+  public readonly creditProblemDetails = new BehaviorSubject<
+    ValidationProblemDetails | ProblemDetails | ApiException | undefined
+  >(undefined);
 
   public isMarkingAsSent$ = this.isMarkingAsSent.asObservable();
   public isMarkingAsCancelled$ = this.isMarkingAsCancelled.asObservable();
   public isMarkingAsPaid$ = this.isMarkingAsPaid.asObservable();
+  public isCopying$ = this.isCopying.asObservable();
+  public isCreatingCredit$ = this.isCreatingCredit.asObservable();
+  protected copyProblemDetails$ = this.copyProblemDetails.asObservable();
+  protected creditProblemDetails$ = this.creditProblemDetails.asObservable();
 
   public InvoiceStatusEnum = InvoiceStatusEnum;
 
@@ -61,18 +89,37 @@ export class InvoiceDetailsComponent implements IHasForm {
     this.invoiceDomainEntityService.observe$,
     this.isMarkingAsSent$,
     this.isMarkingAsCancelled$,
-    this.isMarkingAsPaid$
+    this.isMarkingAsPaid$,
+    this.isCopying$,
+    this.isCreatingCredit$,
+    this.copyProblemDetails$,
+    this.creditProblemDetails$
   ]).pipe(
     debounceTime(0),
-    map(([domainEntityContext, isMarkingAsSent, isMarkingAsCancelled, isMarkingAsPaid]) => {
-      const context: ViewModel = {
-        ...domainEntityContext,
+    map(
+      ([
+        domainEntityContext,
         isMarkingAsSent,
         isMarkingAsCancelled,
-        isMarkingAsPaid
-      };
-      return context;
-    }),
+        isMarkingAsPaid,
+        isCopying,
+        isCreatingCredit,
+        copyProblemDetails,
+        creditProblemDetails
+      ]) => {
+        const context: ViewModel = {
+          ...domainEntityContext,
+          isMarkingAsSent,
+          isMarkingAsCancelled,
+          isMarkingAsPaid,
+          isCopying,
+          isCreatingCredit,
+          copyProblemDetails,
+          creditProblemDetails
+        };
+        return context;
+      }
+    ),
     tap((vm) => (this.vm = vm))
   );
 
@@ -84,7 +131,8 @@ export class InvoiceDetailsComponent implements IHasForm {
   constructor(
     private readonly router: Router,
     private readonly invoiceDomainEntityService: InvoiceDomainEntityService,
-    private readonly modalService: ModalService
+    private readonly modalService: ModalService,
+    private readonly apiInvoicesClient: ApiInvoicesClient
   ) {}
 
   public save(): void {
@@ -170,6 +218,58 @@ export class InvoiceDetailsComponent implements IHasForm {
         finalize(() => this.isMarkingAsPaid.next(false))
       )
       .subscribe();
+  }
+
+  public copy(): void {
+    this.modalService
+      .confirmWithMessage('Are you sure you want to copy this invoice?', 'Copy')
+      .pipe(
+        switchMap((confirmed) => {
+          if (confirmed) {
+            this.isCopying.next(true);
+            const command = new CopyInvoiceCommand();
+            return this.apiInvoicesClient.copy(this.vm!.id!, command);
+          } else {
+            return EMPTY;
+          }
+        }),
+        catchError((error: ValidationProblemDetails | ProblemDetails | ApiException) => {
+          this.copyProblemDetails.next(error);
+          return throwError(() => error);
+        }),
+        finalize(() => this.isCopying.next(false))
+      )
+      .subscribe((response: CopyInvoiceResponse) => {
+        this.router
+          .navigateByUrl('/', { skipLocationChange: true })
+          .then(() => this.router.navigate(['/invoices', response.id]));
+      });
+  }
+
+  public credit(): void {
+    this.modalService
+      .confirmWithMessage('Are you sure you want to credit this invoice?', 'Credit')
+      .pipe(
+        switchMap((confirmed) => {
+          if (confirmed) {
+            this.isCreatingCredit.next(true);
+            const command = new CreditInvoiceCommand();
+            return this.apiInvoicesClient.credit(this.vm!.id!, command);
+          } else {
+            return EMPTY;
+          }
+        }),
+        catchError((error: ValidationProblemDetails | ProblemDetails | ApiException) => {
+          this.creditProblemDetails.next(error);
+          return throwError(() => error);
+        }),
+        finalize(() => this.isCreatingCredit.next(false))
+      )
+      .subscribe((response: CreditInvoiceResponse) => {
+        this.router
+          .navigateByUrl('/', { skipLocationChange: true })
+          .then(() => this.router.navigate(['/invoices', response.id]));
+      });
   }
 
   public resolveMergeConflictWithTakeTheirs(): void {

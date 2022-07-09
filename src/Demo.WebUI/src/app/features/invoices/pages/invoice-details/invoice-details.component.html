@@ -72,6 +72,26 @@
           </button>
           <button
             mat-raised-button
+            (click)="copy()"
+            type="button"
+            *ngIf="vm.id != null"
+            [disabled]="vm.isCopying"
+            [class.button-spinner]="vm.isCopying"
+          >
+            Copy
+          </button>
+          <button
+            mat-raised-button
+            (click)="credit()"
+            type="button"
+            *ngIf="vm.id != null && vm.entity?.status === InvoiceStatusEnum.Paid"
+            [disabled]="vm.isCreatingCredit"
+            [class.button-spinner]="vm.isCreatingCredit"
+          >
+            Credit
+          </button>
+          <button
+            mat-raised-button
             (click)="delete()"
             type="button"
             *ngIf="vm.id != null && vm.entity?.status === InvoiceStatusEnum.Draft"
