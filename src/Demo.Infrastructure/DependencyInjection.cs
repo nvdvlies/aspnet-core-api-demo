@@ -49,6 +49,7 @@ namespace Demo.Infrastructure
             services.AddScoped<IUserIdProvider, UserIdProvider>();
             services.AddScoped<IExternalUserIdProvider, ExternalUserIdProvider>();
             services.AddScoped<ICurrentUserIdProvider, CurrentUserIdProvider>();
+            services.AddScoped<IPermissionChecker, PermissionChecker>();
             services.AddScoped<ITimeZoneProvider, TimeZoneProvider>();
             services.AddScoped<ICultureProvider, CultureProvider>();
             services.AddScoped<IUserProvider, UserProvider>();

@@ -4,8 +4,7 @@ using System.Threading.Tasks;
 using Demo.Application.ApplicationSettings.Commands.SaveApplicationSettings;
 using Demo.Application.ApplicationSettings.Queries.GetApplicationSettings;
 using Demo.Application.ApplicationSettings.Queries.GetApplicationSettingsAuditlog;
-using Demo.WebApi.Auth;
-using Microsoft.AspNetCore.Authorization;
+using Demo.WebApi.Permissions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Demo.WebApi.Controllers
@@ -22,7 +21,7 @@ namespace Demo.WebApi.Controllers
         }
 
         [HttpPut]
-        [Authorize(nameof(Policies.Admin))]
+        [Permission(Domain.Role.Permissions.ApplicationSettingsWrite)]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
@@ -35,6 +34,7 @@ namespace Demo.WebApi.Controllers
         }
 
         [HttpGet("Auditlog")]
+        [Permission(Domain.Role.Permissions.ApplicationSettingsRead)]
         [ProducesResponseType(typeof(GetApplicationSettingsAuditlogQueryResult), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
         public async Task<ActionResult<GetApplicationSettingsAuditlogQueryResult>> GetApplicationSettingsAuditlog(

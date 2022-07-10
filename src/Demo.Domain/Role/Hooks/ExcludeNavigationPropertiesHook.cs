@@ -10,6 +10,7 @@ namespace Demo.Domain.Role.Hooks
         public Task ExecuteAsync(HookType type, IDomainEntityContext<Role> context, CancellationToken cancellationToken)
         {
             context.Entity.UserRoles = null;
+            context.Entity.Permissions?.ForEach(x => { x.Permission = null; });
 
             return Task.CompletedTask;
         }

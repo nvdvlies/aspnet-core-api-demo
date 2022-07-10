@@ -9,8 +9,7 @@ using Demo.Application.Roles.Queries.GetRoleAuditlog;
 using Demo.Application.Roles.Queries.GetRoleById;
 using Demo.Application.Roles.Queries.RoleLookup;
 using Demo.Application.Roles.Queries.SearchRoles;
-using Demo.WebApi.Auth;
-using Microsoft.AspNetCore.Authorization;
+using Demo.WebApi.Permissions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Demo.WebApi.Controllers
@@ -27,6 +26,7 @@ namespace Demo.WebApi.Controllers
         }
 
         [HttpGet("{id:guid}", Name = nameof(GetRoleById))]
+        [Permission(Domain.Role.Permissions.RolesRead)]
         [ProducesResponseType(typeof(GetRoleByIdQueryResult), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
@@ -45,7 +45,7 @@ namespace Demo.WebApi.Controllers
         }
 
         [HttpPost]
-        [Authorize(nameof(Policies.Admin))]
+        [Permission(Domain.Role.Permissions.RolesWrite)]
         [ProducesResponseType(typeof(CreateRoleResponse), (int)HttpStatusCode.Created)]
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
@@ -58,7 +58,7 @@ namespace Demo.WebApi.Controllers
         }
 
         [HttpPut("{id:guid}")]
-        [Authorize(nameof(Policies.Admin))]
+        [Permission(Domain.Role.Permissions.RolesWrite)]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
@@ -73,7 +73,7 @@ namespace Demo.WebApi.Controllers
         }
 
         [HttpDelete("{id:guid}")]
-        [Authorize(nameof(Policies.Admin))]
+        [Permission(Domain.Role.Permissions.RolesWrite)]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
@@ -88,7 +88,7 @@ namespace Demo.WebApi.Controllers
         }
 
         [HttpGet("{id:guid}/Auditlog")]
-        [Authorize(nameof(Policies.Admin))]
+        [Permission(Domain.Role.Permissions.RolesRead)]
         [ProducesResponseType(typeof(GetRoleAuditlogQueryResult), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
         public async Task<ActionResult<GetRoleAuditlogQueryResult>> GetRoleAuditlog([FromRoute] Guid id,

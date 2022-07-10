@@ -20,6 +20,8 @@ namespace Demo.Infrastructure.Persistence
         {
         }
 
+        public DbSet<PermissionGroup> PermissionGroups { get; set; }
+        public DbSet<Permission> Permissions { get; set; }
         public DbSet<OutboxEvent> OutboxEvents { get; set; }
         public DbSet<OutboxMessage> OutboxMessages { get; set; }
         public DbSet<Auditlog> Auditlogs { get; set; }
@@ -29,7 +31,6 @@ namespace Demo.Infrastructure.Persistence
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<FeatureFlagSettings> FeatureFlagSettings { get; set; }
-
         public DbSet<UserPreferences> UserPreferences { get; set; }
         // SCAFFOLD-MARKER: DBSET
 

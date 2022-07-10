@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Demo.Common.Interfaces;
 using Demo.Domain.Role.Interfaces;
 using Demo.Domain.Shared.DomainEntity;
 using Demo.Domain.Shared.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.Extensions.Logging;
 
 namespace Demo.Domain.Role
@@ -34,5 +37,8 @@ namespace Demo.Domain.Role
                 outboxEventCreator, outboxMessageCreator, jsonService, auditlogger)
         {
         }
+
+        protected override Func<IQueryable<Role>, IIncludableQueryable<Role, object>> Includes => _ => _
+            .Include(role => role.Permissions);
     }
 }

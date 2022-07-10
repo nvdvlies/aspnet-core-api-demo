@@ -7,16 +7,16 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using AutoFixture;
 using Demo.Domain.Role;
-using Demo.Domain.Role.Seed;
 using Demo.Domain.User;
 using Demo.Infrastructure.Persistence;
-using Demo.Infrastructure.Persistence.Configuration;
+using Demo.Infrastructure.Services;
 using Demo.Infrastructure.Settings;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
 using Xunit;
@@ -25,7 +25,7 @@ namespace Demo.WebApi.Tests.Helpers
 {
     public abstract class TestBase : IClassFixture<CustomWebApplicationFactory>
     {
-        private readonly IList<Role> _allRoles;
+        private readonly IList<Permission> _allPermissions;
         private readonly SharedFixture _fixture;
         protected readonly Fixture AutoFixture;
         protected readonly HttpClient Client;
@@ -47,7 +47,12 @@ namespace Demo.WebApi.Tests.Helpers
 
             ResetDatabaseAsync().Wait();
 
-            _allRoles = FindExistingEntitiesAsync<Role>(x => true).Result.ToList();
+            var cache = ServiceProvider.GetRequiredService<IDistributedCache>();
+            cache.Remove(RolesProvider.CacheKey);
+            cache.Remove(FeatureFlagSettingsProvider.CacheKey);
+            cache.Remove(ApplicationSettingsProvider.CacheKey);
+
+            _allPermissions = FindExistingEntitiesAsync<Permission>(x => true).Result.ToList();
         }
 
         protected HttpClient CreateHttpClientWithCustomConfiguration(Action<IServiceCollection> servicesConfiguration)
@@ -72,25 +77,39 @@ namespace Demo.WebApi.Tests.Helpers
 
         protected async Task SetTestUserToUnauthenticated()
         {
-            await SetTestUser(false, Array.Empty<Guid>());
+            await SetTestUser(false, Array.Empty<string>());
         }
 
-        protected async Task SetTestUserToAuthenticated()
+        protected async Task SetTestUserWithoutPermission()
         {
-            await SetTestUser(true, new[] { DefaultUserRole.RoleId });
+            await SetTestUser(true, Array.Empty<string>());
         }
 
-        protected async Task SetTestUserToAuthenticatedWithAdministratorRole()
+        protected async Task SetTestUserWithPermission(string permissionName)
         {
-            await SetTestUser(true,
-                new[] { DefaultUserRole.RoleId, DefaultAdministratorRole.RoleId });
+            await SetTestUser(true, new[] { permissionName });
         }
 
-        private async Task SetTestUser(bool isAuthenticated, IList<Guid> roleIds)
+        protected async Task SetTestUserWithPermission(IEnumerable<string> permissionNames)
+        {
+            await SetTestUser(true, permissionNames );
+        }
+
+        private async Task SetTestUser(bool isAuthenticated, IEnumerable<string> permissionNames)
         {
             var testUser = ServiceProvider.GetRequiredService<TestUser>();
+
             testUser.IsAuthenticated = isAuthenticated;
-            testUser.Roles = roleIds.Select(roleId => _allRoles.Single(x => x.Id == roleId)).ToList();
+
+            var roleId =  Guid.NewGuid();
+            var testRole = new Role
+            {
+                Id = roleId,
+                ExternalId = "test_role",
+                Name = "TestRole",
+                Permissions = permissionNames.Select(permissionName => new RolePermission { PermissionId = _allPermissions.Single(permission => permission.Name == permissionName).Id }).ToList()
+            };
+            await AddAsExistingEntityAsync(testRole);
 
             var userId = Guid.NewGuid();
             testUser.User = new User
@@ -100,7 +119,7 @@ namespace Demo.WebApi.Tests.Helpers
                 Email = "test@test.com",
                 FamilyName = "TestUser",
                 Fullname = "TestUser",
-                UserRoles = roleIds.Select(roleId => new UserRole { RoleId = roleId }).ToList()
+                UserRoles = new List<Domain.User.UserRole>() { new() { RoleId = roleId } }
             };
             await AddAsExistingEntityAsync(testUser.User);
         }

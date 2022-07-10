@@ -1,6 +1,8 @@
 ﻿using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using Demo.Domain.Role;
+using Demo.Domain.Role.Seed;
 using Demo.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.SignalR.Client;
@@ -17,7 +19,7 @@ namespace Demo.WebApi.Tests.Helpers
         public readonly Checkpoint Checkpoint = new()
         {
             SchemasToInclude = new[] { "demo" },
-            TablesToIgnore = new[] { new Table("Role") },
+            TablesToIgnore = new[] { new Table(nameof(Permission)), new Table(nameof(PermissionGroup)) },
             WithReseed = true,
             DbAdapter = DbAdapter.Postgres
         };

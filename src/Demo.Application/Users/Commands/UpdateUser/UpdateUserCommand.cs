@@ -19,6 +19,7 @@ namespace Demo.Application.Users.Commands.UpdateUser
         public UserTypeEnum UserType { get; set; }
         public DateTime? BirthDate { get; set; }
         public List<UpdateUserCommandUserRoleDto> UserRoles { get; set; }
+
         // ReSharper disable once InconsistentNaming
         public uint xmin { get; set; }
 

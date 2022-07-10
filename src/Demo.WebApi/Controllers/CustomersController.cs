@@ -9,6 +9,7 @@ using Demo.Application.Customers.Queries.CustomerLookup;
 using Demo.Application.Customers.Queries.GetCustomerAuditlog;
 using Demo.Application.Customers.Queries.GetCustomerById;
 using Demo.Application.Customers.Queries.SearchCustomers;
+using Demo.WebApi.Permissions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Demo.WebApi.Controllers
@@ -16,6 +17,7 @@ namespace Demo.WebApi.Controllers
     public class CustomersController : ApiControllerBase
     {
         [HttpGet]
+        [Permission(Domain.Role.Permissions.CustomersRead)]
         [ProducesResponseType(typeof(SearchCustomersQueryResult), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
         public async Task<ActionResult<SearchCustomersQueryResult>> Search([FromQuery] SearchCustomersQuery query,
@@ -25,6 +27,7 @@ namespace Demo.WebApi.Controllers
         }
 
         [HttpGet("{id:guid}", Name = nameof(GetCustomerById))]
+        [Permission(Domain.Role.Permissions.CustomersRead)]
         [ProducesResponseType(typeof(GetCustomerByIdQueryResult), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(void), (int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
@@ -43,6 +46,7 @@ namespace Demo.WebApi.Controllers
         }
 
         [HttpPost]
+        [Permission(Domain.Role.Permissions.CustomersWrite)]
         [ProducesResponseType(typeof(CreateCustomerResponse), (int)HttpStatusCode.Created)]
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
@@ -55,6 +59,7 @@ namespace Demo.WebApi.Controllers
         }
 
         [HttpPut("{id:guid}")]
+        [Permission(Domain.Role.Permissions.CustomersWrite)]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.NotFound)]
@@ -70,6 +75,7 @@ namespace Demo.WebApi.Controllers
         }
 
         [HttpDelete("{id:guid}")]
+        [Permission(Domain.Role.Permissions.CustomersWrite)]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.NotFound)]
@@ -85,6 +91,7 @@ namespace Demo.WebApi.Controllers
         }
 
         [HttpGet("{id:guid}/Auditlog")]
+        [Permission(Domain.Role.Permissions.CustomersRead)]
         [ProducesResponseType(typeof(GetCustomerAuditlogQueryResult), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
         public async Task<ActionResult<GetCustomerAuditlogQueryResult>> GetCustomerAuditlog([FromRoute] Guid id,

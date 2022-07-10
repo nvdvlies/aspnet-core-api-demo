@@ -11,7 +11,7 @@ namespace Demo.Infrastructure.Services
 {
     internal class FeatureFlagSettingsProvider : IFeatureFlagSettingsProvider
     {
-        private const string CacheKey = "FeatureFlagSettings";
+        public const string CacheKey = "FeatureFlagSettings";
 
         private readonly IDistributedCache _cache;
         private readonly IFeatureFlagSettingsDomainEntity _featureFlagSettingsDomainEntity;

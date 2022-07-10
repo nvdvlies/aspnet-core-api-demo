@@ -21,7 +21,7 @@ namespace Demo.WebApi.Tests.Controllers.ApplicationSettings
             SaveApplicationSettings_When_application_settings_can_be_saved_It_should_return_statuscode_NoContent()
         {
             // Arrange
-            await SetTestUserToAuthenticatedWithAdministratorRole();
+            await SetTestUserWithPermission(Domain.Role.Permissions.ApplicationSettingsWrite);
             var command = new SaveApplicationSettingsCommand
             {
                 Settings = new SaveApplicationSettingsSettingsDto { Setting1 = true }
@@ -36,10 +36,10 @@ namespace Demo.WebApi.Tests.Controllers.ApplicationSettings
 
         [Fact]
         public async Task
-            SaveApplicationSettings_When_user_does_not_have_an_administrator_role_It_should_return_statuscode_Forbidden()
+            SaveApplicationSettings_When_user_does_not_have_write_permission_It_should_return_statuscode_Forbidden()
         {
             // Arrange
-            await SetTestUserToAuthenticated();
+            await SetTestUserWithPermission(Domain.Role.Permissions.ApplicationSettingsRead);
             var command = new SaveApplicationSettingsCommand
             {
                 Settings = new SaveApplicationSettingsSettingsDto { Setting1 = true }

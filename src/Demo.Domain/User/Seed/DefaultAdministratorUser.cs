@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using Demo.Domain.Role.Seed;
 using Demo.Domain.Shared.Interfaces;
 
 namespace Demo.Domain.User.Seed
@@ -16,7 +18,15 @@ namespace Demo.Domain.User.Seed
                 ExternalId = ExternalId,
                 FamilyName = "Administrator",
                 Fullname = "Administrator",
-                Email = "demo@demo.com"
+                Email = "demo@demo.com",
+                UserRoles = new List<UserRole>
+                {
+                    new()
+                    {
+                        UserId = UserId,
+                        RoleId = AdministratorRole.RoleId
+                    }
+                }
             };
             ((IAuditableEntity)user).SetCreatedByAndCreatedOn(UserId, DateTime.UtcNow);
             return user;

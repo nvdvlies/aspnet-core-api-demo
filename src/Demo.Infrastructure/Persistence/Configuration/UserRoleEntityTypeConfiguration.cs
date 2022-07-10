@@ -1,6 +1,4 @@
-﻿using Demo.Domain.Role.Seed;
-using Demo.Domain.User;
-using Demo.Domain.User.Seed;
+﻿using Demo.Domain.User;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -20,12 +18,6 @@ namespace Demo.Infrastructure.Persistence.Configuration
             builder.HasOne(x => x.Role)
                 .WithMany(x => x.UserRoles)
                 .HasForeignKey(x => x.RoleId);
-
-            builder.HasData(new UserRole
-            {
-                UserId = DefaultAdministratorUser.UserId,
-                RoleId = DefaultAdministratorRole.RoleId
-            });
         }
     }
 }

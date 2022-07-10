@@ -1,4 +1,4 @@
-﻿namespace Demo.Application.Users.Messages.SendChangePasswordEmail
+﻿namespace Demo.Application.CurrentUser.Messages.SendChangePasswordEmail
 {
     public class ChangePasswordEmailBodyTemplateModel
     {

@@ -1,18 +1,17 @@
-using Demo.Application.Users.Commands.ResetPassword;
 using System;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Demo.Application.Users.Commands.CreateUser;
 using Demo.Application.Users.Commands.DeleteUser;
+using Demo.Application.Users.Commands.ResetPassword;
 using Demo.Application.Users.Commands.UpdateUser;
 using Demo.Application.Users.Queries.GetUserAuditlog;
 using Demo.Application.Users.Queries.GetUserById;
 using Demo.Application.Users.Queries.IsEmailAvailable;
 using Demo.Application.Users.Queries.SearchUsers;
 using Demo.Application.Users.Queries.UserLookup;
-using Demo.WebApi.Auth;
-using Microsoft.AspNetCore.Authorization;
+using Demo.WebApi.Permissions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Demo.WebApi.Controllers
@@ -20,7 +19,7 @@ namespace Demo.WebApi.Controllers
     public class UsersController : ApiControllerBase
     {
         [HttpGet]
-        [Authorize(nameof(Policies.Admin))]
+        [Permission(Domain.Role.Permissions.UsersRead)]
         [ProducesResponseType(typeof(SearchUsersQueryResult), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
         public async Task<ActionResult<SearchUsersQueryResult>> Search([FromQuery] SearchUsersQuery query,
@@ -30,7 +29,7 @@ namespace Demo.WebApi.Controllers
         }
 
         [HttpGet("{id:guid}", Name = nameof(GetUserById))]
-        [Authorize(nameof(Policies.Admin))]
+        [Permission(Domain.Role.Permissions.UsersRead)]
         [ProducesResponseType(typeof(GetUserByIdQueryResult), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
@@ -49,7 +48,7 @@ namespace Demo.WebApi.Controllers
         }
 
         [HttpPost]
-        [Authorize(nameof(Policies.Admin))]
+        [Permission(Domain.Role.Permissions.UsersWrite)]
         [ProducesResponseType(typeof(CreateUserResponse), (int)HttpStatusCode.Created)]
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
@@ -62,7 +61,7 @@ namespace Demo.WebApi.Controllers
         }
 
         [HttpPut("{id:guid}")]
-        [Authorize(nameof(Policies.Admin))]
+        [Permission(Domain.Role.Permissions.UsersWrite)]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
@@ -77,7 +76,7 @@ namespace Demo.WebApi.Controllers
         }
 
         [HttpDelete("{id:guid}")]
-        [Authorize(nameof(Policies.Admin))]
+        [Permission(Domain.Role.Permissions.UsersWrite)]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
@@ -92,7 +91,7 @@ namespace Demo.WebApi.Controllers
         }
 
         [HttpGet("{id:guid}/Auditlog")]
-        [Authorize(nameof(Policies.Admin))]
+        [Permission(Domain.Role.Permissions.UsersWrite)]
         [ProducesResponseType(typeof(GetUserAuditlogQueryResult), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
         public async Task<ActionResult<GetUserAuditlogQueryResult>> GetUserAuditlog([FromRoute] Guid id,
@@ -126,7 +125,8 @@ namespace Demo.WebApi.Controllers
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
-        public async Task<ActionResult> ResetPassword([FromRoute] Guid id, ResetPasswordCommand command, CancellationToken cancellationToken)
+        public async Task<ActionResult> ResetPassword([FromRoute] Guid id, ResetPasswordCommand command,
+            CancellationToken cancellationToken)
         {
             command.SetUserId(id);
 

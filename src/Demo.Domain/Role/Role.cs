@@ -12,5 +12,7 @@ namespace Demo.Domain.Role
         public string ExternalId { get; set; }
 
         public List<UserRole> UserRoles { get; set; }
+
+        public List<RolePermission> Permissions { get; set; }
     }
 }

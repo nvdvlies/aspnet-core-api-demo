@@ -1,7 +1,7 @@
-using Demo.Application.CurrentUser.Commands.ChangePassword;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Demo.Application.CurrentUser.Commands.ChangePassword;
 using Demo.Application.CurrentUser.Commands.UpdateCurrentUser;
 using Demo.Application.CurrentUser.Queries.GetCurrentUser;
 using Demo.Application.CurrentUser.Queries.GetCurrentUserFeatureFlags;
@@ -53,7 +53,8 @@ namespace Demo.WebApi.Controllers
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
-        public async Task<ActionResult> ChangePassword(ChangePasswordCommand command, CancellationToken cancellationToken)
+        public async Task<ActionResult> ChangePassword(ChangePasswordCommand command,
+            CancellationToken cancellationToken)
         {
             await Mediator.Send(command, cancellationToken);
 

@@ -11,7 +11,7 @@ namespace Demo.Infrastructure.Services
 {
     internal class ApplicationSettingsProvider : IApplicationSettingsProvider
     {
-        private const string CacheKey = "ApplicationSettings";
+        public const string CacheKey = "ApplicationSettings";
         private readonly IApplicationSettingsDomainEntity _applicationSettingsDomainEntity;
 
         private readonly IDistributedCache _cache;

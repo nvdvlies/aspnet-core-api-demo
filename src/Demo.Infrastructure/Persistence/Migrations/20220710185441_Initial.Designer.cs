@@ -15,7 +15,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Demo.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220708184901_Initial")]
+    [Migration("20220710185441_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -403,6 +403,184 @@ namespace Demo.Infrastructure.Persistence.Migrations
                     b.ToTable("OutboxMessage");
                 });
 
+            modelBuilder.Entity("Demo.Domain.Role.Permission", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<Guid?>("PermissionGroupId")
+                        .IsRequired()
+                        .HasColumnType("uuid");
+
+                    b.Property<uint>("xmin")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.HasIndex("PermissionGroupId");
+
+                    b.ToTable("Permission");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("bdd6b139-be77-4302-b80e-c1bce405ada5"),
+                            Name = "Customers:Read",
+                            PermissionGroupId = new Guid("bce43d29-e527-4364-890a-0a49224abf74"),
+                            xmin = 0u
+                        },
+                        new
+                        {
+                            Id = new Guid("c97b9d9d-6611-4a26-a1b4-43708402a49a"),
+                            Name = "Customers:Write",
+                            PermissionGroupId = new Guid("bce43d29-e527-4364-890a-0a49224abf74"),
+                            xmin = 0u
+                        },
+                        new
+                        {
+                            Id = new Guid("931d572a-f85b-4dbb-a32d-8fee11e0e28d"),
+                            Name = "Invoices:Read",
+                            PermissionGroupId = new Guid("4b4e2d70-02dc-43ac-a8bc-c75c25e1e71d"),
+                            xmin = 0u
+                        },
+                        new
+                        {
+                            Id = new Guid("d5d6786c-ca5d-476e-b7a9-ccf67422b98d"),
+                            Name = "Invoices:Write",
+                            PermissionGroupId = new Guid("4b4e2d70-02dc-43ac-a8bc-c75c25e1e71d"),
+                            xmin = 0u
+                        },
+                        new
+                        {
+                            Id = new Guid("537d9994-517f-490b-8c7e-5da886e80d44"),
+                            Name = "FeatureFlags:Read",
+                            PermissionGroupId = new Guid("6fd39917-5f96-472d-ac69-d2a8c56880b7"),
+                            xmin = 0u
+                        },
+                        new
+                        {
+                            Id = new Guid("7f77e408-04ce-496c-b347-bac63b0bc870"),
+                            Name = "FeatureFlags:Write",
+                            PermissionGroupId = new Guid("6fd39917-5f96-472d-ac69-d2a8c56880b7"),
+                            xmin = 0u
+                        },
+                        new
+                        {
+                            Id = new Guid("286864f7-1c3c-4ca5-9ae0-5efe8b56bf5e"),
+                            Name = "Users:Read",
+                            PermissionGroupId = new Guid("9b621e5b-e277-4c88-88d2-18a7befb45aa"),
+                            xmin = 0u
+                        },
+                        new
+                        {
+                            Id = new Guid("b274daec-0a76-4bcc-b268-09768517d265"),
+                            Name = "Users:Write",
+                            PermissionGroupId = new Guid("9b621e5b-e277-4c88-88d2-18a7befb45aa"),
+                            xmin = 0u
+                        },
+                        new
+                        {
+                            Id = new Guid("db7b21d3-41ee-44d2-8218-78ef78f262d3"),
+                            Name = "ApplicationSettings:Read",
+                            PermissionGroupId = new Guid("d3fda6f7-4a23-4a2c-bfcf-abd0aec25774"),
+                            xmin = 0u
+                        },
+                        new
+                        {
+                            Id = new Guid("29ece69e-c315-4902-b959-82790a38dc8a"),
+                            Name = "ApplicationSettings:Write",
+                            PermissionGroupId = new Guid("d3fda6f7-4a23-4a2c-bfcf-abd0aec25774"),
+                            xmin = 0u
+                        },
+                        new
+                        {
+                            Id = new Guid("7baf877f-dda2-4940-b7e5-38274fe7f28b"),
+                            Name = "Roles:Read",
+                            PermissionGroupId = new Guid("7af7d630-e85d-4183-966f-a2cf4a3d67f0"),
+                            xmin = 0u
+                        },
+                        new
+                        {
+                            Id = new Guid("692a27f6-c217-4bfe-a210-8ab19d809199"),
+                            Name = "Roles:Write",
+                            PermissionGroupId = new Guid("7af7d630-e85d-4183-966f-a2cf4a3d67f0"),
+                            xmin = 0u
+                        });
+                });
+
+            modelBuilder.Entity("Demo.Domain.Role.PermissionGroup", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<uint>("xmin")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("PermissionGroup");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("bce43d29-e527-4364-890a-0a49224abf74"),
+                            Name = "Customers",
+                            xmin = 0u
+                        },
+                        new
+                        {
+                            Id = new Guid("4b4e2d70-02dc-43ac-a8bc-c75c25e1e71d"),
+                            Name = "Invoices",
+                            xmin = 0u
+                        },
+                        new
+                        {
+                            Id = new Guid("6fd39917-5f96-472d-ac69-d2a8c56880b7"),
+                            Name = "FeatureFlags",
+                            xmin = 0u
+                        },
+                        new
+                        {
+                            Id = new Guid("9b621e5b-e277-4c88-88d2-18a7befb45aa"),
+                            Name = "Users",
+                            xmin = 0u
+                        },
+                        new
+                        {
+                            Id = new Guid("d3fda6f7-4a23-4a2c-bfcf-abd0aec25774"),
+                            Name = "ApplicationSettings",
+                            xmin = 0u
+                        },
+                        new
+                        {
+                            Id = new Guid("7af7d630-e85d-4183-966f-a2cf4a3d67f0"),
+                            Name = "Roles",
+                            xmin = 0u
+                        });
+                });
+
             modelBuilder.Entity("Demo.Domain.Role.Role", b =>
                 {
                     b.Property<Guid>("Id")
@@ -453,34 +631,21 @@ namespace Demo.Infrastructure.Persistence.Migrations
                         .IsUnique();
 
                     b.ToTable("Role");
+                });
 
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("7c20005d-d5f8-4079-af26-434d69b43c82"),
-                            CreatedBy = new Guid("08463267-7065-4631-9944-08da09d992d6"),
-                            CreatedOn = new DateTime(2022, 7, 8, 18, 49, 1, 303, DateTimeKind.Utc).AddTicks(668),
-                            Deleted = false,
-                            DeletedBy = new Guid("00000000-0000-0000-0000-000000000000"),
-                            ExternalId = "rol_N4KEnzIMUDaetcyr",
-                            LastModifiedBy = new Guid("08463267-7065-4631-9944-08da09d992d6"),
-                            LastModifiedOn = new DateTime(2022, 7, 8, 18, 49, 1, 303, DateTimeKind.Utc).AddTicks(668),
-                            Name = "Admin",
-                            xmin = 0u
-                        },
-                        new
-                        {
-                            Id = new Guid("d8a81cd5-d828-47ac-9f72-2e660f43a176"),
-                            CreatedBy = new Guid("08463267-7065-4631-9944-08da09d992d6"),
-                            CreatedOn = new DateTime(2022, 7, 8, 18, 49, 1, 303, DateTimeKind.Utc).AddTicks(3108),
-                            Deleted = false,
-                            DeletedBy = new Guid("00000000-0000-0000-0000-000000000000"),
-                            ExternalId = "rol_OUaEQHOTuugOJHwe",
-                            LastModifiedBy = new Guid("08463267-7065-4631-9944-08da09d992d6"),
-                            LastModifiedOn = new DateTime(2022, 7, 8, 18, 49, 1, 303, DateTimeKind.Utc).AddTicks(3108),
-                            Name = "User",
-                            xmin = 0u
-                        });
+            modelBuilder.Entity("Demo.Domain.Role.RolePermission", b =>
+                {
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("PermissionId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("RoleId", "PermissionId");
+
+                    b.HasIndex("PermissionId");
+
+                    b.ToTable("RolePermission");
                 });
 
             modelBuilder.Entity("Demo.Domain.User.User", b =>
@@ -563,24 +728,6 @@ namespace Demo.Infrastructure.Persistence.Migrations
                     b.HasIndex("Fullname");
 
                     b.ToTable("User");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("08463267-7065-4631-9944-08da09d992d6"),
-                            CreatedBy = new Guid("08463267-7065-4631-9944-08da09d992d6"),
-                            CreatedOn = new DateTime(2022, 7, 8, 18, 49, 1, 305, DateTimeKind.Utc).AddTicks(9572),
-                            Deleted = false,
-                            DeletedBy = new Guid("00000000-0000-0000-0000-000000000000"),
-                            Email = "demo@demo.com",
-                            ExternalId = "auth0|08463267-7065-4631-9944-08da09d992d6",
-                            FamilyName = "Administrator",
-                            Fullname = "Administrator",
-                            LastModifiedBy = new Guid("08463267-7065-4631-9944-08da09d992d6"),
-                            LastModifiedOn = new DateTime(2022, 7, 8, 18, 49, 1, 305, DateTimeKind.Utc).AddTicks(9572),
-                            UserType = 0,
-                            xmin = 0u
-                        });
                 });
 
             modelBuilder.Entity("Demo.Domain.User.UserRole", b =>
@@ -596,13 +743,6 @@ namespace Demo.Infrastructure.Persistence.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("UserRole");
-
-                    b.HasData(
-                        new
-                        {
-                            UserId = new Guid("08463267-7065-4631-9944-08da09d992d6"),
-                            RoleId = new Guid("7c20005d-d5f8-4079-af26-434d69b43c82")
-                        });
                 });
 
             modelBuilder.Entity("Demo.Domain.UserPreferences.UserPreferences", b =>
@@ -657,6 +797,36 @@ namespace Demo.Infrastructure.Persistence.Migrations
                     b.Navigation("Invoice");
                 });
 
+            modelBuilder.Entity("Demo.Domain.Role.Permission", b =>
+                {
+                    b.HasOne("Demo.Domain.Role.PermissionGroup", "PermissionGroup")
+                        .WithMany("Permissions")
+                        .HasForeignKey("PermissionGroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("PermissionGroup");
+                });
+
+            modelBuilder.Entity("Demo.Domain.Role.RolePermission", b =>
+                {
+                    b.HasOne("Demo.Domain.Role.Permission", "Permission")
+                        .WithMany("Roles")
+                        .HasForeignKey("PermissionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Demo.Domain.Role.Role", "Role")
+                        .WithMany("Permissions")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Permission");
+
+                    b.Navigation("Role");
+                });
+
             modelBuilder.Entity("Demo.Domain.User.UserRole", b =>
                 {
                     b.HasOne("Demo.Domain.Role.Role", "Role")
@@ -697,8 +867,20 @@ namespace Demo.Infrastructure.Persistence.Migrations
                     b.Navigation("InvoiceLines");
                 });
 
+            modelBuilder.Entity("Demo.Domain.Role.Permission", b =>
+                {
+                    b.Navigation("Roles");
+                });
+
+            modelBuilder.Entity("Demo.Domain.Role.PermissionGroup", b =>
+                {
+                    b.Navigation("Permissions");
+                });
+
             modelBuilder.Entity("Demo.Domain.Role.Role", b =>
                 {
+                    b.Navigation("Permissions");
+
                     b.Navigation("UserRoles");
                 });
 

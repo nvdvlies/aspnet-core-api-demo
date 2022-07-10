@@ -1,7 +1,4 @@
-using System;
-using Demo.Domain.Shared.Interfaces;
 using Demo.Domain.User;
-using Demo.Domain.User.Seed;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -57,8 +54,6 @@ namespace Demo.Infrastructure.Persistence.Configuration
             builder.Property(p => p.DeletedOn);
 
             builder.UseXminAsConcurrencyToken();
-
-            builder.HasData(DefaultAdministratorUser.Create());
         }
     }
 }

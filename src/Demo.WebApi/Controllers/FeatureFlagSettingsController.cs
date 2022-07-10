@@ -4,8 +4,7 @@ using System.Threading.Tasks;
 using Demo.Application.FeatureFlagSettings.Commands.SaveFeatureFlagSettings;
 using Demo.Application.FeatureFlagSettings.Queries.GetFeatureFlagSettings;
 using Demo.Application.FeatureFlagSettings.Queries.GetFeatureFlagSettingsAuditlog;
-using Demo.WebApi.Auth;
-using Microsoft.AspNetCore.Authorization;
+using Demo.WebApi.Permissions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Demo.WebApi.Controllers
@@ -13,6 +12,7 @@ namespace Demo.WebApi.Controllers
     public class FeatureFlagSettingsController : ApiControllerBase
     {
         [HttpGet]
+        [Permission(Domain.Role.Permissions.FeatureFlagsRead)]
         [ProducesResponseType(typeof(GetFeatureFlagSettingsQueryResult), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
         public async Task<ActionResult<GetFeatureFlagSettingsQueryResult>> Get(
@@ -22,7 +22,7 @@ namespace Demo.WebApi.Controllers
         }
 
         [HttpPut]
-        [Authorize(nameof(Policies.Admin))]
+        [Permission(Domain.Role.Permissions.FeatureFlagsWrite)]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
@@ -35,6 +35,7 @@ namespace Demo.WebApi.Controllers
         }
 
         [HttpGet("Auditlog")]
+        [Permission(Domain.Role.Permissions.FeatureFlagsRead)]
         [ProducesResponseType(typeof(GetFeatureFlagSettingsAuditlogQueryResult), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
         public async Task<ActionResult<GetFeatureFlagSettingsAuditlogQueryResult>> GetFeatureFlagSettingsAuditlog(

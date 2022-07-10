@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Demo.Application.Shared.Interfaces;
 using Demo.Application.Users.Commands.CreateUser.Dtos;
 using Demo.Application.Users.Queries.GetUserById.Dtos;
-using Demo.Domain.User;
 using MediatR;
 
 namespace Demo.Application.Users.Commands.CreateUser

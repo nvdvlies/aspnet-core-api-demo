@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Demo.Domain.Shared.Interfaces
 {
     public interface IRolesProvider
     {
-        List<Role.Role> Get();
-        List<Role.Role> Get(bool refreshCache);
+        Task<List<Role.Role>> GetAsync();
+        Task<List<Role.Role>> GetAsync(bool refreshCache);
     }
 }

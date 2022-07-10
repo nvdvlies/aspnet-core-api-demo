@@ -6,13 +6,13 @@ namespace Demo.Domain.Shared.DomainEntity
     {
         private readonly string _name;
 
+        private readonly Stopwatch _stopwatch;
+
         public PerformanceMeasurement(string name)
         {
             _name = name;
             _stopwatch = new Stopwatch();
         }
-
-        private readonly Stopwatch _stopwatch;
 
         public void Start()
         {

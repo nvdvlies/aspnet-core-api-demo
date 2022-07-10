@@ -10,7 +10,7 @@ namespace Demo.Application.Users.Commands.UpdateUser
         public UpdateUserMappingProfile()
         {
             CreateMap<UpdateUserCommand, User>()
-                .ForMember(x => x.ExternalId, opt => opt.Condition(src => (src.UserType == UserTypeEnum.System)))
+                .ForMember(x => x.ExternalId, opt => opt.Condition(src => src.UserType == UserTypeEnum.System))
                 .ForMember(x => x.UserType, opt => opt.Ignore())
                 .ForMember(x => x.Deleted, opt => opt.Ignore())
                 .ForMember(x => x.DeletedBy, opt => opt.Ignore())

@@ -10,7 +10,8 @@ namespace Demo.Infrastructure.Services
             EnvironmentSettings environmentSettings
         )
         {
-            TimeZone = TimeZoneInfo.FindSystemTimeZoneById(environmentSettings.DefaultTimeZone ?? "W. Europe Standard Time");
+            TimeZone = TimeZoneInfo.FindSystemTimeZoneById(environmentSettings.DefaultTimeZone ??
+                                                           "W. Europe Standard Time");
         }
 
         public TimeZoneInfo TimeZone { get; }

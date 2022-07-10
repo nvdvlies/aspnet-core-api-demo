@@ -1,16 +1,16 @@
-using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
 using Demo.Common.Interfaces;
 using Demo.Domain.Shared.Interfaces;
 using Demo.Messages.Email;
+using MediatR;
 
 namespace Demo.Application.Users.Commands.ResetPassword
 {
     public class ResetPasswordCommandHandler : IRequestHandler<ResetPasswordCommand, Unit>
     {
-        private readonly ICurrentUserIdProvider _currentUserIdProvider;
         private readonly ICorrelationIdProvider _correlationIdProvider;
+        private readonly ICurrentUserIdProvider _currentUserIdProvider;
         private readonly IOutboxMessageCreator _outboxMessageCreator;
 
         public ResetPasswordCommandHandler(

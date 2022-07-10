@@ -59,7 +59,7 @@ namespace Demo.Infrastructure.Auth0
                 user = await client.Users.CreateAsync(userCreateRequest, cancellationToken);
             }
 
-            var roles = _rolesProvider.Get()
+            var roles = (await _rolesProvider.GetAsync())
                 .Where(x => internalUser.UserRoles.Any(userRole => userRole.RoleId == x.Id))
                 .Select(x => x.ExternalId)
                 .ToArray();
@@ -69,7 +69,8 @@ namespace Demo.Infrastructure.Auth0
             return user.UserId;
         }
 
-        public async Task<string> GetChangePasswordUrlAsync(User internalUser, CancellationToken cancellationToken = default)
+        public async Task<string> GetChangePasswordUrlAsync(User internalUser,
+            CancellationToken cancellationToken = default)
         {
             var client = await _auth0ManagementApiClientCreator.GetClient(cancellationToken);
             var passwordChangeTicketRequest = new PasswordChangeTicketRequest
@@ -115,7 +116,7 @@ namespace Demo.Infrastructure.Auth0
         {
             var client = await _auth0ManagementApiClientCreator.GetClient(cancellationToken);
 
-            var roleIdsAssignedToUser = _rolesProvider.Get()
+            var roleIdsAssignedToUser = (await _rolesProvider.GetAsync())
                 .Where(x => internalUser.UserRoles.Any(y => y.RoleId == x.Id))
                 .Select(x => x.ExternalId)
                 .ToList();

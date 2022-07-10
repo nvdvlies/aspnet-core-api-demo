@@ -1,6 +1,4 @@
-using System;
 using Demo.Domain.Role;
-using Demo.Domain.Role.Seed;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -32,8 +30,6 @@ namespace Demo.Infrastructure.Persistence.Configuration
             builder.Property(p => p.DeletedOn);
 
             builder.UseXminAsConcurrencyToken();
-
-            builder.HasData(DefaultAdministratorRole.Create(), DefaultUserRole.Create());
         }
     }
 }

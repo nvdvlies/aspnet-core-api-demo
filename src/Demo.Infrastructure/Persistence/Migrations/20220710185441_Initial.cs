@@ -143,6 +143,20 @@ namespace Demo.Infrastructure.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "PermissionGroup",
+                schema: "demo",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PermissionGroup", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Role",
                 schema: "demo",
                 columns: table => new
@@ -229,6 +243,28 @@ namespace Demo.Infrastructure.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Permission",
+                schema: "demo",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    PermissionGroupId = table.Column<Guid>(type: "uuid", nullable: false),
+                    xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Permission", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Permission_PermissionGroup_PermissionGroupId",
+                        column: x => x.PermissionGroupId,
+                        principalSchema: "demo",
+                        principalTable: "PermissionGroup",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "UserPreferences",
                 schema: "demo",
                 columns: table => new
@@ -305,27 +341,66 @@ namespace Demo.Infrastructure.Persistence.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.InsertData(
+            migrationBuilder.CreateTable(
+                name: "RolePermission",
                 schema: "demo",
-                table: "Role",
-                columns: new[] { "Id", "CreatedBy", "CreatedOn", "DeletedBy", "DeletedOn", "ExternalId", "LastModifiedBy", "LastModifiedOn", "Name" },
-                values: new object[,]
+                columns: table => new
                 {
-                    { new Guid("7c20005d-d5f8-4079-af26-434d69b43c82"), new Guid("08463267-7065-4631-9944-08da09d992d6"), new DateTime(2022, 7, 8, 18, 49, 1, 303, DateTimeKind.Utc).AddTicks(668), new Guid("00000000-0000-0000-0000-000000000000"), null, "rol_N4KEnzIMUDaetcyr", new Guid("08463267-7065-4631-9944-08da09d992d6"), new DateTime(2022, 7, 8, 18, 49, 1, 303, DateTimeKind.Utc).AddTicks(668), "Admin" },
-                    { new Guid("d8a81cd5-d828-47ac-9f72-2e660f43a176"), new Guid("08463267-7065-4631-9944-08da09d992d6"), new DateTime(2022, 7, 8, 18, 49, 1, 303, DateTimeKind.Utc).AddTicks(3108), new Guid("00000000-0000-0000-0000-000000000000"), null, "rol_OUaEQHOTuugOJHwe", new Guid("08463267-7065-4631-9944-08da09d992d6"), new DateTime(2022, 7, 8, 18, 49, 1, 303, DateTimeKind.Utc).AddTicks(3108), "User" }
+                    RoleId = table.Column<Guid>(type: "uuid", nullable: false),
+                    PermissionId = table.Column<Guid>(type: "uuid", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RolePermission", x => new { x.RoleId, x.PermissionId });
+                    table.ForeignKey(
+                        name: "FK_RolePermission_Permission_PermissionId",
+                        column: x => x.PermissionId,
+                        principalSchema: "demo",
+                        principalTable: "Permission",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_RolePermission_Role_RoleId",
+                        column: x => x.RoleId,
+                        principalSchema: "demo",
+                        principalTable: "Role",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.InsertData(
                 schema: "demo",
-                table: "User",
-                columns: new[] { "Id", "BirthDate", "CreatedBy", "CreatedOn", "DeletedBy", "DeletedOn", "Email", "ExternalId", "FamilyName", "Fullname", "Gender", "GivenName", "LastModifiedBy", "LastModifiedOn", "MiddleName" },
-                values: new object[] { new Guid("08463267-7065-4631-9944-08da09d992d6"), null, new Guid("08463267-7065-4631-9944-08da09d992d6"), new DateTime(2022, 7, 8, 18, 49, 1, 305, DateTimeKind.Utc).AddTicks(9572), new Guid("00000000-0000-0000-0000-000000000000"), null, "demo@demo.com", "auth0|08463267-7065-4631-9944-08da09d992d6", "Administrator", "Administrator", null, null, new Guid("08463267-7065-4631-9944-08da09d992d6"), new DateTime(2022, 7, 8, 18, 49, 1, 305, DateTimeKind.Utc).AddTicks(9572), null });
+                table: "PermissionGroup",
+                columns: new[] { "Id", "Name" },
+                values: new object[,]
+                {
+                    { new Guid("bce43d29-e527-4364-890a-0a49224abf74"), "Customers" },
+                    { new Guid("4b4e2d70-02dc-43ac-a8bc-c75c25e1e71d"), "Invoices" },
+                    { new Guid("6fd39917-5f96-472d-ac69-d2a8c56880b7"), "FeatureFlags" },
+                    { new Guid("9b621e5b-e277-4c88-88d2-18a7befb45aa"), "Users" },
+                    { new Guid("d3fda6f7-4a23-4a2c-bfcf-abd0aec25774"), "ApplicationSettings" },
+                    { new Guid("7af7d630-e85d-4183-966f-a2cf4a3d67f0"), "Roles" }
+                });
 
             migrationBuilder.InsertData(
                 schema: "demo",
-                table: "UserRole",
-                columns: new[] { "RoleId", "UserId" },
-                values: new object[] { new Guid("7c20005d-d5f8-4079-af26-434d69b43c82"), new Guid("08463267-7065-4631-9944-08da09d992d6") });
+                table: "Permission",
+                columns: new[] { "Id", "Name", "PermissionGroupId" },
+                values: new object[,]
+                {
+                    { new Guid("bdd6b139-be77-4302-b80e-c1bce405ada5"), "Customers:Read", new Guid("bce43d29-e527-4364-890a-0a49224abf74") },
+                    { new Guid("c97b9d9d-6611-4a26-a1b4-43708402a49a"), "Customers:Write", new Guid("bce43d29-e527-4364-890a-0a49224abf74") },
+                    { new Guid("931d572a-f85b-4dbb-a32d-8fee11e0e28d"), "Invoices:Read", new Guid("4b4e2d70-02dc-43ac-a8bc-c75c25e1e71d") },
+                    { new Guid("d5d6786c-ca5d-476e-b7a9-ccf67422b98d"), "Invoices:Write", new Guid("4b4e2d70-02dc-43ac-a8bc-c75c25e1e71d") },
+                    { new Guid("537d9994-517f-490b-8c7e-5da886e80d44"), "FeatureFlags:Read", new Guid("6fd39917-5f96-472d-ac69-d2a8c56880b7") },
+                    { new Guid("7f77e408-04ce-496c-b347-bac63b0bc870"), "FeatureFlags:Write", new Guid("6fd39917-5f96-472d-ac69-d2a8c56880b7") },
+                    { new Guid("286864f7-1c3c-4ca5-9ae0-5efe8b56bf5e"), "Users:Read", new Guid("9b621e5b-e277-4c88-88d2-18a7befb45aa") },
+                    { new Guid("b274daec-0a76-4bcc-b268-09768517d265"), "Users:Write", new Guid("9b621e5b-e277-4c88-88d2-18a7befb45aa") },
+                    { new Guid("db7b21d3-41ee-44d2-8218-78ef78f262d3"), "ApplicationSettings:Read", new Guid("d3fda6f7-4a23-4a2c-bfcf-abd0aec25774") },
+                    { new Guid("29ece69e-c315-4902-b959-82790a38dc8a"), "ApplicationSettings:Write", new Guid("d3fda6f7-4a23-4a2c-bfcf-abd0aec25774") },
+                    { new Guid("7baf877f-dda2-4940-b7e5-38274fe7f28b"), "Roles:Read", new Guid("7af7d630-e85d-4183-966f-a2cf4a3d67f0") },
+                    { new Guid("692a27f6-c217-4bfe-a210-8ab19d809199"), "Roles:Write", new Guid("7af7d630-e85d-4183-966f-a2cf4a3d67f0") }
+                });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Auditlog_EntityId",
@@ -420,11 +495,37 @@ namespace Demo.Infrastructure.Persistence.Migrations
                 column: "LockedUntil");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Permission_Name",
+                schema: "demo",
+                table: "Permission",
+                column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Permission_PermissionGroupId",
+                schema: "demo",
+                table: "Permission",
+                column: "PermissionGroupId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PermissionGroup_Name",
+                schema: "demo",
+                table: "PermissionGroup",
+                column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Role_Name",
                 schema: "demo",
                 table: "Role",
                 column: "Name",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RolePermission_PermissionId",
+                schema: "demo",
+                table: "RolePermission",
+                column: "PermissionId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_User_Email",
@@ -472,6 +573,10 @@ namespace Demo.Infrastructure.Persistence.Migrations
                 schema: "demo");
 
             migrationBuilder.DropTable(
+                name: "RolePermission",
+                schema: "demo");
+
+            migrationBuilder.DropTable(
                 name: "UserPreferences",
                 schema: "demo");
 
@@ -484,6 +589,10 @@ namespace Demo.Infrastructure.Persistence.Migrations
                 schema: "demo");
 
             migrationBuilder.DropTable(
+                name: "Permission",
+                schema: "demo");
+
+            migrationBuilder.DropTable(
                 name: "Role",
                 schema: "demo");
 
@@ -493,6 +602,10 @@ namespace Demo.Infrastructure.Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "Customer",
+                schema: "demo");
+
+            migrationBuilder.DropTable(
+                name: "PermissionGroup",
                 schema: "demo");
 
             migrationBuilder.DropSequence(

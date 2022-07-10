@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Demo.Domain.Role;
 using Demo.Domain.Shared.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
 
 namespace Demo.Infrastructure.Services
 {
     internal class RolesProvider : IRolesProvider
     {
-        private const string CacheKey = "Roles";
+        public const string CacheKey = "Roles";
 
         private readonly IDistributedCache _cache;
         private readonly IJsonService<List<Role>> _jsonService;
@@ -27,21 +28,23 @@ namespace Demo.Infrastructure.Services
             _query = query;
         }
 
-        public List<Role> Get()
+        public Task<List<Role>> GetAsync()
         {
-            return Get(false);
+            return GetAsync(false);
         }
 
-        public List<Role> Get(bool refreshCache)
+        public async Task<List<Role>> GetAsync(bool refreshCache)
         {
             var cacheKey = CacheKey;
             var cacheValue = _cache.Get(cacheKey);
 
             if (refreshCache || cacheValue == null)
             {
-                var roles = _query
+                var roles = await _query
                     .AsQueryable()
-                    .ToList();
+                    .Include(role => role.Permissions)
+                    .ThenInclude(rolePermission => rolePermission.Permission)
+                    .ToListAsync();
 
                 var cacheEntryOptions = new DistributedCacheEntryOptions()
                     .SetAbsoluteExpiration(TimeSpan.FromHours(8));

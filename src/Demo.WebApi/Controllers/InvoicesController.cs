@@ -14,6 +14,7 @@ using Demo.Application.Invoices.Queries.GetInvoiceAuditlog;
 using Demo.Application.Invoices.Queries.GetInvoiceById;
 using Demo.Application.Invoices.Queries.InvoiceLookup;
 using Demo.Application.Invoices.Queries.SearchInvoices;
+using Demo.WebApi.Permissions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Demo.WebApi.Controllers
@@ -21,6 +22,7 @@ namespace Demo.WebApi.Controllers
     public class InvoicesController : ApiControllerBase
     {
         [HttpGet]
+        [Permission(Domain.Role.Permissions.InvoicesRead)]
         [ProducesResponseType(typeof(SearchInvoicesQueryResult), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
         public async Task<ActionResult<SearchInvoicesQueryResult>> Search([FromQuery] SearchInvoicesQuery query,
@@ -30,6 +32,7 @@ namespace Demo.WebApi.Controllers
         }
 
         [HttpGet("{id:guid}", Name = nameof(GetInvoiceById))]
+        [Permission(Domain.Role.Permissions.InvoicesRead)]
         [ProducesResponseType(typeof(GetInvoiceByIdQueryResult), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(void), (int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
@@ -48,6 +51,7 @@ namespace Demo.WebApi.Controllers
         }
 
         [HttpPost]
+        [Permission(Domain.Role.Permissions.InvoicesWrite)]
         [ProducesResponseType(typeof(CreateInvoiceResponse), (int)HttpStatusCode.Created)]
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
@@ -60,6 +64,7 @@ namespace Demo.WebApi.Controllers
         }
 
         [HttpPut("{id:guid}")]
+        [Permission(Domain.Role.Permissions.InvoicesWrite)]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.NotFound)]
@@ -75,6 +80,7 @@ namespace Demo.WebApi.Controllers
         }
 
         [HttpDelete("{id:guid}")]
+        [Permission(Domain.Role.Permissions.InvoicesWrite)]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.NotFound)]
@@ -90,6 +96,7 @@ namespace Demo.WebApi.Controllers
         }
 
         [HttpPut("{id:guid}/MarkAsSent")]
+        [Permission(Domain.Role.Permissions.InvoicesWrite)]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.NotFound)]
@@ -105,6 +112,7 @@ namespace Demo.WebApi.Controllers
         }
 
         [HttpPut("{id:guid}/MarkAsPaid")]
+        [Permission(Domain.Role.Permissions.InvoicesWrite)]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.NotFound)]
@@ -120,6 +128,7 @@ namespace Demo.WebApi.Controllers
         }
 
         [HttpPut("{id:guid}/MarkAsCancelled")]
+        [Permission(Domain.Role.Permissions.InvoicesWrite)]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.NotFound)]
@@ -135,6 +144,7 @@ namespace Demo.WebApi.Controllers
         }
 
         [HttpGet("{id:guid}/Auditlog")]
+        [Permission(Domain.Role.Permissions.InvoicesRead)]
         [ProducesResponseType(typeof(GetInvoiceAuditlogQueryResult), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
         public async Task<ActionResult<GetInvoiceAuditlogQueryResult>> GetInvoiceAuditlog([FromRoute] Guid id,
@@ -146,6 +156,7 @@ namespace Demo.WebApi.Controllers
         }
 
         [HttpPost("{id:guid}/Copy")]
+        [Permission(Domain.Role.Permissions.InvoicesWrite)]
         [ProducesResponseType(typeof(CopyInvoiceResponse), (int)HttpStatusCode.Created)]
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
@@ -160,6 +171,7 @@ namespace Demo.WebApi.Controllers
         }
 
         [HttpPost("{id:guid}/Credit")]
+        [Permission(Domain.Role.Permissions.InvoicesWrite)]
         [ProducesResponseType(typeof(CreditInvoiceResponse), (int)HttpStatusCode.Created)]
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]

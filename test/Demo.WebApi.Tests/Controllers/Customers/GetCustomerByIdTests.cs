@@ -22,7 +22,7 @@ namespace Demo.WebApi.Tests.Controllers.Customers
         public async Task GetCustomerById_When_customer_exists_It_should_return_statuscode_OK()
         {
             // Arrange
-            await SetTestUserToAuthenticated();
+            await SetTestUserWithPermission(Domain.Role.Permissions.CustomersRead);
 
             var existingCustomer = new Customer { Id = Guid.NewGuid(), Name = "Test" };
             await AddAsExistingEntityAsync(existingCustomer);
@@ -44,7 +44,7 @@ namespace Demo.WebApi.Tests.Controllers.Customers
         public async Task GetCustomerById_When_customer_does_not_exist_It_should_return_statuscode_NotFound()
         {
             // Arrange
-            await SetTestUserToAuthenticated();
+            await SetTestUserWithPermission(Domain.Role.Permissions.CustomersRead);
 
             var customerId = Guid.NewGuid();
 
@@ -53,6 +53,21 @@ namespace Demo.WebApi.Tests.Controllers.Customers
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        }
+
+        [Fact]
+        public async Task GetCustomerById_When_user_has_no_permission_It_should_return_statuscode_Forbidden()
+        {
+            // Arrange
+            await SetTestUserWithoutPermission();
+
+            var customerId = Guid.NewGuid();
+
+            // Act
+            var response = await Client.CustomersController().GetById(customerId);
+
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
         }
     }
 }

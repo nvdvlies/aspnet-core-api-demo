@@ -5,7 +5,7 @@ using Demo.Domain.User.Interfaces;
 using Demo.Messages.Email;
 using MediatR;
 
-namespace Demo.Application.Users.Messages.SendChangePasswordEmail
+namespace Demo.Application.CurrentUser.Messages.SendChangePasswordEmail
 {
     public class SendChangePasswordEmailMessageHandler : IRequestHandler<SendChangePasswordEmailMessage, Unit>
     {
@@ -45,7 +45,8 @@ namespace Demo.Application.Users.Messages.SendChangePasswordEmail
             };
 
             var htmlContent = await _razorViewRenderer.RenderViewAsync(
-                "~/CurrentUser/Messages/SendChangePasswordEmail/ChangePasswordEmailBodyTemplate.cshtml", emailTemplateModel);
+                "~/CurrentUser/Messages/SendChangePasswordEmail/ChangePasswordEmailBodyTemplate.cshtml",
+                emailTemplateModel);
 
             await _emailSender.SendAsync(toAddress, subject, htmlContent, cancellationToken);
 

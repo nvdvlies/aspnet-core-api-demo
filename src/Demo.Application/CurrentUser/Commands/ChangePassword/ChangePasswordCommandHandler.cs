@@ -1,16 +1,16 @@
-using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
 using Demo.Common.Interfaces;
 using Demo.Domain.Shared.Interfaces;
 using Demo.Messages.Email;
+using MediatR;
 
 namespace Demo.Application.CurrentUser.Commands.ChangePassword
 {
     public class ChangePasswordCommandHandler : IRequestHandler<ChangePasswordCommand, Unit>
     {
-        private readonly ICurrentUserIdProvider _currentUserIdProvider;
         private readonly ICorrelationIdProvider _correlationIdProvider;
+        private readonly ICurrentUserIdProvider _currentUserIdProvider;
         private readonly IOutboxMessageCreator _outboxMessageCreator;
 
         public ChangePasswordCommandHandler(
@@ -27,7 +27,8 @@ namespace Demo.Application.CurrentUser.Commands.ChangePassword
         public async Task<Unit> Handle(ChangePasswordCommand request, CancellationToken cancellationToken)
         {
             await _outboxMessageCreator.CreateAsync(
-                SendChangePasswordEmailMessage.Create(_currentUserIdProvider.Id, _correlationIdProvider.Id, _currentUserIdProvider.Id),
+                SendChangePasswordEmailMessage.Create(_currentUserIdProvider.Id, _correlationIdProvider.Id,
+                    _currentUserIdProvider.Id),
                 cancellationToken
             );
 

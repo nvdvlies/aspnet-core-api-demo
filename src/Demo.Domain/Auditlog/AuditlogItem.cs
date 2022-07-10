@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Demo.Domain.Shared.Entities;
+﻿using System.Collections.Generic;
 
 namespace Demo.Domain.Auditlog
 {

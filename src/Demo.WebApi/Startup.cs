@@ -8,9 +8,9 @@ using Demo.Domain;
 using Demo.Infrastructure;
 using Demo.Infrastructure.Settings;
 using Demo.Infrastructure.SignalR;
-using Demo.WebApi.Auth;
 using Demo.WebApi.Extensions;
 using Demo.WebApi.Middleware;
+using Demo.WebApi.Permissions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -90,20 +90,7 @@ namespace Demo.WebApi
                 };
             });
 
-            services.AddAuthorization(options =>
-            {
-                options.AddPolicy(nameof(Policies.User),
-                    policy => policy.Requirements.Add(new HasRoleRequirement(Auth0Roles.User,
-                        environmentSettings.Auth0.Domain)));
-                options.AddPolicy(nameof(Policies.Admin),
-                    policy => policy.Requirements.Add(new HasRoleRequirement(Auth0Roles.Admin,
-                        environmentSettings.Auth0.Domain)));
-                options.AddPolicy(nameof(Policies.Machine),
-                    policy => policy.Requirements.Add(new HasRoleRequirement(Auth0Roles.Machine,
-                        environmentSettings.Auth0.Domain)));
-            });
-
-            services.AddSingleton<IAuthorizationHandler, HasRoleRequirementAuthorizationHandler>();
+            services.AddAuthorization();
 
             services.AddHttpContextAccessor();
             services.AddScoped<IEventHubContext, SignalrHubContext>();

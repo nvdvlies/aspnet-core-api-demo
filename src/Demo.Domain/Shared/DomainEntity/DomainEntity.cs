@@ -24,6 +24,8 @@ namespace Demo.Domain.Shared.DomainEntity
         private readonly Lazy<IEnumerable<IBeforeUpdate<T>>> _beforeUpdateHooks;
 
         private readonly Lazy<IEnumerable<IDefaultValuesSetter<T>>> _defaultValuesSetters;
+
+        private readonly DomainEntityOptions _options;
         private readonly Lazy<IEnumerable<IValidator<T>>> _validators;
         protected readonly IDomainEntityContext<T> Context;
         protected readonly ICurrentUserIdProvider CurrentUserIdProvider;
@@ -70,8 +72,6 @@ namespace Demo.Domain.Shared.DomainEntity
         }
 
         protected IReadonlyDomainEntityOptions Options => _options;
-
-        private readonly DomainEntityOptions _options;
 
         protected virtual Func<IQueryable<T>, IIncludableQueryable<T, object>> Includes => null;
 
