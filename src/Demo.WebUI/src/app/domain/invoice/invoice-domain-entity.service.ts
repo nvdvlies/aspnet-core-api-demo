@@ -242,6 +242,7 @@ export class InvoiceDomainEntityService extends DomainEntityBase<InvoiceDto> imp
     this.form.controls.invoiceDate?.disable();
     this.form.controls.customerId?.disable();
     this.form.controls.orderReference?.disable();
+    this.invoiceLineFormArray.disable();
     this.invoiceLines.forEach((invoiceLine) => {
       invoiceLine.controls.quantity.disable();
       invoiceLine.controls.description?.disable();

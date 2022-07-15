@@ -256,7 +256,10 @@
                           <th class="mat-header-cell cdk-header-cell border-0 text-left">
                             Selling price
                           </th>
-                          <th class="mat-header-cell cdk-header-cell border-0"></th>
+                          <th
+                            *ngIf="!form.controls.invoiceLines.disabled"
+                            class="mat-header-cell cdk-header-cell border-0"
+                          ></th>
                         </tr>
                       </thead>
                       <tbody role="rowgroup">
@@ -301,7 +304,10 @@
                                 <mat-error appDomainEntityErrorMessage></mat-error>
                               </mat-form-field>
                             </td>
-                            <td class="mat-cell cdk-cell w-0 border-0 pr-0 pb-4 whitespace-nowrap">
+                            <td
+                              *ngIf="!form.controls.invoiceLines.disabled"
+                              class="mat-cell cdk-cell w-0 border-0 pr-0 pb-4 whitespace-nowrap"
+                            >
                               <button
                                 mat-icon-button
                                 type="button"
@@ -323,7 +329,7 @@
                     mat-raised-button
                     type="button"
                     (click)="addInvoiceLine()"
-                    *ngIf="vm.canEditInvoiceContent"
+                    *ngIf="vm.hasWritePermission && vm.canEditInvoiceContent"
                   >
                     <mat-icon>add</mat-icon> Add line
                   </button>
