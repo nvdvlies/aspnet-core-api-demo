@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
-using Demo.Infrastructure.Settings;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -13,7 +11,6 @@ namespace Demo.WebApi.Tests.Helpers
     public class TestAuthHandler : AuthenticationHandler<AuthenticationSchemeOptions>
     {
         public const string DefaultScheme = "Test";
-        private readonly EnvironmentSettings _environmentSettings;
 
         private readonly TestUser _testUser;
 
@@ -22,12 +19,10 @@ namespace Demo.WebApi.Tests.Helpers
             ILoggerFactory logger,
             UrlEncoder encoder,
             ISystemClock clock,
-            TestUser testUser,
-            EnvironmentSettings environmentSettings)
+            TestUser testUser)
             : base(options, logger, encoder, clock)
         {
             _testUser = testUser;
-            _environmentSettings = environmentSettings;
         }
 
         protected override Task<AuthenticateResult> HandleAuthenticateAsync()

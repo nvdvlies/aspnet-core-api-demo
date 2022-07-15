@@ -12,22 +12,26 @@ namespace Demo.Application.Users.Events.UserUpdated
     {
         private readonly IEventHubContext _eventHubContext;
         private readonly IExternalUserIdProvider _externalUserIdProvider;
+        private readonly IUserProvider _userProvider;
         private readonly ILogger<UserUpdatedEventHandler> _logger;
 
         public UserUpdatedEventHandler(
             ILogger<UserUpdatedEventHandler> logger,
             IEventHubContext eventHubContext,
-            IExternalUserIdProvider externalUserIdProvider
+            IExternalUserIdProvider externalUserIdProvider,
+            IUserProvider userProvider
         )
         {
             _logger = logger;
             _eventHubContext = eventHubContext;
             _externalUserIdProvider = externalUserIdProvider;
+            _userProvider = userProvider;
         }
 
         public async Task Handle(UserUpdatedEvent @event, CancellationToken cancellationToken)
         {
             _logger.LogInformation($"Handling {nameof(UserUpdatedEvent)}");
+            await _userProvider.GetAsync(@event.Data.Id, refreshCache: true, cancellationToken);
             await _eventHubContext.All.UserUpdated(@event.Data.Id, @event.Data.UpdatedBy);
             var externalUserId = _externalUserIdProvider.Get(@event.Data.Id);
             if (!string.IsNullOrEmpty(externalUserId))

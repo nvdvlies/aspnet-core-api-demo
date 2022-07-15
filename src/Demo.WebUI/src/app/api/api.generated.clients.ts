@@ -466,6 +466,63 @@ export class ApiCurrentUserClient {
         }
         return _observableOf<void>(<any>null);
     }
+
+    getCurrentUserPermissions(query?: GetCurrentUserPermissionsQuery | null | undefined): Observable<GetCurrentUserPermissionsQueryResult> {
+        let url_ = this.baseUrl + "/api/CurrentUser/Permissions?";
+        if (query !== undefined && query !== null)
+            url_ += "query=" + encodeURIComponent("" + query) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetCurrentUserPermissions(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetCurrentUserPermissions(<any>response_);
+                } catch (e) {
+                    return <Observable<GetCurrentUserPermissionsQueryResult>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<GetCurrentUserPermissionsQueryResult>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetCurrentUserPermissions(response: HttpResponseBase): Observable<GetCurrentUserPermissionsQueryResult> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = GetCurrentUserPermissionsQueryResult.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 500) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result500: any = null;
+            let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result500 = ProblemDetails.fromJS(resultData500);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result500);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<GetCurrentUserPermissionsQueryResult>(<any>null);
+    }
 }
 
 @Injectable({
@@ -2094,6 +2151,134 @@ export class ApiLogClient {
             }));
         }
         return _observableOf<void>(<any>null);
+    }
+}
+
+@Injectable({
+    providedIn: 'root'
+})
+export class ApiPermissionsClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    all(query?: GetAllPermissionsQuery | null | undefined): Observable<GetAllPermissionsQueryResult> {
+        let url_ = this.baseUrl + "/api/Permissions?";
+        if (query !== undefined && query !== null)
+            url_ += "query=" + encodeURIComponent("" + query) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processAll(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processAll(<any>response_);
+                } catch (e) {
+                    return <Observable<GetAllPermissionsQueryResult>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<GetAllPermissionsQueryResult>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processAll(response: HttpResponseBase): Observable<GetAllPermissionsQueryResult> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = GetAllPermissionsQueryResult.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 500) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result500: any = null;
+            let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result500 = ProblemDetails.fromJS(resultData500);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result500);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<GetAllPermissionsQueryResult>(<any>null);
+    }
+
+    getAllPermissionGroups(query?: GetAllPermissionGroupsQuery | null | undefined): Observable<GetAllPermissionGroupsQueryResult> {
+        let url_ = this.baseUrl + "/api/Permissions/PermissionGroups?";
+        if (query !== undefined && query !== null)
+            url_ += "query=" + encodeURIComponent("" + query) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAllPermissionGroups(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAllPermissionGroups(<any>response_);
+                } catch (e) {
+                    return <Observable<GetAllPermissionGroupsQueryResult>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<GetAllPermissionGroupsQueryResult>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAllPermissionGroups(response: HttpResponseBase): Observable<GetAllPermissionGroupsQueryResult> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = GetAllPermissionGroupsQueryResult.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 500) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result500: any = null;
+            let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result500 = ProblemDetails.fromJS(resultData500);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result500);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<GetAllPermissionGroupsQueryResult>(<any>null);
     }
 }
 
@@ -4543,6 +4728,145 @@ export class ChangePasswordCommand implements IChangePasswordCommand {
 export interface IChangePasswordCommand {
 }
 
+export class GetCurrentUserPermissionsQueryResult implements IGetCurrentUserPermissionsQueryResult {
+    permissions?: PermissionDto[] | undefined;
+
+    constructor(data?: IGetCurrentUserPermissionsQueryResult) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["permissions"])) {
+                this.permissions = [] as any;
+                for (let item of _data["permissions"])
+                    this.permissions!.push(PermissionDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): GetCurrentUserPermissionsQueryResult {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetCurrentUserPermissionsQueryResult();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.permissions)) {
+            data["permissions"] = [];
+            for (let item of this.permissions)
+                data["permissions"].push(item.toJSON());
+        }
+        return data;
+    }
+
+    clone(): GetCurrentUserPermissionsQueryResult {
+        const json = this.toJSON();
+        let result = new GetCurrentUserPermissionsQueryResult();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IGetCurrentUserPermissionsQueryResult {
+    permissions?: PermissionDto[] | undefined;
+}
+
+export class PermissionDto implements IPermissionDto {
+    id!: string;
+    name?: string | undefined;
+    permissionGroupId?: string | undefined;
+
+    constructor(data?: IPermissionDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.permissionGroupId = _data["permissionGroupId"];
+        }
+    }
+
+    static fromJS(data: any): PermissionDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new PermissionDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["permissionGroupId"] = this.permissionGroupId;
+        return data;
+    }
+
+    clone(): PermissionDto {
+        const json = this.toJSON();
+        let result = new PermissionDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IPermissionDto {
+    id: string;
+    name?: string | undefined;
+    permissionGroupId?: string | undefined;
+}
+
+export class GetCurrentUserPermissionsQuery implements IGetCurrentUserPermissionsQuery {
+
+    constructor(data?: IGetCurrentUserPermissionsQuery) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+    }
+
+    static fromJS(data: any): GetCurrentUserPermissionsQuery {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetCurrentUserPermissionsQuery();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        return data;
+    }
+
+    clone(): GetCurrentUserPermissionsQuery {
+        const json = this.toJSON();
+        let result = new GetCurrentUserPermissionsQuery();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IGetCurrentUserPermissionsQuery {
+}
+
 export class SearchCustomersQueryResult extends BasePaginatedResult implements ISearchCustomersQueryResult {
     customers?: SearchCustomerDto[] | undefined;
 
@@ -6620,6 +6944,229 @@ export enum LogLevel {
     None = 6,
 }
 
+export class GetAllPermissionsQueryResult implements IGetAllPermissionsQueryResult {
+    permissions?: PermissionDto[] | undefined;
+
+    constructor(data?: IGetAllPermissionsQueryResult) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["permissions"])) {
+                this.permissions = [] as any;
+                for (let item of _data["permissions"])
+                    this.permissions!.push(PermissionDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): GetAllPermissionsQueryResult {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetAllPermissionsQueryResult();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.permissions)) {
+            data["permissions"] = [];
+            for (let item of this.permissions)
+                data["permissions"].push(item.toJSON());
+        }
+        return data;
+    }
+
+    clone(): GetAllPermissionsQueryResult {
+        const json = this.toJSON();
+        let result = new GetAllPermissionsQueryResult();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IGetAllPermissionsQueryResult {
+    permissions?: PermissionDto[] | undefined;
+}
+
+export class GetAllPermissionsQuery implements IGetAllPermissionsQuery {
+
+    constructor(data?: IGetAllPermissionsQuery) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+    }
+
+    static fromJS(data: any): GetAllPermissionsQuery {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetAllPermissionsQuery();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        return data;
+    }
+
+    clone(): GetAllPermissionsQuery {
+        const json = this.toJSON();
+        let result = new GetAllPermissionsQuery();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IGetAllPermissionsQuery {
+}
+
+export class GetAllPermissionGroupsQueryResult implements IGetAllPermissionGroupsQueryResult {
+    permissionGroups?: PermissionGroupDto[] | undefined;
+
+    constructor(data?: IGetAllPermissionGroupsQueryResult) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["permissionGroups"])) {
+                this.permissionGroups = [] as any;
+                for (let item of _data["permissionGroups"])
+                    this.permissionGroups!.push(PermissionGroupDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): GetAllPermissionGroupsQueryResult {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetAllPermissionGroupsQueryResult();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.permissionGroups)) {
+            data["permissionGroups"] = [];
+            for (let item of this.permissionGroups)
+                data["permissionGroups"].push(item.toJSON());
+        }
+        return data;
+    }
+
+    clone(): GetAllPermissionGroupsQueryResult {
+        const json = this.toJSON();
+        let result = new GetAllPermissionGroupsQueryResult();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IGetAllPermissionGroupsQueryResult {
+    permissionGroups?: PermissionGroupDto[] | undefined;
+}
+
+export class PermissionGroupDto implements IPermissionGroupDto {
+    id!: string;
+    name?: string | undefined;
+
+    constructor(data?: IPermissionGroupDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+        }
+    }
+
+    static fromJS(data: any): PermissionGroupDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new PermissionGroupDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        return data;
+    }
+
+    clone(): PermissionGroupDto {
+        const json = this.toJSON();
+        let result = new PermissionGroupDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IPermissionGroupDto {
+    id: string;
+    name?: string | undefined;
+}
+
+export class GetAllPermissionGroupsQuery implements IGetAllPermissionGroupsQuery {
+
+    constructor(data?: IGetAllPermissionGroupsQuery) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+    }
+
+    static fromJS(data: any): GetAllPermissionGroupsQuery {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetAllPermissionGroupsQuery();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        return data;
+    }
+
+    clone(): GetAllPermissionGroupsQuery {
+        const json = this.toJSON();
+        let result = new GetAllPermissionGroupsQuery();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IGetAllPermissionGroupsQuery {
+}
+
 export class SearchRolesQueryResult extends BasePaginatedResult implements ISearchRolesQueryResult {
     roles?: SearchRoleDto[] | undefined;
 
@@ -6762,6 +7309,7 @@ export interface IGetRoleByIdQueryResult {
 export class RoleDto extends SoftDeleteEntityDto implements IRoleDto {
     name?: string | undefined;
     externalId?: string | undefined;
+    rolePermissions?: RolePermissionDto[] | undefined;
 
     constructor(data?: IRoleDto) {
         super(data);
@@ -6772,6 +7320,11 @@ export class RoleDto extends SoftDeleteEntityDto implements IRoleDto {
         if (_data) {
             this.name = _data["name"];
             this.externalId = _data["externalId"];
+            if (Array.isArray(_data["rolePermissions"])) {
+                this.rolePermissions = [] as any;
+                for (let item of _data["rolePermissions"])
+                    this.rolePermissions!.push(RolePermissionDto.fromJS(item));
+            }
         }
     }
 
@@ -6786,6 +7339,11 @@ export class RoleDto extends SoftDeleteEntityDto implements IRoleDto {
         data = typeof data === 'object' ? data : {};
         data["name"] = this.name;
         data["externalId"] = this.externalId;
+        if (Array.isArray(this.rolePermissions)) {
+            data["rolePermissions"] = [];
+            for (let item of this.rolePermissions)
+                data["rolePermissions"].push(item.toJSON());
+        }
         super.toJSON(data);
         return data;
     }
@@ -6801,6 +7359,50 @@ export class RoleDto extends SoftDeleteEntityDto implements IRoleDto {
 export interface IRoleDto extends ISoftDeleteEntityDto {
     name?: string | undefined;
     externalId?: string | undefined;
+    rolePermissions?: RolePermissionDto[] | undefined;
+}
+
+export class RolePermissionDto implements IRolePermissionDto {
+    permissionId!: string;
+
+    constructor(data?: IRolePermissionDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.permissionId = _data["permissionId"];
+        }
+    }
+
+    static fromJS(data: any): RolePermissionDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new RolePermissionDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["permissionId"] = this.permissionId;
+        return data;
+    }
+
+    clone(): RolePermissionDto {
+        const json = this.toJSON();
+        let result = new RolePermissionDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IRolePermissionDto {
+    permissionId: string;
 }
 
 export class CreateRoleResponse implements ICreateRoleResponse {
@@ -6849,6 +7451,7 @@ export interface ICreateRoleResponse {
 export class CreateRoleCommand implements ICreateRoleCommand {
     name?: string | undefined;
     externalId?: string | undefined;
+    rolePermissions?: CreateRoleCommandRolePermission[] | undefined;
 
     constructor(data?: ICreateRoleCommand) {
         if (data) {
@@ -6863,6 +7466,11 @@ export class CreateRoleCommand implements ICreateRoleCommand {
         if (_data) {
             this.name = _data["name"];
             this.externalId = _data["externalId"];
+            if (Array.isArray(_data["rolePermissions"])) {
+                this.rolePermissions = [] as any;
+                for (let item of _data["rolePermissions"])
+                    this.rolePermissions!.push(CreateRoleCommandRolePermission.fromJS(item));
+            }
         }
     }
 
@@ -6877,6 +7485,11 @@ export class CreateRoleCommand implements ICreateRoleCommand {
         data = typeof data === 'object' ? data : {};
         data["name"] = this.name;
         data["externalId"] = this.externalId;
+        if (Array.isArray(this.rolePermissions)) {
+            data["rolePermissions"] = [];
+            for (let item of this.rolePermissions)
+                data["rolePermissions"].push(item.toJSON());
+        }
         return data;
     }
 
@@ -6891,11 +7504,56 @@ export class CreateRoleCommand implements ICreateRoleCommand {
 export interface ICreateRoleCommand {
     name?: string | undefined;
     externalId?: string | undefined;
+    rolePermissions?: CreateRoleCommandRolePermission[] | undefined;
+}
+
+export class CreateRoleCommandRolePermission implements ICreateRoleCommandRolePermission {
+    permissionId!: string;
+
+    constructor(data?: ICreateRoleCommandRolePermission) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.permissionId = _data["permissionId"];
+        }
+    }
+
+    static fromJS(data: any): CreateRoleCommandRolePermission {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateRoleCommandRolePermission();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["permissionId"] = this.permissionId;
+        return data;
+    }
+
+    clone(): CreateRoleCommandRolePermission {
+        const json = this.toJSON();
+        let result = new CreateRoleCommandRolePermission();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICreateRoleCommandRolePermission {
+    permissionId: string;
 }
 
 export class UpdateRoleCommand implements IUpdateRoleCommand {
     name?: string | undefined;
     externalId?: string | undefined;
+    rolePermissions?: UpdateRoleCommandRolePermission[] | undefined;
     xmin!: number;
 
     constructor(data?: IUpdateRoleCommand) {
@@ -6911,6 +7569,11 @@ export class UpdateRoleCommand implements IUpdateRoleCommand {
         if (_data) {
             this.name = _data["name"];
             this.externalId = _data["externalId"];
+            if (Array.isArray(_data["rolePermissions"])) {
+                this.rolePermissions = [] as any;
+                for (let item of _data["rolePermissions"])
+                    this.rolePermissions!.push(UpdateRoleCommandRolePermission.fromJS(item));
+            }
             this.xmin = _data["xmin"];
         }
     }
@@ -6926,6 +7589,11 @@ export class UpdateRoleCommand implements IUpdateRoleCommand {
         data = typeof data === 'object' ? data : {};
         data["name"] = this.name;
         data["externalId"] = this.externalId;
+        if (Array.isArray(this.rolePermissions)) {
+            data["rolePermissions"] = [];
+            for (let item of this.rolePermissions)
+                data["rolePermissions"].push(item.toJSON());
+        }
         data["xmin"] = this.xmin;
         return data;
     }
@@ -6941,7 +7609,51 @@ export class UpdateRoleCommand implements IUpdateRoleCommand {
 export interface IUpdateRoleCommand {
     name?: string | undefined;
     externalId?: string | undefined;
+    rolePermissions?: UpdateRoleCommandRolePermission[] | undefined;
     xmin: number;
+}
+
+export class UpdateRoleCommandRolePermission implements IUpdateRoleCommandRolePermission {
+    permissionId!: string;
+
+    constructor(data?: IUpdateRoleCommandRolePermission) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.permissionId = _data["permissionId"];
+        }
+    }
+
+    static fromJS(data: any): UpdateRoleCommandRolePermission {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateRoleCommandRolePermission();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["permissionId"] = this.permissionId;
+        return data;
+    }
+
+    clone(): UpdateRoleCommandRolePermission {
+        const json = this.toJSON();
+        let result = new UpdateRoleCommandRolePermission();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUpdateRoleCommandRolePermission {
+    permissionId: string;
 }
 
 export class DeleteRoleCommand implements IDeleteRoleCommand {

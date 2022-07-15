@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 import { ApiException, CurrentUserDto, ProblemDetails } from '@api/api.generated.clients';
+import { CurrentUserEventsService } from '@api/signalr.generated.services';
 import { AuthService } from '@auth0/auth0-angular';
 import { CurrentUserStoreService } from '@domain/current-user/current-user-store.service';
-import { Role } from '@shared/enums/role.enum';
 import { BehaviorSubject, catchError, Observable, of, switchMap, tap, throwError } from 'rxjs';
-import { RoleService } from './role.service';
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +21,6 @@ export class CurrentUserService {
 
   constructor(
     private readonly currentUserStoreService: CurrentUserStoreService,
-    private readonly roleService: RoleService,
     private readonly authService: AuthService
   ) {
     this.authService.isAuthenticated$.subscribe((isAuthenticated) => {
@@ -31,6 +29,10 @@ export class CurrentUserService {
         this.isInitialized.next(false);
       }
     });
+
+    this.currentUserStoreService.currentUserUpdatedInStore$
+      .pipe(switchMap(() => this.init(true)))
+      .subscribe();
   }
 
   public init(skipCache: boolean = false): Observable<boolean> {
@@ -63,31 +65,5 @@ export class CurrentUserService {
 
   public get email(): string | undefined {
     return this.currentUser?.email;
-  }
-
-  public hasRole(roleName: keyof typeof Role): boolean {
-    return this.roleService.roles.some(
-      (role) =>
-        role.name === roleName &&
-        this.currentUser?.userRoles?.some((userRole) => userRole.roleId === role.id)
-    );
-  }
-
-  public hasAnyRole(roleNames: Array<keyof typeof Role>): boolean {
-    return this.roleService.roles.some(
-      (role) =>
-        roleNames.some((roleName) => roleName === role.name) &&
-        this.currentUser?.userRoles?.some((userRole) => userRole.roleId === role.id)
-    );
-  }
-
-  public hasAllRoles(roleNames: Array<keyof typeof Role>): boolean {
-    return roleNames.every((roleName) =>
-      this.roleService.roles.some(
-        (role) =>
-          role.name === roleName &&
-          this.currentUser?.userRoles?.some((userRole) => userRole.roleId === role.id)
-      )
-    );
   }
 }

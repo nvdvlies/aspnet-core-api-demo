@@ -16,7 +16,7 @@ namespace Demo.Domain.Role.Seed
                 Id = RoleId,
                 Name = "Admin",
                 ExternalId = "rol_N4KEnzIMUDaetcyr",
-                Permissions = PermissionsSeed.All
+                RolePermissions = PermissionsSeed.All
                     .Select(permission => new RolePermission { RoleId = RoleId, PermissionId = permission.Id })
                     .ToList()
             };

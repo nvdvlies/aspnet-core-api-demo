@@ -13,6 +13,6 @@ namespace Demo.Domain.Role
 
         public List<UserRole> UserRoles { get; set; }
 
-        public List<RolePermission> Permissions { get; set; }
+        public List<RolePermission> RolePermissions { get; set; }
     }
 }

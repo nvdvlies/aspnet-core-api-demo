@@ -32,83 +32,67 @@ import { RoleIdToNamePipe } from './pipes/role-id-to-name.pipe';
 import { RoleIdsToNamesPipe } from './pipes/roles-ids-to-names.pipe';
 import { MessageModalComponent } from './modals/message-modal/message-modal.component';
 import { ConfirmModalComponent } from './modals/confirm-modal/confirm-modal.component';
+import { PermissionIdsToNamesPipe } from './pipes/permission-ids-to-names.pipe';
+import { IfPermissionGrantedDirective } from './directives/if-permission-granted.directive';
+import { IfPermissionDeniedDirective } from './directives/if-permission-denied.directive';
+import { IfAnyPermissionGrantedDirective } from './directives/if-any-permission-granted.directive';
+import { BackButtonDirective } from './directives/back-button.directive';
+
+const components = [
+  PageHeaderComponent,
+  DiscardUnsavedChangesModalComponent,
+  ProblemDetailsComponent,
+  CustomerAutocompleteFormFieldControlComponent,
+  CurrencyFormFieldControlComponent,
+  ConfirmDeleteModalComponent,
+  MessageComponent,
+  SpinnerComponent,
+  UserAutocompleteFormFieldControlComponent,
+  RoleAutocompleteFormFieldControlComponent,
+  AuditlogTableComponent,
+  HighlightComponent,
+  AuditlogItemComponent,
+  MessageModalComponent,
+  ConfirmModalComponent
+];
+
+const directives = [
+  TableFilterContainerDirective,
+  TableFilterDirective,
+  DomainEntityErrorMessageDirective,
+  SetFocusDirective,
+  SelectOnFocusDirective,
+  IfFeatureFlagEnabledDirective,
+  IfFeatureFlagDisabledDirective,
+  IfPermissionGrantedDirective,
+  IfPermissionDeniedDirective,
+  IfAnyPermissionGrantedDirective,
+  BackButtonDirective
+];
+
+const pipes = [
+  CustomerIdToNamePipe,
+  UserIdToNamePipe,
+  InvoiceIdToNumberPipe,
+  UserIdsToNamesPipe,
+  RoleIdToNamePipe,
+  RoleIdsToNamesPipe,
+  AuditlogItemValuePipe,
+  InvoiceStatusEnumToNamePipe,
+  PermissionIdsToNamesPipe
+];
 
 @NgModule({
-  declarations: [
-    TableFilterContainerDirective,
-    TableFilterDirective,
-    PageHeaderComponent,
-    DiscardUnsavedChangesModalComponent,
-    ProblemDetailsComponent,
-    DomainEntityErrorMessageDirective,
-    SetFocusDirective,
-    CustomerAutocompleteFormFieldControlComponent,
-    CustomerIdToNamePipe,
-    UserIdToNamePipe,
-    CurrencyFormFieldControlComponent,
-    SelectOnFocusDirective,
-    ConfirmDeleteModalComponent,
-    MessageComponent,
-    IfFeatureFlagEnabledDirective,
-    IfFeatureFlagDisabledDirective,
-    SpinnerComponent,
-    UserAutocompleteFormFieldControlComponent,
-    RoleAutocompleteFormFieldControlComponent,
-    AuditlogTableComponent,
-    HighlightComponent,
-    AuditlogItemComponent,
-    InvoiceIdToNumberPipe,
-    AuditlogItemValuePipe,
-    UserIdsToNamesPipe,
-    InvoiceStatusEnumToNamePipe,
-    RoleIdToNamePipe,
-    RoleIdsToNamesPipe,
-    MessageModalComponent,
-    ConfirmModalComponent
-  ],
+  declarations: [...components, ...directives, ...pipes],
   imports: [CommonModule, ReactiveFormsModule, FormsModule, MaterialModule],
   exports: [
     ReactiveFormsModule,
     FormsModule,
     MaterialModule,
-    TableFilterContainerDirective,
-    TableFilterDirective,
-    PageHeaderComponent,
-    DiscardUnsavedChangesModalComponent,
-    ProblemDetailsComponent,
-    DomainEntityErrorMessageDirective,
-    SetFocusDirective,
-    CustomerAutocompleteFormFieldControlComponent,
-    CustomerIdToNamePipe,
-    UserIdToNamePipe,
-    CurrencyFormFieldControlComponent,
-    SelectOnFocusDirective,
-    ConfirmDeleteModalComponent,
-    MessageComponent,
-    IfFeatureFlagEnabledDirective,
-    IfFeatureFlagDisabledDirective,
-    SpinnerComponent,
-    UserAutocompleteFormFieldControlComponent,
-    RoleAutocompleteFormFieldControlComponent,
-    AuditlogTableComponent,
-    HighlightComponent,
-    AuditlogItemComponent,
-    InvoiceIdToNumberPipe,
-    AuditlogItemValuePipe,
-    UserIdsToNamesPipe,
-    InvoiceStatusEnumToNamePipe,
-    RoleIdToNamePipe,
-    RoleIdsToNamesPipe,
-    MessageModalComponent,
-    ConfirmModalComponent
+    ...components,
+    ...directives,
+    ...pipes
   ],
-  providers: [
-    CustomerIdToNamePipe,
-    UserIdToNamePipe,
-    InvoiceIdToNumberPipe,
-    UserIdsToNamesPipe,
-    RoleIdToNamePipe,
-    RoleIdsToNamesPipe
-  ]
+  providers: [...pipes]
 })
 export class SharedModule {}

@@ -11,6 +11,7 @@ import { IHasForm } from '@shared/guards/unsaved-changes.guard';
 import { CustomerListRouteState } from '@customers/pages/customer-list/customer-list.component';
 import { ConfirmDeleteModalComponent } from '@shared/modals/confirm-delete-modal/confirm-delete-modal.component';
 import { ModalService } from '@shared/services/modal.service';
+import { UserPermissionService } from '@shared/services/user-permission.service';
 
 interface ViewModel extends ICustomerDomainEntityContext {}
 

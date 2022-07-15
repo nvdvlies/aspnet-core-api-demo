@@ -16,7 +16,7 @@ namespace Demo.Domain.Role.Seed
                 Id = RoleId,
                 Name = "User",
                 ExternalId = "rol_OUaEQHOTuugOJHwe",
-                Permissions = new List<RolePermission>
+                RolePermissions = new List<RolePermission>
                 {
                     new() { RoleId = RoleId, PermissionId = PermissionsSeed.CustomersRead.Id },
                     new() { RoleId = RoleId, PermissionId = PermissionsSeed.CustomersWrite.Id },

@@ -11,8 +11,8 @@ namespace Demo.Domain.Role.Seed
         public static readonly PermissionGroup Invoices = new()
             { Id = Guid.Parse("4b4e2d70-02dc-43ac-a8bc-c75c25e1e71d"), Name = "Invoices" };
 
-        public static readonly PermissionGroup FeatureFlags = new()
-            { Id = Guid.Parse("6fd39917-5f96-472d-ac69-d2a8c56880b7"), Name = "FeatureFlags" };
+        public static readonly PermissionGroup FeatureFlagSettings = new()
+            { Id = Guid.Parse("6fd39917-5f96-472d-ac69-d2a8c56880b7"), Name = "FeatureFlagSettings" };
 
         public static readonly PermissionGroup Users = new()
             { Id = Guid.Parse("9b621e5b-e277-4c88-88d2-18a7befb45aa"), Name = "Users" };
@@ -25,7 +25,7 @@ namespace Demo.Domain.Role.Seed
 
         public static List<PermissionGroup> All => new()
         {
-            Customers, Invoices, FeatureFlags, Users, ApplicationSettings, Roles
+            Customers, Invoices, FeatureFlagSettings, Users, ApplicationSettings, Roles
         };
     }
 }

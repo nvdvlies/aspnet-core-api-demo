@@ -94,13 +94,19 @@
             mat-raised-button
             (click)="delete()"
             type="button"
-            *ngIf="vm.id != null && vm.entity?.status === InvoiceStatusEnum.Draft"
+            *ngIf="
+              vm.hasWritePermission &&
+              vm.id != null &&
+              vm.entity?.status === InvoiceStatusEnum.Draft
+            "
             [disabled]="vm.isDeleting"
             [class.button-spinner]="vm.isDeleting"
           >
             Delete
           </button>
-          <button mat-raised-button routerLink="/invoices" type="button">Close</button>
+          <button mat-raised-button appBackButton fallbackRouterLink="/invoices" type="button">
+            Close
+          </button>
           <div class="auditlog" *ngIf="vm.id != null">
             <small
               >Created by
@@ -130,178 +136,191 @@
               </button>
             </div>
           </app-message>
-          <mat-card class="card bg-white pb-1 pl-3 pr-3 pt-0 mt-1 mb-3">
-            <mat-card-title class="pl-1 pt-1 mb-1 text-lg">General</mat-card-title>
-            <mat-card-content>
-              <div class="row">
-                <div class="col">
-                  <mat-form-field appearance="fill" class="full-width">
-                    <mat-label>Invoice date</mat-label>
-                    <input
-                      matInput
-                      [appSetFocus]="vm.id == null"
-                      formControlName="invoiceDate"
-                      [matDatepicker]="picker"
-                      placeholder="Invoice date"
-                      type="text"
-                    />
-                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                    <mat-datepicker #picker></mat-datepicker>
-                    <mat-error appDomainEntityErrorMessage></mat-error>
-                  </mat-form-field>
-                </div>
-
-                <div class="col">
-                  <mat-form-field appearance="fill" class="full-width">
-                    <mat-label>Customer</mat-label>
-                    <button
-                      type="button"
-                      mat-button
-                      matPrefix
-                      mat-icon-button
-                      (click)="customerAutocomplete.focus()"
-                      *ngIf="!customerAutocomplete.disabled"
-                    >
-                      <mat-icon>search</mat-icon>
-                    </button>
-                    <app-customer-autocomplete-form-field-control
-                      #customerAutocomplete
-                      matInput
-                      placeholder="Customer"
-                      formControlName="customerId"
-                    >
-                    </app-customer-autocomplete-form-field-control>
-                    <button
-                      *ngIf="customerAutocomplete.value != null && !customerAutocomplete.disabled"
-                      type="button"
-                      mat-button
-                      mat-icon-button
-                      matSuffix
-                      (click)="customerAutocomplete.clearSearchField()"
-                    >
-                      <mat-icon>close</mat-icon>
-                    </button>
-                    <mat-error appDomainEntityErrorMessage></mat-error>
-                  </mat-form-field>
-                </div>
-
-                <div class="col">
-                  <mat-form-field appearance="fill" class="full-width">
-                    <mat-label>Order reference</mat-label>
-                    <input
-                      matInput
-                      placeholder="Order reference"
-                      formControlName="orderReference"
-                      type="text"
-                    />
-                    <mat-error appDomainEntityErrorMessage></mat-error>
-                  </mat-form-field>
-                </div>
-
-                <div class="col" *ngIf="vm.id != null">
-                  <mat-form-field appearance="fill" class="full-width">
-                    <mat-label>Status</mat-label>
-                    <input
-                      matInput
-                      placeholder="Status"
-                      type="text"
-                      disabled="true"
-                      [value]="
-                        vm.entity?.status ?? InvoiceStatusEnum.Draft | invoiceStatusEnumToName
-                      "
-                    />
-                  </mat-form-field>
-                </div>
-              </div>
-            </mat-card-content>
-          </mat-card>
-
-          <mat-card class="card bg-white pb-3 pl-3 pr-3 pt-0 pb-2 mt-1 mb-2">
-            <mat-card-title class="pl-1 pt-1 mb-1 text-lg">Invoice lines</mat-card-title>
-            <mat-card-content>
-              <ng-container formArrayName="invoiceLines">
-                <table class="mat-table cdk-table">
-                  <thead role="rowgroup">
-                    <tr class="mat-header-row cdk-header-row">
-                      <th class="mat-header-cell cdk-header-cell border-0 pl-2 text-left">
-                        Quantity
-                      </th>
-                      <th class="mat-header-cell cdk-header-cell border-0 text-left">
-                        Description
-                      </th>
-                      <th class="mat-header-cell cdk-header-cell border-0 text-left">
-                        Selling price
-                      </th>
-                      <th class="mat-header-cell cdk-header-cell border-0"></th>
-                    </tr>
-                  </thead>
-                  <tbody role="rowgroup">
-                    <tr class="mat-row cdk-row" *ngFor="let _ of invoiceLines.controls; index as i">
-                      <ng-container [formGroupName]="i">
-                        <td class="mat-cell cdk-cell border-0 px-1 w-1/12">
-                          <mat-form-field appearance="fill" class="full-width">
-                            <mat-label>Quantity</mat-label>
-                            <input
-                              matInput
-                              type="number"
-                              formControlName="quantity"
-                              placeholder="Quantity"
-                            />
-                            <mat-error appDomainEntityErrorMessage></mat-error>
-                          </mat-form-field>
-                        </td>
-                        <td class="mat-cell cdk-cell border-0 px-1">
-                          <mat-form-field appearance="fill" class="full-width">
-                            <mat-label>Description</mat-label>
-                            <input
-                              matInput
-                              formControlName="description"
-                              placeholder="Description"
-                              type="text"
-                            />
-                            <mat-error appDomainEntityErrorMessage></mat-error>
-                          </mat-form-field>
-                        </td>
-                        <td class="mat-cell cdk-cell border-0 px-1 w-1/12">
-                          <mat-form-field appearance="fill" class="full-width">
-                            <mat-label>Selling price</mat-label>
-                            <app-currency-form-field-control
-                              matInput
-                              formControlName="sellingPrice"
-                              placeholder="Selling price"
-                              type="text"
-                            ></app-currency-form-field-control>
-                            <mat-error appDomainEntityErrorMessage></mat-error>
-                          </mat-form-field>
-                        </td>
-                        <td class="mat-cell cdk-cell w-0 border-0 pr-0 pb-4 whitespace-nowrap">
-                          <button
-                            mat-icon-button
-                            type="button"
-                            (click)="removeInvoiceLine(i)"
-                            matTooltip="Remove line"
-                            [disabled]="
-                              !vm.canEditInvoiceContent || invoiceLines.controls.length === 1
-                            "
-                          >
-                            <mat-icon>delete</mat-icon>
-                          </button>
-                        </td>
-                      </ng-container>
-                    </tr>
-                  </tbody>
-                </table>
-              </ng-container>
-              <button
-                mat-raised-button
-                type="button"
-                (click)="addInvoiceLine()"
-                *ngIf="vm.canEditInvoiceContent"
-              >
-                <mat-icon>add</mat-icon> Add line
-              </button>
-            </mat-card-content>
-          </mat-card>
+          <div class="flex flex-row flex-wrap gap-2">
+            <div class="max-w-400">
+              <mat-card class="card bg-white pb-1 pl-3 pr-3 pt-0 mt-1 mb-3">
+                <mat-card-title class="pl-1 pt-1 mb-1 text-lg">General</mat-card-title>
+                <mat-card-content>
+                  <div class="row">
+                    <div class="col">
+                      <mat-form-field appearance="fill" class="full-width">
+                        <mat-label>Invoice date</mat-label>
+                        <input
+                          matInput
+                          [appSetFocus]="vm.id == null"
+                          formControlName="invoiceDate"
+                          [matDatepicker]="picker"
+                          placeholder="Invoice date"
+                          type="text"
+                        />
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                        <mat-error appDomainEntityErrorMessage></mat-error>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col">
+                      <mat-form-field appearance="fill" class="full-width">
+                        <mat-label>Customer</mat-label>
+                        <button
+                          type="button"
+                          mat-button
+                          matPrefix
+                          mat-icon-button
+                          (click)="customerAutocomplete.focus()"
+                          *ngIf="!customerAutocomplete.disabled"
+                        >
+                          <mat-icon>search</mat-icon>
+                        </button>
+                        <app-customer-autocomplete-form-field-control
+                          #customerAutocomplete
+                          matInput
+                          placeholder="Customer"
+                          formControlName="customerId"
+                        >
+                        </app-customer-autocomplete-form-field-control>
+                        <button
+                          *ngIf="
+                            customerAutocomplete.value != null && !customerAutocomplete.disabled
+                          "
+                          type="button"
+                          mat-button
+                          mat-icon-button
+                          matSuffix
+                          (click)="customerAutocomplete.clearSearchField()"
+                        >
+                          <mat-icon>close</mat-icon>
+                        </button>
+                        <mat-error appDomainEntityErrorMessage></mat-error>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col">
+                      <mat-form-field appearance="fill" class="full-width">
+                        <mat-label>Order reference</mat-label>
+                        <input
+                          matInput
+                          placeholder="Order reference"
+                          formControlName="orderReference"
+                          type="text"
+                        />
+                        <mat-error appDomainEntityErrorMessage></mat-error>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col" *ngIf="vm.id != null">
+                      <mat-form-field appearance="fill" class="full-width">
+                        <mat-label>Status</mat-label>
+                        <input
+                          matInput
+                          placeholder="Status"
+                          type="text"
+                          disabled="true"
+                          [value]="
+                            vm.entity?.status ?? InvoiceStatusEnum.Draft | invoiceStatusEnumToName
+                          "
+                        />
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </mat-card-content>
+              </mat-card>
+            </div>
+            <div class="grow min-w-500">
+              <mat-card class="card bg-white pb-3 pl-3 pr-3 pt-0 pb-2 mt-1 mb-2">
+                <mat-card-title class="pl-1 pt-1 mb-1 text-lg">Invoice lines</mat-card-title>
+                <mat-card-content>
+                  <ng-container formArrayName="invoiceLines">
+                    <table class="mat-table cdk-table">
+                      <thead role="rowgroup">
+                        <tr class="mat-header-row cdk-header-row">
+                          <th class="mat-header-cell cdk-header-cell border-0 pl-2 text-left">
+                            Quantity
+                          </th>
+                          <th class="mat-header-cell cdk-header-cell border-0 text-left">
+                            Description
+                          </th>
+                          <th class="mat-header-cell cdk-header-cell border-0 text-left">
+                            Selling price
+                          </th>
+                          <th class="mat-header-cell cdk-header-cell border-0"></th>
+                        </tr>
+                      </thead>
+                      <tbody role="rowgroup">
+                        <tr
+                          class="mat-row cdk-row"
+                          *ngFor="let _ of invoiceLines.controls; index as i"
+                        >
+                          <ng-container [formGroupName]="i">
+                            <td class="mat-cell cdk-cell border-0 px-1 w-1/12">
+                              <mat-form-field appearance="fill" class="full-width">
+                                <mat-label>Quantity</mat-label>
+                                <input
+                                  matInput
+                                  type="number"
+                                  formControlName="quantity"
+                                  placeholder="Quantity"
+                                />
+                                <mat-error appDomainEntityErrorMessage></mat-error>
+                              </mat-form-field>
+                            </td>
+                            <td class="mat-cell cdk-cell border-0 px-1">
+                              <mat-form-field appearance="fill" class="full-width">
+                                <mat-label>Description</mat-label>
+                                <input
+                                  matInput
+                                  formControlName="description"
+                                  placeholder="Description"
+                                  type="text"
+                                />
+                                <mat-error appDomainEntityErrorMessage></mat-error>
+                              </mat-form-field>
+                            </td>
+                            <td class="mat-cell cdk-cell border-0 px-1 w-1/12">
+                              <mat-form-field appearance="fill" class="full-width">
+                                <mat-label>Selling price</mat-label>
+                                <app-currency-form-field-control
+                                  matInput
+                                  formControlName="sellingPrice"
+                                  placeholder="Selling price"
+                                  type="text"
+                                ></app-currency-form-field-control>
+                                <mat-error appDomainEntityErrorMessage></mat-error>
+                              </mat-form-field>
+                            </td>
+                            <td class="mat-cell cdk-cell w-0 border-0 pr-0 pb-4 whitespace-nowrap">
+                              <button
+                                mat-icon-button
+                                type="button"
+                                (click)="removeInvoiceLine(i)"
+                                matTooltip="Remove line"
+                                [disabled]="
+                                  !vm.canEditInvoiceContent || invoiceLines.controls.length === 1
+                                "
+                              >
+                                <mat-icon>delete</mat-icon>
+                              </button>
+                            </td>
+                          </ng-container>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </ng-container>
+                  <button
+                    mat-raised-button
+                    type="button"
+                    (click)="addInvoiceLine()"
+                    *ngIf="vm.canEditInvoiceContent"
+                  >
+                    <mat-icon>add</mat-icon> Add line
+                  </button>
+                </mat-card-content>
+              </mat-card>
+            </div>
+          </div>
         </div>
         <!-- <pre>{{ form.value | json }}</pre> -->
       </form>

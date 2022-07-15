@@ -39,6 +39,6 @@ namespace Demo.Domain.Role
         }
 
         protected override Func<IQueryable<Role>, IIncludableQueryable<Role, object>> Includes => _ => _
-            .Include(role => role.Permissions);
+            .Include(role => role.RolePermissions);
     }
 }

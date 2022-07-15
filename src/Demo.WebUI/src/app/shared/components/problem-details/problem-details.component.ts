@@ -1,6 +1,7 @@
 import { Component, ChangeDetectionStrategy, Input, OnInit, Optional } from '@angular/core';
 import { ControlContainer, FormControl, FormGroup } from '@angular/forms';
 import { ApiException, ProblemDetails, ValidationProblemDetails } from '@api/api.generated.clients';
+import { PermissionDeniedError } from '@shared/errors/permission-denied.error';
 import { LoggerService } from '@shared/services/logger.service';
 
 @Component({
@@ -10,16 +11,27 @@ import { LoggerService } from '@shared/services/logger.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProblemDetailsComponent implements OnInit {
-  private _problemDetails: ValidationProblemDetails | ProblemDetails | ApiException | undefined;
+  private _problemDetails:
+    | ValidationProblemDetails
+    | ProblemDetails
+    | ApiException
+    | PermissionDeniedError
+    | undefined;
   public get problemDetails():
     | ValidationProblemDetails
     | ProblemDetails
     | ApiException
+    | PermissionDeniedError
     | undefined {
     return this._problemDetails;
   }
   @Input() public set problemDetails(
-    value: ValidationProblemDetails | ProblemDetails | ApiException | undefined
+    value:
+      | ValidationProblemDetails
+      | ProblemDetails
+      | ApiException
+      | PermissionDeniedError
+      | undefined
   ) {
     this._problemDetails = value;
     this.setErrorMessage();
@@ -38,8 +50,9 @@ export class ProblemDetailsComponent implements OnInit {
   }
 
   private setErrorMessage(): void {
+    this.errorMessages = [];
+
     if (!this.problemDetails) {
-      this.errorMessages = [];
       return;
     }
 
@@ -53,7 +66,9 @@ export class ProblemDetailsComponent implements OnInit {
               serverError: this.problemDetails.errors[key][0]
             });
           } else {
-            this.errorMessages.push(this.problemDetails.errors[key][0]);
+            for (const error of this.problemDetails.errors[key]) {
+              this.errorMessages.push(error);
+            }
           }
         }
       } else {
@@ -61,8 +76,17 @@ export class ProblemDetailsComponent implements OnInit {
       }
     } else if (this.problemDetails instanceof ProblemDetails) {
       this.errorMessages.push(this.problemDetails.title!);
+    } else if (this.problemDetails instanceof PermissionDeniedError) {
+      this.errorMessages.push('Permission denied.');
     } else if (this.problemDetails instanceof ApiException) {
-      this.errorMessages.push(this.problemDetails.message);
+      switch (this.problemDetails.status) {
+        case 403:
+          this.errorMessages.push('Permission denied error.');
+          break;
+        default:
+          this.errorMessages.push(this.problemDetails.message);
+          break;
+      }
     } else {
       this.loggerService.logError('Unhandled ProblemDetails', undefined, this.problemDetails);
       this.errorMessages.push('An unknown exception occured.');

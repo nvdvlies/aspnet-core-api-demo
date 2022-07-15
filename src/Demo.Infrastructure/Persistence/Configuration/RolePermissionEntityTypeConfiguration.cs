@@ -12,11 +12,11 @@ namespace Demo.Infrastructure.Persistence.Configuration
                 .HasKey(t => new { t.RoleId, t.PermissionId });
 
             builder.HasOne(x => x.Role)
-                .WithMany(x => x.Permissions)
+                .WithMany(x => x.RolePermissions)
                 .HasForeignKey(x => x.RoleId);
 
             builder.HasOne(x => x.Permission)
-                .WithMany(x => x.Roles)
+                .WithMany(x => x.RolePermissions)
                 .HasForeignKey(x => x.PermissionId);
         }
     }

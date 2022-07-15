@@ -27,12 +27,18 @@
               mat-raised-button
               color="primary"
               type="submit"
+              *ngIf="vm.hasWritePermission"
               [disabled]="vm.isSaving"
               [class.button-spinner]="vm.isSaving"
             >
               Save
             </button>
-            <button mat-raised-button routerLink="/feature-flag-settings" type="button">
+            <button
+              mat-raised-button
+              appBackButton
+              fallbackRouterLink="/feature-flag-settings"
+              type="button"
+            >
               Close
             </button>
             <div class="auditlog" *ngIf="vm.pristine">

@@ -5,7 +5,6 @@ import { ApiUsersClient, SearchUserDto, SearchUserOrderByEnum } from '@api/api.g
 import { UserEventsService } from '@api/signalr.generated.services';
 import { UserStoreService } from '@domain/user/user-store.service';
 import {
-  IEntityUpdatedEvent,
   ITableFilterCriteria,
   TableDataBase,
   TableDataContext,
@@ -47,11 +46,7 @@ export class UserTableDataService extends TableDataBase<SearchUserDto> {
     })
   );
 
-  protected entityUpdatedInStore$ = this.userStoreService.userUpdatedInStore$.pipe(
-    map(
-      ([event, entity]) => [event, { ...entity, customerName: null }] as [IEntityUpdatedEvent, any]
-    )
-  );
+  protected entityUpdatedInStore$ = this.userStoreService.userUpdatedInStore$;
   protected entityDeletedEvent$ = this.userEventsService.userDeleted$;
 
   constructor(

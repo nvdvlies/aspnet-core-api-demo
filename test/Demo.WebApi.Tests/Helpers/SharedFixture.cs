@@ -2,7 +2,6 @@
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Demo.Domain.Role;
-using Demo.Domain.Role.Seed;
 using Demo.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.SignalR.Client;

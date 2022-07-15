@@ -27,6 +27,7 @@ namespace Demo.Application.Roles.Queries.GetRoleById
         public async Task<GetRoleByIdQueryResult> Handle(GetRoleByIdQuery request, CancellationToken cancellationToken)
         {
             var role = await _query.AsQueryable()
+                .Include(role => role.RolePermissions)
                 .ProjectTo<RoleDto>(_mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 

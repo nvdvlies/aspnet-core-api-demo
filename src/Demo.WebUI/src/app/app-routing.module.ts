@@ -1,18 +1,21 @@
 import { NgModule } from '@angular/core';
-import { Route, RouterModule, Routes } from '@angular/router';
+import { Route, RouterModule } from '@angular/router';
 import { AuthGuard } from '@auth0/auth0-angular';
 import { DefaultTemplateComponent } from '@layout/default-template/default-template.component';
 import { FeatureFlag } from '@shared/enums/feature-flag.enum';
-import { Role } from '@shared/enums/role.enum';
+import { Permission } from '@shared/enums/permission.enum';
 import { ApplicationSettingsResolver } from '@shared/resolvers/application-settings.resolver';
 import { CurrentUserResolver } from '@shared/resolvers/current-user.resolver';
 import { FeatureFlagResolver } from '@shared/resolvers/feature-flag.resolver';
+import { PermissionGroupsResolver } from '@shared/resolvers/permission-groups.resolver';
+import { PermissionsResolver } from '@shared/resolvers/permissions.resolver';
 import { RolesResolver } from '@shared/resolvers/roles.resolver';
+import { UserPermissionsResolver } from '@shared/resolvers/user-permissions.resolver';
 import { UserPreferencesResolver } from '@shared/resolvers/user-preferences.resolver';
 
 export type RouteData = {
   featureFlag?: FeatureFlag;
-  roleNames?: Array<keyof typeof Role>;
+  permission?: keyof typeof Permission;
 };
 
 export type AppRoute = Route & {
@@ -31,7 +34,10 @@ const routes: AppRoutes = [
       applicationSettingsInitialized: ApplicationSettingsResolver,
       currentUserInitialized: CurrentUserResolver,
       userPreferencesInitialized: UserPreferencesResolver,
-      rolesInitialized: RolesResolver
+      rolesInitialized: RolesResolver,
+      permissionsInitialized: PermissionsResolver,
+      userPermissionsInitialized: UserPermissionsResolver,
+      permissionGroupsInitialized: PermissionGroupsResolver
     },
     children: [
       {
@@ -84,6 +90,11 @@ const routes: AppRoutes = [
         path: 'profile',
         loadChildren: () =>
           import('./features/profile/profile.module').then((m) => m.ProfileModule),
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'roles',
+        loadChildren: () => import('./features/roles/roles.module').then((m) => m.RolesModule),
         canActivate: [AuthGuard]
       }
     ] as AppRoutes

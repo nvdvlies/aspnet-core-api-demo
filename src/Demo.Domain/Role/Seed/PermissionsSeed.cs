@@ -29,16 +29,16 @@ namespace Demo.Domain.Role.Seed
             PermissionGroupId = PermissionGroupsSeed.Invoices.Id
         };
 
-        public static readonly Permission FeatureFlagsRead = new()
+        public static readonly Permission FeatureFlagSettingsRead = new()
         {
-            Id = Guid.Parse("537d9994-517f-490b-8c7e-5da886e80d44"), Name = Permissions.FeatureFlagsRead,
-            PermissionGroupId = PermissionGroupsSeed.FeatureFlags.Id
+            Id = Guid.Parse("537d9994-517f-490b-8c7e-5da886e80d44"), Name = Permissions.FeatureFlagSettingsRead,
+            PermissionGroupId = PermissionGroupsSeed.FeatureFlagSettings.Id
         };
 
-        public static readonly Permission FeatureFlagsWrite = new()
+        public static readonly Permission FeatureFlagSettingsWrite = new()
         {
-            Id = Guid.Parse("7f77e408-04ce-496c-b347-bac63b0bc870"), Name = Permissions.FeatureFlagsWrite,
-            PermissionGroupId = PermissionGroupsSeed.FeatureFlags.Id
+            Id = Guid.Parse("7f77e408-04ce-496c-b347-bac63b0bc870"), Name = Permissions.FeatureFlagSettingsWrite,
+            PermissionGroupId = PermissionGroupsSeed.FeatureFlagSettings.Id
         };
 
         public static readonly Permission UsersRead = new()
@@ -79,7 +79,7 @@ namespace Demo.Domain.Role.Seed
 
         public static List<Permission> All => new()
         {
-            CustomersRead, CustomersWrite, InvoicesRead, InvoicesWrite, FeatureFlagsRead, FeatureFlagsWrite,
+            CustomersRead, CustomersWrite, InvoicesRead, InvoicesWrite, FeatureFlagSettingsRead, FeatureFlagSettingsWrite,
             UsersRead, UsersWrite, ApplicationSettingsRead, ApplicationSettingsWrite, RolesRead, RolesWrite
         };
     }

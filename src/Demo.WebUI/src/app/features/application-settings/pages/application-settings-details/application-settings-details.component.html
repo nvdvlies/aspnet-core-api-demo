@@ -23,6 +23,7 @@
             mat-raised-button
             color="primary"
             type="submit"
+            *ngIf="vm.hasWritePermission"
             [disabled]="vm.isSaving"
             [class.button-spinner]="vm.isSaving"
           >

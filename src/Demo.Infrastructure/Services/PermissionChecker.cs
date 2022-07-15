@@ -8,30 +8,22 @@ namespace Demo.Infrastructure.Services
     public class PermissionChecker : IPermissionChecker
     {
         private readonly ICurrentUserIdProvider _currentUserIdProvider;
-        private readonly IRolesProvider _rolesProvider;
-        private readonly IUserProvider _userProvider;
+        private readonly IUserPermissionsProvider _userPermissionsProvider;
 
         public PermissionChecker(
             ICurrentUserIdProvider currentUserIdProvider,
-            IUserProvider userProvider,
-            IRolesProvider rolesProvider
+            IUserPermissionsProvider userPermissionsProvider
         )
         {
             _currentUserIdProvider = currentUserIdProvider;
-            _userProvider = userProvider;
-            _rolesProvider = rolesProvider;
+            _userPermissionsProvider = userPermissionsProvider;
         }
 
         public async Task<bool> HasPermissionAsync(string permissionName, CancellationToken cancellationToken = default)
         {
-            var user = await _userProvider.GetAsync(_currentUserIdProvider.Id, cancellationToken);
-            var roles = await _rolesProvider.GetAsync();
+            var userPermissions = await _userPermissionsProvider.GetAsync(_currentUserIdProvider.Id, cancellationToken);
 
-            var userRoleIds = user.UserRoles.Select(x => x.RoleId);
-            return roles.Any(role =>
-                userRoleIds.Contains(role.Id)
-                && role.Permissions.Any(rolePermission => rolePermission.Permission.Name == permissionName)
-            );
+            return userPermissions.Any(permission => permission.Name == permissionName);
         }
     }
 }

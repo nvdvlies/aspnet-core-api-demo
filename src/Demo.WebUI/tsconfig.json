@@ -32,7 +32,8 @@
       "@application-settings/*": ["src/app/features/application-settings/*"],
       "@feature-flag-settings/*": ["src/app/features/feature-flag-settings/*"],
       "@users/*": ["src/app/features/users/*"],
-      "@profile/*": ["src/app/features/profile/*"]
+      "@profile/*": ["src/app/features/profile/*"],
+      "@roles/*": ["src/app/features/roles/*"]
     }
   },
   "angularCompilerOptions": {

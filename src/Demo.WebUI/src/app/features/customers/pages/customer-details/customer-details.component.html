@@ -29,6 +29,7 @@
             mat-raised-button
             color="primary"
             type="submit"
+            *ngIf="vm.hasWritePermission"
             [disabled]="vm.isSaving"
             [class.button-spinner]="vm.isSaving"
           >
@@ -38,13 +39,15 @@
             mat-raised-button
             (click)="delete()"
             type="button"
-            *ngIf="vm.id != null"
+            *ngIf="vm.hasWritePermission && vm.id != null"
             [disabled]="vm.isDeleting"
             [class.button-spinner]="vm.isDeleting"
           >
             Delete
           </button>
-          <button mat-raised-button routerLink="/customers" type="button">Close</button>
+          <button mat-raised-button appBackButton fallbackRouterLink="/customers" type="button">
+            Close
+          </button>
           <div class="auditlog" *ngIf="vm.id != null">
             <small
               >Created by

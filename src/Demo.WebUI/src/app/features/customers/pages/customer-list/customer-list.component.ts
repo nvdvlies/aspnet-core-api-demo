@@ -10,7 +10,7 @@ import {
   ViewChildren,
   ViewContainerRef
 } from '@angular/core';
-import { Location } from '@angular/common';
+import { Location, PlatformLocation } from '@angular/common';
 import { BehaviorSubject, combineLatest, map, Observable, tap } from 'rxjs';
 import { CustomerTableDataSource } from '@customers/pages/customer-list/customer-table-datasource';
 import {
@@ -65,6 +65,7 @@ export class CustomerListComponent implements OnInit, OnDestroy {
     const state = this.location.getState() as CustomerListRouteState;
     if (state && state.spotlightIdentifier) {
       this.customerTableDataService.spotlight(state.spotlightIdentifier);
+      history.replaceState({ ...state, spotlightIdentifier: null }, '');
     }
   }
 

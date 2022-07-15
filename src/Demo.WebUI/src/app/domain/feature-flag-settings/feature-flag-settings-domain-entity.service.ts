@@ -25,6 +25,8 @@ import {
 } from '@domain/shared/domain-entity-base';
 import { FeatureFlag } from '@shared/enums/feature-flag.enum';
 import { v4 as uuidv4 } from 'uuid';
+import { Permission } from '@shared/enums/permission.enum';
+import { UserPermissionService } from '@shared/services/user-permission.service';
 
 export interface IFeatureFlagSettingsDomainEntityContext
   extends IDomainEntityContext<FeatureFlagSettingsDto> {}
@@ -70,6 +72,8 @@ export class FeatureFlagSettingsDomainEntityService
   protected deleteFunction = (id?: string) => of(void 0);
   protected entityUpdatedEvent$ =
     this.featureFlagSettingsStoreService.featureFlagSettingsUpdatedInStore$;
+  protected readPermission?: keyof typeof Permission = 'FeatureFlagSettingsRead';
+  protected writePermission?: keyof typeof Permission = 'FeatureFlagSettingsWrite';
 
   public observe$: Observable<FeatureFlagSettingsDomainEntityContext> = combineLatest([
     this.observeInternal$
@@ -85,9 +89,10 @@ export class FeatureFlagSettingsDomainEntityService
 
   constructor(
     route: ActivatedRoute,
+    userPermissionService: UserPermissionService,
     private readonly featureFlagSettingsStoreService: FeatureFlagSettingsStoreService
   ) {
-    super(route);
+    super(route, userPermissionService);
     super.init();
   }
 

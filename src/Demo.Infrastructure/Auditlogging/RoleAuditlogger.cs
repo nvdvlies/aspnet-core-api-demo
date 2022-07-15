@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Demo.Common.Interfaces;
 using Demo.Domain.Auditlog;
 using Demo.Domain.Auditlog.Interfaces;
@@ -23,6 +24,7 @@ namespace Demo.Infrastructure.Auditlogging
             return new AuditlogBuilder<Role>()
                 .WithProperty(x => x.Name)
                 .WithProperty(x => x.ExternalId)
+                .WithProperty(x => x.RolePermissions.Select(y => y.PermissionId).ToList(), nameof(Role.RolePermissions))
                 .Build(current, previous);
         }
     }

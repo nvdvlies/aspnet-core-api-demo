@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { combineLatest, debounceTime, map, Observable } from 'rxjs';
-import { FeatureFlagDto } from '@api/api.generated.clients';
+import { FeatureFlagDto, IFeatureFlagDto } from '@api/api.generated.clients';
 import { FeatureFlagSettingsStoreService } from '@domain/feature-flag-settings/feature-flag-settings-store.service';
 import {
   ITableFilterCriteria,
@@ -15,12 +15,14 @@ import {
   FeatureFlagSettingListPageSettingsService
 } from './feature-flag-setting-list-page-settings.service';
 import { FeatureFlag } from '@shared/enums/feature-flag.enum';
+import { UserFeatureFlagService } from '@shared/services/user-feature-flag.service';
 
 export declare type FeatureFlagSettingSortColumn =
   | 'name'
   | 'description'
   | 'enabledForAll'
   | 'enabledForUsers'
+  | 'enabledForCurrentUser'
   | undefined;
 
 export class FeatureFlagSettingTableFilterCriteria
@@ -35,12 +37,22 @@ export class FeatureFlagSettingTableFilterCriteria
     this.sortDirection = pageSettings?.sortDirection ?? 'asc';
   }
 }
-export interface FeatureFlagSettingTableDataContext extends TableDataContext<FeatureFlagDto> {
+export interface FeatureFlagSettingTableDataContext
+  extends TableDataContext<IFeatureFlagSettingsTableRow> {
   criteria: FeatureFlagSettingTableFilterCriteria | undefined;
 }
 
+export interface IFeatureFlagSettingsTableRow {
+  id: string;
+  name?: string | undefined;
+  description?: string | undefined;
+  enabledForAll: boolean;
+  enabledForUsers?: string[] | undefined;
+  enabledForCurrentUser: boolean;
+}
+
 @Injectable()
-export class FeatureFlagSettingTableDataService extends TableDataBase<FeatureFlagDto> {
+export class FeatureFlagSettingTableDataService extends TableDataBase<IFeatureFlagSettingsTableRow> {
   public searchTerm = new FormControl();
 
   public observe$: Observable<FeatureFlagSettingTableDataContext> = combineLatest([
@@ -62,7 +74,8 @@ export class FeatureFlagSettingTableDataService extends TableDataBase<FeatureFla
 
   constructor(
     private readonly featureFlagSettingsStoreService: FeatureFlagSettingsStoreService,
-    private readonly featureFlagSettingListPageSettingsService: FeatureFlagSettingListPageSettingsService
+    private readonly featureFlagSettingListPageSettingsService: FeatureFlagSettingListPageSettingsService,
+    private readonly userFeatureFlagService: UserFeatureFlagService
   ) {
     super();
     const pageSettings = this.featureFlagSettingListPageSettingsService.settings;
@@ -83,14 +96,18 @@ export class FeatureFlagSettingTableDataService extends TableDataBase<FeatureFla
           const persistedFeatureFlag = featureFlagSettings.settings?.featureFlags?.find(
             (x) => x.name === key
           );
-          const featureFlagDto = new FeatureFlagDto();
-          featureFlagDto.name = key;
-          featureFlagDto.description = persistedFeatureFlag?.description;
-          featureFlagDto.enabledForAll = persistedFeatureFlag?.enabledForAll ?? false;
-          featureFlagDto.enabledForUsers = persistedFeatureFlag?.enabledForAll
-            ? []
-            : persistedFeatureFlag?.enabledForUsers;
-          return featureFlagDto;
+          const featureFlagSettingsTableRow: IFeatureFlagSettingsTableRow = {
+            id: key,
+            name: key,
+            description: persistedFeatureFlag?.description,
+            enabledForAll: persistedFeatureFlag?.enabledForAll ?? false,
+            enabledForUsers: persistedFeatureFlag?.enabledForAll
+              ? []
+              : persistedFeatureFlag?.enabledForUsers,
+            enabledForCurrentUser: this.userFeatureFlagService.isEnabled(value)
+          };
+
+          return featureFlagSettingsTableRow;
         });
 
         if (this.searchTerm.value && this.searchTerm.value.length > 0) {
@@ -120,7 +137,7 @@ export class FeatureFlagSettingTableDataService extends TableDataBase<FeatureFla
           }
         }
 
-        const result: TableDataSearchResult<FeatureFlagDto> = {
+        const result: TableDataSearchResult<IFeatureFlagSettingsTableRow> = {
           items: items.slice(
             criteria.pageIndex * criteria.pageSize,
             criteria.pageIndex * criteria.pageSize + criteria.pageSize

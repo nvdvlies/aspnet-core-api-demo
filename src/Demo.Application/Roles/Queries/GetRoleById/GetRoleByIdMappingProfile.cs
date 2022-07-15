@@ -9,6 +9,7 @@ namespace Demo.Application.Roles.Queries.GetRoleById
         public GetRoleByIdMappingProfile()
         {
             CreateMap<Role, RoleDto>();
+            CreateMap<RolePermission, RolePermissionDto>();
         }
     }
 }

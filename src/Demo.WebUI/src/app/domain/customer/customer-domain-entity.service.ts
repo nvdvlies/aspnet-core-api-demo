@@ -11,6 +11,8 @@ import {
   IDomainEntityContext,
   InitFromRouteOptions
 } from '@domain/shared/domain-entity-base';
+import { Permission } from '@shared/enums/permission.enum';
+import { UserPermissionService } from '@shared/services/user-permission.service';
 
 export interface ICustomerDomainEntityContext extends IDomainEntityContext<CustomerDto> {}
 
@@ -36,6 +38,8 @@ export class CustomerDomainEntityService
   protected updateFunction = (customer: CustomerDto) => this.customerStoreService.update(customer);
   protected deleteFunction = (id?: string) => this.customerStoreService.delete(id!);
   protected entityUpdatedEvent$ = this.customerStoreService.customerUpdatedInStore$;
+  protected readPermission?: keyof typeof Permission = 'CustomersRead';
+  protected writePermission?: keyof typeof Permission = 'CustomersWrite';
 
   public observe$: Observable<CustomerDomainEntityContext> = combineLatest([
     this.observeInternal$
@@ -49,8 +53,12 @@ export class CustomerDomainEntityService
     })
   );
 
-  constructor(route: ActivatedRoute, private readonly customerStoreService: CustomerStoreService) {
-    super(route);
+  constructor(
+    route: ActivatedRoute,
+    userPermissionService: UserPermissionService,
+    private readonly customerStoreService: CustomerStoreService
+  ) {
+    super(route, userPermissionService);
     super.init();
   }
 

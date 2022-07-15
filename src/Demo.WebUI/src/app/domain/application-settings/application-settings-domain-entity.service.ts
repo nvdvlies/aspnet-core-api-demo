@@ -14,6 +14,8 @@ import {
   DomainEntityContext,
   IDomainEntityContext
 } from '@domain/shared/domain-entity-base';
+import { Permission } from '@shared/enums/permission.enum';
+import { UserPermissionService } from '@shared/services/user-permission.service';
 
 export interface IApplicationSettingsDomainEntityContext
   extends IDomainEntityContext<ApplicationSettingsDto> {}
@@ -50,6 +52,8 @@ export class ApplicationSettingsDomainEntityService
   protected deleteFunction = (id?: string) => of(void 0);
   protected entityUpdatedEvent$ =
     this.applicationSettingsStoreService.applicationSettingsUpdatedInStore$;
+  protected readPermission?: keyof typeof Permission = 'ApplicationSettingsRead';
+  protected writePermission?: keyof typeof Permission = 'ApplicationSettingsWrite';
 
   public observe$: Observable<ApplicationSettingsDomainEntityContext> = combineLatest([
     this.observeInternal$
@@ -65,9 +69,10 @@ export class ApplicationSettingsDomainEntityService
 
   constructor(
     route: ActivatedRoute,
+    userPermissionService: UserPermissionService,
     private readonly applicationSettingsStoreService: ApplicationSettingsStoreService
   ) {
-    super(route);
+    super(route, userPermissionService);
     super.init();
   }
 

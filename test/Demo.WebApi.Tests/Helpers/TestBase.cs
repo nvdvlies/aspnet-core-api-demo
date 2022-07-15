@@ -51,6 +51,7 @@ namespace Demo.WebApi.Tests.Helpers
             cache.Remove(RolesProvider.CacheKey);
             cache.Remove(FeatureFlagSettingsProvider.CacheKey);
             cache.Remove(ApplicationSettingsProvider.CacheKey);
+            cache.Remove(PermissionsProvider.CacheKey);
 
             _allPermissions = FindExistingEntitiesAsync<Permission>(x => true).Result.ToList();
         }
@@ -107,7 +108,7 @@ namespace Demo.WebApi.Tests.Helpers
                 Id = roleId,
                 ExternalId = "test_role",
                 Name = "TestRole",
-                Permissions = permissionNames.Select(permissionName => new RolePermission { PermissionId = _allPermissions.Single(permission => permission.Name == permissionName).Id }).ToList()
+                RolePermissions = permissionNames.Select(permissionName => new RolePermission { PermissionId = _allPermissions.Single(permission => permission.Name == permissionName).Id }).ToList()
             };
             await AddAsExistingEntityAsync(testRole);
 
@@ -119,7 +120,7 @@ namespace Demo.WebApi.Tests.Helpers
                 Email = "test@test.com",
                 FamilyName = "TestUser",
                 Fullname = "TestUser",
-                UserRoles = new List<Domain.User.UserRole>() { new() { RoleId = roleId } }
+                UserRoles = new List<UserRole>() { new() { RoleId = roleId } }
             };
             await AddAsExistingEntityAsync(testUser.User);
         }

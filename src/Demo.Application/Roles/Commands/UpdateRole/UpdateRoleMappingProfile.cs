@@ -1,4 +1,5 @@
 using AutoMapper;
+using Demo.Application.Roles.Commands.UpdateRole.Dtos;
 using Demo.Domain.Role;
 
 namespace Demo.Application.Roles.Commands.UpdateRole
@@ -16,6 +17,11 @@ namespace Demo.Application.Roles.Commands.UpdateRole
                 .ForMember(x => x.LastModifiedBy, opt => opt.Ignore())
                 .ForMember(x => x.LastModifiedOn, opt => opt.Ignore())
                 .ForMember(x => x.Id, opt => opt.Ignore());
+
+            CreateMap<UpdateRoleCommandRolePermission, RolePermission>()
+                .ForMember(x => x.RoleId, opt => opt.Ignore())
+                .ForMember(x => x.Role, opt => opt.Ignore())
+                .ForMember(x => x.Permission, opt => opt.Ignore());
         }
     }
 }

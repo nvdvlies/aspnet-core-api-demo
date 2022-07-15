@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Demo.Domain.Role;
 using Demo.Domain.Shared.Interfaces;
@@ -28,28 +29,27 @@ namespace Demo.Infrastructure.Services
             _query = query;
         }
 
-        public Task<List<Role>> GetAsync()
+        public Task<List<Role>> GetAsync(CancellationToken cancellationToken)
         {
-            return GetAsync(false);
+            return GetAsync(false, cancellationToken);
         }
 
-        public async Task<List<Role>> GetAsync(bool refreshCache)
+        public async Task<List<Role>> GetAsync(bool refreshCache, CancellationToken cancellationToken)
         {
             var cacheKey = CacheKey;
-            var cacheValue = _cache.Get(cacheKey);
+            var cacheValue = await _cache.GetAsync(cacheKey, cancellationToken);
 
             if (refreshCache || cacheValue == null)
             {
                 var roles = await _query
                     .AsQueryable()
-                    .Include(role => role.Permissions)
-                    .ThenInclude(rolePermission => rolePermission.Permission)
-                    .ToListAsync();
+                    .Include(role => role.RolePermissions)
+                    .ToListAsync(cancellationToken);
 
                 var cacheEntryOptions = new DistributedCacheEntryOptions()
                     .SetAbsoluteExpiration(TimeSpan.FromHours(8));
 
-                _cache.Set(cacheKey, Encode(roles), cacheEntryOptions);
+                await _cache.SetAsync(cacheKey, Encode(roles), cacheEntryOptions, cancellationToken);
 
                 return roles;
             }

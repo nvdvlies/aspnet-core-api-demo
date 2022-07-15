@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using Demo.Domain.Role;
-using Demo.Domain.User;
+﻿using Demo.Domain.User;
 
 namespace Demo.WebApi.Tests.Helpers
 {

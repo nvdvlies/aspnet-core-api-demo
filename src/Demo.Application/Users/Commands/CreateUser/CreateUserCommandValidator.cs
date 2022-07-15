@@ -20,7 +20,7 @@ namespace Demo.Application.Users.Commands.CreateUser
 
         private static bool HasUniqueRoles(IList<CreateUserCommandUserRole> userRoles)
         {
-            return userRoles.GroupBy(x => x.RoleId).Count() == userRoles.Count();
+            return userRoles.GroupBy(x => x.RoleId).Count() == userRoles.Count;
         }
     }
 }

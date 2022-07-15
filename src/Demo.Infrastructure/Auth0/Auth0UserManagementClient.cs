@@ -59,7 +59,7 @@ namespace Demo.Infrastructure.Auth0
                 user = await client.Users.CreateAsync(userCreateRequest, cancellationToken);
             }
 
-            var roles = (await _rolesProvider.GetAsync())
+            var roles = (await _rolesProvider.GetAsync(cancellationToken))
                 .Where(x => internalUser.UserRoles.Any(userRole => userRole.RoleId == x.Id))
                 .Select(x => x.ExternalId)
                 .ToArray();
@@ -116,7 +116,7 @@ namespace Demo.Infrastructure.Auth0
         {
             var client = await _auth0ManagementApiClientCreator.GetClient(cancellationToken);
 
-            var roleIdsAssignedToUser = (await _rolesProvider.GetAsync())
+            var roleIdsAssignedToUser = (await _rolesProvider.GetAsync(cancellationToken))
                 .Where(x => internalUser.UserRoles.Any(y => y.RoleId == x.Id))
                 .Select(x => x.ExternalId)
                 .ToList();

@@ -10,6 +10,8 @@ import {
   DomainEntityContext,
   IDomainEntityContext
 } from '@domain/shared/domain-entity-base';
+import { Permission } from '@shared/enums/permission.enum';
+import { UserPermissionService } from '@shared/services/user-permission.service';
 
 export interface ICurrentUserDomainEntityContext extends IDomainEntityContext<CurrentUserDto> {}
 
@@ -46,6 +48,8 @@ export class CurrentUserDomainEntityService
     this.currentUserStoreService.save(currentUser);
   protected deleteFunction = (id?: string) => of(void 0);
   protected entityUpdatedEvent$ = this.currentUserStoreService.currentUserUpdatedInStore$;
+  protected readPermission?: keyof typeof Permission = undefined;
+  protected writePermission?: keyof typeof Permission = undefined;
 
   public observe$: Observable<CurrentUserDomainEntityContext> = combineLatest([
     this.observeInternal$
@@ -61,9 +65,10 @@ export class CurrentUserDomainEntityService
 
   constructor(
     route: ActivatedRoute,
+    userPermissionService: UserPermissionService,
     private readonly currentUserStoreService: CurrentUserStoreService
   ) {
-    super(route);
+    super(route, userPermissionService);
     super.init();
   }
 

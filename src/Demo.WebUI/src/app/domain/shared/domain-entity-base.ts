@@ -15,13 +15,20 @@ import {
 import { ApiException, ProblemDetails, ValidationProblemDetails } from '@api/api.generated.clients';
 import { MergeUtil } from '@domain/shared/merge.util';
 import { StringUtils } from '@shared/utils/string.utils';
+import { Permission } from '@shared/enums/permission.enum';
+import { UserPermissionService } from '@shared/services/user-permission.service';
+import { PermissionDeniedError } from '@shared/errors/permission-denied.error';
 
 export class ProblemDetailsError extends Error {
-  public problemDetails: ValidationProblemDetails | ProblemDetails | ApiException;
+  public problemDetails:
+    | ValidationProblemDetails
+    | ProblemDetails
+    | ApiException
+    | PermissionDeniedError;
 
   constructor(
     message: string,
-    problemDetails: ValidationProblemDetails | ProblemDetails | ApiException
+    problemDetails: ValidationProblemDetails | ProblemDetails | ApiException | PermissionDeniedError
   ) {
     super(message);
     this.problemDetails = problemDetails;
@@ -41,8 +48,14 @@ export interface IDomainEntityContext<T> {
   isSaving: boolean;
   isDeleting: boolean;
   hasNewerVersionWithMergeConflict: boolean;
-  problemDetails: ValidationProblemDetails | ProblemDetails | ApiException | undefined;
+  problemDetails:
+    | ValidationProblemDetails
+    | ProblemDetails
+    | ApiException
+    | PermissionDeniedError
+    | undefined;
   loadingEntityFailed: boolean;
+  hasWritePermission: boolean;
 }
 
 export class DomainEntityContext<T> implements IDomainEntityContext<T> {
@@ -53,6 +66,7 @@ export class DomainEntityContext<T> implements IDomainEntityContext<T> {
     this.isDeleting = false;
     this.hasNewerVersionWithMergeConflict = false;
     this.loadingEntityFailed = false;
+    this.hasWritePermission = false;
   }
 
   id: string | null;
@@ -62,8 +76,14 @@ export class DomainEntityContext<T> implements IDomainEntityContext<T> {
   isSaving: boolean;
   isDeleting: boolean;
   hasNewerVersionWithMergeConflict: boolean;
-  problemDetails: ValidationProblemDetails | ProblemDetails | ApiException | undefined;
+  problemDetails:
+    | ValidationProblemDetails
+    | ProblemDetails
+    | ApiException
+    | PermissionDeniedError
+    | undefined;
   loadingEntityFailed: boolean;
+  hasWritePermission: boolean;
 }
 
 export interface IDomainEntity<T> {
@@ -92,6 +112,15 @@ export abstract class DomainEntityBase<T extends IDomainEntity<T>>
   public afterNewHook?: (entity: T) => Observable<null>;
   public afterReadHook?: (entity: T) => Observable<null>;
   protected abstract entityUpdatedEvent$: Observable<[any, T]>;
+  protected abstract readPermission?: keyof typeof Permission;
+  protected abstract writePermission?: keyof typeof Permission;
+
+  // private hasReadPermission$ = () =>
+  //   this.readPermission ? this.userPermissionService.hasPermission$(this.readPermission) : of(true);
+  // private hasWritePermission$ = () =>
+  //   this.writePermission
+  //     ? this.userPermissionService.hasPermission$(this.writePermission)
+  //     : of(true);
 
   protected readonly id = new BehaviorSubject<string | undefined>(undefined);
   protected readonly entity = new BehaviorSubject<Readonly<T> | undefined>(undefined);
@@ -101,9 +130,11 @@ export abstract class DomainEntityBase<T extends IDomainEntity<T>>
   protected readonly isDeleting = new BehaviorSubject<boolean>(false);
   protected readonly hasNewerVersionWithMergeConflict = new BehaviorSubject<boolean>(false);
   protected readonly problemDetails = new BehaviorSubject<
-    ValidationProblemDetails | ProblemDetails | ApiException | undefined
+    ValidationProblemDetails | ProblemDetails | ApiException | PermissionDeniedError | undefined
   >(undefined);
   protected readonly loadingEntityFailed = new BehaviorSubject<boolean>(false);
+  protected readonly hasReadPermission = new BehaviorSubject<boolean>(false);
+  protected readonly hasWritePermission = new BehaviorSubject<boolean>(false);
   protected readonly onDestroy = new Subject<void>();
 
   protected id$ = this.id.asObservable();
@@ -116,6 +147,8 @@ export abstract class DomainEntityBase<T extends IDomainEntity<T>>
     this.hasNewerVersionWithMergeConflict.asObservable();
   protected problemDetails$ = this.problemDetails.asObservable();
   protected loadingEntityFailed$ = this.loadingEntityFailed.asObservable();
+  protected hasReadPermission$ = this.hasReadPermission.asObservable();
+  protected hasWritePermission$ = this.hasWritePermission.asObservable();
   protected onDestroy$ = this.onDestroy.asObservable();
 
   protected get readonlyFormState(): any {
@@ -131,7 +164,8 @@ export abstract class DomainEntityBase<T extends IDomainEntity<T>>
     this.isDeleting$,
     this.hasNewerVersionWithMergeConflict$,
     this.problemDetails$,
-    this.loadingEntityFailed$
+    this.loadingEntityFailed$,
+    this.hasWritePermission$
   ]).pipe(
     debounceTime(0),
     map(
@@ -144,7 +178,8 @@ export abstract class DomainEntityBase<T extends IDomainEntity<T>>
         isDeleting,
         hasNewerVersionWithMergeConflict,
         problemDetails,
-        loadingEntityFailed
+        loadingEntityFailed,
+        hasWritePermission
       ]) => {
         const context: DomainEntityContext<T> = {
           id: id ?? null,
@@ -155,7 +190,8 @@ export abstract class DomainEntityBase<T extends IDomainEntity<T>>
           isDeleting,
           hasNewerVersionWithMergeConflict,
           problemDetails,
-          loadingEntityFailed
+          loadingEntityFailed,
+          hasWritePermission
         };
         return context;
       }
@@ -170,17 +206,53 @@ export abstract class DomainEntityBase<T extends IDomainEntity<T>>
     this._form = value;
   }
 
-  constructor(protected readonly route: ActivatedRoute) {}
+  constructor(
+    protected readonly route: ActivatedRoute,
+    protected readonly userPermissionService: UserPermissionService
+  ) {}
 
   protected init(): void {
     this.instantiateForm();
+    this.setPermissions();
     this.subscribeToEntityUpdatedEvent();
+  }
+
+  protected setPermissions(): void {
+    if (this.readPermission) {
+      this.userPermissionService.hasPermission$(this.readPermission).subscribe((hasPermission) => {
+        this.hasReadPermission.next(hasPermission);
+      });
+    } else {
+      this.hasReadPermission.next(true);
+    }
+
+    if (this.writePermission) {
+      this.userPermissionService.hasPermission$(this.writePermission).subscribe((hasPermission) => {
+        this.hasWritePermission.next(hasPermission);
+      });
+    } else {
+      this.hasWritePermission.next(true);
+    }
   }
 
   protected new(): Observable<null> {
     this.reset();
+
+    if (!this.hasWritePermission.value) {
+      this.loadingEntityFailed.next(true);
+      return this.setProblemDetailsAndRethrow(new PermissionDeniedError());
+    }
+
     this.isLoading.next(true);
     return this.instantiateNewEntity().pipe(
+      catchError(
+        (
+          error: ValidationProblemDetails | ProblemDetails | ApiException | PermissionDeniedError
+        ) => {
+          this.loadingEntityFailed.next(true);
+          return this.setProblemDetailsAndRethrow(error);
+        }
+      ),
       map((entity: T) => {
         this.setEntity(entity);
         return entity;
@@ -192,13 +264,23 @@ export abstract class DomainEntityBase<T extends IDomainEntity<T>>
 
   protected read(id?: string, readFunction?: (id?: string) => Observable<T>): Observable<null> {
     this.reset();
+
+    if (!this.hasReadPermission.value) {
+      this.loadingEntityFailed.next(true);
+      return this.setProblemDetailsAndRethrow(new PermissionDeniedError());
+    }
+
     this.isLoading.next(true);
     readFunction ??= this.readFunction;
-    return readFunction(id).pipe(
-      catchError((error: ValidationProblemDetails | ProblemDetails | ApiException) => {
-        this.loadingEntityFailed.next(true);
-        return this.setProblemDetailsAndRethrow(error);
-      }),
+    return readFunction!(id).pipe(
+      catchError(
+        (
+          error: ValidationProblemDetails | ProblemDetails | ApiException | PermissionDeniedError
+        ) => {
+          this.loadingEntityFailed.next(true);
+          return this.setProblemDetailsAndRethrow(error);
+        }
+      ),
       map((entity: T) => entity.clone()),
       tap((entity: T) => {
         this.setEntity(entity);
@@ -206,6 +288,11 @@ export abstract class DomainEntityBase<T extends IDomainEntity<T>>
       switchMap(
         (entity: T) => this.afterReadHook?.(entity).pipe(map(() => null)) ?? of<null>(null)
       ),
+      tap(() => {
+        if (!this.hasWritePermission.value) {
+          this.form.disable();
+        }
+      }),
       finalize(() => this.isLoading.next(false))
     );
   }
@@ -234,15 +321,21 @@ export abstract class DomainEntityBase<T extends IDomainEntity<T>>
 
   protected create(createFunction?: (entity: T) => Observable<T>): Observable<T> {
     if (!this.form.valid) {
-      return throwError(() => new Error('Form is not valid.'));
+      return this.setProblemDetailsAndRethrow(new Error('Form is not valid.'));
     }
+
+    if (!this.hasWritePermission.value) {
+      return this.setProblemDetailsAndRethrow(new PermissionDeniedError());
+    }
+
     this.isSaving.next(true);
     this.problemDetails.next(undefined);
     this.patchFormToEntity();
     createFunction ??= this.createFunction;
-    return createFunction(this.entity.value!).pipe(
-      catchError((error: ValidationProblemDetails | ProblemDetails | ApiException) =>
-        this.setProblemDetailsAndRethrow(error)
+    return createFunction!(this.entity.value!).pipe(
+      catchError(
+        (error: ValidationProblemDetails | ProblemDetails | ApiException | PermissionDeniedError) =>
+          this.setProblemDetailsAndRethrow(error)
       ),
       map((entity: T) => entity.clone()),
       tap((entity) => {
@@ -254,15 +347,20 @@ export abstract class DomainEntityBase<T extends IDomainEntity<T>>
 
   protected update(updateFunction?: (entity: T) => Observable<T>): Observable<T> {
     if (!this.form.valid) {
-      return throwError(() => new Error('Form is not valid.'));
+      return this.setProblemDetailsAndRethrow(new Error('Form is not valid.'));
+    }
+    debugger;
+    if (!this.hasWritePermission.value) {
+      return this.setProblemDetailsAndRethrow(new PermissionDeniedError());
     }
     this.isSaving.next(true);
     this.problemDetails.next(undefined);
     this.patchFormToEntity();
     updateFunction ??= this.updateFunction;
-    return updateFunction(this.entity.value!).pipe(
-      catchError((error: ValidationProblemDetails | ProblemDetails | ApiException) =>
-        this.setProblemDetailsAndRethrow(error)
+    return updateFunction!(this.entity.value!).pipe(
+      catchError(
+        (error: ValidationProblemDetails | ProblemDetails | ApiException | PermissionDeniedError) =>
+          this.setProblemDetailsAndRethrow(error)
       ),
       map((entity: T) => entity.clone()),
       tap((entity) => {
@@ -283,12 +381,16 @@ export abstract class DomainEntityBase<T extends IDomainEntity<T>>
     if (!this.id.value) {
       return throwError(() => new Error("'Id' is not defined."));
     }
+    if (!this.hasWritePermission.value) {
+      return this.setProblemDetailsAndRethrow(new PermissionDeniedError());
+    }
     this.problemDetails.next(undefined);
     this.isDeleting.next(true);
     deleteFunction ??= this.deleteFunction;
-    return deleteFunction(this.id.value).pipe(
-      catchError((error: ValidationProblemDetails | ProblemDetails | ApiException) =>
-        this.setProblemDetailsAndRethrow(error)
+    return deleteFunction!(this.id.value!).pipe(
+      catchError(
+        (error: ValidationProblemDetails | ProblemDetails | ApiException | PermissionDeniedError) =>
+          this.setProblemDetailsAndRethrow(error)
       ),
       tap(() => this.form.reset()),
       finalize(() => this.isDeleting.next(false))
@@ -337,7 +439,7 @@ export abstract class DomainEntityBase<T extends IDomainEntity<T>>
   }
 
   protected setProblemDetailsAndRethrow(
-    problemDetails: ValidationProblemDetails | ProblemDetails | ApiException
+    problemDetails: ValidationProblemDetails | ProblemDetails | ApiException | PermissionDeniedError
   ): Observable<never> {
     this.problemDetails.next(problemDetails);
     return throwError(

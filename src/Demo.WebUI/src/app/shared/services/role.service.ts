@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { ApiException, ApiRolesClient, ProblemDetails, RoleDto } from '@api/api.generated.clients';
+import { RoleEventsService } from '@api/signalr.generated.services';
 import { AuthService } from '@auth0/auth0-angular';
+import { RoleStoreService } from '@domain/role/role-store.service';
 import { BehaviorSubject, catchError, Observable, of, switchMap, tap, throwError } from 'rxjs';
 
 @Injectable({
@@ -19,7 +21,8 @@ export class RoleService {
 
   constructor(
     private readonly apiRolesClient: ApiRolesClient,
-    private readonly authService: AuthService
+    private readonly authService: AuthService,
+    private readonly roleEventsService: RoleEventsService
   ) {
     this.authService.isAuthenticated$.subscribe((isAuthenticated) => {
       if (!isAuthenticated) {
@@ -29,6 +32,8 @@ export class RoleService {
         }
       }
     });
+
+    this.roleEventsService.roleUpdated$.pipe(switchMap(() => this.init(true))).subscribe();
   }
 
   public init(skipCache: boolean = false): Observable<boolean> {

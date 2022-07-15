@@ -4,8 +4,9 @@ import { AuthGuard } from '@auth0/auth0-angular';
 import { UserDetailsComponent } from '@users/pages/user-details/user-details.component';
 import { UserListComponent } from '@users/pages/user-list/user-list.component';
 import { UnsavedChangesGuard } from '@shared/guards/unsaved-changes.guard';
-import { AppRoutes } from 'src/app/app-routing.module';
+import { AppRoutes, RouteData } from 'src/app/app-routing.module';
 import { UserAuditlogComponent } from '@users/pages/user-auditlog/user-auditlog.component';
+import { PermissionGuard } from '@shared/guards/permission.guard';
 
 const routes: AppRoutes = [
   {
@@ -14,15 +15,27 @@ const routes: AppRoutes = [
     children: [
       {
         path: '',
-        component: UserListComponent
+        component: UserListComponent,
+        canActivate: [PermissionGuard],
+        data: {
+          permission: 'UsersRead'
+        } as RouteData
       },
       {
         path: ':id/auditlog',
-        component: UserAuditlogComponent
+        component: UserAuditlogComponent,
+        canActivate: [PermissionGuard],
+        data: {
+          permission: 'UsersRead'
+        } as RouteData
       },
       {
         path: ':id',
         component: UserDetailsComponent,
+        canActivate: [PermissionGuard],
+        data: {
+          permission: 'UsersRead'
+        } as RouteData,
         canDeactivate: [UnsavedChangesGuard]
       }
     ] as AppRoutes

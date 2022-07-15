@@ -3,10 +3,7 @@ import { RouterModule } from '@angular/router';
 import { AuthGuard } from '@auth0/auth0-angular';
 import { CustomerDetailsComponent } from '@customers/pages/customer-details/customer-details.component';
 import { CustomerListComponent } from '@customers/pages/customer-list/customer-list.component';
-import { FeatureFlag } from '@shared/enums/feature-flag.enum';
-import { Role } from '@shared/enums/role.enum';
-import { FeatureFlagGuard } from '@shared/guards/feature-flag.guard';
-import { RoleGuard } from '@shared/guards/role.guard';
+import { PermissionGuard } from '@shared/guards/permission.guard';
 import { UnsavedChangesGuard } from '@shared/guards/unsaved-changes.guard';
 import { AppRoutes, RouteData } from 'src/app/app-routing.module';
 import { CustomerAuditlogComponent } from './pages/customer-auditlog/customer-auditlog.component';
@@ -18,21 +15,28 @@ const routes: AppRoutes = [
     children: [
       {
         path: '',
-        component: CustomerListComponent
+        component: CustomerListComponent,
+        canActivate: [PermissionGuard],
+        data: {
+          permission: 'CustomersRead'
+        } as RouteData
       },
       {
         path: ':id/auditlog',
-        component: CustomerAuditlogComponent
+        component: CustomerAuditlogComponent,
+        canActivate: [PermissionGuard],
+        data: {
+          permission: 'CustomersRead'
+        } as RouteData
       },
       {
         path: ':id',
         component: CustomerDetailsComponent,
-        // canActivate: [FeatureFlagGuard, RoleGuard],
+        canActivate: [PermissionGuard],
+        data: {
+          permission: 'CustomersRead'
+        } as RouteData,
         canDeactivate: [UnsavedChangesGuard]
-        // data: {
-        //   featureFlag: FeatureFlag.FeatureFlagX,
-        //   roleNames: [Role.Administrator]
-        // } as RouteData
       }
     ] as AppRoutes
   }

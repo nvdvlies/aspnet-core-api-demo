@@ -44,7 +44,6 @@ export class FeatureFlagSettingDetailsComponent implements OnInit, OnDestroy, IH
   public readonly featureFlagName = new BehaviorSubject<keyof typeof FeatureFlag | undefined>(
     undefined
   );
-
   protected readonly onDestroy = new Subject<void>();
 
   public featureFlagName$ = this.featureFlagName.asObservable();

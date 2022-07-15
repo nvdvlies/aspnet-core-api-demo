@@ -10,6 +10,6 @@ namespace Demo.Domain.Role
         public string Name { get; set; }
         public Guid? PermissionGroupId { get; set; }
         public PermissionGroup PermissionGroup { get; set; }
-        public List<RolePermission> Roles { get; set; }
+        public List<RolePermission> RolePermissions { get; set; }
     }
 }

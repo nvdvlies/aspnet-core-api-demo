@@ -54,6 +54,9 @@ namespace Demo.Infrastructure
             services.AddScoped<ICultureProvider, CultureProvider>();
             services.AddScoped<IUserProvider, UserProvider>();
             services.AddScoped<IRolesProvider, RolesProvider>();
+            services.AddScoped<IPermissionsProvider, PermissionsProvider>();
+            services.AddScoped<IPermissionGroupsProvider, PermissionGroupsProvider>();
+            services.AddScoped<IUserPermissionsProvider, UserPermissionsProvider>();
             services.AddScoped<IOutboxEventCreator, OutboxEventCreator>();
             services.AddScoped<IOutboxMessageCreator, OutboxMessageCreator>();
             services.AddScoped<IOutboxEventCreatedEvents, OutboxEventCreatedEvents>();
@@ -220,11 +223,12 @@ namespace Demo.Infrastructure
                 .ClassesThatImplementInterface(typeof(IAuditlogger<>))
                 .ForEach(type =>
                 {
-                    var interfaceType = type.GetInterfaces()
+                    var interfaceType = type
+                        .GetInterfaces()
                         .Where(i => i.GetTypeInfo().IsGenericType)
-                        .Where(i => i.GetGenericTypeDefinition() == typeof(IAuditlogger<>))
-                        .FirstOrDefault();
-                    services.AddTransient(interfaceType, type);
+                        .FirstOrDefault(i => i.GetGenericTypeDefinition() == typeof(IAuditlogger<>));
+
+                    services.AddTransient(interfaceType!, type);
                 });
         }
     }

@@ -14,6 +14,8 @@ import {
   DomainEntityContext,
   IDomainEntityContext
 } from '@domain/shared/domain-entity-base';
+import { Permission } from '@shared/enums/permission.enum';
+import { UserPermissionService } from '@shared/services/user-permission.service';
 
 export interface IUserPreferencesDomainEntityContext
   extends IDomainEntityContext<UserPreferencesDto> {}
@@ -49,6 +51,8 @@ export class UserPreferencesDomainEntityService
     this.userPreferencesStoreService.save(userPreferences);
   protected deleteFunction = (id?: string) => of(void 0);
   protected entityUpdatedEvent$ = this.userPreferencesStoreService.userPreferencesUpdatedInStore$;
+  protected readPermission?: keyof typeof Permission = undefined;
+  protected writePermission?: keyof typeof Permission = undefined;
 
   public observe$: Observable<UserPreferencesDomainEntityContext> = combineLatest([
     this.observeInternal$
@@ -64,9 +68,10 @@ export class UserPreferencesDomainEntityService
 
   constructor(
     route: ActivatedRoute,
+    userPermissionService: UserPermissionService,
     private readonly userPreferencesStoreService: UserPreferencesStoreService
   ) {
-    super(route);
+    super(route, userPermissionService);
     super.init();
   }
 

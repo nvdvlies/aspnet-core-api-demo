@@ -231,7 +231,7 @@ export abstract class TableDataBase<T extends ITableDataSearchResultItem> {
       if (this.spotlightIdentifier.value === id) {
         this.spotlightIdentifier.next(undefined);
       }
-    }, 4000);
+    }, 2500);
   }
 
   public clearSpotlight(): void {

@@ -1,17 +1,23 @@
-import { Directive, ElementRef, Input } from '@angular/core';
+import { Directive, Input, TemplateRef, ViewContainerRef } from '@angular/core';
 import { FeatureFlag } from '@shared/enums/feature-flag.enum';
-import { FeatureFlagService } from '@shared/services/feature-flag.service';
+import { UserFeatureFlagService } from '@shared/services/user-feature-flag.service';
 
 @Directive({
   selector: '[appIfFeatureFlagDisabled]'
 })
 export class IfFeatureFlagDisabledDirective {
-  constructor(private elementRef: ElementRef, private featureFlagService: FeatureFlagService) {}
+  constructor(
+    private readonly templateRef: TemplateRef<any>,
+    private readonly viewContainerRef: ViewContainerRef,
+    private readonly userFeatureFlagService: UserFeatureFlagService
+  ) {}
 
   @Input() set appIfFeatureFlagDisabled(featureFlag: keyof typeof FeatureFlag) {
-    const isEnabled = this.featureFlagService.isEnabled(featureFlag);
+    const isEnabled = this.userFeatureFlagService.isEnabled(featureFlag);
     if (isEnabled) {
-      this.elementRef.nativeElement.remove();
+      this.viewContainerRef.clear();
+    } else {
+      this.viewContainerRef.createEmbeddedView(this.templateRef);
     }
   }
 }

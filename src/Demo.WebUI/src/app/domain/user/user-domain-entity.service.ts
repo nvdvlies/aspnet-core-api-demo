@@ -28,6 +28,8 @@ import {
   IDomainEntityContext,
   InitFromRouteOptions
 } from '@domain/shared/domain-entity-base';
+import { UserPermissionService } from '@shared/services/user-permission.service';
+import { Permission } from '@shared/enums/permission.enum';
 
 export interface IUserDomainEntityContext extends IDomainEntityContext<UserDto> {
   isSystemUser: boolean;
@@ -67,6 +69,8 @@ export class UserDomainEntityService extends DomainEntityBase<UserDto> implement
   protected updateFunction = (user: UserDto) => this.userStoreService.update(user);
   protected deleteFunction = (id?: string) => this.userStoreService.delete(id!);
   protected entityUpdatedEvent$ = this.userStoreService.userUpdatedInStore$;
+  protected readPermission?: keyof typeof Permission = 'UsersRead';
+  protected writePermission?: keyof typeof Permission = 'UsersWrite';
 
   protected readonly isSystemUser = new BehaviorSubject<boolean>(false);
 
@@ -88,10 +92,11 @@ export class UserDomainEntityService extends DomainEntityBase<UserDto> implement
 
   constructor(
     route: ActivatedRoute,
+    userPermissionService: UserPermissionService,
     private readonly userStoreService: UserStoreService,
     private readonly apiUsersClient: ApiUsersClient
   ) {
-    super(route);
+    super(route, userPermissionService);
     super.init();
   }
 

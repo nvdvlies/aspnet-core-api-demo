@@ -6,8 +6,8 @@
         public const string CustomersWrite = "Customers:Write";
         public const string InvoicesRead = "Invoices:Read";
         public const string InvoicesWrite = "Invoices:Write";
-        public const string FeatureFlagsRead = "FeatureFlags:Read";
-        public const string FeatureFlagsWrite = "FeatureFlags:Write";
+        public const string FeatureFlagSettingsRead = "FeatureFlagSettings:Read";
+        public const string FeatureFlagSettingsWrite = "FeatureFlagSettings:Write";
         public const string UsersRead = "Users:Read";
         public const string UsersWrite = "Users:Write";
         public const string ApplicationSettingsRead = "ApplicationSettings:Read";

@@ -1,0 +1,150 @@
+﻿{{ initFromRoute$ | async }}
+
+<ng-container *ngIf="vm$ | async as vm; else loading">
+  <ng-container *ngIf="!vm.isLoading; else loading">
+    <ng-container *ngIf="vm.loadingEntityFailed && vm.problemDetails">
+      <div class="page-load-error-container">
+        <app-problem-details [problemDetails]="vm.problemDetails"></app-problem-details>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="!vm.loadingEntityFailed">
+      <form [formGroup]="form" novalidate (ngSubmit)="save()">
+        <app-page-header
+          headerTitle="{{ vm.id != null ? 'Role: ' + vm.pristine?.name : 'New role' }}"
+        >
+          <button
+            mat-icon-button
+            type="button"
+            *ngIf="vm.id != null"
+            routerLink="auditlog"
+            matTooltip="Audit log"
+          >
+            <mat-icon>history</mat-icon>
+          </button>
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            *ngIf="vm.hasWritePermission"
+            [disabled]="vm.isSaving"
+            [class.button-spinner]="vm.isSaving"
+          >
+            Save
+          </button>
+          <button
+            mat-raised-button
+            (click)="delete()"
+            type="button"
+            *ngIf="vm.hasWritePermission && vm.id != null"
+            [disabled]="vm.isDeleting"
+            [class.button-spinner]="vm.isDeleting"
+          >
+            Delete
+          </button>
+          <button mat-raised-button appBackButton fallbackRouterLink="/roles" type="button">
+            Close
+          </button>
+          <div class="auditlog" *ngIf="vm.id != null">
+            <small
+              >Created by
+              {{ vm.pristine?.createdBy | roleIdToName | async }}
+              on {{ vm.pristine?.createdOn | date: 'short' }}</small
+            >
+            <small
+              >Last modified by
+              {{ vm.pristine?.lastModifiedBy | roleIdToName | async }}
+              on {{ vm.pristine?.lastModifiedOn | date: 'short' }}</small
+            >
+          </div>
+        </app-page-header>
+        <div class="content-container">
+          <app-problem-details [problemDetails]="vm.problemDetails"></app-problem-details>
+          <app-message type="warning" *ngIf="vm.hasNewerVersionWithMergeConflict">
+            This role has just been modified by somebody else and that modification contains changes
+            which conflict with your pending changes. Please click 'Refresh' to switch to the
+            persisted version of the role. Your pending changes will be lost.
+            <div>
+              <button
+                mat-stroked-button
+                (click)="resolveMergeConflictWithTakeTheirs()"
+                type="button"
+              >
+                Refresh
+              </button>
+            </div>
+          </app-message>
+          <mat-card class="card bg-white pb-1 pl-3 pr-3 pt-0 mt-1 mb-3">
+            <mat-card-title class="pl-1 pt-1 mb-1 text-lg">General</mat-card-title>
+            <mat-card-content>
+              <div class="row">
+                <div class="col">
+                  <mat-form-field appearance="fill" class="full-width">
+                    <mat-label>Name</mat-label>
+                    <input
+                      matInput
+                      placeholder="Name"
+                      formControlName="name"
+                      [appSetFocus]="vm.id == null"
+                    />
+                    <mat-error appDomainEntityErrorMessage></mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <mat-form-field appearance="fill" class="full-width">
+                    <mat-label>External Id</mat-label>
+                    <input matInput placeholder="External Id" formControlName="externalId" />
+                    <mat-error appDomainEntityErrorMessage></mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+
+          <mat-card class="card bg-white pb-1 pl-3 pr-3 pt-0 pb-3 mt-1 mb-3">
+            <mat-card-title class="pl-1 pt-1 mb-1 text-lg">Permissions</mat-card-title>
+            <mat-card-content>
+              <ng-container formArrayName="rolePermissions">
+                <ng-container *ngFor="let permissionGroup of permissionGroups">
+                  <mat-checkbox
+                    class="ml-1"
+                    [checked]="allChildPermissionsChecked(permissionGroup)"
+                    (change)="togglePermissionGroup(permissionGroup, $event.checked)"
+                  >
+                    {{ permissionGroup.name }}
+                  </mat-checkbox>
+                  <ul class="pl-8 mt-0 mb-1">
+                    <ng-container
+                      *ngFor="let rolePermission of rolePermissions!.controls; let i = index"
+                    >
+                      <ng-container
+                        *ngIf="
+                          rolePermission.controls.permissionGroupId.value === permissionGroup.id
+                        "
+                      >
+                        <li>
+                          <ng-container [formGroupName]="i">
+                            <mat-checkbox formControlName="checked">
+                              {{ rolePermission.controls.name.value }}
+                            </mat-checkbox>
+                          </ng-container>
+                        </li>
+                      </ng-container>
+                    </ng-container>
+                  </ul>
+                </ng-container>
+              </ng-container>
+            </mat-card-content>
+          </mat-card>
+        </div>
+        <!-- <pre>{{ form.value | json }}</pre> -->
+      </form>
+    </ng-container>
+  </ng-container>
+  <!-- <pre>{{ vm | json }}</pre> -->
+</ng-container>
+
+<ng-template #loading>
+  <app-spinner diameter="50" fullHeight="true"></app-spinner>
+</ng-template>

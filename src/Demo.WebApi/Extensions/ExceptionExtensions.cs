@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Linq;
+using System.Net;
 using Demo.Domain.Shared.Exceptions;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
@@ -33,8 +34,17 @@ namespace Demo.WebApi.Extensions
 
             foreach (var validationMessage in exception.ValidationMessages)
             {
-                validationProblemDetails.Errors.Add(validationMessage.PropertyName ?? "_",
-                    new[] { validationMessage.Message });
+                var propertyName = validationMessage.PropertyName ?? "_";
+                if (validationProblemDetails.Errors.ContainsKey(propertyName))
+                {
+                    var messages = validationProblemDetails.Errors[propertyName].ToList();
+                    messages.Add(validationMessage.Message);
+                    validationProblemDetails.Errors[propertyName] =  messages.ToArray();
+                }
+                else
+                {
+                    validationProblemDetails.Errors.Add(propertyName, new[] { validationMessage.Message });
+                }
             }
 
             return validationProblemDetails;
@@ -65,7 +75,17 @@ namespace Demo.WebApi.Extensions
 
             foreach (var error in exception.Errors)
             {
-                validationProblemDetails.Errors.Add(error.PropertyName ?? "_", new[] { error.ErrorMessage });
+                var propertyName = error.PropertyName ?? "_";
+                if (validationProblemDetails.Errors.ContainsKey(propertyName))
+                {
+                    var messages = validationProblemDetails.Errors[propertyName].ToList();
+                    messages.Add(error.ErrorMessage);
+                    validationProblemDetails.Errors[propertyName] =  messages.ToArray();
+                }
+                else
+                {
+                    validationProblemDetails.Errors.Add(propertyName, new[] { error.ErrorMessage });
+                }
             }
 
             return validationProblemDetails;

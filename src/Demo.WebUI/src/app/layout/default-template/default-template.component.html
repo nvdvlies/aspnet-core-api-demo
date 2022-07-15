@@ -1,14 +1,49 @@
-<mat-toolbar color="primary">
+<mat-toolbar color="primary" *ngIf="flag">
   Demo
   <span style="flex: 1 1 auto"></span>
-  <a mat-button routerLink="/customers" routerLinkActive="active"> Customers </a>
-  <a mat-button [routerLink]="'/invoices'" routerLinkActive="active"> Invoices </a>
-  <div>
+  <a
+    *appIfPermissionGranted="'CustomersRead'"
+    mat-button
+    routerLink="/customers"
+    routerLinkActive="active"
+  >
+    Customers
+  </a>
+  <a
+    *appIfPermissionGranted="'InvoicesRead'"
+    mat-button
+    [routerLink]="'/invoices'"
+    routerLinkActive="active"
+  >
+    Invoices
+  </a>
+  <div
+    *appIfAnyPermissionGranted="[
+      'ApplicationSettingsRead',
+      'FeatureFlagSettingsRead',
+      'UsersRead',
+      'RolesRead'
+    ]"
+  >
     <button mat-icon-button [matMenuTriggerFor]="systemMenu"><mat-icon>menu</mat-icon></button>
     <mat-menu #systemMenu [overlapTrigger]="false" yPosition="below">
-      <button mat-menu-item routerLink="/application-settings">Application settings</button>
-      <button mat-menu-item routerLink="/feature-flag-settings">Feature flags</button>
-      <button mat-menu-item routerLink="/users">Users</button>
+      <button
+        *appIfPermissionGranted="'ApplicationSettingsRead'"
+        mat-menu-item
+        routerLink="/application-settings"
+      >
+        Application settings
+      </button>
+
+      <button
+        *appIfPermissionGranted="'FeatureFlagSettingsRead'"
+        mat-menu-item
+        routerLink="/feature-flag-settings"
+      >
+        Feature flags
+      </button>
+      <button *appIfPermissionGranted="'UsersRead'" mat-menu-item routerLink="/users">Users</button>
+      <button *appIfPermissionGranted="'RolesRead'" mat-menu-item routerLink="/roles">Roles</button>
     </mat-menu>
   </div>
   <div>

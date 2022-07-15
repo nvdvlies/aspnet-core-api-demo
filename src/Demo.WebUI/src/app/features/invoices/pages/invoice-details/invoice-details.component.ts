@@ -35,6 +35,7 @@ import {
   ProblemDetails,
   ValidationProblemDetails
 } from '@api/api.generated.clients';
+import { PermissionDeniedError } from '@shared/errors/permission-denied.error';
 
 interface ViewModel extends IInvoiceDomainEntityContext {
   isMarkingAsSent: boolean;
@@ -42,8 +43,18 @@ interface ViewModel extends IInvoiceDomainEntityContext {
   isMarkingAsPaid: boolean;
   isCopying: boolean;
   isCreatingCredit: boolean;
-  copyProblemDetails: ValidationProblemDetails | ProblemDetails | ApiException | undefined;
-  creditProblemDetails: ValidationProblemDetails | ProblemDetails | ApiException | undefined;
+  copyProblemDetails:
+    | ValidationProblemDetails
+    | ProblemDetails
+    | ApiException
+    | PermissionDeniedError
+    | undefined;
+  creditProblemDetails:
+    | ValidationProblemDetails
+    | ProblemDetails
+    | ApiException
+    | PermissionDeniedError
+    | undefined;
 }
 
 @Component({
@@ -67,10 +78,10 @@ export class InvoiceDetailsComponent implements IHasForm {
   public readonly isCopying = new BehaviorSubject<boolean>(false);
   public readonly isCreatingCredit = new BehaviorSubject<boolean>(false);
   public readonly copyProblemDetails = new BehaviorSubject<
-    ValidationProblemDetails | ProblemDetails | ApiException | undefined
+    ValidationProblemDetails | ProblemDetails | ApiException | PermissionDeniedError | undefined
   >(undefined);
   public readonly creditProblemDetails = new BehaviorSubject<
-    ValidationProblemDetails | ProblemDetails | ApiException | undefined
+    ValidationProblemDetails | ProblemDetails | ApiException | PermissionDeniedError | undefined
   >(undefined);
 
   public isMarkingAsSent$ = this.isMarkingAsSent.asObservable();
@@ -233,10 +244,14 @@ export class InvoiceDetailsComponent implements IHasForm {
             return EMPTY;
           }
         }),
-        catchError((error: ValidationProblemDetails | ProblemDetails | ApiException) => {
-          this.copyProblemDetails.next(error);
-          return throwError(() => error);
-        }),
+        catchError(
+          (
+            error: ValidationProblemDetails | ProblemDetails | ApiException | PermissionDeniedError
+          ) => {
+            this.copyProblemDetails.next(error);
+            return throwError(() => error);
+          }
+        ),
         finalize(() => this.isCopying.next(false))
       )
       .subscribe((response: CopyInvoiceResponse) => {
@@ -259,10 +274,14 @@ export class InvoiceDetailsComponent implements IHasForm {
             return EMPTY;
           }
         }),
-        catchError((error: ValidationProblemDetails | ProblemDetails | ApiException) => {
-          this.creditProblemDetails.next(error);
-          return throwError(() => error);
-        }),
+        catchError(
+          (
+            error: ValidationProblemDetails | ProblemDetails | ApiException | PermissionDeniedError
+          ) => {
+            this.creditProblemDetails.next(error);
+            return throwError(() => error);
+          }
+        ),
         finalize(() => this.isCreatingCredit.next(false))
       )
       .subscribe((response: CreditInvoiceResponse) => {

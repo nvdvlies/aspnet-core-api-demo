@@ -1,0 +1,33 @@
+﻿.card {
+  min-width: 120px;
+  margin: 20px auto;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  column-gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.col {
+  flex: 1;
+}
+
+.col:last-child {
+  margin-right: 0;
+}
+
+.auditlog {
+  display: flex;
+  flex-direction: column;
+  text-align: right;
+}
+
+table {
+  width: 100%;
+}
+
+ul {
+  list-style-type: none;
+}

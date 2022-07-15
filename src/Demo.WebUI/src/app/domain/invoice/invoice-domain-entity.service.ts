@@ -19,6 +19,8 @@ import {
   IDomainEntityContext,
   InitFromRouteOptions
 } from '@domain/shared/domain-entity-base';
+import { Permission } from '@shared/enums/permission.enum';
+import { UserPermissionService } from '@shared/services/user-permission.service';
 
 export interface IInvoiceDomainEntityContext extends IDomainEntityContext<InvoiceDto> {
   canEditInvoiceContent: boolean;
@@ -54,6 +56,8 @@ export class InvoiceDomainEntityService extends DomainEntityBase<InvoiceDto> imp
   protected updateFunction = (invoice: InvoiceDto) => this.invoiceStoreService.update(invoice);
   protected deleteFunction = (id?: string) => this.invoiceStoreService.delete(id!);
   protected entityUpdatedEvent$ = this.invoiceStoreService.invoiceUpdatedInStore$;
+  protected readPermission?: keyof typeof Permission = 'InvoicesRead';
+  protected writePermission?: keyof typeof Permission = 'InvoicesWrite';
 
   protected readonly canEditInvoiceContent = new BehaviorSubject<boolean>(true);
 
@@ -75,10 +79,11 @@ export class InvoiceDomainEntityService extends DomainEntityBase<InvoiceDto> imp
 
   constructor(
     route: ActivatedRoute,
+    userPermissionService: UserPermissionService,
     private readonly invoiceStoreService: InvoiceStoreService,
     private readonly apiInvoicesClient: ApiInvoicesClient
   ) {
-    super(route);
+    super(route, userPermissionService);
     super.init();
   }
 

@@ -1,6 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { CustomerIdToNamePipe } from './customer-id-to-name.pipe';
+import { PermissionIdsToNamesPipe } from './permission-ids-to-names.pipe';
 import { RoleIdsToNamesPipe } from './roles-ids-to-names.pipe';
 import { UserIdsToNamesPipe } from './user-ids-to-names.pipe';
 
@@ -11,7 +12,8 @@ export class AuditlogItemValuePipe implements PipeTransform {
   constructor(
     private readonly customerIdToNamePipe: CustomerIdToNamePipe,
     private readonly userIdsToNamesPipe: UserIdsToNamesPipe,
-    private readonly rolesIdsToNamesPipe: RoleIdsToNamesPipe
+    private readonly rolesIdsToNamesPipe: RoleIdsToNamesPipe,
+    private readonly permissionIdsToNamesPipe: PermissionIdsToNamesPipe
   ) {}
 
   transform(
@@ -44,6 +46,11 @@ export class AuditlogItemValuePipe implements PipeTransform {
       case 'User':
         if (propertyName === 'UserRoles') {
           return this.rolesIdsToNamesPipe.transform(value);
+        }
+        break;
+      case 'Role':
+        if (propertyName === 'RolePermissions') {
+          return of(this.permissionIdsToNamesPipe.transform(value));
         }
         break;
     }

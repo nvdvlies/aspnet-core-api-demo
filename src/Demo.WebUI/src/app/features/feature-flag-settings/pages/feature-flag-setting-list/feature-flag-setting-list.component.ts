@@ -10,11 +10,12 @@ import {
   ViewChildren
 } from '@angular/core';
 import { Location } from '@angular/common';
-import { BehaviorSubject, combineLatest, map, Observable, tap } from 'rxjs';
+import { combineLatest, map, Observable, tap } from 'rxjs';
 import { FeatureFlagSettingTableDataSource } from '@feature-flag-settings/pages/feature-flag-setting-list/feature-flag-setting-table-datasource';
 import {
   FeatureFlagSettingTableDataContext,
-  FeatureFlagSettingTableDataService
+  FeatureFlagSettingTableDataService,
+  IFeatureFlagSettingsTableRow
 } from '@feature-flag-settings/pages/feature-flag-setting-list/feature-flag-setting-table-data.service';
 import { TableFilterCriteria } from '@shared/base/table-data-base';
 import { Router } from '@angular/router';
@@ -36,7 +37,13 @@ export class FeatureFlagSettingListComponent implements OnInit, OnDestroy {
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator | undefined;
   @ViewChildren('tableRows', { read: ElementRef }) tableRows: QueryList<ElementRef> | undefined;
 
-  public displayedColumns = ['name', 'description', 'enabledForAll', 'enabledForUsers'];
+  public displayedColumns = [
+    'name',
+    'description',
+    'enabledForAll',
+    'enabledForUsers',
+    'enabledForCurrentUser'
+  ];
   public dataSource!: FeatureFlagSettingTableDataSource;
   public searchTerm = this.featureFlagSettingTableDataService.searchTerm;
 
@@ -68,6 +75,7 @@ export class FeatureFlagSettingListComponent implements OnInit, OnDestroy {
     const state = this.location.getState() as FeatureFlagSettingListRouteState;
     if (state && state.spotlightIdentifier) {
       this.featureFlagSettingTableDataService.spotlight(state.spotlightIdentifier);
+      history.replaceState({ ...state, spotlightIdentifier: null }, '');
     }
 
     this.featureFlagSettingTableDataService.search(undefined, true);
@@ -77,7 +85,7 @@ export class FeatureFlagSettingListComponent implements OnInit, OnDestroy {
     this.featureFlagSettingTableDataService.search(criteria);
   }
 
-  public trackById(index: number, item: FeatureFlagDto): string {
+  public trackById(index: number, item: IFeatureFlagSettingsTableRow): string {
     return item.name!;
   }
 

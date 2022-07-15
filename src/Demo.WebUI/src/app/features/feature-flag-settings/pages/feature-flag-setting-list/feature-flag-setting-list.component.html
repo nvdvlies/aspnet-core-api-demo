@@ -82,6 +82,15 @@
                 </td>
               </ng-container>
 
+              <ng-container matColumnDef="enabledForCurrentUser">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>
+                  Enabled for current user
+                </th>
+                <td mat-cell *matCellDef="let row">
+                  <mat-icon *ngIf="row.enabledForCurrentUser">done</mat-icon>
+                </td>
+              </ng-container>
+
               <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
               <tr
                 mat-row

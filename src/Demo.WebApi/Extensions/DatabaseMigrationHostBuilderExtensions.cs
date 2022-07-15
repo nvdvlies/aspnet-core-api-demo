@@ -3,12 +3,14 @@ using System.Linq;
 using Demo.Domain.Role.Seed;
 using Demo.Domain.User.Seed;
 using Demo.Infrastructure.Persistence;
+using Demo.Infrastructure.Settings;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using StackExchange.Redis;
 
 namespace Demo.WebApi.Extensions
 {
@@ -48,31 +50,40 @@ namespace Demo.WebApi.Extensions
                     lastAppliedMigration = dbContext.Database.GetAppliedMigrations().Last();
 
                     logger.LogInformation("Database migrated to '{lastAppliedMigration}'.", lastAppliedMigration);
+
+                    if (!databaseExistedBeforeMigrate)
+                    {
+                        logger.LogInformation("Database was newly created. Seeding with data.");
+
+                        if (!dbContext.Roles.Any())
+                        {
+                            logger.LogInformation("Seeding default roles.");
+                            dbContext.Roles.AddRange(AdministratorRole.Create(), UserRole.Create());
+                        }
+
+                        if (!dbContext.Users.Any())
+                        {
+                            logger.LogInformation("Seeding default user(s).");
+                            dbContext.Users.Add(DefaultAdministratorUser.Create());
+                        }
+
+                        dbContext.SaveChanges();
+
+                        logger.LogInformation("Finished seeding.");
+                    }
+
+                    var environmentSettings = scope.ServiceProvider.GetRequiredService<EnvironmentSettings>();
+                    if (!string.IsNullOrEmpty(environmentSettings.Redis.Connection))
+                    {
+                        logger.LogInformation("Clearing Redis cache.");
+                        using var redis = scope.ServiceProvider.GetRequiredService<IConnectionMultiplexer>();
+                        redis.GetServer(environmentSettings.Redis.Connection).FlushDatabase();
+                        logger.LogInformation("Finished clearing Redis cache.");
+                    }
                 }
                 else
                 {
                     logger.LogInformation("No pending database migrations available.");
-                }
-
-                if (!databaseExistedBeforeMigrate)
-                {
-                    logger.LogInformation("Database was newly created. Seeding with data.");
-
-                    if (!dbContext.Roles.Any())
-                    {
-                        logger.LogInformation("Seeding default roles.");
-                        dbContext.Roles.AddRange(AdministratorRole.Create(), UserRole.Create());
-                    }
-
-                    if (!dbContext.Users.Any())
-                    {
-                        logger.LogInformation("Seeding default user(s).");
-                        dbContext.Users.Add(DefaultAdministratorUser.Create());
-                    }
-
-                    dbContext.SaveChanges();
-
-                    logger.LogInformation("Finished seeding.");
                 }
             }
             catch (Exception ex)

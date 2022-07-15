@@ -20,7 +20,7 @@ namespace Demo.Application.Users.Commands.UpdateUser
 
         private static bool HasUniqueRoles(IList<UpdateUserCommandUserRoleDto> userRoles)
         {
-            return userRoles.GroupBy(x => x.RoleId).Count() == userRoles.Count();
+            return userRoles.GroupBy(x => x.RoleId).Count() == userRoles.Count;
         }
     }
 }

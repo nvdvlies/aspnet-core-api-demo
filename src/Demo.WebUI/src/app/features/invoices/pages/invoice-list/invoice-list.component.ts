@@ -95,6 +95,7 @@ export class InvoiceListComponent implements OnInit, OnDestroy {
     const state = this.location.getState() as InvoiceListRouteState;
     if (state && state.spotlightIdentifier) {
       this.invoiceTableDataService.spotlight(state.spotlightIdentifier);
+      history.replaceState({ ...state, spotlightIdentifier: null }, '');
     }
   }
 

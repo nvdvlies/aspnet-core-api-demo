@@ -67,6 +67,7 @@ export class UserListComponent implements OnInit, OnDestroy {
     const state = this.location.getState() as UserListRouteState;
     if (state && state.spotlightIdentifier) {
       this.userTableDataService.spotlight(state.spotlightIdentifier);
+      history.replaceState({ ...state, spotlightIdentifier: null }, '');
     }
   }
 
