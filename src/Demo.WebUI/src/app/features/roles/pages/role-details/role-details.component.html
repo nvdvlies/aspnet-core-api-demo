@@ -111,6 +111,7 @@
                     class="ml-1"
                     [checked]="allChildPermissionsChecked(permissionGroup)"
                     (change)="togglePermissionGroup(permissionGroup, $event.checked)"
+                    [disabled]="form.disabled"
                   >
                     {{ permissionGroup.name }}
                   </mat-checkbox>

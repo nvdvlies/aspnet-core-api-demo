@@ -27,6 +27,7 @@
             mat-raised-button
             color="primary"
             type="submit"
+            *ngIf="vm.hasWritePermission"
             [disabled]="
               vm.isSaving && !vm.isMarkingAsSent && !vm.isMarkingAsCancelled && !vm.isMarkingAsPaid
             "
@@ -40,7 +41,11 @@
             mat-raised-button
             (click)="markAsSent()"
             type="button"
-            *ngIf="vm.id != null && vm.entity?.status === InvoiceStatusEnum.Draft"
+            *ngIf="
+              vm.hasWritePermission &&
+              vm.id != null &&
+              vm.entity?.status === InvoiceStatusEnum.Draft
+            "
             [disabled]="vm.isMarkingAsSent"
             [class.button-spinner]="vm.isMarkingAsSent"
           >
@@ -51,6 +56,7 @@
             (click)="markAsCancelled()"
             type="button"
             *ngIf="
+              vm.hasWritePermission &&
               vm.id != null &&
               (vm.entity?.status === InvoiceStatusEnum.Draft ||
                 vm.entity?.status === InvoiceStatusEnum.Sent)
@@ -64,7 +70,9 @@
             mat-raised-button
             (click)="markAsPaid()"
             type="button"
-            *ngIf="vm.id != null && vm.entity?.status === InvoiceStatusEnum.Sent"
+            *ngIf="
+              vm.hasWritePermission && vm.id != null && vm.entity?.status === InvoiceStatusEnum.Sent
+            "
             [disabled]="vm.isMarkingAsPaid"
             [class.button-spinner]="vm.isMarkingAsPaid"
           >
@@ -74,7 +82,7 @@
             mat-raised-button
             (click)="copy()"
             type="button"
-            *ngIf="vm.id != null"
+            *ngIf="vm.hasWritePermission && vm.id != null"
             [disabled]="vm.isCopying"
             [class.button-spinner]="vm.isCopying"
           >
@@ -84,7 +92,9 @@
             mat-raised-button
             (click)="credit()"
             type="button"
-            *ngIf="vm.id != null && vm.entity?.status === InvoiceStatusEnum.Paid"
+            *ngIf="
+              vm.hasWritePermission && vm.id != null && vm.entity?.status === InvoiceStatusEnum.Paid
+            "
             [disabled]="vm.isCreatingCredit"
             [class.button-spinner]="vm.isCreatingCredit"
           >
