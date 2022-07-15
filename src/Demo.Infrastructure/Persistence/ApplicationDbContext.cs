@@ -32,6 +32,7 @@ namespace Demo.Infrastructure.Persistence
         public DbSet<Role> Roles { get; set; }
         public DbSet<FeatureFlagSettings> FeatureFlagSettings { get; set; }
         public DbSet<UserPreferences> UserPreferences { get; set; }
+
         // SCAFFOLD-MARKER: DBSET
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

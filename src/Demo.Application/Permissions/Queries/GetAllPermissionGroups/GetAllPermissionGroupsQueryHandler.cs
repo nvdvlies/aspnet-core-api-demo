@@ -1,17 +1,19 @@
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using AutoMapper;
 using Demo.Application.Shared.Dtos;
 using Demo.Domain.Shared.Interfaces;
 using MediatR;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Demo.Application.Permissions.Queries.GetAllPermissionGroups
 {
-    public class GetAllPermissionGroupsQueryHandler : IRequestHandler<GetAllPermissionGroupsQuery, GetAllPermissionGroupsQueryResult>
+    public class
+        GetAllPermissionGroupsQueryHandler : IRequestHandler<GetAllPermissionGroupsQuery,
+            GetAllPermissionGroupsQueryResult>
     {
-        private readonly IPermissionGroupsProvider _permissionGroupsProvider;
         private readonly IMapper _mapper;
+        private readonly IPermissionGroupsProvider _permissionGroupsProvider;
 
         public GetAllPermissionGroupsQueryHandler(
             IPermissionGroupsProvider permissionGroupsProvider,
@@ -22,7 +24,8 @@ namespace Demo.Application.Permissions.Queries.GetAllPermissionGroups
             _mapper = mapper;
         }
 
-        public async Task<GetAllPermissionGroupsQueryResult> Handle(GetAllPermissionGroupsQuery request, CancellationToken cancellationToken)
+        public async Task<GetAllPermissionGroupsQueryResult> Handle(GetAllPermissionGroupsQuery request,
+            CancellationToken cancellationToken)
         {
             var permissionGroups = await _permissionGroupsProvider.GetAsync(cancellationToken);
 

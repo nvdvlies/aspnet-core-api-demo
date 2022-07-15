@@ -8,6 +8,7 @@ namespace Demo.Application.Roles.Events
         Task RoleCreated(Guid id, Guid createdBy);
         Task RoleUpdated(Guid id, Guid updatedBy);
         Task RoleDeleted(Guid id, Guid deletedBy);
+
         // SCAFFOLD-MARKER: EVENTHUB
     }
 }

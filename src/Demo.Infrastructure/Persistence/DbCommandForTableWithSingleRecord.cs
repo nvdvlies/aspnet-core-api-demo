@@ -19,7 +19,7 @@ namespace Demo.Infrastructure.Persistence
             return query.SingleOrDefaultAsync(cancellationToken);
         }
 
-        public override async Task InsertAsync(T entity, CancellationToken cancellationToken)
+        public override async Task InsertAsync(T entity, CancellationToken cancellationToken = default)
         {
             var query = DbContext.Set<T>().AsQueryable();
             var existing = await query.SingleOrDefaultAsync(cancellationToken);

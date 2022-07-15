@@ -11,7 +11,10 @@ namespace Demo.Application.Roles.Commands.CreateRole
         {
             RuleFor(role => role.Name).NotEmpty();
             RuleFor(role => role.ExternalId).NotEmpty();
-            RuleForEach(role => role.RolePermissions).ChildRules(rolePermission => { rolePermission.RuleFor(x => x.PermissionId).NotEmpty(); });
+            RuleForEach(role => role.RolePermissions).ChildRules(rolePermission =>
+            {
+                rolePermission.RuleFor(x => x.PermissionId).NotEmpty();
+            });
             RuleFor(role => role.RolePermissions)
                 .Must(HasUniquePermissions)
                 .WithMessage(_ => "RolePermissions cannot contain duplicate permissions");

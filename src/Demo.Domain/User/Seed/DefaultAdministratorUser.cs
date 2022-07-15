@@ -19,14 +19,7 @@ namespace Demo.Domain.User.Seed
                 FamilyName = "Administrator",
                 Fullname = "Administrator",
                 Email = "demo@demo.com",
-                UserRoles = new List<UserRole>
-                {
-                    new()
-                    {
-                        UserId = UserId,
-                        RoleId = AdministratorRole.RoleId
-                    }
-                }
+                UserRoles = new List<UserRole> { new() { UserId = UserId, RoleId = AdministratorRole.RoleId } }
             };
             ((IAuditableEntity)user).SetCreatedByAndCreatedOn(UserId, DateTime.UtcNow);
             return user;

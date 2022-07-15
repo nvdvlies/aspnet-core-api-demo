@@ -104,10 +104,7 @@ namespace Demo.Infrastructure.Tests.Auditlogging
         {
             // Arrange
             var previous = new Invoice();
-            var current = new Invoice
-            {
-                InvoiceLines = new List<InvoiceLine> { new() { LineNumber = 1 } }
-            };
+            var current = new Invoice { InvoiceLines = new List<InvoiceLine> { new() { LineNumber = 1 } } };
 
             // Act
             await _subject.CreateAuditLogAsync(current, previous, CancellationToken.None);

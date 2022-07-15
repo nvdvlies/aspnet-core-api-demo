@@ -21,7 +21,8 @@ namespace Demo.Domain.User.Hooks
             _correlationIdProvider = correlationIdProvider;
         }
 
-        public Task ExecuteAsync(HookType type, IDomainEntityContext<User> context, CancellationToken cancellationToken = default)
+        public Task ExecuteAsync(HookType type, IDomainEntityContext<User> context,
+            CancellationToken cancellationToken = default)
         {
             switch (context.EditMode)
             {

@@ -7,11 +7,7 @@ namespace Demo.Messages.Email
     {
         public static SendChangePasswordEmailMessage Create(Guid createdBy, Guid correlationId, Guid userId)
         {
-            var data = new SendChangePasswordEmailMessageData
-            {
-                CorrelationId = correlationId,
-                UserId = userId
-            };
+            var data = new SendChangePasswordEmailMessageData { CorrelationId = correlationId, UserId = userId };
             return new SendChangePasswordEmailMessage
             {
                 Queue = Queues.SendChangePasswordEmail,

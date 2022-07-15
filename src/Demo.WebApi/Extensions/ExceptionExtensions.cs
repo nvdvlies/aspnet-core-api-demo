@@ -39,7 +39,7 @@ namespace Demo.WebApi.Extensions
                 {
                     var messages = validationProblemDetails.Errors[propertyName].ToList();
                     messages.Add(validationMessage.Message);
-                    validationProblemDetails.Errors[propertyName] =  messages.ToArray();
+                    validationProblemDetails.Errors[propertyName] = messages.ToArray();
                 }
                 else
                 {
@@ -80,7 +80,7 @@ namespace Demo.WebApi.Extensions
                 {
                     var messages = validationProblemDetails.Errors[propertyName].ToList();
                     messages.Add(error.ErrorMessage);
-                    validationProblemDetails.Errors[propertyName] =  messages.ToArray();
+                    validationProblemDetails.Errors[propertyName] = messages.ToArray();
                 }
                 else
                 {

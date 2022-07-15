@@ -7,11 +7,7 @@ namespace Demo.Messages.Email
     {
         public static SendUserInvitationEmailMessage Create(Guid createdBy, Guid correlationId, Guid userId)
         {
-            var data = new SendUserInvitationEmailMessageData
-            {
-                CorrelationId = correlationId,
-                UserId = userId
-            };
+            var data = new SendUserInvitationEmailMessageData { CorrelationId = correlationId, UserId = userId };
             return new SendUserInvitationEmailMessage
             {
                 Queue = Queues.SendUserInvitationEmail,

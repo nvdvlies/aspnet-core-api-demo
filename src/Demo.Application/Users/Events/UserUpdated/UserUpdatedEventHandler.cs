@@ -12,8 +12,8 @@ namespace Demo.Application.Users.Events.UserUpdated
     {
         private readonly IEventHubContext _eventHubContext;
         private readonly IExternalUserIdProvider _externalUserIdProvider;
-        private readonly IUserProvider _userProvider;
         private readonly ILogger<UserUpdatedEventHandler> _logger;
+        private readonly IUserProvider _userProvider;
 
         public UserUpdatedEventHandler(
             ILogger<UserUpdatedEventHandler> logger,
@@ -31,7 +31,7 @@ namespace Demo.Application.Users.Events.UserUpdated
         public async Task Handle(UserUpdatedEvent @event, CancellationToken cancellationToken)
         {
             _logger.LogInformation($"Handling {nameof(UserUpdatedEvent)}");
-            await _userProvider.GetAsync(@event.Data.Id, refreshCache: true, cancellationToken);
+            await _userProvider.GetAsync(@event.Data.Id, true, cancellationToken);
             await _eventHubContext.All.UserUpdated(@event.Data.Id, @event.Data.UpdatedBy);
             var externalUserId = _externalUserIdProvider.Get(@event.Data.Id);
             if (!string.IsNullOrEmpty(externalUserId))

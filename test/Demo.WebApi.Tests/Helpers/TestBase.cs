@@ -102,13 +102,17 @@ namespace Demo.WebApi.Tests.Helpers
 
             testUser.IsAuthenticated = isAuthenticated;
 
-            var roleId =  Guid.NewGuid();
+            var roleId = Guid.NewGuid();
             var testRole = new Role
             {
                 Id = roleId,
                 ExternalId = "test_role",
                 Name = "TestRole",
-                RolePermissions = permissionNames.Select(permissionName => new RolePermission { PermissionId = _allPermissions.Single(permission => permission.Name == permissionName).Id }).ToList()
+                RolePermissions = permissionNames.Select(permissionName => new RolePermission
+                    {
+                        PermissionId = _allPermissions.Single(permission => permission.Name == permissionName).Id
+                    })
+                    .ToList()
             };
             await AddAsExistingEntityAsync(testRole);
 
@@ -120,7 +124,7 @@ namespace Demo.WebApi.Tests.Helpers
                 Email = "test@test.com",
                 FamilyName = "TestUser",
                 Fullname = "TestUser",
-                UserRoles = new List<UserRole>() { new() { RoleId = roleId } }
+                UserRoles = new List<UserRole> { new() { RoleId = roleId } }
             };
             await AddAsExistingEntityAsync(testUser.User);
         }

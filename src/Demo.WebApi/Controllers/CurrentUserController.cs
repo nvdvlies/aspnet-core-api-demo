@@ -1,4 +1,3 @@
-using Demo.Application.CurrentUser.Queries.GetCurrentUserPermissions;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -6,6 +5,7 @@ using Demo.Application.CurrentUser.Commands.ChangePassword;
 using Demo.Application.CurrentUser.Commands.UpdateCurrentUser;
 using Demo.Application.CurrentUser.Queries.GetCurrentUser;
 using Demo.Application.CurrentUser.Queries.GetCurrentUserFeatureFlags;
+using Demo.Application.CurrentUser.Queries.GetCurrentUserPermissions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Demo.WebApi.Controllers
@@ -65,7 +65,8 @@ namespace Demo.WebApi.Controllers
         [HttpGet("Permissions")]
         [ProducesResponseType(typeof(GetCurrentUserPermissionsQueryResult), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.InternalServerError)]
-        public async Task<ActionResult<GetCurrentUserPermissionsQueryResult>> GetCurrentUserPermissions([FromQuery] GetCurrentUserPermissionsQuery query, CancellationToken cancellationToken)
+        public async Task<ActionResult<GetCurrentUserPermissionsQueryResult>> GetCurrentUserPermissions(
+            [FromQuery] GetCurrentUserPermissionsQuery query, CancellationToken cancellationToken)
         {
             return await Mediator.Send(query, cancellationToken);
         }

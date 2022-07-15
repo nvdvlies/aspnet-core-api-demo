@@ -10,8 +10,8 @@ namespace Demo.Infrastructure.Services
 {
     internal class UserPermissionsProvider : IUserPermissionsProvider
     {
-        private readonly IUserProvider _userProvider;
         private readonly IPermissionsProvider _permissionsProvider;
+        private readonly IUserProvider _userProvider;
 
         public UserPermissionsProvider(
             IUserProvider userProvider,
@@ -27,7 +27,8 @@ namespace Demo.Infrastructure.Services
             return GetAsync(userId, false, cancellationToken);
         }
 
-        public async Task<List<Permission>> GetAsync(Guid userId, bool refreshCache, CancellationToken cancellationToken)
+        public async Task<List<Permission>> GetAsync(Guid userId, bool refreshCache,
+            CancellationToken cancellationToken)
         {
             var user = await _userProvider.GetAsync(userId, cancellationToken);
 
@@ -36,7 +37,8 @@ namespace Demo.Infrastructure.Services
             var allPermissions = await _permissionsProvider.GetAsync(cancellationToken);
 
             var userPermissions = allPermissions
-                .Where(permission => permission.RolePermissions.Any(rolePermission => userRoleIds.Contains(rolePermission.RoleId)))
+                .Where(permission =>
+                    permission.RolePermissions.Any(rolePermission => userRoleIds.Contains(rolePermission.RoleId)))
                 .ToList();
 
             return userPermissions;

@@ -39,10 +39,7 @@ namespace Demo.Application.CurrentUser.Messages.SendChangePasswordEmail
             var changePasswordUrl =
                 await _auth0UserManagementClient.GetChangePasswordUrlAsync(_userDomainEntity.Entity, cancellationToken);
 
-            var emailTemplateModel = new ChangePasswordEmailBodyTemplateModel
-            {
-                ChangePasswordUrl = changePasswordUrl
-            };
+            var emailTemplateModel = new ChangePasswordEmailBodyTemplateModel { ChangePasswordUrl = changePasswordUrl };
 
             var htmlContent = await _razorViewRenderer.RenderViewAsync(
                 "~/CurrentUser/Messages/SendChangePasswordEmail/ChangePasswordEmailBodyTemplate.cshtml",

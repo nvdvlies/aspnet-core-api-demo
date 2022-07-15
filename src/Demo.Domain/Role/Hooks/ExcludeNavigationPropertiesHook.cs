@@ -7,7 +7,8 @@ namespace Demo.Domain.Role.Hooks
 {
     internal class ExcludeNavigationPropertiesHook : IBeforeCreate<Role>, IBeforeUpdate<Role>, IBeforeDelete<Role>
     {
-        public Task ExecuteAsync(HookType type, IDomainEntityContext<Role> context, CancellationToken cancellationToken = default)
+        public Task ExecuteAsync(HookType type, IDomainEntityContext<Role> context,
+            CancellationToken cancellationToken = default)
         {
             context.Entity.UserRoles = null;
             context.Entity.RolePermissions?.ForEach(x => { x.Permission = null; });

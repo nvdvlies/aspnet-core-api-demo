@@ -21,7 +21,8 @@ namespace Demo.Domain.Role.Hooks
             _correlationIdProvider = correlationIdProvider;
         }
 
-        public Task ExecuteAsync(HookType type, IDomainEntityContext<Role> context, CancellationToken cancellationToken = default)
+        public Task ExecuteAsync(HookType type, IDomainEntityContext<Role> context,
+            CancellationToken cancellationToken = default)
         {
             switch (context.EditMode)
             {

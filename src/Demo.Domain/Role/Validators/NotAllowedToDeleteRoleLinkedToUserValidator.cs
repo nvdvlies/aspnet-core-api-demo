@@ -26,8 +26,8 @@ namespace Demo.Domain.Role.Validators
             }
 
             var isRoleInUse = await _userQuery.AsQueryable()
-                    .Where(user => user.UserRoles.Any(userRole => userRole.RoleId == context.Entity.Id))
-                    .AnyAsync(cancellationToken);
+                .Where(user => user.UserRoles.Any(userRole => userRole.RoleId == context.Entity.Id))
+                .AnyAsync(cancellationToken);
 
             if (isRoleInUse)
             {

@@ -11,9 +11,9 @@ namespace Demo.Application.Roles.Events.RoleUpdated
     public class RoleUpdatedEventHandler : INotificationHandler<RoleUpdatedEvent>
     {
         private readonly IEventHubContext _eventHubContext;
-        private readonly IRolesProvider _rolesProvider;
-        private readonly IPermissionsProvider _permissionsProvider;
         private readonly ILogger<RoleUpdatedEventHandler> _logger;
+        private readonly IPermissionsProvider _permissionsProvider;
+        private readonly IRolesProvider _rolesProvider;
 
         public RoleUpdatedEventHandler(
             ILogger<RoleUpdatedEventHandler> logger,

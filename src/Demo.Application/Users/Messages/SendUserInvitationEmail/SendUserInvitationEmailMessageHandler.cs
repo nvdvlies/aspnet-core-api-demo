@@ -39,10 +39,7 @@ namespace Demo.Application.Users.Messages.SendUserInvitationEmail
             var changePasswordUrl =
                 await _auth0UserManagementClient.GetChangePasswordUrlAsync(_userDomainEntity.Entity, cancellationToken);
 
-            var emailTemplateModel = new UserInvitationEmailBodyTemplateModel
-            {
-                ChangePasswordUrl = changePasswordUrl
-            };
+            var emailTemplateModel = new UserInvitationEmailBodyTemplateModel { ChangePasswordUrl = changePasswordUrl };
 
             var htmlContent = await _razorViewRenderer.RenderViewAsync(
                 "~/Users/Messages/SendUserInvitationEmail/UserInvitationEmailBodyTemplate.cshtml", emailTemplateModel);

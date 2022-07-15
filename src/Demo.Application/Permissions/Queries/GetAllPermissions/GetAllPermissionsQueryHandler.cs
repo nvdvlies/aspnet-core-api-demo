@@ -10,8 +10,8 @@ namespace Demo.Application.Permissions.Queries.GetAllPermissions
 {
     public class GetAllPermissionsQueryHandler : IRequestHandler<GetAllPermissionsQuery, GetAllPermissionsQueryResult>
     {
-        private readonly IPermissionsProvider _permissionsProvider;
         private readonly IMapper _mapper;
+        private readonly IPermissionsProvider _permissionsProvider;
 
         public GetAllPermissionsQueryHandler(
             IPermissionsProvider permissionsProvider,
@@ -21,7 +21,8 @@ namespace Demo.Application.Permissions.Queries.GetAllPermissions
             _mapper = mapper;
         }
 
-        public async Task<GetAllPermissionsQueryResult> Handle(GetAllPermissionsQuery request, CancellationToken cancellationToken)
+        public async Task<GetAllPermissionsQueryResult> Handle(GetAllPermissionsQuery request,
+            CancellationToken cancellationToken)
         {
             var permissions = await _permissionsProvider.GetAsync(cancellationToken);
 
