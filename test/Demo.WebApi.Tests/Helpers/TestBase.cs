@@ -76,27 +76,27 @@ namespace Demo.WebApi.Tests.Helpers
             await _fixture.Checkpoint.Reset(connection);
         }
 
-        protected Task SetTestUserToUnauthenticated()
+        protected Task SetTestUserToUnauthenticatedAsync()
         {
-            return SetTestUser(false, Array.Empty<string>());
+            return SetTestUserAsync(false, Array.Empty<string>());
         }
 
-        protected Task SetTestUserWithoutPermission()
+        protected Task SetTestUserWithoutPermissionAsync()
         {
-            return SetTestUser(true, Array.Empty<string>());
+            return SetTestUserAsync(true, Array.Empty<string>());
         }
 
-        protected Task SetTestUserWithPermission(string permissionName)
+        protected Task SetTestUserWithPermissionAsync(string permissionName)
         {
-            return SetTestUser(true, new[] { permissionName });
+            return SetTestUserAsync(true, new[] { permissionName });
         }
 
-        protected Task SetTestUserWithPermission(IEnumerable<string> permissionNames)
+        protected Task SetTestUserWithPermissionAsync(IEnumerable<string> permissionNames)
         {
-            return SetTestUser(true, permissionNames);
+            return SetTestUserAsync(true, permissionNames);
         }
 
-        private async Task SetTestUser(bool isAuthenticated, IEnumerable<string> permissionNames)
+        private async Task SetTestUserAsync(bool isAuthenticated, IEnumerable<string> permissionNames)
         {
             var testUser = ServiceProvider.GetRequiredService<TestUser>();
 

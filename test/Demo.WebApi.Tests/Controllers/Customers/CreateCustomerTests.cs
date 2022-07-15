@@ -34,7 +34,7 @@ namespace Demo.WebApi.Tests.Controllers.Customers
         public async Task CreateCustomer_When_a_customer_can_be_created_It_should_return_statuscode_Created()
         {
             // Arrange
-            await SetTestUserWithPermission(Domain.Role.Permissions.CustomersWrite);
+            await SetTestUserWithPermissionAsync(Domain.Role.Permissions.CustomersWrite);
             var command = new CreateCustomerCommand { Name = "Test" };
 
             // Act
@@ -52,7 +52,7 @@ namespace Demo.WebApi.Tests.Controllers.Customers
         public async Task CreateCustomer_When_a_customer_is_created_It_should_be_persisted_to_the_database()
         {
             // Arrange
-            await SetTestUserWithPermission(Domain.Role.Permissions.CustomersWrite);
+            await SetTestUserWithPermissionAsync(Domain.Role.Permissions.CustomersWrite);
             var command = new CreateCustomerCommand { Name = "Test" };
 
             // Act
@@ -74,7 +74,7 @@ namespace Demo.WebApi.Tests.Controllers.Customers
         public async Task CreateCustomer_When_a_customer_is_created_It_should_publish_a_CustomerCreated_event()
         {
             // Arrange
-            await SetTestUserWithPermission(Domain.Role.Permissions.CustomersWrite);
+            await SetTestUserWithPermissionAsync(Domain.Role.Permissions.CustomersWrite);
             var command = new CreateCustomerCommand { Name = "Test" };
 
             var idFromEvent = Guid.Empty;
@@ -107,7 +107,7 @@ namespace Demo.WebApi.Tests.Controllers.Customers
             //
             //     services.AddSingleton(mock.Object);
             // });
-            await SetTestUserWithPermission(Domain.Role.Permissions.CustomersWrite);
+            await SetTestUserWithPermissionAsync(Domain.Role.Permissions.CustomersWrite);
 
             var command = new CreateCustomerCommand { Name = string.Empty };
 
@@ -138,7 +138,7 @@ namespace Demo.WebApi.Tests.Controllers.Customers
 
                 services.AddSingleton(mock.Object);
             });
-            await SetTestUserWithPermission(Domain.Role.Permissions.CustomersWrite);
+            await SetTestUserWithPermissionAsync(Domain.Role.Permissions.CustomersWrite);
 
             var command = new CreateCustomerCommand { Name = "Test" };
 
@@ -168,7 +168,7 @@ namespace Demo.WebApi.Tests.Controllers.Customers
 
                 services.AddSingleton(mock.Object);
             });
-            await SetTestUserWithPermission(Domain.Role.Permissions.CustomersWrite);
+            await SetTestUserWithPermissionAsync(Domain.Role.Permissions.CustomersWrite);
 
             var command = new CreateCustomerCommand { Name = "Test" };
 
@@ -197,7 +197,7 @@ namespace Demo.WebApi.Tests.Controllers.Customers
 
                 services.AddSingleton(mock.Object);
             });
-            await SetTestUserWithPermission(Domain.Role.Permissions.CustomersWrite);
+            await SetTestUserWithPermissionAsync(Domain.Role.Permissions.CustomersWrite);
 
             var command = new CreateCustomerCommand { Name = "Test" };
 
@@ -217,7 +217,7 @@ namespace Demo.WebApi.Tests.Controllers.Customers
         public async Task CreateCustomer_When_user_has_no_permission_It_should_return_statuscode_Forbidden()
         {
             // Arrange
-            await SetTestUserWithoutPermission();
+            await SetTestUserWithoutPermissionAsync();
             var command = new CreateCustomerCommand { Name = "Test" };
 
             // Act
@@ -231,7 +231,7 @@ namespace Demo.WebApi.Tests.Controllers.Customers
         public async Task CreateCustomer_When_request_is_not_authenticated_It_should_return_statuscode_Unauthorized()
         {
             // Arrange
-            await SetTestUserToUnauthenticated();
+            await SetTestUserToUnauthenticatedAsync();
             var command = new CreateCustomerCommand { Name = "Test" };
 
             // Act

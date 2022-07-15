@@ -25,7 +25,7 @@ namespace Demo.WebApi.Tests.Controllers.Customers
         public async Task SearchCustomers_When_no_customers_exist_It_should_return_an_empty_list()
         {
             // Arrange
-            await SetTestUserWithPermission(Domain.Role.Permissions.CustomersRead);
+            await SetTestUserWithPermissionAsync(Domain.Role.Permissions.CustomersRead);
 
             var query = new SearchCustomersQuery();
 
@@ -51,7 +51,7 @@ namespace Demo.WebApi.Tests.Controllers.Customers
         public async Task SearchCustomers_When_1_customer_exists_It_should_return_1_customer()
         {
             // Arrange
-            await SetTestUserWithPermission(Domain.Role.Permissions.CustomersRead);
+            await SetTestUserWithPermissionAsync(Domain.Role.Permissions.CustomersRead);
 
             var existingCustomer = new Customer { Id = Guid.NewGuid(), Name = "Test" };
             await AddAsExistingEntityAsync(existingCustomer);
@@ -84,7 +84,7 @@ namespace Demo.WebApi.Tests.Controllers.Customers
         public async Task SearchCustomers_When_2_customers_exist_It_should_return_2_customers()
         {
             // Arrange
-            await SetTestUserWithPermission(Domain.Role.Permissions.CustomersRead);
+            await SetTestUserWithPermissionAsync(Domain.Role.Permissions.CustomersRead);
 
             var existingCustomer1 = new Customer { Id = Guid.NewGuid(), Name = "Test" };
             await AddAsExistingEntityAsync(existingCustomer1);
@@ -126,7 +126,7 @@ namespace Demo.WebApi.Tests.Controllers.Customers
         public async Task SearchCustomers_When_18_customers_exist_and_pagesize_is_10_It_should_return_10_customers()
         {
             // Arrange
-            await SetTestUserWithPermission(Domain.Role.Permissions.CustomersRead);
+            await SetTestUserWithPermissionAsync(Domain.Role.Permissions.CustomersRead);
 
             var numberOfExistingCustomers = 18;
             var existingCustomers = AutoFixture.CreateMany<Customer>(numberOfExistingCustomers);
@@ -158,7 +158,7 @@ namespace Demo.WebApi.Tests.Controllers.Customers
             SearchCustomers_When_18_customers_exist_and_pagesize_is_10_and_page_index_is_1_It_should_return_8_customers()
         {
             // Arrange
-            await SetTestUserWithPermission(Domain.Role.Permissions.CustomersRead);
+            await SetTestUserWithPermissionAsync(Domain.Role.Permissions.CustomersRead);
 
             var numberOfExistingCustomers = 18;
 
@@ -191,7 +191,7 @@ namespace Demo.WebApi.Tests.Controllers.Customers
             SearchCustomers_When_28_customers_exist_and_pagesize_is_10_and_page_index_is_1_It_should_return_10_customers()
         {
             // Arrange
-            await SetTestUserWithPermission(Domain.Role.Permissions.CustomersRead);
+            await SetTestUserWithPermissionAsync(Domain.Role.Permissions.CustomersRead);
 
             var numberOfExistingCustomers = 28;
             var existingCustomers = AutoFixture.CreateMany<Customer>(numberOfExistingCustomers);
@@ -223,7 +223,7 @@ namespace Demo.WebApi.Tests.Controllers.Customers
             SearchCustomers_When_ordering_by_customer_code_ascending_It_should_return_list_in_correct_order()
         {
             // Arrange
-            await SetTestUserWithPermission(Domain.Role.Permissions.CustomersRead);
+            await SetTestUserWithPermissionAsync(Domain.Role.Permissions.CustomersRead);
 
             var existingCustomer1 = new Customer { Id = Guid.NewGuid(), Code = 2, Name = "Test" };
             await AddAsExistingEntityAsync(existingCustomer1);
@@ -256,7 +256,7 @@ namespace Demo.WebApi.Tests.Controllers.Customers
             SearchCustomers_When_ordering_by_customer_code_descending_It_should_return_list_in_correct_order()
         {
             // Arrange
-            await SetTestUserWithPermission(Domain.Role.Permissions.CustomersRead);
+            await SetTestUserWithPermissionAsync(Domain.Role.Permissions.CustomersRead);
 
             var existingCustomer1 = new Customer { Id = Guid.NewGuid(), Code = 2, Name = "Test" };
             await AddAsExistingEntityAsync(existingCustomer1);
@@ -289,7 +289,7 @@ namespace Demo.WebApi.Tests.Controllers.Customers
             SearchCustomers_When_ordering_by_customer_name_ascending_It_should_return_list_in_correct_order()
         {
             // Arrange
-            await SetTestUserWithPermission(Domain.Role.Permissions.CustomersRead);
+            await SetTestUserWithPermissionAsync(Domain.Role.Permissions.CustomersRead);
 
             var existingCustomer1 = new Customer { Id = Guid.NewGuid(), Code = 2, Name = "B" };
             await AddAsExistingEntityAsync(existingCustomer1);
@@ -322,7 +322,7 @@ namespace Demo.WebApi.Tests.Controllers.Customers
             SearchCustomers_When_ordering_by_customer_name_descending_It_should_return_list_in_correct_order()
         {
             // Arrange
-            await SetTestUserWithPermission(Domain.Role.Permissions.CustomersRead);
+            await SetTestUserWithPermissionAsync(Domain.Role.Permissions.CustomersRead);
 
             var existingCustomer1 = new Customer { Id = Guid.NewGuid(), Code = 2, Name = "B" };
             await AddAsExistingEntityAsync(existingCustomer1);
@@ -354,7 +354,7 @@ namespace Demo.WebApi.Tests.Controllers.Customers
         public async Task SearchCustomers_When_filter_on_name_It_should_exclude_non_matching_customers()
         {
             // Arrange
-            await SetTestUserWithPermission(Domain.Role.Permissions.CustomersRead);
+            await SetTestUserWithPermissionAsync(Domain.Role.Permissions.CustomersRead);
 
             var existingCustomer1 = new Customer { Id = Guid.NewGuid(), Name = "Customer with Hello in name" };
             await AddAsExistingEntityAsync(existingCustomer1);
@@ -382,7 +382,7 @@ namespace Demo.WebApi.Tests.Controllers.Customers
         public async Task SearchCustomers_When_user_has_no_permission_It_should_return_statuscode_Forbidden()
         {
             // Arrange
-            await SetTestUserWithoutPermission();
+            await SetTestUserWithoutPermissionAsync();
 
             var query = new SearchCustomersQuery { SearchTerm = "hello" };
 
