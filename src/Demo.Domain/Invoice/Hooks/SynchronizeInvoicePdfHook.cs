@@ -31,7 +31,7 @@ namespace Demo.Domain.Invoice.Hooks
         public int Order => 99;
 
         public async Task ExecuteAsync(HookType type, IDomainEntityContext<Invoice> context,
-            CancellationToken cancellationToken)
+            CancellationToken cancellationToken = default)
         {
             if (type == HookType.BeforeCreate)
             {

@@ -25,7 +25,7 @@ namespace Demo.Domain.OutboxMessage.Hooks
         }
 
         public Task ExecuteAsync(HookType type, IDomainEntityContext<OutboxMessage> context,
-            CancellationToken cancellationToken)
+            CancellationToken cancellationToken = default)
         {
             _outboxMessageCreatedEvents.Add(OutboxMessageCreatedEvent.Create(_correlationIdProvider.Id,
                 context.Entity.Id, _currentUserIdProvider.Id));

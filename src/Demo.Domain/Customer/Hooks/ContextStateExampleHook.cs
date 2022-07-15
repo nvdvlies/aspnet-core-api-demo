@@ -8,7 +8,7 @@ namespace Demo.Domain.Customer.Hooks
     internal class ContextStateExampleHook : IBeforeCreate<Customer>, IBeforeUpdate<Customer>, IBeforeDelete<Customer>
     {
         public Task ExecuteAsync(HookType type, IDomainEntityContext<Customer> context,
-            CancellationToken cancellationToken)
+            CancellationToken cancellationToken = default)
         {
             // Example: Retrieve variable set in application layer.
             // var exampleBoolean = context.State.Get<bool>(CustomerStateKeys.ExampleBoolean);

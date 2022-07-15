@@ -12,7 +12,7 @@ namespace Demo.Domain.FeatureFlagSettings.Hooks
         public Task ExecuteAsync(HookType type, IDomainEntityContext<FeatureFlagSettings> context,
             CancellationToken cancellationToken = default)
         {
-            foreach (var featureFlag in context.Entity.Settings.FeatureFlags.Where(x => x.Id == default))
+            foreach (var featureFlag in context.Entity.Settings.FeatureFlags.Where(x => x.Id == Guid.Empty))
             {
                 featureFlag.Id = Guid.NewGuid();
             }

@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Demo.Scaffold.Tool
 {
-    internal class Program
+    internal static class Program
     {
         public static void Main(string[] args)
         {

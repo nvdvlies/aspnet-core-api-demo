@@ -41,20 +41,20 @@ namespace Demo.Infrastructure.Persistence
             return query.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
         }
 
-        public virtual Task InsertAsync(T entity, CancellationToken cancellationToken)
+        public virtual Task InsertAsync(T entity, CancellationToken cancellationToken = default)
         {
             DbContext.Set<T>().Add(entity);
             return Task.CompletedTask;
         }
 
-        public virtual Task UpdateAsync(T entity, CancellationToken cancellationToken)
+        public virtual Task UpdateAsync(T entity, CancellationToken cancellationToken = default)
         {
             DbContext.Entry(entity).OriginalValues[nameof(entity.xmin)] = entity.xmin;
             DbContext.Set<T>().Update(entity);
             return Task.CompletedTask;
         }
 
-        public virtual Task DeleteAsync(T entity, CancellationToken cancellationToken)
+        public virtual Task DeleteAsync(T entity, CancellationToken cancellationToken = default)
         {
             DbContext.Set<T>().Remove(entity);
             return Task.CompletedTask;

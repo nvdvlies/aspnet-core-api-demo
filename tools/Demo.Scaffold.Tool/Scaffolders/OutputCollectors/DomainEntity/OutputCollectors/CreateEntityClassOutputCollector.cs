@@ -39,8 +39,10 @@ namespace Demo.Domain.%ENTITY%
 }
 ";
             code = code.Replace("%ENTITY%", entityName);
-            code = code.Replace("%BASE_CLASS%",
-                enableSoftDelete ? "SoftDeleteEntity" : enableAuditlogging ? "AuditableEntity" : "Entity");
+            var baseClass = enableSoftDelete
+                ? "SoftDeleteEntity"
+                : enableAuditlogging ? "AuditableEntity" : "Entity";
+            code = code.Replace("%BASE_CLASS%", baseClass);
             return code;
         }
     }

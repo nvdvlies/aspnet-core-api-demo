@@ -7,7 +7,7 @@ namespace Demo.Messages
 {
     public abstract class Message<M, D> : IRequest<Unit>, IMessage where M : IMessage where D : IMessageData
     {
-        public Message()
+        protected Message()
         {
             Type = GetType().FullName;
             CreatedOn = DateTime.UtcNow;

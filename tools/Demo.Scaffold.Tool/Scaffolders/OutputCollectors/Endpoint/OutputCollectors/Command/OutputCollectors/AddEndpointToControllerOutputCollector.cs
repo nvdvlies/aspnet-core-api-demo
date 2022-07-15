@@ -48,7 +48,7 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint.OutputCollect
                 case CommandEndpointTypes.DeleteSubEndpoint:
                     return GetDeleteSubEndpointTemplate(entityName, commandName, endpointName);
                 default:
-                    throw new Exception($"CommandEndpointType '{commandEndpointType}' not supported.");
+                    throw new NotSupportedException($"CommandEndpointType '{commandEndpointType}' not supported.");
             }
         }
 

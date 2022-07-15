@@ -17,7 +17,7 @@ namespace Demo.Domain.Shared.DomainEntity.Hooks
             _logger = logger;
         }
 
-        public Task ExecuteAsync(HookType type, IDomainEntityContext<T> context, CancellationToken cancellationToken)
+        public Task ExecuteAsync(HookType type, IDomainEntityContext<T> context, CancellationToken cancellationToken = default)
         {
             _logger.LogInformation($"{type}: {typeof(T).Name}");
             return Task.CompletedTask;

@@ -16,14 +16,14 @@ namespace Demo.Domain.Shared.Interfaces
         Guid EntityId { get; }
         IDomainEntityState State { get; }
         IDomainEntity<T> WithOptions(Action<IDomainEntityOptions> action);
-        Task NewAsync(CancellationToken cancellationToken);
-        Task GetAsync(Guid id, CancellationToken cancellationToken);
+        Task NewAsync(CancellationToken cancellationToken = default);
+        Task GetAsync(Guid id, CancellationToken cancellationToken = default);
         void With(Action<T> action);
-        Task CreateAsync(CancellationToken cancellationToken);
-        Task UpdateAsync(CancellationToken cancellationToken);
-        Task UpsertAsync(CancellationToken cancellationToken);
-        Task DeleteAsync(CancellationToken cancellationToken);
-        Task AddEventAsync(IEvent @event, CancellationToken cancellationToken);
-        Task AddMessageAsync(IMessage message, CancellationToken cancellationToken);
+        Task CreateAsync(CancellationToken cancellationToken = default);
+        Task UpdateAsync(CancellationToken cancellationToken = default);
+        Task UpsertAsync(CancellationToken cancellationToken = default);
+        Task DeleteAsync(CancellationToken cancellationToken = default);
+        Task AddEventAsync(IEvent @event, CancellationToken cancellationToken = default);
+        Task AddMessageAsync(IMessage message, CancellationToken cancellationToken = default);
     }
 }

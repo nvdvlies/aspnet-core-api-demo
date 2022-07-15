@@ -21,9 +21,9 @@ namespace Demo.Infrastructure.SignalR
         public IEventHub All => _hubContext.Clients.All;
         public IEventHub CurrentUser => _hubContext.Clients.User(_currentUserIdProvider.ExternalId);
 
-        public IEventHub User(string externalId)
+        public IEventHub User(string externalUserId)
         {
-            return _hubContext.Clients.User(externalId);
+            return _hubContext.Clients.User(externalUserId);
         }
     }
 }

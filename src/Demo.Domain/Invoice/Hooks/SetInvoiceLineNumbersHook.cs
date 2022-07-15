@@ -8,7 +8,7 @@ namespace Demo.Domain.Invoice.Hooks
     internal class SetInvoiceLineNumbersHook : IBeforeCreate<Invoice>, IBeforeUpdate<Invoice>
     {
         public Task ExecuteAsync(HookType type, IDomainEntityContext<Invoice> context,
-            CancellationToken cancellationToken)
+            CancellationToken cancellationToken = default)
         {
             var i = 0;
             foreach (var invoiceLine in context.Entity.InvoiceLines)

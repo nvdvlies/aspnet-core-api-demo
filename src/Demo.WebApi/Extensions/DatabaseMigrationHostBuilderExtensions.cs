@@ -42,7 +42,7 @@ namespace Demo.WebApi.Extensions
                             lastAppliedMigration);
                     }
 
-                    logger.LogInformation("Applying {count} migration(s) ({names}).", pendingMigrations.Count(),
+                    logger.LogInformation("Applying {count} migration(s) ({names}).", pendingMigrations.Count,
                         string.Join(",", pendingMigrations));
 
                     dbContext.Database.Migrate();

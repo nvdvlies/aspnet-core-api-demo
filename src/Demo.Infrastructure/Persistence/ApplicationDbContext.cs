@@ -34,15 +34,15 @@ namespace Demo.Infrastructure.Persistence
         public DbSet<UserPreferences> UserPreferences { get; set; }
         // SCAFFOLD-MARKER: DBSET
 
-        protected override void OnModelCreating(ModelBuilder builder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            builder.HasDefaultSchema(Constants.SchemaName);
+            modelBuilder.HasDefaultSchema(Constants.SchemaName);
 
-            base.OnModelCreating(builder);
+            base.OnModelCreating(modelBuilder);
 
-            builder.ConfigureSequences();
-            builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-            builder.ApplyUtcDateTimeConverter();
+            modelBuilder.ConfigureSequences();
+            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+            modelBuilder.ApplyUtcDateTimeConverter();
         }
     }
 }

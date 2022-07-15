@@ -5,7 +5,7 @@ namespace Demo.Domain.ApplicationSettings.Interfaces
 {
     public interface IApplicationSettingsProvider
     {
-        Task<ApplicationSettings> GetAsync(CancellationToken cancellationToken);
-        Task<ApplicationSettings> GetAsync(bool refreshCache, CancellationToken cancellationToken);
+        Task<ApplicationSettings> GetAsync(CancellationToken cancellationToken = default);
+        Task<ApplicationSettings> GetAsync(bool refreshCache, CancellationToken cancellationToken = default);
     }
 }

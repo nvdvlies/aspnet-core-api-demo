@@ -23,7 +23,7 @@ namespace Demo.Domain.UserPreferences.Hooks
         }
 
         public async Task ExecuteAsync(HookType type, IDomainEntityContext<UserPreferences> context,
-            CancellationToken cancellationToken)
+            CancellationToken cancellationToken = default)
         {
             switch (context.EditMode)
             {

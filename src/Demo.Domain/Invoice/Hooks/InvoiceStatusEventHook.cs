@@ -21,7 +21,7 @@ namespace Demo.Domain.Invoice.Hooks
         }
 
         public async Task ExecuteAsync(HookType type, IDomainEntityContext<Invoice> context,
-            CancellationToken cancellationToken)
+            CancellationToken cancellationToken = default)
         {
             var isStatusPropertyDirty = context.EditMode == EditMode.Create
                                         || (context.EditMode == EditMode.Update &&

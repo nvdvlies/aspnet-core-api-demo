@@ -18,7 +18,7 @@ namespace Demo.Domain.FeatureFlagSettings.Hooks
         }
 
         public Task ExecuteAsync(HookType type, IDomainEntityContext<FeatureFlagSettings> context,
-            CancellationToken cancellationToken)
+            CancellationToken cancellationToken = default)
         {
             return _auditlogger.Value.CreateAuditLogAsync(context.Entity, context.Pristine, cancellationToken);
         }

@@ -22,7 +22,7 @@ namespace Demo.Domain.Shared.Entities
         void ISoftDeleteEntity.UndoMarkAsDeleted()
         {
             Deleted = false;
-            DeletedBy = default;
+            DeletedBy = Guid.Empty;
             DeletedOn = default;
         }
     }

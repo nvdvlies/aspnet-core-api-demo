@@ -6,12 +6,12 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Demo.WebApi.Permissions
 {
-    public class PermissionAuthorizationFilter : Attribute, IAsyncAuthorizationFilter
+    public class PermissionAuthorizationFilterAttribute : Attribute, IAsyncAuthorizationFilter
     {
         private readonly IPermissionChecker _permissionChecker;
         private readonly PermissionRequirement _permissionRequirement;
 
-        public PermissionAuthorizationFilter(
+        public PermissionAuthorizationFilterAttribute(
             IPermissionChecker permissionChecker,
             PermissionRequirement permissionRequirement
         )

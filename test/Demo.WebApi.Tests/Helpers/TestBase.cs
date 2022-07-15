@@ -35,7 +35,7 @@ namespace Demo.WebApi.Tests.Helpers
 
         protected IServiceProvider ServiceProvider;
 
-        public TestBase(SharedFixture fixture)
+        protected TestBase(SharedFixture fixture)
         {
             _fixture = fixture;
 

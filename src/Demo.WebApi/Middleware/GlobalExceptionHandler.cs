@@ -16,13 +16,13 @@ using Microsoft.Extensions.Logging;
 
 namespace Demo.WebApi.Middleware
 {
-    public class GlobalExceptionHandler
+    public static class GlobalExceptionHandler
     {
         public static RequestDelegate Handle(IWebHostEnvironment env)
         {
             return async context =>
             {
-                var logger = context.RequestServices.GetRequiredService<ILogger<GlobalExceptionHandler>>();
+                var logger = context.RequestServices.GetRequiredService<ILogger>();
                 var exception = context.Features.Get<IExceptionHandlerFeature>().Error;
 
                 var includeDetailsInResponse = !env.IsProduction();

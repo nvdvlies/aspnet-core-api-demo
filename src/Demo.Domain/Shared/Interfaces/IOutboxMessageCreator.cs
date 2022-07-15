@@ -6,6 +6,6 @@ namespace Demo.Domain.Shared.Interfaces
 {
     public interface IOutboxMessageCreator
     {
-        Task CreateAsync(IMessage message, CancellationToken cancellationToken);
+        Task CreateAsync(IMessage message, CancellationToken cancellationToken = default);
     }
 }

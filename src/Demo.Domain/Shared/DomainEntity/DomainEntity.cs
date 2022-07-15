@@ -33,7 +33,7 @@ namespace Demo.Domain.Shared.DomainEntity
         protected readonly IDbCommand<T> DbCommand;
         protected readonly ILogger Logger;
 
-        public DomainEntity(
+        protected DomainEntity(
             ILogger logger,
             ICurrentUserIdProvider currentUserIdProvider,
             IDateTime dateTime,
@@ -77,7 +77,7 @@ namespace Demo.Domain.Shared.DomainEntity
 
         public T Entity => Context.Entity;
 
-        public Guid EntityId => Context.Entity?.Id ?? default;
+        public Guid EntityId => Context.Entity?.Id ?? Guid.Empty;
 
         public IDomainEntityState State => Context.State;
 
@@ -204,7 +204,7 @@ namespace Demo.Domain.Shared.DomainEntity
             Guard.NotNull(Context.Entity, nameof(Context.Entity),
                 $"Call {nameof(NewAsync)} or {nameof(GetAsync)} first to instantiate entity");
 
-            if (EntityId == default)
+            if (EntityId == Guid.Empty)
             {
                 await CreateAsync(cancellationToken);
             }

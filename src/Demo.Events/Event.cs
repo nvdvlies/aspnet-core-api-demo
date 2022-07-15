@@ -6,7 +6,7 @@ namespace Demo.Events
 {
     public abstract class Event<E, D> : IEvent where E : IEvent where D : IEventData
     {
-        public Event()
+        protected Event()
         {
             Type = GetType().FullName;
             CreatedOn = DateTime.UtcNow;

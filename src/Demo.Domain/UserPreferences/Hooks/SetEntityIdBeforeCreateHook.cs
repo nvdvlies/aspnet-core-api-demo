@@ -16,7 +16,7 @@ namespace Demo.Domain.UserPreferences.Hooks
         }
 
         public Task ExecuteAsync(HookType type, IDomainEntityContext<UserPreferences> context,
-            CancellationToken cancellationToken)
+            CancellationToken cancellationToken = default)
         {
             if (context.Entity.Id == Guid.Empty)
             {

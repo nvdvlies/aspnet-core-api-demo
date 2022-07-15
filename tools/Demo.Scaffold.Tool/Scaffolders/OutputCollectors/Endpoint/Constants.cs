@@ -2,13 +2,13 @@
 {
     internal static class Constants
     {
-        public static string EndpointType = "EndpointType";
-        public static string ControllerName = "ControllerName";
+        public static readonly string EndpointType = "EndpointType";
+        public static readonly string ControllerName = "ControllerName";
 
-        public static string CommandName = "CommandName";
-        public static string CommandEndpointType = "CommandEndpointType";
+        public static readonly string CommandName = "CommandName";
+        public static readonly string CommandEndpointType = "CommandEndpointType";
 
-        public static string QueryName = "QueryName";
-        public static string QueryEndpointType = "QueryEndpointType";
+        public static readonly string QueryName = "QueryName";
+        public static readonly string QueryEndpointType = "QueryEndpointType";
     }
 }

@@ -27,17 +27,19 @@ namespace Demo.Infrastructure.Persistence
         public static void ApplyUtcDateTimeConverter(this ModelBuilder builder)
         {
             foreach (var entityType in builder.Model.GetEntityTypes())
-            foreach (var property in entityType.GetProperties())
             {
-                if (!property.IsUtc())
+                foreach (var property in entityType.GetProperties())
                 {
-                    continue;
-                }
+                    if (!property.IsUtc())
+                    {
+                        continue;
+                    }
 
-                if (property.ClrType == typeof(DateTime) ||
-                    property.ClrType == typeof(DateTime?))
-                {
-                    property.SetValueConverter(UtcConverter);
+                    if (property.ClrType == typeof(DateTime) ||
+                        property.ClrType == typeof(DateTime?))
+                    {
+                        property.SetValueConverter(UtcConverter);
+                    }
                 }
             }
         }

@@ -26,11 +26,11 @@ namespace Demo.Domain
                 .ClassesThatImplementInterface(typeof(IDomainEntity<>))
                 .ForEach(type =>
                 {
-                    var nonGenericInterfaceType = type.GetInterfaces()
+                    var nonGenericInterfaceType = type
+                        .GetInterfaces()
                         .Where(i => !i.GetTypeInfo().IsGenericType)
-                        .Where(i => i.GetInterfaces().Any(j =>
-                            j.IsGenericType && j.GetGenericTypeDefinition() == typeof(IDomainEntity<>)))
-                        .FirstOrDefault();
+                        .FirstOrDefault(i => i.GetInterfaces().Any(j =>
+                            j.IsGenericType && j.GetGenericTypeDefinition() == typeof(IDomainEntity<>)));
                     services.AddTransient(nonGenericInterfaceType, type);
                 });
         }
@@ -56,10 +56,10 @@ namespace Demo.Domain
                         }
                         else
                         {
-                            var interfaceType = type.GetInterfaces()
+                            var interfaceType = type
+                                .GetInterfaces()
                                 .Where(i => i.GetTypeInfo().IsGenericType)
-                                .Where(i => i.GetGenericTypeDefinition() == @interface)
-                                .FirstOrDefault();
+                                .FirstOrDefault(i => i.GetGenericTypeDefinition() == @interface);
                             services.AddTransient(interfaceType, type);
                         }
                     });

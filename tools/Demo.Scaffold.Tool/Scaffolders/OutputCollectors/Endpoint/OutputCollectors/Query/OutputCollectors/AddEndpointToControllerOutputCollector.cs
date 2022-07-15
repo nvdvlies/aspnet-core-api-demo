@@ -45,7 +45,7 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint.OutputCollect
                 case QueryEndpointTypes.SubEndpoint:
                     return GetSubEndpointTemplate(queryName, entityName);
                 default:
-                    throw new Exception($"QueryEndpointType '{queryEndpointType}' not supported.");
+                    throw new NotSupportedException($"QueryEndpointType '{queryEndpointType}' not supported.");
             }
         }
 

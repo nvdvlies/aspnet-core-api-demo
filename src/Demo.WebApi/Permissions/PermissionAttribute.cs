@@ -4,7 +4,7 @@ namespace Demo.WebApi.Permissions
 {
     public class PermissionAttribute : TypeFilterAttribute
     {
-        public PermissionAttribute(string permissionName) : base(typeof(PermissionAuthorizationFilter))
+        public PermissionAttribute(string permissionName) : base(typeof(PermissionAuthorizationFilterAttribute))
         {
             Arguments = new object[] { new PermissionRequirement(permissionName) };
             Order = int.MinValue;

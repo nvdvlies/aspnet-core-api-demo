@@ -58,13 +58,13 @@ namespace Demo.Domain.Invoice
                     throw new DomainEntityNotFoundException($"Entity with id '{id}' not found.");
                 }
 
-                entity.Id = default;
+                entity.Id = Guid.Empty;
                 entity.InvoiceNumber = default;
                 entity.Status = InvoiceStatus.Draft;
                 entity.InvoiceDate = DateTime.UtcNow.Date;
                 entity.PdfIsSynced = false;
                 entity.PdfChecksum = default;
-                entity.InvoiceLines.ForEach(x => x.Id = default);
+                entity.InvoiceLines.ForEach(x => x.Id = Guid.Empty);
                 (entity as IAuditableEntity).ClearCreatedAndLastModified();
                 (entity as ISoftDeleteEntity).UndoMarkAsDeleted();
 
@@ -91,7 +91,7 @@ namespace Demo.Domain.Invoice
                     throw new DomainEntityNotFoundException($"Entity with id '{id}' not found.");
                 }
 
-                entity.Id = default;
+                entity.Id = Guid.Empty;
                 entity.InvoiceNumber = default;
                 entity.Status = InvoiceStatus.Draft;
                 entity.InvoiceDate = DateTime.UtcNow.Date;
@@ -99,7 +99,7 @@ namespace Demo.Domain.Invoice
                 entity.PdfChecksum = default;
                 entity.InvoiceLines.ForEach(x =>
                 {
-                    x.Id = default;
+                    x.Id = Guid.Empty;
                     x.Quantity *= -1;
                 });
                 (entity as IAuditableEntity).ClearCreatedAndLastModified();

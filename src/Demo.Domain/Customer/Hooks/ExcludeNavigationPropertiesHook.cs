@@ -9,7 +9,7 @@ namespace Demo.Domain.Customer.Hooks
         IBeforeDelete<Customer>
     {
         public Task ExecuteAsync(HookType type, IDomainEntityContext<Customer> context,
-            CancellationToken cancellationToken)
+            CancellationToken cancellationToken = default)
         {
             context.Entity.Invoices = null;
 

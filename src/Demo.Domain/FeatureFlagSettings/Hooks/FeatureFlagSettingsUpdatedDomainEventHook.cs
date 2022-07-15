@@ -23,7 +23,7 @@ namespace Demo.Domain.FeatureFlagSettings.Hooks
         }
 
         public Task ExecuteAsync(HookType type, IDomainEntityContext<FeatureFlagSettings> context,
-            CancellationToken cancellationToken)
+            CancellationToken cancellationToken = default)
         {
             return context.AddEventAsync(
                 FeatureFlagSettingsUpdatedEvent.Create(_correlationIdProvider.Id, context.Entity.Id,

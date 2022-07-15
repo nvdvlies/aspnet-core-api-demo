@@ -30,9 +30,9 @@ namespace Demo.Domain.Shared.Entities
 
         void IAuditableEntity.ClearCreatedAndLastModified()
         {
-            CreatedBy = default;
+            CreatedBy = Guid.Empty;
             CreatedOn = default;
-            LastModifiedBy = default;
+            LastModifiedBy = Guid.Empty;
             LastModifiedOn = default;
         }
     }

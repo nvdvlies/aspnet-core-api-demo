@@ -18,7 +18,7 @@ namespace Demo.Domain.ApplicationSettings.Hooks
         }
 
         public Task ExecuteAsync(HookType type, IDomainEntityContext<ApplicationSettings> context,
-            CancellationToken cancellationToken)
+            CancellationToken cancellationToken = default)
         {
             return _auditlogger.Value.CreateAuditLogAsync(context.Entity, context.Pristine, cancellationToken);
         }

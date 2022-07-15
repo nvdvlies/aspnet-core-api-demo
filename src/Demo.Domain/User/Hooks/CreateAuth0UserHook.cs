@@ -21,7 +21,7 @@ namespace Demo.Domain.User.Hooks
             _currentUserIdProvider = currentUserIdProvider;
         }
 
-        public Task ExecuteAsync(HookType type, IDomainEntityContext<User> context, CancellationToken cancellationToken)
+        public Task ExecuteAsync(HookType type, IDomainEntityContext<User> context, CancellationToken cancellationToken = default)
         {
             if (context.Entity.UserType == UserType.System)
             {

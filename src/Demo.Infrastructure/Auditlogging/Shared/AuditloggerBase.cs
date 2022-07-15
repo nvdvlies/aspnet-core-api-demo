@@ -14,7 +14,7 @@ namespace Demo.Infrastructure.Auditlogging.Shared
         private readonly ICurrentUserIdProvider _currentUserIdProvider;
         private readonly IDateTime _dateTime;
 
-        public AuditloggerBase(
+        protected AuditloggerBase(
             ICurrentUserIdProvider currentUserIdProvider,
             IDateTime dateTime,
             IAuditlogDomainEntity auditlogDomainEntity

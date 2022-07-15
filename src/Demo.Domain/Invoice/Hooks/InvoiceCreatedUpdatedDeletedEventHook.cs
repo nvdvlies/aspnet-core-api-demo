@@ -22,7 +22,7 @@ namespace Demo.Domain.Invoice.Hooks
         }
 
         public async Task ExecuteAsync(HookType type, IDomainEntityContext<Invoice> context,
-            CancellationToken cancellationToken)
+            CancellationToken cancellationToken = default)
         {
             switch (context.EditMode)
             {

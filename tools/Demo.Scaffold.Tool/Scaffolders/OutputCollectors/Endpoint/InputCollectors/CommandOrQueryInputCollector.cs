@@ -25,7 +25,7 @@ namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint.InputCollecto
                     context.Variables.Set(Constants.EndpointType, EndpointTypes.Query);
                     break;
                 default:
-                    throw new Exception($"Invalid endpoint type '{option}'");
+                    throw new NotSupportedException($"Invalid endpoint type '{option}'");
             }
         }
     }

@@ -9,7 +9,7 @@ namespace Demo.Domain.UserPreferences.Hooks
         IBeforeDelete<UserPreferences>
     {
         public Task ExecuteAsync(HookType type, IDomainEntityContext<UserPreferences> context,
-            CancellationToken cancellationToken)
+            CancellationToken cancellationToken = default)
         {
             context.Entity.User = null;
 

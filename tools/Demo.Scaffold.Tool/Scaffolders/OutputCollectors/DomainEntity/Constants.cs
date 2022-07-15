@@ -2,9 +2,9 @@
 {
     internal static class Constants
     {
-        public static string EntityName = "EntityName";
-        public static string EnableSoftDelete = "EnableSoftDelete";
-        public static string CollectionName = "CollectionName";
-        public static string EnableAuditlogging = "EnableAuditlogging";
+        public static readonly string EntityName = "EntityName";
+        public static readonly string EnableSoftDelete = "EnableSoftDelete";
+        public static readonly string CollectionName = "CollectionName";
+        public static readonly string EnableAuditlogging = "EnableAuditlogging";
     }
 }
