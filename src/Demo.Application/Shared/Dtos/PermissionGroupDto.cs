@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using Demo.Application.Shared.Interfaces;
 
 namespace Demo.Application.Shared.Dtos

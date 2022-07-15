@@ -58,7 +58,7 @@ namespace Demo.Infrastructure.Auth0
             if (response.IsSuccessStatusCode)
             {
                 var json = JObject.Parse(content);
-                return json["access_token"].Value<string>();
+                return json["access_token"]!.Value<string>();
             }
 
             throw new Exception(

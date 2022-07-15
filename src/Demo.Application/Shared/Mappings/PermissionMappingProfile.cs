@@ -1,7 +1,6 @@
 using AutoMapper;
 using Demo.Application.Roles.Queries.GetRoleById.Dtos;
 using Demo.Application.Shared.Dtos;
-using Demo.Domain.Auditlog;
 using Demo.Domain.Role;
 
 namespace Demo.Application.Shared.Mappings

@@ -9,13 +9,6 @@ namespace Demo.Domain.Role.Validators
 {
     internal class NotAllowedToDeleteAdminRoleValidator : IValidator<Role>
     {
-        private readonly ICurrentUserIdProvider _currentUserIdProvider;
-
-        public NotAllowedToDeleteAdminRoleValidator(ICurrentUserIdProvider currentUserIdProvider)
-        {
-            _currentUserIdProvider = currentUserIdProvider;
-        }
-
         public Task<IEnumerable<ValidationMessage>> ValidateAsync(IDomainEntityContext<Role> context,
             CancellationToken cancellationToken = default)
         {

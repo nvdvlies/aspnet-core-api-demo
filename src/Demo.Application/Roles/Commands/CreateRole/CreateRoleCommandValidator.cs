@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Demo.Application.Roles.Commands.CreateRole.Dtos;
-using Demo.Application.Users.Commands.CreateUser.Dtos;
 using FluentValidation;
 
 namespace Demo.Application.Roles.Commands.CreateRole
