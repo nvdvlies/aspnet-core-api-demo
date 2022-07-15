@@ -85,7 +85,7 @@ namespace Demo.WebApi.Middleware
             };
         }
 
-        private static async Task WriteResponseAsync(IWebHostEnvironment env, HttpContext context,
+        private static Task WriteResponseAsync(IWebHostEnvironment env, HttpContext context,
             ProblemDetails problemDetails, HttpStatusCode statusCode)
         {
             context.Response.StatusCode = (int)statusCode;
@@ -97,7 +97,7 @@ namespace Demo.WebApi.Middleware
                 WriteIndented = env.IsDevelopment() || env.IsDockerDev()
             };
             var json = JsonSerializer.Serialize(problemDetails, problemDetails.GetType(), options);
-            await context.Response.WriteAsync(json);
+            return context.Response.WriteAsync(json);
         }
     }
 }

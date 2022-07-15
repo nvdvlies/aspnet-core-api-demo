@@ -28,9 +28,9 @@ namespace Demo.Infrastructure.Services
             _featureFlagSettingsDomainEntity = featureFlagSettingsDomainEntity;
         }
 
-        public async Task<FeatureFlagSettings> GetAsync(CancellationToken cancellationToken = default)
+        public Task<FeatureFlagSettings> GetAsync(CancellationToken cancellationToken = default)
         {
-            return await GetAsync(false, cancellationToken);
+            return GetAsync(false, cancellationToken);
         }
 
         public async Task<FeatureFlagSettings> GetAsync(bool refreshCache,

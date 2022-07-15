@@ -21,10 +21,10 @@ namespace Demo.Application.ApplicationSettings.Events.ApplicationSettingsUpdated
             _eventHubContext = eventHubContext;
         }
 
-        public async Task Handle(ApplicationSettingsUpdatedEvent @event, CancellationToken cancellationToken)
+        public Task Handle(ApplicationSettingsUpdatedEvent @event, CancellationToken cancellationToken)
         {
             _logger.LogInformation($"Handling {nameof(ApplicationSettingsUpdatedEvent)}");
-            await _eventHubContext.All.ApplicationSettingsUpdated(@event.Data.Id, @event.Data.UpdatedBy);
+            return _eventHubContext.All.ApplicationSettingsUpdated(@event.Data.Id, @event.Data.UpdatedBy);
         }
     }
 }

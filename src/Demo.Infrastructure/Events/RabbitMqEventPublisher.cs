@@ -21,10 +21,10 @@ namespace Demo.Infrastructure.Events
             _bus = bus;
         }
 
-        public async Task PublishAsync(IEvent @event, CancellationToken cancellationToken)
+        public Task PublishAsync(IEvent @event, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Publishing event with type '{type}'", @event.Type);
-            await _bus.Publish(@event.ToRabbitMqEvent(), context => context.CorrelationId = @event.CorrelationId,
+            return _bus.Publish(@event.ToRabbitMqEvent(), context => context.CorrelationId = @event.CorrelationId,
                 cancellationToken);
         }
     }

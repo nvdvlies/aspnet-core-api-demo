@@ -17,24 +17,24 @@ namespace Demo.WebApi.Tests.Controllers.Customers.Helpers
             _httpClient = httpClient;
         }
 
-        public async Task<HttpResponseMessage> SearchAsync(SearchCustomersQuery query)
+        public Task<HttpResponseMessage> SearchAsync(SearchCustomersQuery query)
         {
-            return await _httpClient.GetAsync($"/api/customers?{query.ToQueryString()}");
+            return _httpClient.GetAsync($"/api/customers?{query.ToQueryString()}");
         }
 
-        public async Task<HttpResponseMessage> GetById(Guid id)
+        public Task<HttpResponseMessage> GetById(Guid id)
         {
-            return await _httpClient.GetAsync($"/api/customers/{id}");
+            return _httpClient.GetAsync($"/api/customers/{id}");
         }
 
-        public async Task<HttpResponseMessage> CreateAsync(CreateCustomerCommand command)
+        public Task<HttpResponseMessage> CreateAsync(CreateCustomerCommand command)
         {
-            return await _httpClient.PostAsJsonAsync("/api/customers", command);
+            return _httpClient.PostAsJsonAsync("/api/customers", command);
         }
 
-        public async Task<HttpResponseMessage> UpdateAsync(UpdateCustomerCommand command)
+        public Task<HttpResponseMessage> UpdateAsync(UpdateCustomerCommand command)
         {
-            return await _httpClient.PutAsJsonAsync($"/api/customers/{command.Id}", command);
+            return _httpClient.PutAsJsonAsync($"/api/customers/{command.Id}", command);
         }
     }
 }

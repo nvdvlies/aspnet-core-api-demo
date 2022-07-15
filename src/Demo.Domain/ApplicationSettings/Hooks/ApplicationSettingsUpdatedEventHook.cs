@@ -22,10 +22,10 @@ namespace Demo.Domain.ApplicationSettings.Hooks
             _correlationIdProvider = correlationIdProvider;
         }
 
-        public async Task ExecuteAsync(HookType type, IDomainEntityContext<ApplicationSettings> context,
+        public Task ExecuteAsync(HookType type, IDomainEntityContext<ApplicationSettings> context,
             CancellationToken cancellationToken)
         {
-            await context.AddEventAsync(
+            return context.AddEventAsync(
                 ApplicationSettingsUpdatedEvent.Create(_correlationIdProvider.Id, context.Entity.Id,
                     _currentUserIdProvider.Id),
                 cancellationToken);

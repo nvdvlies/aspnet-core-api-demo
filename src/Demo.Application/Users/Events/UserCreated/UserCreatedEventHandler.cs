@@ -21,10 +21,10 @@ namespace Demo.Application.Users.Events.UserCreated
             _eventHubContext = eventHubContext;
         }
 
-        public async Task Handle(UserCreatedEvent @event, CancellationToken cancellationToken)
+        public Task Handle(UserCreatedEvent @event, CancellationToken cancellationToken)
         {
             _logger.LogInformation($"Handling {nameof(UserCreatedEvent)}");
-            await _eventHubContext.All.UserCreated(@event.Data.Id, @event.Data.CreatedBy);
+            return _eventHubContext.All.UserCreated(@event.Data.Id, @event.Data.CreatedBy);
         }
     }
 }

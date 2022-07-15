@@ -21,10 +21,10 @@ namespace Demo.Application.Roles.Events.RoleCreated
             _eventHubContext = eventHubContext;
         }
 
-        public async Task Handle(RoleCreatedEvent @event, CancellationToken cancellationToken)
+        public Task Handle(RoleCreatedEvent @event, CancellationToken cancellationToken)
         {
             _logger.LogInformation($"Handling {nameof(RoleCreatedEvent)}");
-            await _eventHubContext.All.RoleCreated(@event.Data.Id, @event.Data.CreatedBy);
+            return _eventHubContext.All.RoleCreated(@event.Data.Id, @event.Data.CreatedBy);
         }
     }
 }

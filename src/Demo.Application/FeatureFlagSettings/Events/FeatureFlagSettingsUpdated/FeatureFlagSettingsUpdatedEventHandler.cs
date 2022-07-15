@@ -21,10 +21,10 @@ namespace Demo.Application.FeatureFlagSettings.Events.FeatureFlagSettingsUpdated
             _eventHubContext = eventHubContext;
         }
 
-        public async Task Handle(FeatureFlagSettingsUpdatedEvent @event, CancellationToken cancellationToken)
+        public Task Handle(FeatureFlagSettingsUpdatedEvent @event, CancellationToken cancellationToken)
         {
             _logger.LogInformation($"Handling {nameof(FeatureFlagSettingsUpdatedEvent)}");
-            await _eventHubContext.All.FeatureFlagSettingsUpdated(@event.Data.Id, @event.Data.UpdatedBy);
+            return _eventHubContext.All.FeatureFlagSettingsUpdated(@event.Data.Id, @event.Data.UpdatedBy);
         }
     }
 }

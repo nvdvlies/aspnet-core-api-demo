@@ -21,10 +21,10 @@ namespace Demo.Application.UserPreferences.Events.UserPreferencesUpdated
             _eventHubContext = eventHubContext;
         }
 
-        public async Task Handle(UserPreferencesUpdatedEvent @event, CancellationToken cancellationToken)
+        public Task Handle(UserPreferencesUpdatedEvent @event, CancellationToken cancellationToken)
         {
             _logger.LogInformation($"Handling {nameof(UserPreferencesUpdatedEvent)}");
-            await _eventHubContext.All.UserPreferencesUpdated(@event.Data.Id, @event.Data.UpdatedBy);
+            return _eventHubContext.All.UserPreferencesUpdated(@event.Data.Id, @event.Data.UpdatedBy);
         }
     }
 }

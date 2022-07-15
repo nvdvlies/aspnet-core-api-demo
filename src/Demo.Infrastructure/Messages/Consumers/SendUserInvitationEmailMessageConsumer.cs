@@ -13,11 +13,11 @@ namespace Demo.Infrastructure.Messages.Consumers
         {
         }
 
-        protected override async Task ConsumeInternal(ConsumeContext<SendUserInvitationEmailMessage> context)
+        protected override Task ConsumeInternal(ConsumeContext<SendUserInvitationEmailMessage> context)
         {
             Logger.LogInformation($"Consuming {nameof(SendUserInvitationEmailMessage)}");
             var message = context.Message;
-            await Mediator.Send(message, context.CancellationToken);
+            return Mediator.Send(message, context.CancellationToken);
         }
     }
 }

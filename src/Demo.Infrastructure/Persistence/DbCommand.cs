@@ -25,7 +25,7 @@ namespace Demo.Infrastructure.Persistence
             return this;
         }
 
-        public virtual async Task<T> GetAsync(Guid id,
+        public virtual Task<T> GetAsync(Guid id,
             Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null,
             CancellationToken cancellationToken = default)
         {
@@ -38,7 +38,7 @@ namespace Demo.Infrastructure.Persistence
                 query = include(query);
             }
 
-            return await query.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+            return query.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
         }
 
         public virtual Task InsertAsync(T entity, CancellationToken cancellationToken)

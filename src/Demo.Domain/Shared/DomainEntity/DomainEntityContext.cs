@@ -50,14 +50,14 @@ namespace Demo.Domain.Shared.DomainEntity
         public IDomainEntityState State { get; }
         public bool IsNewEntity => Entity?.Id == Guid.Empty;
 
-        public async Task AddEventAsync(IEvent @event, CancellationToken cancellationToken)
+        public Task AddEventAsync(IEvent @event, CancellationToken cancellationToken)
         {
-            await _outboxEventCreator.Value.CreateAsync(@event, cancellationToken);
+            return _outboxEventCreator.Value.CreateAsync(@event, cancellationToken);
         }
 
-        public async Task AddMessageAsync(IMessage message, CancellationToken cancellationToken)
+        public Task AddMessageAsync(IMessage message, CancellationToken cancellationToken)
         {
-            await _outboxMessageCreator.Value.CreateAsync(message, cancellationToken);
+            return _outboxMessageCreator.Value.CreateAsync(message, cancellationToken);
         }
 
         private T DeepCopy(T entity)

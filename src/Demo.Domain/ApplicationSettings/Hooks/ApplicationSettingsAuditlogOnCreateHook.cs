@@ -17,10 +17,10 @@ namespace Demo.Domain.ApplicationSettings.Hooks
             _auditlogger = auditlogger;
         }
 
-        public async Task ExecuteAsync(HookType type, IDomainEntityContext<ApplicationSettings> context,
+        public Task ExecuteAsync(HookType type, IDomainEntityContext<ApplicationSettings> context,
             CancellationToken cancellationToken)
         {
-            await _auditlogger.Value.CreateAuditLogAsync(context.Entity, context.Pristine, cancellationToken);
+            return _auditlogger.Value.CreateAuditLogAsync(context.Entity, context.Pristine, cancellationToken);
         }
     }
 }

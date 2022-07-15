@@ -22,10 +22,10 @@ namespace Demo.Domain.FeatureFlagSettings.Hooks
             _correlationIdProvider = correlationIdProvider;
         }
 
-        public async Task ExecuteAsync(HookType type, IDomainEntityContext<FeatureFlagSettings> context,
+        public Task ExecuteAsync(HookType type, IDomainEntityContext<FeatureFlagSettings> context,
             CancellationToken cancellationToken)
         {
-            await context.AddEventAsync(
+            return context.AddEventAsync(
                 FeatureFlagSettingsUpdatedEvent.Create(_correlationIdProvider.Id, context.Entity.Id,
                     _currentUserIdProvider.Id),
                 cancellationToken);

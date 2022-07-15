@@ -13,11 +13,11 @@ namespace Demo.Infrastructure.Messages.Consumers
         {
         }
 
-        protected override async Task ConsumeInternal(ConsumeContext<SynchronizeInvoicePdfMessage> context)
+        protected override Task ConsumeInternal(ConsumeContext<SynchronizeInvoicePdfMessage> context)
         {
             Logger.LogInformation($"Consuming {nameof(SynchronizeInvoicePdfMessage)}");
             var message = context.Message;
-            await Mediator.Send(message, context.CancellationToken);
+            return Mediator.Send(message, context.CancellationToken);
         }
     }
 }

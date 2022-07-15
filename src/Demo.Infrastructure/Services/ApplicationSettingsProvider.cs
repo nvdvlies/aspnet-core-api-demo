@@ -28,9 +28,9 @@ namespace Demo.Infrastructure.Services
             _applicationSettingsDomainEntity = applicationSettingsDomainEntity;
         }
 
-        public async Task<ApplicationSettings> GetAsync(CancellationToken cancellationToken = default)
+        public Task<ApplicationSettings> GetAsync(CancellationToken cancellationToken = default)
         {
-            return await GetAsync(false, cancellationToken);
+            return GetAsync(false, cancellationToken);
         }
 
         public async Task<ApplicationSettings> GetAsync(bool refreshCache,

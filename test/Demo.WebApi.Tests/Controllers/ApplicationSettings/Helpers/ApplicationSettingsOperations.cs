@@ -14,14 +14,14 @@ namespace Demo.WebApi.Tests.Controllers.ApplicationSettings.Helpers
             _httpClient = httpClient;
         }
 
-        public async Task<HttpResponseMessage> Get()
+        public Task<HttpResponseMessage> Get()
         {
-            return await _httpClient.GetAsync("/api/applicationsettings");
+            return _httpClient.GetAsync("/api/applicationsettings");
         }
 
-        public async Task<HttpResponseMessage> Save(SaveApplicationSettingsCommand command)
+        public Task<HttpResponseMessage> Save(SaveApplicationSettingsCommand command)
         {
-            return await _httpClient.PutAsJsonAsync("/api/applicationsettings", command);
+            return _httpClient.PutAsJsonAsync("/api/applicationsettings", command);
         }
     }
 }

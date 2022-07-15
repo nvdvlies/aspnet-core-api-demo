@@ -20,10 +20,10 @@ namespace Demo.Application.Invoices.Events.InvoiceCreated
             _eventHubContext = eventHubContext;
         }
 
-        public async Task Handle(InvoiceCreatedEvent @event, CancellationToken cancellationToken)
+        public Task Handle(InvoiceCreatedEvent @event, CancellationToken cancellationToken)
         {
             _logger.LogInformation($"Handling {nameof(InvoiceCreatedEvent)}");
-            await _eventHubContext.All.InvoiceCreated(@event.Data.Id, @event.Data.CreatedBy);
+            return _eventHubContext.All.InvoiceCreated(@event.Data.Id, @event.Data.CreatedBy);
         }
     }
 }

@@ -13,10 +13,10 @@ namespace Demo.Infrastructure.Persistence
         {
         }
 
-        public async Task<T> GetAsync(CancellationToken cancellationToken = default)
+        public Task<T> GetAsync(CancellationToken cancellationToken = default)
         {
             var query = DbContext.Set<T>().AsQueryable();
-            return await query.SingleOrDefaultAsync(cancellationToken);
+            return query.SingleOrDefaultAsync(cancellationToken);
         }
 
         public override async Task InsertAsync(T entity, CancellationToken cancellationToken)

@@ -13,11 +13,11 @@ namespace Demo.Infrastructure.Messages.Consumers
         {
         }
 
-        protected override async Task ConsumeInternal(ConsumeContext<SyncAuth0UserMessage> context)
+        protected override Task ConsumeInternal(ConsumeContext<SyncAuth0UserMessage> context)
         {
             Logger.LogInformation($"Consuming {nameof(SyncAuth0UserMessage)}");
             var message = context.Message;
-            await Mediator.Send(message, context.CancellationToken);
+            return Mediator.Send(message, context.CancellationToken);
         }
     }
 }

@@ -21,10 +21,10 @@ namespace Demo.Application.OutboxEvents.Events.OutboxEventCreated
             _outboxEventPublisher = outboxEventPublisher;
         }
 
-        public async Task Handle(OutboxEventCreatedEvent @event, CancellationToken cancellationToken)
+        public Task Handle(OutboxEventCreatedEvent @event, CancellationToken cancellationToken)
         {
             _logger.LogInformation($"Handling {nameof(OutboxEventCreatedEvent)}'");
-            await _outboxEventPublisher.PublishAsync(@event.Data.Id, cancellationToken);
+            return _outboxEventPublisher.PublishAsync(@event.Data.Id, cancellationToken);
         }
     }
 }

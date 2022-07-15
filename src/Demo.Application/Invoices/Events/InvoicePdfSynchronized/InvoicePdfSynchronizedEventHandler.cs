@@ -20,10 +20,10 @@ namespace Demo.Application.Invoices.Events.InvoicePdfSynchronized
             _eventHubContext = eventHubContext;
         }
 
-        public async Task Handle(InvoicePdfSynchronizedEvent @event, CancellationToken cancellationToken)
+        public Task Handle(InvoicePdfSynchronizedEvent @event, CancellationToken cancellationToken)
         {
             _logger.LogInformation($"Handling {nameof(InvoicePdfSynchronizedEvent)}");
-            await _eventHubContext.All.InvoicePdfSynchronized(@event.Data.Id);
+            return _eventHubContext.All.InvoicePdfSynchronized(@event.Data.Id);
         }
     }
 }

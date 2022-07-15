@@ -31,9 +31,9 @@ namespace Demo.Infrastructure.Services
             _userPreferencesDomainEntity = userPreferencesDomainEntity;
         }
 
-        public async Task<UserPreferences> GetAsync(CancellationToken cancellationToken)
+        public Task<UserPreferences> GetAsync(CancellationToken cancellationToken)
         {
-            return await GetAsync(false, cancellationToken);
+            return GetAsync(false, cancellationToken);
         }
 
         public async Task<UserPreferences> GetAsync(bool refreshCache, CancellationToken cancellationToken)

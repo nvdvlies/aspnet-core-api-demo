@@ -13,9 +13,9 @@ namespace Demo.Infrastructure.Persistence
             _dbContext = dbContext;
         }
 
-        public async Task<int> CommitAsync(CancellationToken cancellationToken)
+        public Task<int> CommitAsync(CancellationToken cancellationToken)
         {
-            return await _dbContext.SaveChangesAsync(cancellationToken);
+            return _dbContext.SaveChangesAsync(cancellationToken);
         }
     }
 }

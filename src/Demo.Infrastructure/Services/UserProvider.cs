@@ -28,9 +28,9 @@ namespace Demo.Infrastructure.Services
             _userDomainEntity = userDomainEntity;
         }
 
-        public async Task<User> GetAsync(Guid id, CancellationToken cancellationToken = default)
+        public Task<User> GetAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            return await GetAsync(id, false, cancellationToken);
+            return GetAsync(id, false, cancellationToken);
         }
 
         public async Task<User> GetAsync(Guid id, bool refreshCache, CancellationToken cancellationToken = default)

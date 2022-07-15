@@ -20,10 +20,10 @@ namespace Demo.Application.Customers.Events.CustomerDeleted
             _eventHubContext = eventHubContext;
         }
 
-        public async Task Handle(CustomerDeletedEvent @event, CancellationToken cancellationToken)
+        public Task Handle(CustomerDeletedEvent @event, CancellationToken cancellationToken)
         {
             _logger.LogInformation($"Handling {nameof(CustomerDeletedEvent)}");
-            await _eventHubContext.All.CustomerDeleted(@event.Data.Id, @event.Data.DeletedBy);
+            return _eventHubContext.All.CustomerDeleted(@event.Data.Id, @event.Data.DeletedBy);
         }
     }
 }

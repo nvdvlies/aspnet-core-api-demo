@@ -20,10 +20,10 @@ namespace Demo.Application.Invoices.Events.InvoiceUpdated
             _eventHubContext = eventHubContext;
         }
 
-        public async Task Handle(InvoiceUpdatedEvent @event, CancellationToken cancellationToken)
+        public Task Handle(InvoiceUpdatedEvent @event, CancellationToken cancellationToken)
         {
             _logger.LogInformation($"Handling {nameof(InvoiceUpdatedEvent)}");
-            await _eventHubContext.All.InvoiceUpdated(@event.Data.Id, @event.Data.UpdatedBy);
+            return _eventHubContext.All.InvoiceUpdated(@event.Data.Id, @event.Data.UpdatedBy);
         }
     }
 }

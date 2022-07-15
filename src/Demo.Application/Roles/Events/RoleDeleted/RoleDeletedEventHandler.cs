@@ -21,10 +21,10 @@ namespace Demo.Application.Roles.Events.RoleDeleted
             _eventHubContext = eventHubContext;
         }
 
-        public async Task Handle(RoleDeletedEvent @event, CancellationToken cancellationToken)
+        public Task Handle(RoleDeletedEvent @event, CancellationToken cancellationToken)
         {
             _logger.LogInformation($"Handling {nameof(RoleDeletedEvent)}");
-            await _eventHubContext.All.RoleDeleted(@event.Data.Id, @event.Data.DeletedBy);
+            return _eventHubContext.All.RoleDeleted(@event.Data.Id, @event.Data.DeletedBy);
         }
     }
 }

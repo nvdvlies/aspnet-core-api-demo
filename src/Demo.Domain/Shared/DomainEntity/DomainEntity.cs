@@ -250,14 +250,14 @@ namespace Demo.Domain.Shared.DomainEntity
             }
         }
 
-        public async Task AddEventAsync(IEvent @event, CancellationToken cancellationToken)
+        public Task AddEventAsync(IEvent @event, CancellationToken cancellationToken)
         {
-            await Context.AddEventAsync(@event, cancellationToken);
+            return Context.AddEventAsync(@event, cancellationToken);
         }
 
-        public async Task AddMessageAsync(IMessage message, CancellationToken cancellationToken)
+        public Task AddMessageAsync(IMessage message, CancellationToken cancellationToken)
         {
-            await Context.AddMessageAsync(message, cancellationToken);
+            return Context.AddMessageAsync(message, cancellationToken);
         }
 
         private async Task ValidateAsync(CancellationToken cancellationToken = default)
