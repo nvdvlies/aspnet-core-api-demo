@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { combineLatest, debounceTime, map, Observable } from 'rxjs';
 import { FeatureFlagDto, IFeatureFlagDto } from '@api/api.generated.clients';
 import { FeatureFlagSettingsStoreService } from '@domain/feature-flag-settings/feature-flag-settings-store.service';
@@ -53,7 +53,7 @@ export interface IFeatureFlagSettingsTableRow {
 
 @Injectable()
 export class FeatureFlagSettingTableDataService extends TableDataBase<IFeatureFlagSettingsTableRow> {
-  public searchTerm = new FormControl();
+  public searchTerm = new UntypedFormControl();
 
   public observe$: Observable<FeatureFlagSettingTableDataContext> = combineLatest([
     this.observeInternal$

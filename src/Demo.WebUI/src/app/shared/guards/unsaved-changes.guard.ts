@@ -1,13 +1,13 @@
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Injectable } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRouteSnapshot, CanDeactivate, RouterStateSnapshot } from '@angular/router';
 import { DiscardUnsavedChangesModalComponent } from '@shared/modals/discard-unsaved-changes-modal/discard-unsaved-changes-modal.component';
 import { map, Observable } from 'rxjs';
 
 export interface IHasForm {
-  form: FormGroup;
+  form: UntypedFormGroup;
 }
 
 @Injectable({

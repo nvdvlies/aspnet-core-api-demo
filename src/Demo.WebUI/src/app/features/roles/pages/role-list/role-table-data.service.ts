@@ -1,5 +1,5 @@
 ﻿import { Injectable } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { combineLatest, debounceTime, map, Observable } from 'rxjs';
 import { ApiRolesClient, SearchRoleDto, SearchRoleOrderByEnum } from '@api/api.generated.clients';
 import { RoleEventsService } from '@api/signalr.generated.services';
@@ -33,7 +33,7 @@ export interface RoleTableDataContext extends TableDataContext<SearchRoleDto> {
 
 @Injectable()
 export class RoleTableDataService extends TableDataBase<SearchRoleDto> {
-  public searchTerm = new FormControl();
+  public searchTerm = new UntypedFormControl();
 
   public observe$: Observable<RoleTableDataContext> = combineLatest([this.observeInternal$]).pipe(
     debounceTime(0),

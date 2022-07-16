@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { combineLatest, Observable, of } from 'rxjs';
 import { debounceTime, map } from 'rxjs/operators';
@@ -26,7 +26,7 @@ export class CustomerDomainEntityContext
 }
 
 type CustomerControls = { [key in keyof ICustomerDto]-?: AbstractControl };
-export type CustomerFormGroup = FormGroup & { controls: CustomerControls };
+export type CustomerFormGroup = UntypedFormGroup & { controls: CustomerControls };
 
 @Injectable()
 export class CustomerDomainEntityService
@@ -75,23 +75,23 @@ export class CustomerDomainEntityService
 
   private buildFormGroup(): CustomerFormGroup {
     const controls: CustomerControls = {
-      id: new FormControl(super.readonlyFormState),
-      code: new FormControl(super.readonlyFormState),
-      name: new FormControl(
+      id: new UntypedFormControl(super.readonlyFormState),
+      code: new UntypedFormControl(super.readonlyFormState),
+      name: new UntypedFormControl(
         null,
         [Validators.required, Validators.minLength(2), Validators.maxLength(200)],
         []
       ),
-      deleted: new FormControl(super.readonlyFormState),
-      deletedBy: new FormControl(super.readonlyFormState),
-      deletedOn: new FormControl(super.readonlyFormState),
-      createdBy: new FormControl(super.readonlyFormState),
-      createdOn: new FormControl(super.readonlyFormState),
-      lastModifiedBy: new FormControl(super.readonlyFormState),
-      lastModifiedOn: new FormControl(super.readonlyFormState),
-      xmin: new FormControl(super.readonlyFormState)
+      deleted: new UntypedFormControl(super.readonlyFormState),
+      deletedBy: new UntypedFormControl(super.readonlyFormState),
+      deletedOn: new UntypedFormControl(super.readonlyFormState),
+      createdBy: new UntypedFormControl(super.readonlyFormState),
+      createdOn: new UntypedFormControl(super.readonlyFormState),
+      lastModifiedBy: new UntypedFormControl(super.readonlyFormState),
+      lastModifiedOn: new UntypedFormControl(super.readonlyFormState),
+      xmin: new UntypedFormControl(super.readonlyFormState)
     };
-    return new FormGroup(controls) as CustomerFormGroup;
+    return new UntypedFormGroup(controls) as CustomerFormGroup;
   }
 
   protected instantiateNewEntity(): Observable<CustomerDto> {

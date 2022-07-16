@@ -2,9 +2,9 @@ import { Injectable, OnDestroy } from '@angular/core';
 import {
   AbstractControl,
   AsyncValidatorFn,
-  FormArray,
-  FormControl,
-  FormGroup,
+  UntypedFormArray,
+  UntypedFormControl,
+  UntypedFormGroup,
   ValidationErrors,
   ValidatorFn,
   Validators
@@ -47,14 +47,14 @@ export class UserDomainEntityContext
 }
 
 type UserControls = { [key in keyof IUserDto]-?: AbstractControl };
-export type UserFormGroup = FormGroup & { controls: UserControls };
+export type UserFormGroup = UntypedFormGroup & { controls: UserControls };
 
 type UserRoleControls = { [key in keyof IUserRoleDto]-?: AbstractControl };
-export type UserRoleFormGroup = FormGroup & {
+export type UserRoleFormGroup = UntypedFormGroup & {
   controls: UserRoleControls;
 };
 
-export type UserRoleFormArray = FormArray & {
+export type UserRoleFormArray = UntypedFormArray & {
   controls: UserRoleFormGroup[];
 };
 
@@ -113,42 +113,42 @@ export class UserDomainEntityService extends DomainEntityBase<UserDto> implement
 
   private buildUserFormGroup(): UserFormGroup {
     const controls: UserControls = {
-      id: new FormControl(super.readonlyFormState),
-      externalId: new FormControl(super.readonlyFormState),
-      fullname: new FormControl(super.readonlyFormState),
-      givenName: new FormControl(null),
-      familyName: new FormControl(null, [Validators.required], []),
-      middleName: new FormControl(null),
-      email: new FormControl(
+      id: new UntypedFormControl(super.readonlyFormState),
+      externalId: new UntypedFormControl(super.readonlyFormState),
+      fullname: new UntypedFormControl(super.readonlyFormState),
+      givenName: new UntypedFormControl(null),
+      familyName: new UntypedFormControl(null, [Validators.required], []),
+      middleName: new UntypedFormControl(null),
+      email: new UntypedFormControl(
         null,
         [Validators.required, Validators.email],
         [this.uniqueEmailValidator()]
       ),
-      gender: new FormControl(null),
-      userType: new FormControl(null),
-      birthDate: new FormControl(null),
-      userRoles: new FormArray(
+      gender: new UntypedFormControl(null),
+      userType: new UntypedFormControl(null),
+      birthDate: new UntypedFormControl(null),
+      userRoles: new UntypedFormArray(
         [] as UserRoleFormGroup[],
         [Validators.required, this.uniqueRolesValidator()],
         []
       ) as UserRoleFormArray,
-      deleted: new FormControl(super.readonlyFormState),
-      deletedBy: new FormControl(super.readonlyFormState),
-      deletedOn: new FormControl(super.readonlyFormState),
-      createdBy: new FormControl(super.readonlyFormState),
-      createdOn: new FormControl(super.readonlyFormState),
-      lastModifiedBy: new FormControl(super.readonlyFormState),
-      lastModifiedOn: new FormControl(super.readonlyFormState),
-      xmin: new FormControl(super.readonlyFormState)
+      deleted: new UntypedFormControl(super.readonlyFormState),
+      deletedBy: new UntypedFormControl(super.readonlyFormState),
+      deletedOn: new UntypedFormControl(super.readonlyFormState),
+      createdBy: new UntypedFormControl(super.readonlyFormState),
+      createdOn: new UntypedFormControl(super.readonlyFormState),
+      lastModifiedBy: new UntypedFormControl(super.readonlyFormState),
+      lastModifiedOn: new UntypedFormControl(super.readonlyFormState),
+      xmin: new UntypedFormControl(super.readonlyFormState)
     };
-    return new FormGroup(controls) as UserFormGroup;
+    return new UntypedFormGroup(controls) as UserFormGroup;
   }
 
   private buildUserRoleFormGroup(): UserRoleFormGroup {
     const controls: UserRoleControls = {
-      roleId: new FormControl(null, [Validators.required], [])
+      roleId: new UntypedFormControl(null, [Validators.required], [])
     };
-    return new FormGroup(controls) as UserRoleFormGroup;
+    return new UntypedFormGroup(controls) as UserRoleFormGroup;
   }
 
   public addUserRole(): void {
@@ -173,8 +173,8 @@ export class UserDomainEntityService extends DomainEntityBase<UserDto> implement
     return this.userRoleFormArray.controls as UserRoleFormGroup[];
   }
 
-  private get userRoleFormArray(): FormArray {
-    return this.form.controls.userRoles as FormArray;
+  private get userRoleFormArray(): UntypedFormArray {
+    return this.form.controls.userRoles as UntypedFormArray;
   }
 
   public override new(isSystemUser?: boolean): Observable<null> {
@@ -271,7 +271,7 @@ export class UserDomainEntityService extends DomainEntityBase<UserDto> implement
   private uniqueRolesValidator(): ValidatorFn {
     return (formArray: AbstractControl): ValidationErrors | null => {
       let roleIds: string[] = [];
-      if (formArray instanceof FormArray) {
+      if (formArray instanceof UntypedFormArray) {
         for (let userRoleFormGroup of formArray.controls as UserRoleFormGroup[]) {
           let roleId = userRoleFormGroup.controls.roleId.value;
           if (!roleId) {

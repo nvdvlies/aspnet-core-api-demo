@@ -1,12 +1,12 @@
-import { FormArray, FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormArray, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 
 export class MergeUtil {
-  public static mergeIntoFormGroup(updated: any, form: FormGroup): void {
+  public static mergeIntoFormGroup(updated: any, form: UntypedFormGroup): void {
     for (const key in form.controls) {
-      const control = form.controls[key] as FormControl | FormGroup | FormArray;
-      if (control instanceof FormGroup) {
+      const control = form.controls[key] as UntypedFormControl | UntypedFormGroup | UntypedFormArray;
+      if (control instanceof UntypedFormGroup) {
         this.mergeIntoFormGroup(updated[key], control);
-      } else if (control instanceof FormArray) {
+      } else if (control instanceof UntypedFormArray) {
         this.mergeFormArray(updated[key], control);
       } else {
         this.mergeFormControl(updated[key], control);
@@ -14,19 +14,19 @@ export class MergeUtil {
     }
   }
 
-  public static hasMergeConflictInFormGroup(updated: any, pristine: any, form: FormGroup): boolean {
+  public static hasMergeConflictInFormGroup(updated: any, pristine: any, form: UntypedFormGroup): boolean {
     if (!form.dirty) {
       // control has not been changed by current user
       return false;
     }
 
     for (const key in form.controls) {
-      const control = form.controls[key] as FormControl | FormGroup | FormArray;
-      if (control instanceof FormGroup) {
+      const control = form.controls[key] as UntypedFormControl | UntypedFormGroup | UntypedFormArray;
+      if (control instanceof UntypedFormGroup) {
         if (this.hasMergeConflictInFormGroup(updated[key], pristine[key], control)) {
           return true;
         }
-      } else if (control instanceof FormArray) {
+      } else if (control instanceof UntypedFormArray) {
         if (this.hasMergeConflictInFormArray(updated[key], pristine[key], control)) {
           return true;
         }
@@ -39,12 +39,12 @@ export class MergeUtil {
     return false;
   }
 
-  private static mergeFormArray(updated: any[], formArray: FormArray): void {
+  private static mergeFormArray(updated: any[], formArray: UntypedFormArray): void {
     let i = 0;
     for (const key in formArray.controls) {
       const updatedValue = updated[i];
-      const control = formArray.controls[key] as FormControl | FormGroup;
-      if (control instanceof FormGroup) {
+      const control = formArray.controls[key] as UntypedFormControl | UntypedFormGroup;
+      if (control instanceof UntypedFormGroup) {
         this.mergeIntoFormGroup(updatedValue, control);
       } else {
         this.mergeFormControl(updatedValue[key], control);
@@ -53,7 +53,7 @@ export class MergeUtil {
     }
   }
 
-  private static mergeFormControl(updated: any, control: FormControl): void {
+  private static mergeFormControl(updated: any, control: UntypedFormControl): void {
     if (!control.dirty && updated !== control.value) {
       control.setValue(updated);
       control.markAsPristine();
@@ -63,7 +63,7 @@ export class MergeUtil {
   private static hasMergeConflictInFormArray(
     updated: any[],
     pristine: any[],
-    formArray: FormArray
+    formArray: UntypedFormArray
   ): boolean {
     if (!formArray.dirty) {
       // control has not been changed by current user
@@ -84,8 +84,8 @@ export class MergeUtil {
     for (const key in formArray.controls) {
       const updatedValue = updated[i];
       const pristineValue = updated[i];
-      const control = formArray.controls[key] as FormControl | FormGroup;
-      if (control instanceof FormGroup) {
+      const control = formArray.controls[key] as UntypedFormControl | UntypedFormGroup;
+      if (control instanceof UntypedFormGroup) {
         if (this.hasMergeConflictInFormGroup(updatedValue[key], pristineValue[key], control)) {
           return true;
         }
@@ -103,7 +103,7 @@ export class MergeUtil {
   private static hasMergeConflictInFormControl(
     updated: any,
     pristine: any,
-    control: FormControl
+    control: UntypedFormControl
   ): boolean {
     if (!control.dirty) {
       // control has not been changed by current user

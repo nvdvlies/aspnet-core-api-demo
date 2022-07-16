@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, Input, OnInit, Optional } from '@angular/core';
-import { ControlContainer, FormControl, FormGroup } from '@angular/forms';
+import { ControlContainer, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { ApiException, ProblemDetails, ValidationProblemDetails } from '@api/api.generated.clients';
 import { PermissionDeniedError } from '@shared/errors/permission-denied.error';
 import { LoggerService } from '@shared/services/logger.service';
@@ -38,7 +38,7 @@ export class ProblemDetailsComponent implements OnInit {
   }
 
   public errorMessages: string[] = [];
-  private form: FormGroup | undefined;
+  private form: UntypedFormGroup | undefined;
 
   constructor(
     @Optional() private readonly controlContainer: ControlContainer,
@@ -46,7 +46,7 @@ export class ProblemDetailsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.form = this.controlContainer?.control as FormGroup;
+    this.form = this.controlContainer?.control as UntypedFormGroup;
   }
 
   private setErrorMessage(): void {
@@ -61,7 +61,7 @@ export class ProblemDetailsComponent implements OnInit {
         for (const key in this.problemDetails.errors) {
           const path = this.getFormControlPath(key);
           const formControl = this.form?.get(path);
-          if (formControl && formControl instanceof FormControl && formControl.enabled) {
+          if (formControl && formControl instanceof UntypedFormControl && formControl.enabled) {
             formControl.setErrors({
               serverError: this.problemDetails.errors[key][0]
             });

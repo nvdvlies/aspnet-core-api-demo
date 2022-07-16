@@ -10,7 +10,7 @@ import {
   ViewChild,
   OnInit
 } from '@angular/core';
-import { ControlContainer, FormControl, NgControl } from '@angular/forms';
+import { ControlContainer, UntypedFormControl, NgControl } from '@angular/forms';
 import { MatFormFieldControlBase } from '@shared/base/mat-form-field-control-base';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import {
@@ -82,7 +82,7 @@ export abstract class AutocompleteMatFormFieldControlBase
     })
   );
 
-  public searchFormControl = new FormControl(null);
+  public searchFormControl = new UntypedFormControl(null);
 
   private _selectedOption: IAutocompleteOption | undefined;
   private get selectedOption(): IAutocompleteOption | undefined {

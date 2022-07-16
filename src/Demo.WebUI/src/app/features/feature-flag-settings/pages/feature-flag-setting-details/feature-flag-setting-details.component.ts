@@ -20,7 +20,7 @@ import {
 import { IHasForm } from '@shared/guards/unsaved-changes.guard';
 import { FeatureFlagSettingListRouteState } from '@feature-flag-settings/pages/feature-flag-setting-list/feature-flag-setting-list.component';
 import { FeatureFlag } from '@shared/enums/feature-flag.enum';
-import { FormArray, FormControl } from '@angular/forms';
+import { UntypedFormArray, UntypedFormControl } from '@angular/forms';
 import { FeatureFlagDto } from '@api/api.generated.clients';
 
 interface ViewModel extends IFeatureFlagSettingsDomainEntityContext {
@@ -73,8 +73,8 @@ export class FeatureFlagSettingDetailsComponent implements OnInit, OnDestroy, IH
   public form: FeatureFlagSettingsFormGroup = this.featureFlagSettingsDomainEntityService.form;
   public featureFlagFormGroup: FeatureFlagFormGroup | undefined;
 
-  public get enabledForUsersFormArray(): FormArray | undefined {
-    return this.featureFlagFormGroup?.controls.enabledForUsers as FormArray;
+  public get enabledForUsersFormArray(): UntypedFormArray | undefined {
+    return this.featureFlagFormGroup?.controls.enabledForUsers as UntypedFormArray;
   }
 
   constructor(
@@ -137,8 +137,8 @@ export class FeatureFlagSettingDetailsComponent implements OnInit, OnDestroy, IH
     event.preventDefault();
   }
 
-  public getUserFormControl(index: number): FormControl {
-    return this.enabledForUsersFormArray!.at(index) as FormControl;
+  public getUserFormControl(index: number): UntypedFormControl {
+    return this.enabledForUsersFormArray!.at(index) as UntypedFormControl;
   }
 
   public addUser(): void {

@@ -1,5 +1,5 @@
 ﻿import { Injectable, OnDestroy } from '@angular/core';
-import { AbstractControl, FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormArray, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { combineLatest, Observable, of } from 'rxjs';
 import { debounceTime, map } from 'rxjs/operators';
@@ -25,14 +25,14 @@ export class CurrentUserDomainEntityContext
 }
 
 type CurrentUserControls = { [key in keyof ICurrentUserDto]-?: AbstractControl };
-export type CurrentUserFormGroup = FormGroup & { controls: CurrentUserControls };
+export type CurrentUserFormGroup = UntypedFormGroup & { controls: CurrentUserControls };
 
 type UserRoleControls = { [key in keyof IUserRoleDto]-?: AbstractControl };
-export type UserRoleFormGroup = FormGroup & {
+export type UserRoleFormGroup = UntypedFormGroup & {
   controls: UserRoleControls;
 };
 
-export type UserRoleFormArray = FormArray & {
+export type UserRoleFormArray = UntypedFormArray & {
   controls: UserRoleFormGroup[];
 };
 
@@ -85,26 +85,26 @@ export class CurrentUserDomainEntityService
 
   private buildFormGroup(): CurrentUserFormGroup {
     const controls: CurrentUserControls = {
-      id: new FormControl(super.readonlyFormState),
-      birthDate: new FormControl(super.readonlyFormState),
-      email: new FormControl(super.readonlyFormState),
-      externalId: new FormControl(super.readonlyFormState),
-      givenName: new FormControl(null),
-      middleName: new FormControl(null),
-      familyName: new FormControl(null, [Validators.required]),
-      fullname: new FormControl(super.readonlyFormState),
-      gender: new FormControl(super.readonlyFormState),
-      userRoles: new FormArray([] as UserRoleFormGroup[]) as UserRoleFormArray,
-      deleted: new FormControl(super.readonlyFormState),
-      deletedBy: new FormControl(super.readonlyFormState),
-      deletedOn: new FormControl(super.readonlyFormState),
-      createdBy: new FormControl(super.readonlyFormState),
-      createdOn: new FormControl(super.readonlyFormState),
-      lastModifiedBy: new FormControl(super.readonlyFormState),
-      lastModifiedOn: new FormControl(super.readonlyFormState),
-      xmin: new FormControl(super.readonlyFormState)
+      id: new UntypedFormControl(super.readonlyFormState),
+      birthDate: new UntypedFormControl(super.readonlyFormState),
+      email: new UntypedFormControl(super.readonlyFormState),
+      externalId: new UntypedFormControl(super.readonlyFormState),
+      givenName: new UntypedFormControl(null),
+      middleName: new UntypedFormControl(null),
+      familyName: new UntypedFormControl(null, [Validators.required]),
+      fullname: new UntypedFormControl(super.readonlyFormState),
+      gender: new UntypedFormControl(super.readonlyFormState),
+      userRoles: new UntypedFormArray([] as UserRoleFormGroup[]) as UserRoleFormArray,
+      deleted: new UntypedFormControl(super.readonlyFormState),
+      deletedBy: new UntypedFormControl(super.readonlyFormState),
+      deletedOn: new UntypedFormControl(super.readonlyFormState),
+      createdBy: new UntypedFormControl(super.readonlyFormState),
+      createdOn: new UntypedFormControl(super.readonlyFormState),
+      lastModifiedBy: new UntypedFormControl(super.readonlyFormState),
+      lastModifiedOn: new UntypedFormControl(super.readonlyFormState),
+      xmin: new UntypedFormControl(super.readonlyFormState)
     };
-    return new FormGroup(controls) as CurrentUserFormGroup;
+    return new UntypedFormGroup(controls) as CurrentUserFormGroup;
   }
 
   protected instantiateNewEntity(): Observable<CurrentUserDto> {

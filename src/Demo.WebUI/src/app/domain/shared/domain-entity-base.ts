@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject, combineLatest, Observable, of, Subject, throwError } from 'rxjs';
 import {
@@ -198,11 +198,11 @@ export abstract class DomainEntityBase<T extends IDomainEntity<T>>
     )
   );
 
-  private _form: FormGroup | undefined;
-  protected get form(): FormGroup {
+  private _form: UntypedFormGroup | undefined;
+  protected get form(): UntypedFormGroup {
     return this._form!;
   }
-  protected set form(value: FormGroup) {
+  protected set form(value: UntypedFormGroup) {
     this._form = value;
   }
 
@@ -425,7 +425,7 @@ export abstract class DomainEntityBase<T extends IDomainEntity<T>>
     this.afterPatchEntityToFormHook?.(entity);
   }
 
-  protected tryMerge(updated: T, pristine: T, form: FormGroup): boolean {
+  protected tryMerge(updated: T, pristine: T, form: UntypedFormGroup): boolean {
     if (MergeUtil.hasMergeConflictInFormGroup(updated, pristine, form)) {
       return false;
     }

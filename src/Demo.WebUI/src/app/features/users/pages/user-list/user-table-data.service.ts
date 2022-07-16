@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { combineLatest, debounceTime, map, Observable } from 'rxjs';
 import { ApiUsersClient, SearchUserDto, SearchUserOrderByEnum } from '@api/api.generated.clients';
 import { UserEventsService } from '@api/signalr.generated.services';
@@ -33,7 +33,7 @@ export interface UserTableDataContext extends TableDataContext<SearchUserDto> {
 
 @Injectable()
 export class UserTableDataService extends TableDataBase<SearchUserDto> {
-  public searchTerm = new FormControl();
+  public searchTerm = new UntypedFormControl();
 
   public observe$: Observable<UserTableDataContext> = combineLatest([this.observeInternal$]).pipe(
     debounceTime(0),

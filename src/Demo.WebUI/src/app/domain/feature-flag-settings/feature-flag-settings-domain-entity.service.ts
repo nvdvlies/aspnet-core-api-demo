@@ -1,9 +1,9 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import {
   AbstractControl,
-  FormArray,
-  FormControl,
-  FormGroup,
+  UntypedFormArray,
+  UntypedFormControl,
+  UntypedFormGroup,
   ValidationErrors,
   ValidatorFn,
   Validators
@@ -41,21 +41,21 @@ export class FeatureFlagSettingsDomainEntityContext
 }
 
 type FeatureFlagSettingsControls = { [key in keyof IFeatureFlagSettingsDto]-?: AbstractControl };
-export type FeatureFlagSettingsFormGroup = FormGroup & { controls: FeatureFlagSettingsControls };
+export type FeatureFlagSettingsFormGroup = UntypedFormGroup & { controls: FeatureFlagSettingsControls };
 
 type FeatureFlagSettingsSettingsControls = {
   [key in keyof IFeatureFlagSettingsSettingsDto]-?: AbstractControl;
 };
-export type FeatureFlagSettingsSettingsFormGroup = FormGroup & {
+export type FeatureFlagSettingsSettingsFormGroup = UntypedFormGroup & {
   controls: FeatureFlagSettingsSettingsControls;
 };
 
 type FeatureFlagControls = { [key in keyof IFeatureFlagDto]-?: AbstractControl };
-export type FeatureFlagFormGroup = FormGroup & {
+export type FeatureFlagFormGroup = UntypedFormGroup & {
   controls: FeatureFlagControls;
 };
 
-export type FeatureFlagFormArray = FormArray & {
+export type FeatureFlagFormArray = UntypedFormArray & {
   controls: FeatureFlagFormGroup[];
 };
 
@@ -118,41 +118,41 @@ export class FeatureFlagSettingsDomainEntityService
 
   private buildFormGroup(): FeatureFlagSettingsFormGroup {
     const controls: FeatureFlagSettingsControls = {
-      id: new FormControl(super.readonlyFormState),
-      settings: new FormGroup({
-        featureFlags: new FormArray([] as FeatureFlagFormGroup[]) as FeatureFlagFormArray
+      id: new UntypedFormControl(super.readonlyFormState),
+      settings: new UntypedFormGroup({
+        featureFlags: new UntypedFormArray([] as FeatureFlagFormGroup[]) as FeatureFlagFormArray
       } as FeatureFlagSettingsSettingsControls) as FeatureFlagSettingsSettingsFormGroup,
-      createdBy: new FormControl(super.readonlyFormState),
-      createdOn: new FormControl(super.readonlyFormState),
-      lastModifiedBy: new FormControl(super.readonlyFormState),
-      lastModifiedOn: new FormControl(super.readonlyFormState),
-      xmin: new FormControl(super.readonlyFormState)
+      createdBy: new UntypedFormControl(super.readonlyFormState),
+      createdOn: new UntypedFormControl(super.readonlyFormState),
+      lastModifiedBy: new UntypedFormControl(super.readonlyFormState),
+      lastModifiedOn: new UntypedFormControl(super.readonlyFormState),
+      xmin: new UntypedFormControl(super.readonlyFormState)
     };
-    return new FormGroup(controls) as FeatureFlagSettingsFormGroup;
+    return new UntypedFormGroup(controls) as FeatureFlagSettingsFormGroup;
   }
 
   private buildFeatureFlagFormGroup(): FeatureFlagFormGroup {
     const controls: FeatureFlagControls = {
-      id: new FormControl(super.readonlyFormState),
-      name: new FormControl(super.readonlyFormState),
-      description: new FormControl(null, [Validators.required], []),
-      enabledForAll: new FormControl(false),
-      enabledForUsers: new FormArray([], [this.uniqueUsersValidator()], []),
-      createdBy: new FormControl(super.readonlyFormState),
-      createdOn: new FormControl(super.readonlyFormState),
-      lastModifiedBy: new FormControl(super.readonlyFormState),
-      lastModifiedOn: new FormControl(super.readonlyFormState),
-      xmin: new FormControl(super.readonlyFormState)
+      id: new UntypedFormControl(super.readonlyFormState),
+      name: new UntypedFormControl(super.readonlyFormState),
+      description: new UntypedFormControl(null, [Validators.required], []),
+      enabledForAll: new UntypedFormControl(false),
+      enabledForUsers: new UntypedFormArray([], [this.uniqueUsersValidator()], []),
+      createdBy: new UntypedFormControl(super.readonlyFormState),
+      createdOn: new UntypedFormControl(super.readonlyFormState),
+      lastModifiedBy: new UntypedFormControl(super.readonlyFormState),
+      lastModifiedOn: new UntypedFormControl(super.readonlyFormState),
+      xmin: new UntypedFormControl(super.readonlyFormState)
     };
-    return new FormGroup(controls) as FeatureFlagFormGroup;
+    return new UntypedFormGroup(controls) as FeatureFlagFormGroup;
   }
 
   private uniqueUsersValidator(): ValidatorFn {
     return (formArray: AbstractControl): ValidationErrors | null => {
       let userIds: string[] = [];
-      if (formArray instanceof FormArray) {
+      if (formArray instanceof UntypedFormArray) {
         for (let formControl of formArray.controls) {
-          if (formControl instanceof FormControl) {
+          if (formControl instanceof UntypedFormControl) {
             let userId = formControl.value;
             if (!userId) {
               continue;
@@ -181,11 +181,11 @@ export class FeatureFlagSettingsDomainEntityService
     return formGroup;
   }
 
-  public addUser(formArray: FormArray): void {
-    formArray.push(new FormControl(null, [Validators.required], []));
+  public addUser(formArray: UntypedFormArray): void {
+    formArray.push(new UntypedFormControl(null, [Validators.required], []));
   }
 
-  public removeUser(formArray: FormArray, index: number): void {
+  public removeUser(formArray: UntypedFormArray, index: number): void {
     if (formArray.length > 0) {
       formArray.removeAt(index);
       if (!this.form.dirty) {
@@ -222,10 +222,10 @@ export class FeatureFlagSettingsDomainEntityService
     featureFlagSettings.settings?.featureFlags?.forEach((featureFlag) => {
       const featureFlagFormGroup = this.buildFeatureFlagFormGroup();
       featureFlagFormGroup.patchValue({ ...featureFlag });
-      (featureFlagFormGroup.controls.enabledForUsers as FormArray).clear();
+      (featureFlagFormGroup.controls.enabledForUsers as UntypedFormArray).clear();
       featureFlag.enabledForUsers?.forEach((enabledForUser) => {
-        (featureFlagFormGroup.controls.enabledForUsers as FormArray).push(
-          new FormControl(enabledForUser)
+        (featureFlagFormGroup.controls.enabledForUsers as UntypedFormArray).push(
+          new UntypedFormControl(enabledForUser)
         );
       });
       this.featureFlagFormArray.push(featureFlagFormGroup);

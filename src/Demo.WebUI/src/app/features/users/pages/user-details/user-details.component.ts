@@ -24,7 +24,7 @@ import { IHasForm } from '@shared/guards/unsaved-changes.guard';
 import { UserListRouteState } from '@users/pages/user-list/user-list.component';
 import { ModalService } from '@shared/services/modal.service';
 import { ConfirmDeleteModalComponent } from '@shared/modals/confirm-delete-modal/confirm-delete-modal.component';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { ApiUsersClient, ResetPasswordCommand } from '@api/api.generated.clients';
 
 interface ViewModel extends IUserDomainEntityContext {
@@ -105,8 +105,8 @@ export class UserDetailsComponent implements OnInit, IHasForm {
     });
   }
 
-  public getRoleFormControl(index: number): FormControl {
-    return this.userRoles!.at(index) as FormControl;
+  public getRoleFormControl(index: number): UntypedFormControl {
+    return this.userRoles!.at(index) as UntypedFormControl;
   }
 
   public addUserRole(): void {

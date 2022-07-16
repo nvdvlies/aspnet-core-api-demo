@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { combineLatest, debounceTime, map, Observable, of, switchMap } from 'rxjs';
 import {
   ApiInvoicesClient,
@@ -41,8 +41,8 @@ export interface InvoiceTableDataContext extends TableDataContext<SearchInvoiceD
 
 @Injectable()
 export class InvoiceTableDataService extends TableDataBase<SearchInvoiceDto> {
-  public searchTerm = new FormControl();
-  public invoiceStatus = new FormControl(undefined);
+  public searchTerm = new UntypedFormControl();
+  public invoiceStatus = new UntypedFormControl(undefined);
 
   public observe$: Observable<InvoiceTableDataContext> = combineLatest([
     this.observeInternal$

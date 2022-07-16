@@ -9,7 +9,7 @@ import {
   ViewChild,
   OnInit
 } from '@angular/core';
-import { ControlContainer, FormControl, NgControl } from '@angular/forms';
+import { ControlContainer, UntypedFormControl, NgControl } from '@angular/forms';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { MatFormFieldControlBase } from '@shared/base/mat-form-field-control-base';
@@ -37,7 +37,7 @@ export class CurrencyFormFieldControlComponent
   @ViewChild('input', { static: true })
   public inputElementRef!: ElementRef;
 
-  public inputFormControl = new FormControl(null);
+  public inputFormControl = new UntypedFormControl(null);
 
   constructor(
     @Optional() elementRef: ElementRef<HTMLElement>,

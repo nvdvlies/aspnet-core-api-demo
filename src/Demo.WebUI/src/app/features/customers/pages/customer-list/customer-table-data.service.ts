@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { combineLatest, debounceTime, map, Observable, tap } from 'rxjs';
 import {
   ApiCustomersClient,
@@ -40,7 +40,7 @@ export interface CustomerTableDataContext extends TableDataContext<SearchCustome
 
 @Injectable()
 export class CustomerTableDataService extends TableDataBase<SearchCustomerDto> {
-  public searchTerm = new FormControl();
+  public searchTerm = new UntypedFormControl();
 
   public observe$: Observable<CustomerTableDataContext> = combineLatest([
     this.observeInternal$

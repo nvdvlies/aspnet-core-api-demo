@@ -14,7 +14,7 @@ import { Subject, takeUntil } from 'rxjs';
 import {
   NgControl,
   ControlValueAccessor,
-  FormControl,
+  UntypedFormControl,
   ControlContainer,
   FormGroupDirective,
   FormGroupName,
@@ -48,7 +48,7 @@ export abstract class MatFormFieldControlBase<T>
   public onChange = (_: any) => {};
   public onTouched = () => {};
 
-  @Input() public formControl!: FormControl;
+  @Input() public formControl!: UntypedFormControl;
   @Input() public formControlName: string | undefined;
 
   protected readonly onDestroy = new Subject<void>();
@@ -76,7 +76,7 @@ export abstract class MatFormFieldControlBase<T>
   public ngOnInit(): void {
     if (this.formControl === undefined) {
       if (this.formControlName != undefined) {
-        this.formControl = this.controlContainer.control!.get(this.formControlName)! as FormControl;
+        this.formControl = this.controlContainer.control!.get(this.formControlName)! as UntypedFormControl;
       }
     }
 

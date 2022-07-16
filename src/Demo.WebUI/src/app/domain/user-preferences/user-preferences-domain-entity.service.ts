@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { combineLatest, Observable, of } from 'rxjs';
 import { debounceTime, map } from 'rxjs/operators';
@@ -30,12 +30,12 @@ export class UserPreferencesDomainEntityContext
 }
 
 type UserPreferencesControls = { [key in keyof IUserPreferencesDto]-?: AbstractControl };
-export type UserPreferencesFormGroup = FormGroup & { controls: UserPreferencesControls };
+export type UserPreferencesFormGroup = UntypedFormGroup & { controls: UserPreferencesControls };
 
 type UserPreferencesPreferencesControls = {
   [key in keyof IUserPreferencesPreferencesDto]-?: AbstractControl;
 };
-export type UserPreferencesPreferencesFormGroup = FormGroup & {
+export type UserPreferencesPreferencesFormGroup = UntypedFormGroup & {
   controls: UserPreferencesPreferencesControls;
 };
 
@@ -88,21 +88,21 @@ export class UserPreferencesDomainEntityService
 
   private buildFormGroup(): UserPreferencesFormGroup {
     const controls: UserPreferencesControls = {
-      id: new FormControl(super.readonlyFormState),
-      preferences: new FormGroup({
-        setting1: new FormControl(null),
-        setting2: new FormControl(null),
-        setting3: new FormControl(null, [Validators.required], []),
-        setting4: new FormControl(null, [Validators.required], []),
-        setting5: new FormControl(null, [Validators.required], [])
+      id: new UntypedFormControl(super.readonlyFormState),
+      preferences: new UntypedFormGroup({
+        setting1: new UntypedFormControl(null),
+        setting2: new UntypedFormControl(null),
+        setting3: new UntypedFormControl(null, [Validators.required], []),
+        setting4: new UntypedFormControl(null, [Validators.required], []),
+        setting5: new UntypedFormControl(null, [Validators.required], [])
       } as UserPreferencesPreferencesControls) as UserPreferencesPreferencesFormGroup,
-      createdBy: new FormControl(super.readonlyFormState),
-      createdOn: new FormControl(super.readonlyFormState),
-      lastModifiedBy: new FormControl(super.readonlyFormState),
-      lastModifiedOn: new FormControl(super.readonlyFormState),
-      xmin: new FormControl(super.readonlyFormState)
+      createdBy: new UntypedFormControl(super.readonlyFormState),
+      createdOn: new UntypedFormControl(super.readonlyFormState),
+      lastModifiedBy: new UntypedFormControl(super.readonlyFormState),
+      lastModifiedOn: new UntypedFormControl(super.readonlyFormState),
+      xmin: new UntypedFormControl(super.readonlyFormState)
     };
-    return new FormGroup(controls) as UserPreferencesFormGroup;
+    return new UntypedFormGroup(controls) as UserPreferencesFormGroup;
   }
 
   protected instantiateNewEntity(): Observable<UserPreferencesDto> {

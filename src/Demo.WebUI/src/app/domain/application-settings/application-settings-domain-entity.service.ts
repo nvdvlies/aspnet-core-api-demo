@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { combineLatest, Observable, of } from 'rxjs';
 import { debounceTime, map } from 'rxjs/operators';
@@ -30,12 +30,12 @@ export class ApplicationSettingsDomainEntityContext
 }
 
 type ApplicationSettingsControls = { [key in keyof IApplicationSettingsDto]-?: AbstractControl };
-export type ApplicationSettingsFormGroup = FormGroup & { controls: ApplicationSettingsControls };
+export type ApplicationSettingsFormGroup = UntypedFormGroup & { controls: ApplicationSettingsControls };
 
 type ApplicationSettingsSettingsControls = {
   [key in keyof IApplicationSettingsSettingsDto]-?: AbstractControl;
 };
-export type ApplicationSettingsSettingsFormGroup = FormGroup & {
+export type ApplicationSettingsSettingsFormGroup = UntypedFormGroup & {
   controls: ApplicationSettingsSettingsControls;
 };
 
@@ -89,21 +89,21 @@ export class ApplicationSettingsDomainEntityService
 
   private buildFormGroup(): ApplicationSettingsFormGroup {
     const controls: ApplicationSettingsControls = {
-      id: new FormControl(super.readonlyFormState),
-      settings: new FormGroup({
-        setting1: new FormControl(null),
-        setting2: new FormControl(null),
-        setting3: new FormControl(null, [Validators.required], []),
-        setting4: new FormControl(null, [Validators.required], []),
-        setting5: new FormControl(null, [Validators.required], [])
+      id: new UntypedFormControl(super.readonlyFormState),
+      settings: new UntypedFormGroup({
+        setting1: new UntypedFormControl(null),
+        setting2: new UntypedFormControl(null),
+        setting3: new UntypedFormControl(null, [Validators.required], []),
+        setting4: new UntypedFormControl(null, [Validators.required], []),
+        setting5: new UntypedFormControl(null, [Validators.required], [])
       } as ApplicationSettingsSettingsControls) as ApplicationSettingsSettingsFormGroup,
-      createdBy: new FormControl(super.readonlyFormState),
-      createdOn: new FormControl(super.readonlyFormState),
-      lastModifiedBy: new FormControl(super.readonlyFormState),
-      lastModifiedOn: new FormControl(super.readonlyFormState),
-      xmin: new FormControl(super.readonlyFormState)
+      createdBy: new UntypedFormControl(super.readonlyFormState),
+      createdOn: new UntypedFormControl(super.readonlyFormState),
+      lastModifiedBy: new UntypedFormControl(super.readonlyFormState),
+      lastModifiedOn: new UntypedFormControl(super.readonlyFormState),
+      xmin: new UntypedFormControl(super.readonlyFormState)
     };
-    return new FormGroup(controls) as ApplicationSettingsFormGroup;
+    return new UntypedFormGroup(controls) as ApplicationSettingsFormGroup;
   }
 
   protected instantiateNewEntity(): Observable<ApplicationSettingsDto> {

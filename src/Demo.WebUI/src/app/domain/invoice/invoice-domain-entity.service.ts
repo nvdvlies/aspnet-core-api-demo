@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { AbstractControl, FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormArray, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject, combineLatest, Observable, of, throwError } from 'rxjs';
 import { debounceTime, map } from 'rxjs/operators';
@@ -38,14 +38,14 @@ export class InvoiceDomainEntityContext
 }
 
 type InvoiceControls = { [key in keyof IInvoiceDto]-?: AbstractControl };
-export type InvoiceFormGroup = FormGroup & { controls: InvoiceControls };
+export type InvoiceFormGroup = UntypedFormGroup & { controls: InvoiceControls };
 
 type InvoiceLineControls = { [key in keyof IInvoiceLineDto]-?: AbstractControl };
-export type InvoiceLineFormGroup = FormGroup & {
+export type InvoiceLineFormGroup = UntypedFormGroup & {
   controls: InvoiceLineControls;
 };
 
-export type InvoiceLineFormArray = FormArray & {
+export type InvoiceLineFormArray = UntypedFormArray & {
   controls: InvoiceLineFormGroup[];
 };
 
@@ -100,42 +100,42 @@ export class InvoiceDomainEntityService extends DomainEntityBase<InvoiceDto> imp
 
   private buildInvoiceFormGroup(): InvoiceFormGroup {
     const controls: InvoiceControls = {
-      id: new FormControl(super.readonlyFormState),
-      invoiceNumber: new FormControl(super.readonlyFormState),
-      customerId: new FormControl(null, [Validators.required], []),
-      invoiceDate: new FormControl(null, [Validators.required], []),
-      paymentTerm: new FormControl(null, [Validators.required], []),
-      orderReference: new FormControl(null, [Validators.required], []),
-      status: new FormControl(super.readonlyFormState),
-      pdfIsSynced: new FormControl(super.readonlyFormState),
-      pdfDataChecksum: new FormControl(super.readonlyFormState),
-      invoiceLines: new FormArray(
+      id: new UntypedFormControl(super.readonlyFormState),
+      invoiceNumber: new UntypedFormControl(super.readonlyFormState),
+      customerId: new UntypedFormControl(null, [Validators.required], []),
+      invoiceDate: new UntypedFormControl(null, [Validators.required], []),
+      paymentTerm: new UntypedFormControl(null, [Validators.required], []),
+      orderReference: new UntypedFormControl(null, [Validators.required], []),
+      status: new UntypedFormControl(super.readonlyFormState),
+      pdfIsSynced: new UntypedFormControl(super.readonlyFormState),
+      pdfDataChecksum: new UntypedFormControl(super.readonlyFormState),
+      invoiceLines: new UntypedFormArray(
         [] as InvoiceLineFormGroup[],
         [Validators.required],
         []
       ) as InvoiceLineFormArray,
-      deleted: new FormControl(super.readonlyFormState),
-      deletedBy: new FormControl(super.readonlyFormState),
-      deletedOn: new FormControl(super.readonlyFormState),
-      createdBy: new FormControl(super.readonlyFormState),
-      createdOn: new FormControl(super.readonlyFormState),
-      lastModifiedBy: new FormControl(super.readonlyFormState),
-      lastModifiedOn: new FormControl(super.readonlyFormState),
-      xmin: new FormControl(super.readonlyFormState)
+      deleted: new UntypedFormControl(super.readonlyFormState),
+      deletedBy: new UntypedFormControl(super.readonlyFormState),
+      deletedOn: new UntypedFormControl(super.readonlyFormState),
+      createdBy: new UntypedFormControl(super.readonlyFormState),
+      createdOn: new UntypedFormControl(super.readonlyFormState),
+      lastModifiedBy: new UntypedFormControl(super.readonlyFormState),
+      lastModifiedOn: new UntypedFormControl(super.readonlyFormState),
+      xmin: new UntypedFormControl(super.readonlyFormState)
     };
-    return new FormGroup(controls) as InvoiceFormGroup;
+    return new UntypedFormGroup(controls) as InvoiceFormGroup;
   }
 
   private buildInvoiceLineFormGroup(): InvoiceLineFormGroup {
     const controls: InvoiceLineControls = {
-      id: new FormControl(super.readonlyFormState),
-      lineNumber: new FormControl(super.readonlyFormState),
-      quantity: new FormControl(null, [Validators.required], []),
-      sellingPrice: new FormControl(null, [Validators.required], []),
-      description: new FormControl(null, [Validators.required], []),
-      xmin: new FormControl(super.readonlyFormState)
+      id: new UntypedFormControl(super.readonlyFormState),
+      lineNumber: new UntypedFormControl(super.readonlyFormState),
+      quantity: new UntypedFormControl(null, [Validators.required], []),
+      sellingPrice: new UntypedFormControl(null, [Validators.required], []),
+      description: new UntypedFormControl(null, [Validators.required], []),
+      xmin: new UntypedFormControl(super.readonlyFormState)
     };
-    return new FormGroup(controls) as InvoiceLineFormGroup;
+    return new UntypedFormGroup(controls) as InvoiceLineFormGroup;
   }
 
   public addInvoiceLine(): void {
@@ -166,8 +166,8 @@ export class InvoiceDomainEntityService extends DomainEntityBase<InvoiceDto> imp
     return this.invoiceLineFormArray.controls as InvoiceLineFormGroup[];
   }
 
-  private get invoiceLineFormArray(): FormArray {
-    return this.form.controls.invoiceLines as FormArray;
+  private get invoiceLineFormArray(): UntypedFormArray {
+    return this.form.controls.invoiceLines as UntypedFormArray;
   }
 
   public override new(): Observable<null> {

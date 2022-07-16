@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { FormBuilder } from '@angular/forms';
+import { UntypedFormBuilder } from '@angular/forms';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { CustomerDto } from '@api/api.generated.clients';
 import { CustomerUpdatedEvent } from '@api/signalr.generated.services';
@@ -35,7 +35,7 @@ describe('CustomerDomainEntityService', () => {
     TestBed.configureTestingModule({
       providers: [
         CustomerDomainEntityService,
-        FormBuilder,
+        UntypedFormBuilder,
         {
           provide: ActivatedRoute,
           useValue: { snapshot: { paramMap: convertToParamMap(paramMap) } }

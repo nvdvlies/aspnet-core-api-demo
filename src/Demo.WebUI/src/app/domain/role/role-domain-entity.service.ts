@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { AbstractControl, FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormArray, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { combineLatest, Observable, of } from 'rxjs';
 import { debounceTime, map } from 'rxjs/operators';
@@ -27,7 +27,7 @@ export class RoleDomainEntityContext
 }
 
 type RoleControls = { [key in keyof IRoleDto]-?: AbstractControl };
-export type RoleFormGroup = FormGroup & { controls: RoleControls };
+export type RoleFormGroup = UntypedFormGroup & { controls: RoleControls };
 
 interface IRolePermissionControls extends IRolePermissionDto {
   permissionGroupId: string;
@@ -36,11 +36,11 @@ interface IRolePermissionControls extends IRolePermissionDto {
 }
 
 type RolePermissionControls = { [key in keyof IRolePermissionControls]-?: AbstractControl };
-export type RolePermissionFormGroup = FormGroup & {
+export type RolePermissionFormGroup = UntypedFormGroup & {
   controls: RolePermissionControls;
 };
 
-export type RolePermissionFormArray = FormArray & {
+export type RolePermissionFormArray = UntypedFormArray & {
   controls: RolePermissionFormGroup[];
 };
 
@@ -91,34 +91,34 @@ export class RoleDomainEntityService extends DomainEntityBase<RoleDto> implement
 
   private buildRoleFormGroup(): RoleFormGroup {
     const controls: RoleControls = {
-      id: new FormControl(super.readonlyFormState),
-      name: new FormControl(null, [Validators.required], []),
-      externalId: new FormControl(null, [Validators.required], []),
-      rolePermissions: new FormArray(
+      id: new UntypedFormControl(super.readonlyFormState),
+      name: new UntypedFormControl(null, [Validators.required], []),
+      externalId: new UntypedFormControl(null, [Validators.required], []),
+      rolePermissions: new UntypedFormArray(
         [] as RolePermissionFormGroup[],
         [],
         []
       ) as RolePermissionFormArray,
-      deleted: new FormControl(super.readonlyFormState),
-      deletedBy: new FormControl(super.readonlyFormState),
-      deletedOn: new FormControl(super.readonlyFormState),
-      createdBy: new FormControl(super.readonlyFormState),
-      createdOn: new FormControl(super.readonlyFormState),
-      lastModifiedBy: new FormControl(super.readonlyFormState),
-      lastModifiedOn: new FormControl(super.readonlyFormState),
-      xmin: new FormControl(super.readonlyFormState)
+      deleted: new UntypedFormControl(super.readonlyFormState),
+      deletedBy: new UntypedFormControl(super.readonlyFormState),
+      deletedOn: new UntypedFormControl(super.readonlyFormState),
+      createdBy: new UntypedFormControl(super.readonlyFormState),
+      createdOn: new UntypedFormControl(super.readonlyFormState),
+      lastModifiedBy: new UntypedFormControl(super.readonlyFormState),
+      lastModifiedOn: new UntypedFormControl(super.readonlyFormState),
+      xmin: new UntypedFormControl(super.readonlyFormState)
     };
-    return new FormGroup(controls) as RoleFormGroup;
+    return new UntypedFormGroup(controls) as RoleFormGroup;
   }
 
   private buildRolePermissionFormGroup(): RolePermissionFormGroup {
     const controls: RolePermissionControls = {
-      permissionId: new FormControl(null, [Validators.required], []),
-      permissionGroupId: new FormControl(super.readonlyFormState),
-      name: new FormControl(super.readonlyFormState),
-      checked: new FormControl(null)
+      permissionId: new UntypedFormControl(null, [Validators.required], []),
+      permissionGroupId: new UntypedFormControl(super.readonlyFormState),
+      name: new UntypedFormControl(super.readonlyFormState),
+      checked: new UntypedFormControl(null)
     };
-    return new FormGroup(controls) as RolePermissionFormGroup;
+    return new UntypedFormGroup(controls) as RolePermissionFormGroup;
   }
 
   protected instantiateNewEntity(): Observable<RoleDto> {
@@ -135,8 +135,8 @@ export class RoleDomainEntityService extends DomainEntityBase<RoleDto> implement
     return this.rolePermissions.filter((x) => x.controls.checked);
   }
 
-  private get rolePermissionFormArray(): FormArray {
-    return this.form.controls.rolePermissions as FormArray;
+  private get rolePermissionFormArray(): UntypedFormArray {
+    return this.form.controls.rolePermissions as UntypedFormArray;
   }
 
   public override new(): Observable<null> {
