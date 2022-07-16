@@ -2,7 +2,7 @@
 
 WORKDIR /app
 
-RUN npm install -g @angular/cli@13
+RUN npm install -g @angular/cli@14
 
 COPY ./src/Demo.WebUI/package.json ./src/Demo.WebUI/package-lock.json ./
 RUN npm ci
