@@ -44,6 +44,7 @@ export class AutocompleteOption implements IAutocompleteOption {
 @Component({
   template: ''
 })
+/* eslint-disable-next-line @angular-eslint/component-class-suffix */
 export abstract class AutocompleteMatFormFieldControlBase
   extends MatFormFieldControlBase<string>
   implements OnInit

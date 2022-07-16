@@ -27,6 +27,7 @@ import { FocusMonitor } from '@angular/cdk/a11y';
 @Component({
   template: ''
 })
+/* eslint-disable-next-line @angular-eslint/component-class-suffix */
 export abstract class MatFormFieldControlBase<T>
   implements MatFormFieldControl<T>, ControlValueAccessor, OnInit, OnDestroy
 {
@@ -76,7 +77,9 @@ export abstract class MatFormFieldControlBase<T>
   public ngOnInit(): void {
     if (this.formControl === undefined) {
       if (this.formControlName != undefined) {
-        this.formControl = this.controlContainer.control!.get(this.formControlName)! as UntypedFormControl;
+        this.formControl = this.controlContainer.control!.get(
+          this.formControlName
+        )! as UntypedFormControl;
       }
     }
 
