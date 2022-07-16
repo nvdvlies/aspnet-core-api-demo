@@ -11,11 +11,15 @@ using Demo.Infrastructure.Settings;
 using Demo.Infrastructure.SignalR;
 using Demo.WebApi.Extensions;
 using Demo.WebApi.Middleware;
+using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using NSwag;
@@ -125,6 +129,26 @@ builder.Services.Configure<MvcRazorRuntimeCompilationOptions>(options =>
 });
 builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
 
+var healthChecksBuilder = builder.Services.AddHealthChecks()
+    .AddRabbitMQ(
+        rabbitConnectionString:
+        $"amqp://{environmentSettings.RabbitMq.Username}:{environmentSettings.RabbitMq.Password}@{environmentSettings.RabbitMq.Host}/%2F")
+    .AddNpgSql(environmentSettings.ConnectionStrings.PostgresDatabase)
+    .AddSignalRHub($"{environmentSettings.WebApiBaseUrl}/hub")
+    .AddElasticsearch(environmentSettings.ElasticSearch.Uri);
+
+if (!string.IsNullOrEmpty(environmentSettings.Redis.Connection))
+{
+    healthChecksBuilder.AddRedis(environmentSettings.Redis.Connection);
+}
+
+builder.Services
+    .AddHealthChecksUI(setupSettings: settings =>
+    {
+        settings.AddHealthCheckEndpoint("hc", "/hc");
+    })
+    .AddInMemoryStorage();
+
 builder.Services.AddApplication();
 builder.Services.AddDomain();
 builder.Services.AddInfrastructure(environmentSettings);
@@ -158,6 +182,20 @@ app.UseMiddleware<CorrelationIdMiddleware>();
 app.UseMiddleware<CurrentUserIdMiddleware>();
 
 app.UseAuthorization();
+
+app.UseHealthChecks("/hc",
+    new HealthCheckOptions
+    {
+        Predicate = _ => true,
+        ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+    }
+);
+
+app.UseHealthChecksUI(setup =>
+{
+    setup.ApiPath = "/hc-api";
+    setup.UIPath = "/hc-ui";
+});
 
 app.UseEndpoints(endpoints =>
 {

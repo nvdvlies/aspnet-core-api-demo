@@ -2,6 +2,7 @@
 
 public class EnvironmentSettings
 {
+    public string WebApiBaseUrl { get; set; }
     public string DefaultTimeZone { get; set; }
     public string DefaultCulture { get; set; }
     public ConnectionStrings ConnectionStrings { get; set; } = new();

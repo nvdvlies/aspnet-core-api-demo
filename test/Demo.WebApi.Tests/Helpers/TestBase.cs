@@ -60,7 +60,7 @@ public abstract class TestBase : IClassFixture<CustomWebApplicationFactory>
     {
         var webhost = _factory
             .WithWebHostBuilder(builder => { builder.ConfigureTestServices(servicesConfiguration); });
-        var client = webhost.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
+        var client = webhost.CreateClient(new WebApplicationFactoryClientOptions { BaseAddress = new Uri("http://localhost"), AllowAutoRedirect = false });
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(TestAuthHandler.DefaultScheme);
         _serviceProvider = webhost.Services;
         return client;
