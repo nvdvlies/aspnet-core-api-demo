@@ -3,7 +3,10 @@ import { UntypedFormArray, UntypedFormControl, UntypedFormGroup } from '@angular
 export class MergeUtil {
   public static mergeIntoFormGroup(updated: any, form: UntypedFormGroup): void {
     for (const key in form.controls) {
-      const control = form.controls[key] as UntypedFormControl | UntypedFormGroup | UntypedFormArray;
+      const control = form.controls[key] as
+        | UntypedFormControl
+        | UntypedFormGroup
+        | UntypedFormArray;
       if (control instanceof UntypedFormGroup) {
         this.mergeIntoFormGroup(updated[key], control);
       } else if (control instanceof UntypedFormArray) {
@@ -14,14 +17,21 @@ export class MergeUtil {
     }
   }
 
-  public static hasMergeConflictInFormGroup(updated: any, pristine: any, form: UntypedFormGroup): boolean {
+  public static hasMergeConflictInFormGroup(
+    updated: any,
+    pristine: any,
+    form: UntypedFormGroup
+  ): boolean {
     if (!form.dirty) {
       // control has not been changed by current user
       return false;
     }
 
     for (const key in form.controls) {
-      const control = form.controls[key] as UntypedFormControl | UntypedFormGroup | UntypedFormArray;
+      const control = form.controls[key] as
+        | UntypedFormControl
+        | UntypedFormGroup
+        | UntypedFormArray;
       if (control instanceof UntypedFormGroup) {
         if (this.hasMergeConflictInFormGroup(updated[key], pristine[key], control)) {
           return true;

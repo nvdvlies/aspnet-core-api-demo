@@ -115,13 +115,6 @@ export abstract class DomainEntityBase<T extends IDomainEntity<T>>
   protected abstract readPermission?: keyof typeof Permission;
   protected abstract writePermission?: keyof typeof Permission;
 
-  // private hasReadPermission$ = () =>
-  //   this.readPermission ? this.userPermissionService.hasPermission$(this.readPermission) : of(true);
-  // private hasWritePermission$ = () =>
-  //   this.writePermission
-  //     ? this.userPermissionService.hasPermission$(this.writePermission)
-  //     : of(true);
-
   protected readonly id = new BehaviorSubject<string | undefined>(undefined);
   protected readonly entity = new BehaviorSubject<Readonly<T> | undefined>(undefined);
   protected readonly pristine = new BehaviorSubject<Readonly<T> | undefined>(undefined);

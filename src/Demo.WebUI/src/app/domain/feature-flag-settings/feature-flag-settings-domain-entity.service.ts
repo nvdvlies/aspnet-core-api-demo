@@ -41,7 +41,9 @@ export class FeatureFlagSettingsDomainEntityContext
 }
 
 type FeatureFlagSettingsControls = { [key in keyof IFeatureFlagSettingsDto]-?: AbstractControl };
-export type FeatureFlagSettingsFormGroup = UntypedFormGroup & { controls: FeatureFlagSettingsControls };
+export type FeatureFlagSettingsFormGroup = UntypedFormGroup & {
+  controls: FeatureFlagSettingsControls;
+};
 
 type FeatureFlagSettingsSettingsControls = {
   [key in keyof IFeatureFlagSettingsSettingsDto]-?: AbstractControl;

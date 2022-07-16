@@ -30,7 +30,9 @@ export class ApplicationSettingsDomainEntityContext
 }
 
 type ApplicationSettingsControls = { [key in keyof IApplicationSettingsDto]-?: AbstractControl };
-export type ApplicationSettingsFormGroup = UntypedFormGroup & { controls: ApplicationSettingsControls };
+export type ApplicationSettingsFormGroup = UntypedFormGroup & {
+  controls: ApplicationSettingsControls;
+};
 
 type ApplicationSettingsSettingsControls = {
   [key in keyof IApplicationSettingsSettingsDto]-?: AbstractControl;
