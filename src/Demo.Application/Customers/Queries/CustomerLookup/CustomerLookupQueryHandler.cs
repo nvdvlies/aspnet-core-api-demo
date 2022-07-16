@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
@@ -13,70 +13,69 @@ using Demo.Domain.Shared.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace Demo.Application.Customers.Queries.CustomerLookup
+namespace Demo.Application.Customers.Queries.CustomerLookup;
+
+public class CustomerLookupQueryHandler : IRequestHandler<CustomerLookupQuery, CustomerLookupQueryResult>
 {
-    public class CustomerLookupQueryHandler : IRequestHandler<CustomerLookupQuery, CustomerLookupQueryResult>
+    private readonly IMapper _mapper;
+    private readonly IDbQuery<Customer> _query;
+
+    public CustomerLookupQueryHandler(
+        IDbQuery<Customer> query,
+        IMapper mapper
+    )
     {
-        private readonly IMapper _mapper;
-        private readonly IDbQuery<Customer> _query;
+        _query = query;
+        _mapper = mapper;
+    }
 
-        public CustomerLookupQueryHandler(
-            IDbQuery<Customer> query,
-            IMapper mapper
-        )
+    public async Task<CustomerLookupQueryResult> Handle(CustomerLookupQuery request,
+        CancellationToken cancellationToken)
+    {
+        var query = request.Ids is { Length: > 0 }
+            ? _query.WithOptions(x => x.IncludeDeleted = true).AsQueryable()
+            : _query.AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(request.SearchTerm))
         {
-            _query = query;
-            _mapper = mapper;
+            var isValidInteger = int.TryParse(request.SearchTerm, NumberStyles.Integer,
+                CultureInfo.GetCultureInfo("nl-NL"), out _);
+
+            query = query.Where(x =>
+                EF.Functions.ILike(x.Name, $"%{request.SearchTerm}%")
+                || (isValidInteger && EF.Functions.ILike(x.Code.ToString(), $"%{request.SearchTerm}%"))
+            );
         }
 
-        public async Task<CustomerLookupQueryResult> Handle(CustomerLookupQuery request,
-            CancellationToken cancellationToken)
+        if (request.Ids is { Length: > 0 })
         {
-            var query = request.Ids is { Length: > 0 }
-                ? _query.WithOptions(x => x.IncludeDeleted = true).AsQueryable()
-                : _query.AsQueryable();
-
-            if (!string.IsNullOrWhiteSpace(request.SearchTerm))
-            {
-                var isValidInteger = int.TryParse(request.SearchTerm, NumberStyles.Integer,
-                    CultureInfo.GetCultureInfo("nl-NL"), out _);
-
-                query = query.Where(x =>
-                    EF.Functions.ILike(x.Name, $"%{request.SearchTerm}%")
-                    || (isValidInteger && EF.Functions.ILike(x.Code.ToString(), $"%{request.SearchTerm}%"))
-                );
-            }
-
-            if (request.Ids is { Length: > 0 })
-            {
-                query = query.Where(x => request.Ids.Contains(x.Id));
-            }
-
-            var totalItems = await query.CountAsync(cancellationToken);
-
-            var sortOrder = request.OrderByDescending ? SortDirection.Descending : SortDirection.Ascending;
-
-            query = request.OrderBy switch
-            {
-                CustomerLookupOrderByEnum.Code => query.OrderBy(x => x.Code, sortOrder),
-                CustomerLookupOrderByEnum.Name => query.OrderBy(x => x.Name, sortOrder),
-                _ => throw new Exception($"OrderBy '{request.OrderBy}' not implemented.")
-            };
-
-            var customers = await query
-                .Skip(request.PageSize * request.PageIndex)
-                .Take(request.PageSize)
-                .ProjectTo<CustomerLookupDto>(_mapper.ConfigurationProvider)
-                //.WriteQueryStringToOutputWindowIfInDebugMode()
-                .ToListAsync(cancellationToken);
-
-            return new CustomerLookupQueryResult
-            {
-                PageIndex = request.PageIndex,
-                PageSize = request.PageSize,
-                TotalItems = totalItems,
-                Customers = customers
-            };
+            query = query.Where(x => request.Ids.Contains(x.Id));
         }
+
+        var totalItems = await query.CountAsync(cancellationToken);
+
+        var sortOrder = request.OrderByDescending ? SortDirection.Descending : SortDirection.Ascending;
+
+        query = request.OrderBy switch
+        {
+            CustomerLookupOrderByEnum.Code => query.OrderBy(x => x.Code, sortOrder),
+            CustomerLookupOrderByEnum.Name => query.OrderBy(x => x.Name, sortOrder),
+            _ => throw new Exception($"OrderBy '{request.OrderBy}' not implemented.")
+        };
+
+        var customers = await query
+            .Skip(request.PageSize * request.PageIndex)
+            .Take(request.PageSize)
+            .ProjectTo<CustomerLookupDto>(_mapper.ConfigurationProvider)
+            //.WriteQueryStringToOutputWindowIfInDebugMode()
+            .ToListAsync(cancellationToken);
+
+        return new CustomerLookupQueryResult
+        {
+            PageIndex = request.PageIndex,
+            PageSize = request.PageSize,
+            TotalItems = totalItems,
+            Customers = customers
+        };
     }
 }

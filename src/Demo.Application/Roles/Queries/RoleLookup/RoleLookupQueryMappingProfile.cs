@@ -2,13 +2,12 @@
 using Demo.Application.Roles.Queries.RoleLookup.Dtos;
 using Demo.Domain.Role;
 
-namespace Demo.Application.Roles.Queries.RoleLookup
+namespace Demo.Application.Roles.Queries.RoleLookup;
+
+public class RoleLookupQueryMappingProfile : Profile
 {
-    public class RoleLookupQueryMappingProfile : Profile
+    public RoleLookupQueryMappingProfile()
     {
-        public RoleLookupQueryMappingProfile()
-        {
-            CreateMap<Role, RoleLookupDto>();
-        }
+        CreateMap<Role, RoleLookupDto>();
     }
 }

@@ -2,13 +2,12 @@
 using Demo.Application.Customers.Queries.GetCustomerById.Dtos;
 using Demo.Domain.Customer;
 
-namespace Demo.Application.Customers.Queries.GetCustomerById
+namespace Demo.Application.Customers.Queries.GetCustomerById;
+
+public class GetCustomerByIdQueryMappingProfile : Profile
 {
-    public class GetCustomerByIdQueryMappingProfile : Profile
+    public GetCustomerByIdQueryMappingProfile()
     {
-        public GetCustomerByIdQueryMappingProfile()
-        {
-            CreateMap<Customer, CustomerDto>();
-        }
+        CreateMap<Customer, CustomerDto>();
     }
 }

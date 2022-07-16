@@ -1,8 +1,7 @@
-﻿namespace Demo.Infrastructure.Persistence
+﻿namespace Demo.Infrastructure.Persistence;
+
+internal static class Sequences
 {
-    internal static class Sequences
-    {
-        public const string InvoiceNumber = "InvoiceNumber";
-        public const string CustomerCode = "CustomerCode";
-    }
+    public const string InvoiceNumber = "InvoiceNumber";
+    public const string CustomerCode = "CustomerCode";
 }

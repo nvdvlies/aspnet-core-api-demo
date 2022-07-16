@@ -1,12 +1,11 @@
-using FluentValidation;
+﻿using FluentValidation;
 
-namespace Demo.Application.FeatureFlagSettings.Commands.SaveFeatureFlagSettings
+namespace Demo.Application.FeatureFlagSettings.Commands.SaveFeatureFlagSettings;
+
+public class SaveFeatureFlagSettingsCommandValidator : AbstractValidator<SaveFeatureFlagSettingsCommand>
 {
-    public class SaveFeatureFlagSettingsCommandValidator : AbstractValidator<SaveFeatureFlagSettingsCommand>
+    public SaveFeatureFlagSettingsCommandValidator()
     {
-        public SaveFeatureFlagSettingsCommandValidator()
-        {
-            RuleFor(x => x.Settings).NotNull();
-        }
+        RuleFor(x => x.Settings).NotNull();
     }
 }

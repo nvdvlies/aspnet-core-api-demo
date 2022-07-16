@@ -1,9 +1,8 @@
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
-namespace Demo.Application.Shared.Interfaces
+namespace Demo.Application.Shared.Interfaces;
+
+public interface IRazorViewRenderer
 {
-    public interface IRazorViewRenderer
-    {
-        Task<string> RenderViewAsync<TModel>(string viewName, TModel model);
-    }
+    Task<string> RenderViewAsync<TModel>(string viewName, TModel model);
 }

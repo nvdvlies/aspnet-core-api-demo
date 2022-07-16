@@ -3,18 +3,17 @@ using System.Threading.Tasks;
 using Demo.Domain.Shared.DomainEntity;
 using Demo.Domain.Shared.Interfaces;
 
-namespace Demo.Domain.User.Hooks
+namespace Demo.Domain.User.Hooks;
+
+internal class UpdateFullnameHook : IBeforeCreate<User>, IBeforeUpdate<User>
 {
-    internal class UpdateFullnameHook : IBeforeCreate<User>, IBeforeUpdate<User>
+    public Task ExecuteAsync(HookType type, IDomainEntityContext<User> context,
+        CancellationToken cancellationToken = default)
     {
-        public Task ExecuteAsync(HookType type, IDomainEntityContext<User> context,
-            CancellationToken cancellationToken = default)
-        {
-            context.Entity.Fullname =
-                $"{context.Entity.GivenName} {context.Entity.MiddleName} {context.Entity.FamilyName}"
-                    .Replace("  ", " ")
-                    .Trim();
-            return Task.CompletedTask;
-        }
+        context.Entity.Fullname =
+            $"{context.Entity.GivenName} {context.Entity.MiddleName} {context.Entity.FamilyName}"
+                .Replace("  ", " ")
+                .Trim();
+        return Task.CompletedTask;
     }
 }

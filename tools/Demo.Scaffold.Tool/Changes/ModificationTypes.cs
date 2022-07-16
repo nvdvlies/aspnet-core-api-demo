@@ -1,8 +1,7 @@
-﻿namespace Demo.Scaffold.Tool.Changes
+﻿namespace Demo.Scaffold.Tool.Changes;
+
+public enum ModificationTypes
 {
-    public enum ModificationTypes
-    {
-        Create,
-        Update
-    }
+    Create,
+    Update
 }

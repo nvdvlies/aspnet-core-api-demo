@@ -1,8 +1,7 @@
-﻿namespace Demo.Domain.User
+﻿namespace Demo.Domain.User;
+
+public enum UserType
 {
-    public enum UserType
-    {
-        Regular = 1,
-        System = 2
-    }
+    Regular = 1,
+    System = 2
 }

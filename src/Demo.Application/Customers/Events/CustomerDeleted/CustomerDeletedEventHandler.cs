@@ -5,25 +5,24 @@ using Demo.Events.Customer;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
-namespace Demo.Application.Customers.Events.CustomerDeleted
+namespace Demo.Application.Customers.Events.CustomerDeleted;
+
+public class CustomerDeletedEventHandler : INotificationHandler<CustomerDeletedEvent>
 {
-    public class CustomerDeletedEventHandler : INotificationHandler<CustomerDeletedEvent>
+    private readonly IEventHubContext _eventHubContext;
+    private readonly ILogger<CustomerDeletedEventHandler> _logger;
+
+    public CustomerDeletedEventHandler(
+        ILogger<CustomerDeletedEventHandler> logger,
+        IEventHubContext eventHubContext)
     {
-        private readonly IEventHubContext _eventHubContext;
-        private readonly ILogger<CustomerDeletedEventHandler> _logger;
+        _logger = logger;
+        _eventHubContext = eventHubContext;
+    }
 
-        public CustomerDeletedEventHandler(
-            ILogger<CustomerDeletedEventHandler> logger,
-            IEventHubContext eventHubContext)
-        {
-            _logger = logger;
-            _eventHubContext = eventHubContext;
-        }
-
-        public Task Handle(CustomerDeletedEvent @event, CancellationToken cancellationToken)
-        {
-            _logger.LogInformation($"Handling {nameof(CustomerDeletedEvent)}");
-            return _eventHubContext.All.CustomerDeleted(@event.Data.Id, @event.Data.DeletedBy);
-        }
+    public Task Handle(CustomerDeletedEvent @event, CancellationToken cancellationToken)
+    {
+        _logger.LogInformation($"Handling {nameof(CustomerDeletedEvent)}");
+        return _eventHubContext.All.CustomerDeleted(@event.Data.Id, @event.Data.DeletedBy);
     }
 }

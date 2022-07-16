@@ -1,12 +1,11 @@
-using FluentValidation;
+﻿using FluentValidation;
 
-namespace Demo.Application.Roles.Commands.DeleteRole
+namespace Demo.Application.Roles.Commands.DeleteRole;
+
+public class DeleteRoleCommandValidator : AbstractValidator<DeleteRoleCommand>
 {
-    public class DeleteRoleCommandValidator : AbstractValidator<DeleteRoleCommand>
+    public DeleteRoleCommandValidator()
     {
-        public DeleteRoleCommandValidator()
-        {
-            RuleFor(x => x.Id).NotEmpty();
-        }
+        RuleFor(x => x.Id).NotEmpty();
     }
 }

@@ -22,255 +22,254 @@ using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using Xunit;
 
-namespace Demo.WebApi.Tests.Controllers.Customers
+namespace Demo.WebApi.Tests.Controllers.Customers;
+
+[Collection(nameof(SharedFixture))]
+public class UpdateCustomerTests : TestBase
 {
-    [Collection(nameof(SharedFixture))]
-    public class UpdateCustomerTests : TestBase
+    public UpdateCustomerTests(SharedFixture fixture) : base(fixture)
     {
-        public UpdateCustomerTests(SharedFixture fixture) : base(fixture)
+    }
+
+    [Fact]
+    public async Task UpdateCustomer_When_a_customer_is_updated_It_should_return_statuscode_Updated()
+    {
+        // Arrange
+        await SetTestUserWithPermissionAsync(Domain.Role.Permissions.CustomersWrite);
+        var customerId = Guid.NewGuid();
+        var existingCustomer = new Customer { Id = customerId, Name = "Test" };
+        await AddAsExistingEntityAsync(existingCustomer);
+
+        var command = new UpdateCustomerCommand { Id = customerId, Name = "Test2", xmin = existingCustomer.xmin };
+
+        // Act
+        var response = await Client.CustomersController().UpdateAsync(command);
+
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.NoContent);
+    }
+
+    [Fact]
+    public async Task UpdateCustomer_When_a_customer_is_updated_It_should_be_persisted_to_the_database()
+    {
+        // Arrange
+        await SetTestUserWithPermissionAsync(Domain.Role.Permissions.CustomersWrite);
+        var customerId = Guid.NewGuid();
+        var existingCustomer = new Customer { Id = customerId, Name = "Test" };
+        await AddAsExistingEntityAsync(existingCustomer);
+
+        var command = new UpdateCustomerCommand { Id = customerId, Name = "Test2", xmin = existingCustomer.xmin };
+
+        // Act
+        var response = await Client.CustomersController().UpdateAsync(command);
+
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.NoContent);
+
+        var updatedCustomerEntity = await FindExistingEntityAsync<Customer>(x => x.Id == customerId);
+        updatedCustomerEntity.Should().NotBeNull();
+        updatedCustomerEntity.Name.Should().Be(command.Name);
+    }
+
+    [Fact]
+    public async Task UpdateCustomer_When_a_customer_is_updated_It_should_publish_a_CustomerUpdated_event()
+    {
+        // Arrange
+        await SetTestUserWithPermissionAsync(Domain.Role.Permissions.CustomersWrite);
+        var customerId = Guid.NewGuid();
+        var existingCustomer = new Customer { Id = customerId, Name = "Test" };
+        await AddAsExistingEntityAsync(existingCustomer);
+
+        var command = new UpdateCustomerCommand { Id = customerId, Name = "Test2", xmin = existingCustomer.xmin };
+
+        var idFromEvent = Guid.Empty;
+        using var subscription = HubConnection.On(nameof(ICustomerEventHub.CustomerUpdated),
+            (Guid id, string _) => { idFromEvent = id; });
+
+        // Act
+        var response = await Client.CustomersController().UpdateAsync(command);
+
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.NoContent);
+
+        WithRetry(() => idFromEvent.Should().Be(customerId), 1.Seconds(), 10.Milliseconds(),
+            $"Didnt receive {nameof(ICustomerEventHub.CustomerUpdated)} event for created entity");
+    }
+
+    [Fact]
+    public async Task
+        UpdateCustomer_When_a_command_validator_throws_a_ValidationException_It_should_return_statuscode_BadRequest()
+    {
+        // Arrange
+        await SetTestUserWithPermissionAsync(Domain.Role.Permissions.CustomersWrite);
+        var customerId = Guid.NewGuid();
+        var existingCustomer = new Customer { Id = customerId, Name = "Test" };
+        await AddAsExistingEntityAsync(existingCustomer);
+
+        var command = new UpdateCustomerCommand { Id = customerId, Name = string.Empty };
+
+        // Act
+        var response = await Client.CustomersController().UpdateAsync(command);
+
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+
+        var content = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
+        content.Should().NotBeNull();
+        content!.Type.Should().Be(nameof(ValidationException));
+        content!.Detail.Should().Contain("'Name' must not be empty");
+    }
+
+    [Fact]
+    public async Task
+        UpdateCustomer_When_a_domainentity_validator_throws_a_DomainValidationException_It_should_return_statuscode_BadRequest()
+    {
+        // Arrange
+        var client = CreateHttpClientWithCustomConfiguration(services =>
         {
-        }
+            var mock = new Mock<Domain.Shared.Interfaces.IValidator<Customer>>();
+            mock.Setup(x =>
+                    x.ValidateAsync(It.IsAny<IDomainEntityContext<Customer>>(), It.IsAny<CancellationToken>()))
+                .Throws(new DomainValidationException(
+                    new[] { new ValidationMessage("TestProperty", "TestMessage") }));
 
-        [Fact]
-        public async Task UpdateCustomer_When_a_customer_is_updated_It_should_return_statuscode_Updated()
+            services.AddSingleton(mock.Object);
+        });
+        await SetTestUserWithPermissionAsync(Domain.Role.Permissions.CustomersWrite);
+
+        var customerId = Guid.NewGuid();
+        var existingCustomer = new Customer { Id = customerId, Name = "Test" };
+        await AddAsExistingEntityAsync(existingCustomer);
+
+        var command = new UpdateCustomerCommand { Id = customerId, Name = "Test2" };
+
+        // Act
+        var response = await client.CustomersController().UpdateAsync(command);
+
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+
+        var content = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
+        content.Should().NotBeNull();
+        content!.Type.Should().Be(nameof(DomainValidationException));
+        content!.Title.Should().Be("TestMessage");
+    }
+
+    [Fact]
+    public async Task
+        UpdateCustomer_When_a_domainentity_hook_throws_a_DomainException_It_should_return_statuscode_BadRequest()
+    {
+        // Arrange
+        var client = CreateHttpClientWithCustomConfiguration(services =>
         {
-            // Arrange
-            await SetTestUserWithPermissionAsync(Domain.Role.Permissions.CustomersWrite);
-            var customerId = Guid.NewGuid();
-            var existingCustomer = new Customer { Id = customerId, Name = "Test" };
-            await AddAsExistingEntityAsync(existingCustomer);
+            var mock = new Mock<IAfterUpdate<Customer>>();
+            mock.Setup(x => x.ExecuteAsync(It.IsAny<HookType>(), It.IsAny<IDomainEntityContext<Customer>>(),
+                    It.IsAny<CancellationToken>()))
+                .Throws(new DomainException("TestMessage"));
 
-            var command = new UpdateCustomerCommand { Id = customerId, Name = "Test2", xmin = existingCustomer.xmin };
+            services.AddSingleton(mock.Object);
+        });
+        await SetTestUserWithPermissionAsync(Domain.Role.Permissions.CustomersWrite);
 
-            // Act
-            var response = await Client.CustomersController().UpdateAsync(command);
+        var customerId = Guid.NewGuid();
+        var existingCustomer = new Customer { Id = customerId, Name = "Test" };
+        await AddAsExistingEntityAsync(existingCustomer);
 
-            // Assert
-            response.StatusCode.Should().Be(HttpStatusCode.NoContent);
-        }
+        var command = new UpdateCustomerCommand { Id = customerId, Name = "Test2" };
 
-        [Fact]
-        public async Task UpdateCustomer_When_a_customer_is_updated_It_should_be_persisted_to_the_database()
+        // Act
+        var response = await client.CustomersController().UpdateAsync(command);
+
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+
+        var content = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
+        content.Should().NotBeNull();
+        content!.Type.Should().Be(nameof(DomainException));
+        content!.Title.Should().Be("TestMessage");
+    }
+
+    [Fact]
+    public async Task
+        UpdateCustomer_When_an_unhandled_exception_occurs_It_should_return_statuscode_InternalServerError()
+    {
+        // Arrange
+        var client = CreateHttpClientWithCustomConfiguration(services =>
         {
-            // Arrange
-            await SetTestUserWithPermissionAsync(Domain.Role.Permissions.CustomersWrite);
-            var customerId = Guid.NewGuid();
-            var existingCustomer = new Customer { Id = customerId, Name = "Test" };
-            await AddAsExistingEntityAsync(existingCustomer);
+            var mock = new Mock<ICustomerDomainEntity>();
+            mock.Setup(x => x.UpdateAsync(It.IsAny<CancellationToken>()))
+                .Throws(new ArgumentException("TestException"));
 
-            var command = new UpdateCustomerCommand { Id = customerId, Name = "Test2", xmin = existingCustomer.xmin };
+            services.AddSingleton(mock.Object);
+        });
+        await SetTestUserWithPermissionAsync(Domain.Role.Permissions.CustomersWrite);
 
-            // Act
-            var response = await Client.CustomersController().UpdateAsync(command);
+        var customerId = Guid.NewGuid();
+        var existingCustomer = new Customer { Id = customerId, Name = "Test" };
+        await AddAsExistingEntityAsync(existingCustomer);
 
-            // Assert
-            response.StatusCode.Should().Be(HttpStatusCode.NoContent);
+        var command = new UpdateCustomerCommand { Id = customerId, Name = "Test2" };
 
-            var updatedCustomerEntity = await FindExistingEntityAsync<Customer>(x => x.Id == customerId);
-            updatedCustomerEntity.Should().NotBeNull();
-            updatedCustomerEntity.Name.Should().Be(command.Name);
-        }
+        // Act
+        var response = await client.CustomersController().UpdateAsync(command);
 
-        [Fact]
-        public async Task UpdateCustomer_When_a_customer_is_updated_It_should_publish_a_CustomerUpdated_event()
-        {
-            // Arrange
-            await SetTestUserWithPermissionAsync(Domain.Role.Permissions.CustomersWrite);
-            var customerId = Guid.NewGuid();
-            var existingCustomer = new Customer { Id = customerId, Name = "Test" };
-            await AddAsExistingEntityAsync(existingCustomer);
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
 
-            var command = new UpdateCustomerCommand { Id = customerId, Name = "Test2", xmin = existingCustomer.xmin };
+        var content = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
+        content.Should().NotBeNull();
+        content!.Type.Should().Be(nameof(ArgumentException));
+        content!.Title.Should().Be("TestException");
+    }
 
-            var idFromEvent = Guid.Empty;
-            using var subscription = HubConnection.On(nameof(ICustomerEventHub.CustomerUpdated),
-                (Guid id, string _) => { idFromEvent = id; });
+    [Fact]
+    public async Task UpdateCustomer_When_user_has_no_permission_It_should_return_statuscode_Forbidden()
+    {
+        // Arrange
+        await SetTestUserWithoutPermissionAsync();
+        var command = new UpdateCustomerCommand { Id = Guid.NewGuid(), Name = "Test" };
 
-            // Act
-            var response = await Client.CustomersController().UpdateAsync(command);
+        // Act
+        var response = await Client.CustomersController().UpdateAsync(command);
 
-            // Assert
-            response.StatusCode.Should().Be(HttpStatusCode.NoContent);
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+    }
 
-            WithRetry(() => idFromEvent.Should().Be(customerId), 1.Seconds(), 10.Milliseconds(),
-                $"Didnt receive {nameof(ICustomerEventHub.CustomerUpdated)} event for created entity");
-        }
+    [Fact]
+    public async Task UpdateCustomer_When_request_is_not_authenticated_It_should_return_statuscode_Unauthorized()
+    {
+        // Arrange
+        await SetTestUserToUnauthenticatedAsync();
+        var command = new UpdateCustomerCommand { Id = Guid.NewGuid(), Name = "Test" };
 
-        [Fact]
-        public async Task
-            UpdateCustomer_When_a_command_validator_throws_a_ValidationException_It_should_return_statuscode_BadRequest()
-        {
-            // Arrange
-            await SetTestUserWithPermissionAsync(Domain.Role.Permissions.CustomersWrite);
-            var customerId = Guid.NewGuid();
-            var existingCustomer = new Customer { Id = customerId, Name = "Test" };
-            await AddAsExistingEntityAsync(existingCustomer);
+        // Act
+        var response = await Client.CustomersController().UpdateAsync(command);
 
-            var command = new UpdateCustomerCommand { Id = customerId, Name = string.Empty };
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+    }
 
-            // Act
-            var response = await Client.CustomersController().UpdateAsync(command);
+    [Fact]
+    public async Task
+        UpdateCustomer_When_an_incorrect_concurrency_token_is_used_It_should_return_statuscode_BadRequest()
+    {
+        // Arrange
+        await SetTestUserWithPermissionAsync(Domain.Role.Permissions.CustomersWrite);
+        var customerId = Guid.NewGuid();
+        var existingCustomer = new Customer { Id = customerId, Name = "Test" };
+        await AddAsExistingEntityAsync(existingCustomer);
 
-            // Assert
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        var command = new UpdateCustomerCommand { Id = customerId, Name = "Test2", xmin = 1 };
 
-            var content = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
-            content.Should().NotBeNull();
-            content!.Type.Should().Be(nameof(ValidationException));
-            content!.Detail.Should().Contain("'Name' must not be empty");
-        }
+        // Act
+        var response = await Client.CustomersController().UpdateAsync(command);
 
-        [Fact]
-        public async Task
-            UpdateCustomer_When_a_domainentity_validator_throws_a_DomainValidationException_It_should_return_statuscode_BadRequest()
-        {
-            // Arrange
-            var client = CreateHttpClientWithCustomConfiguration(services =>
-            {
-                var mock = new Mock<Domain.Shared.Interfaces.IValidator<Customer>>();
-                mock.Setup(x =>
-                        x.ValidateAsync(It.IsAny<IDomainEntityContext<Customer>>(), It.IsAny<CancellationToken>()))
-                    .Throws(new DomainValidationException(
-                        new[] { new ValidationMessage("TestProperty", "TestMessage") }));
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
 
-                services.AddSingleton(mock.Object);
-            });
-            await SetTestUserWithPermissionAsync(Domain.Role.Permissions.CustomersWrite);
-
-            var customerId = Guid.NewGuid();
-            var existingCustomer = new Customer { Id = customerId, Name = "Test" };
-            await AddAsExistingEntityAsync(existingCustomer);
-
-            var command = new UpdateCustomerCommand { Id = customerId, Name = "Test2" };
-
-            // Act
-            var response = await client.CustomersController().UpdateAsync(command);
-
-            // Assert
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-
-            var content = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
-            content.Should().NotBeNull();
-            content!.Type.Should().Be(nameof(DomainValidationException));
-            content!.Title.Should().Be("TestMessage");
-        }
-
-        [Fact]
-        public async Task
-            UpdateCustomer_When_a_domainentity_hook_throws_a_DomainException_It_should_return_statuscode_BadRequest()
-        {
-            // Arrange
-            var client = CreateHttpClientWithCustomConfiguration(services =>
-            {
-                var mock = new Mock<IAfterUpdate<Customer>>();
-                mock.Setup(x => x.ExecuteAsync(It.IsAny<HookType>(), It.IsAny<IDomainEntityContext<Customer>>(),
-                        It.IsAny<CancellationToken>()))
-                    .Throws(new DomainException("TestMessage"));
-
-                services.AddSingleton(mock.Object);
-            });
-            await SetTestUserWithPermissionAsync(Domain.Role.Permissions.CustomersWrite);
-
-            var customerId = Guid.NewGuid();
-            var existingCustomer = new Customer { Id = customerId, Name = "Test" };
-            await AddAsExistingEntityAsync(existingCustomer);
-
-            var command = new UpdateCustomerCommand { Id = customerId, Name = "Test2" };
-
-            // Act
-            var response = await client.CustomersController().UpdateAsync(command);
-
-            // Assert
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-
-            var content = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
-            content.Should().NotBeNull();
-            content!.Type.Should().Be(nameof(DomainException));
-            content!.Title.Should().Be("TestMessage");
-        }
-
-        [Fact]
-        public async Task
-            UpdateCustomer_When_an_unhandled_exception_occurs_It_should_return_statuscode_InternalServerError()
-        {
-            // Arrange
-            var client = CreateHttpClientWithCustomConfiguration(services =>
-            {
-                var mock = new Mock<ICustomerDomainEntity>();
-                mock.Setup(x => x.UpdateAsync(It.IsAny<CancellationToken>()))
-                    .Throws(new ArgumentException("TestException"));
-
-                services.AddSingleton(mock.Object);
-            });
-            await SetTestUserWithPermissionAsync(Domain.Role.Permissions.CustomersWrite);
-
-            var customerId = Guid.NewGuid();
-            var existingCustomer = new Customer { Id = customerId, Name = "Test" };
-            await AddAsExistingEntityAsync(existingCustomer);
-
-            var command = new UpdateCustomerCommand { Id = customerId, Name = "Test2" };
-
-            // Act
-            var response = await client.CustomersController().UpdateAsync(command);
-
-            // Assert
-            response.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
-
-            var content = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
-            content.Should().NotBeNull();
-            content!.Type.Should().Be(nameof(ArgumentException));
-            content!.Title.Should().Be("TestException");
-        }
-
-        [Fact]
-        public async Task UpdateCustomer_When_user_has_no_permission_It_should_return_statuscode_Forbidden()
-        {
-            // Arrange
-            await SetTestUserWithoutPermissionAsync();
-            var command = new UpdateCustomerCommand { Id = Guid.NewGuid(), Name = "Test" };
-
-            // Act
-            var response = await Client.CustomersController().UpdateAsync(command);
-
-            // Assert
-            response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
-        }
-
-        [Fact]
-        public async Task UpdateCustomer_When_request_is_not_authenticated_It_should_return_statuscode_Unauthorized()
-        {
-            // Arrange
-            await SetTestUserToUnauthenticatedAsync();
-            var command = new UpdateCustomerCommand { Id = Guid.NewGuid(), Name = "Test" };
-
-            // Act
-            var response = await Client.CustomersController().UpdateAsync(command);
-
-            // Assert
-            response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
-        }
-
-        [Fact]
-        public async Task
-            UpdateCustomer_When_an_incorrect_concurrency_token_is_used_It_should_return_statuscode_BadRequest()
-        {
-            // Arrange
-            await SetTestUserWithPermissionAsync(Domain.Role.Permissions.CustomersWrite);
-            var customerId = Guid.NewGuid();
-            var existingCustomer = new Customer { Id = customerId, Name = "Test" };
-            await AddAsExistingEntityAsync(existingCustomer);
-
-            var command = new UpdateCustomerCommand { Id = customerId, Name = "Test2", xmin = 1 };
-
-            // Act
-            var response = await Client.CustomersController().UpdateAsync(command);
-
-            // Assert
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-
-            var content = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
-            content.Should().NotBeNull();
-            content!.Type.Should().Be(nameof(DbUpdateConcurrencyException));
-        }
+        var content = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
+        content.Should().NotBeNull();
+        content!.Type.Should().Be(nameof(DbUpdateConcurrencyException));
     }
 }

@@ -1,8 +1,7 @@
-using Demo.Domain.Shared.Interfaces;
+﻿using Demo.Domain.Shared.Interfaces;
 
-namespace Demo.Domain.Role.Interfaces
+namespace Demo.Domain.Role.Interfaces;
+
+public interface IRoleDomainEntity : IDomainEntity<Role>
 {
-    public interface IRoleDomainEntity : IDomainEntity<Role>
-    {
-    }
 }

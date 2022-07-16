@@ -1,8 +1,7 @@
-﻿namespace Demo.Application.Users.Queries.UserLookup.Dtos
+﻿namespace Demo.Application.Users.Queries.UserLookup.Dtos;
+
+public enum UserLookupOrderByEnum
 {
-    public enum UserLookupOrderByEnum
-    {
-        FamilyName,
-        Fullname
-    }
+    FamilyName,
+    Fullname
 }

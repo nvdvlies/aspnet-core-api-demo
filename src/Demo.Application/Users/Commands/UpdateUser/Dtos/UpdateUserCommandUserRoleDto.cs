@@ -1,9 +1,8 @@
 ﻿using System;
 
-namespace Demo.Application.Users.Commands.UpdateUser.Dtos
+namespace Demo.Application.Users.Commands.UpdateUser.Dtos;
+
+public class UpdateUserCommandUserRoleDto
 {
-    public class UpdateUserCommandUserRoleDto
-    {
-        public Guid RoleId { get; set; }
-    }
+    public Guid RoleId { get; set; }
 }

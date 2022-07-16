@@ -1,18 +1,17 @@
 ﻿using System;
 using System.Linq;
 
-namespace Demo.SignalrTypescript.Generator.Models
-{
-    internal class EventHubInfo
-    {
-        public EventHubInfo(Type eventHubInterface)
-        {
-            EventHubs = eventHubInterface
-                .GetInterfaces()
-                .Select(type => new EventHub(type))
-                .ToArray();
-        }
+namespace Demo.SignalrTypescript.Generator.Models;
 
-        public EventHub[] EventHubs { get; }
+internal class EventHubInfo
+{
+    public EventHubInfo(Type eventHubInterface)
+    {
+        EventHubs = eventHubInterface
+            .GetInterfaces()
+            .Select(type => new EventHub(type))
+            .ToArray();
     }
+
+    public EventHub[] EventHubs { get; }
 }

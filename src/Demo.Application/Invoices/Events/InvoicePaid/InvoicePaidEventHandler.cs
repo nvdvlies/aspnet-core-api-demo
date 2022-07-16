@@ -5,25 +5,24 @@ using Demo.Events.Invoice;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
-namespace Demo.Application.Invoices.Events.InvoicePaid
+namespace Demo.Application.Invoices.Events.InvoicePaid;
+
+public class InvoicePaidEventHandler : INotificationHandler<InvoicePaidEvent>
 {
-    public class InvoicePaidEventHandler : INotificationHandler<InvoicePaidEvent>
+    private readonly IEventHubContext _eventHubContext;
+    private readonly ILogger<InvoicePaidEventHandler> _logger;
+
+    public InvoicePaidEventHandler(
+        ILogger<InvoicePaidEventHandler> logger,
+        IEventHubContext eventHubContext)
     {
-        private readonly IEventHubContext _eventHubContext;
-        private readonly ILogger<InvoicePaidEventHandler> _logger;
+        _logger = logger;
+        _eventHubContext = eventHubContext;
+    }
 
-        public InvoicePaidEventHandler(
-            ILogger<InvoicePaidEventHandler> logger,
-            IEventHubContext eventHubContext)
-        {
-            _logger = logger;
-            _eventHubContext = eventHubContext;
-        }
-
-        public Task Handle(InvoicePaidEvent @event, CancellationToken cancellationToken)
-        {
-            _logger.LogInformation($"Handling {nameof(InvoicePaidEvent)}");
-            return _eventHubContext.All.InvoicePaid(@event.Data.Id);
-        }
+    public Task Handle(InvoicePaidEvent @event, CancellationToken cancellationToken)
+    {
+        _logger.LogInformation($"Handling {nameof(InvoicePaidEvent)}");
+        return _eventHubContext.All.InvoicePaid(@event.Data.Id);
     }
 }

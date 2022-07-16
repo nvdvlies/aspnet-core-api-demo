@@ -1,7 +1,6 @@
-﻿namespace Demo.Infrastructure.Persistence
+﻿namespace Demo.Infrastructure.Persistence;
+
+internal static class Constants
 {
-    internal static class Constants
-    {
-        public static string SchemaName = "demo";
-    }
+    public static string SchemaName = "demo";
 }

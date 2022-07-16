@@ -2,13 +2,12 @@
 using Demo.Application.Users.Queries.UserLookup.Dtos;
 using Demo.Domain.User;
 
-namespace Demo.Application.Users.Queries.UserLookup
+namespace Demo.Application.Users.Queries.UserLookup;
+
+public class UserLookupQueryMappingProfile : Profile
 {
-    public class UserLookupQueryMappingProfile : Profile
+    public UserLookupQueryMappingProfile()
     {
-        public UserLookupQueryMappingProfile()
-        {
-            CreateMap<User, UserLookupDto>();
-        }
+        CreateMap<User, UserLookupDto>();
     }
 }

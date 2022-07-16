@@ -7,49 +7,48 @@ using Demo.WebApi.Tests.Helpers;
 using FluentAssertions;
 using Xunit;
 
-namespace Demo.WebApi.Tests.Controllers.ApplicationSettings
+namespace Demo.WebApi.Tests.Controllers.ApplicationSettings;
+
+[Collection(nameof(SharedFixture))]
+public class SaveApplicationSettingsTests : TestBase
 {
-    [Collection(nameof(SharedFixture))]
-    public class SaveApplicationSettingsTests : TestBase
+    public SaveApplicationSettingsTests(SharedFixture fixture) : base(fixture)
     {
-        public SaveApplicationSettingsTests(SharedFixture fixture) : base(fixture)
+    }
+
+    [Fact]
+    public async Task
+        SaveApplicationSettings_When_application_settings_can_be_saved_It_should_return_statuscode_NoContent()
+    {
+        // Arrange
+        await SetTestUserWithPermissionAsync(Domain.Role.Permissions.ApplicationSettingsWrite);
+        var command = new SaveApplicationSettingsCommand
         {
-        }
+            Settings = new SaveApplicationSettingsSettingsDto { Setting1 = true }
+        };
 
-        [Fact]
-        public async Task
-            SaveApplicationSettings_When_application_settings_can_be_saved_It_should_return_statuscode_NoContent()
+        // Act
+        var response = await Client.ApplicationSettingsController().Save(command);
+
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.NoContent);
+    }
+
+    [Fact]
+    public async Task
+        SaveApplicationSettings_When_user_does_not_have_write_permission_It_should_return_statuscode_Forbidden()
+    {
+        // Arrange
+        await SetTestUserWithPermissionAsync(Domain.Role.Permissions.ApplicationSettingsRead);
+        var command = new SaveApplicationSettingsCommand
         {
-            // Arrange
-            await SetTestUserWithPermissionAsync(Domain.Role.Permissions.ApplicationSettingsWrite);
-            var command = new SaveApplicationSettingsCommand
-            {
-                Settings = new SaveApplicationSettingsSettingsDto { Setting1 = true }
-            };
+            Settings = new SaveApplicationSettingsSettingsDto { Setting1 = true }
+        };
 
-            // Act
-            var response = await Client.ApplicationSettingsController().Save(command);
+        // Act
+        var response = await Client.ApplicationSettingsController().Save(command);
 
-            // Assert
-            response.StatusCode.Should().Be(HttpStatusCode.NoContent);
-        }
-
-        [Fact]
-        public async Task
-            SaveApplicationSettings_When_user_does_not_have_write_permission_It_should_return_statuscode_Forbidden()
-        {
-            // Arrange
-            await SetTestUserWithPermissionAsync(Domain.Role.Permissions.ApplicationSettingsRead);
-            var command = new SaveApplicationSettingsCommand
-            {
-                Settings = new SaveApplicationSettingsSettingsDto { Setting1 = true }
-            };
-
-            // Act
-            var response = await Client.ApplicationSettingsController().Save(command);
-
-            // Assert
-            response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
-        }
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
     }
 }

@@ -2,10 +2,9 @@
 using System.Threading.Tasks;
 using Demo.Domain.Invoice.Models;
 
-namespace Demo.Domain.Invoice.Interfaces
+namespace Demo.Domain.Invoice.Interfaces;
+
+public interface IInvoiceToPdfModelMapper
 {
-    public interface IInvoiceToPdfModelMapper
-    {
-        Task<InvoiceToPdfModel> MapAsync(Invoice invoice, CancellationToken cancellationToken);
-    }
+    Task<InvoiceToPdfModel> MapAsync(Invoice invoice, CancellationToken cancellationToken);
 }

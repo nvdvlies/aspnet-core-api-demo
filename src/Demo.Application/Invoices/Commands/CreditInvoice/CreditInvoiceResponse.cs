@@ -1,9 +1,8 @@
 ﻿using System;
 
-namespace Demo.Application.Invoices.Commands.CreditInvoice
+namespace Demo.Application.Invoices.Commands.CreditInvoice;
+
+public class CreditInvoiceResponse
 {
-    public class CreditInvoiceResponse
-    {
-        public Guid Id { get; set; }
-    }
+    public Guid Id { get; set; }
 }

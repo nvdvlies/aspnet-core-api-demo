@@ -1,7 +1,6 @@
-﻿namespace Demo.Domain.Shared.Interfaces
+﻿namespace Demo.Domain.Shared.Interfaces;
+
+public interface IDbCommandOptions
 {
-    public interface IDbCommandOptions
-    {
-        bool AsNoTracking { get; set; }
-    }
+    bool AsNoTracking { get; set; }
 }

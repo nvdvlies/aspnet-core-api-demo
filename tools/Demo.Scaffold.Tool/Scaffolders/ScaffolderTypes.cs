@@ -1,9 +1,8 @@
-﻿namespace Demo.Scaffold.Tool.Scaffolders
+﻿namespace Demo.Scaffold.Tool.Scaffolders;
+
+internal enum ScaffolderTypes
 {
-    internal enum ScaffolderTypes
-    {
-        Unknown,
-        DomainEntity,
-        Endpoint
-    }
+    Unknown,
+    DomainEntity,
+    Endpoint
 }

@@ -1,12 +1,11 @@
-using FluentValidation;
+﻿using FluentValidation;
 
-namespace Demo.Application.Customers.Commands.CreateCustomer
+namespace Demo.Application.Customers.Commands.CreateCustomer;
+
+public class CreateCustomerCommandValidator : AbstractValidator<CreateCustomerCommand>
 {
-    public class CreateCustomerCommandValidator : AbstractValidator<CreateCustomerCommand>
+    public CreateCustomerCommandValidator()
     {
-        public CreateCustomerCommandValidator()
-        {
-            RuleFor(x => x.Name).NotEmpty();
-        }
+        RuleFor(x => x.Name).NotEmpty();
     }
 }

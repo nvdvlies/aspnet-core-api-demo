@@ -11,43 +11,42 @@ using Respawn;
 using Respawn.Graph;
 using Xunit;
 
-namespace Demo.WebApi.Tests.Helpers
+namespace Demo.WebApi.Tests.Helpers;
+
+public class SharedFixture : ICollectionFixture<CustomWebApplicationFactory>
 {
-    public class SharedFixture : ICollectionFixture<CustomWebApplicationFactory>
+    public readonly Checkpoint Checkpoint = new()
     {
-        public readonly Checkpoint Checkpoint = new()
-        {
-            SchemasToInclude = new[] { "demo" },
-            TablesToIgnore = new[] { new Table(nameof(Permission)), new Table(nameof(PermissionGroup)) },
-            WithReseed = true,
-            DbAdapter = DbAdapter.Postgres
-        };
+        SchemasToInclude = new[] { "demo" },
+        TablesToIgnore = new[] { new Table(nameof(Permission)), new Table(nameof(PermissionGroup)) },
+        WithReseed = true,
+        DbAdapter = DbAdapter.Postgres
+    };
 
-        public readonly HttpClient Client;
-        internal readonly CustomWebApplicationFactory Factory;
-        public readonly HubConnection HubConnection;
+    public readonly HttpClient Client;
+    internal readonly CustomWebApplicationFactory Factory;
+    public readonly HubConnection HubConnection;
 
-        public SharedFixture()
-        {
-            Factory = new CustomWebApplicationFactory();
-            Client = Factory.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
-            Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(TestAuthHandler.DefaultScheme);
+    public SharedFixture()
+    {
+        Factory = new CustomWebApplicationFactory();
+        Client = Factory.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
+        Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(TestAuthHandler.DefaultScheme);
 
-            MigrateDatabaseAsync().Wait();
+        MigrateDatabaseAsync().Wait();
 
-            HubConnection = new HubConnectionBuilder()
-                .WithAutomaticReconnect()
-                .WithUrl("http://localhost/hub",
-                    o => { o.HttpMessageHandlerFactory = _ => Factory.Server.CreateHandler(); })
-                .Build();
-            HubConnection.StartAsync().Wait();
-        }
+        HubConnection = new HubConnectionBuilder()
+            .WithAutomaticReconnect()
+            .WithUrl("http://localhost/hub",
+                o => { o.HttpMessageHandlerFactory = _ => Factory.Server.CreateHandler(); })
+            .Build();
+        HubConnection.StartAsync().Wait();
+    }
 
-        private async Task MigrateDatabaseAsync()
-        {
-            using var scope = Factory.Services.CreateScope();
-            var applicationDbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-            await applicationDbContext.Database.MigrateAsync();
-        }
+    private async Task MigrateDatabaseAsync()
+    {
+        using var scope = Factory.Services.CreateScope();
+        var applicationDbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        await applicationDbContext.Database.MigrateAsync();
     }
 }

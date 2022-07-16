@@ -1,9 +1,8 @@
 ﻿using System;
 
-namespace Demo.Common.Interfaces
+namespace Demo.Common.Interfaces;
+
+public interface IDateTime
 {
-    public interface IDateTime
-    {
-        DateTime UtcNow { get; }
-    }
+    DateTime UtcNow { get; }
 }

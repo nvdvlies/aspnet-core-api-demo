@@ -1,10 +1,9 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Demo.Application.Shared.Dtos;
 
-namespace Demo.Application.CurrentUser.Queries.GetCurrentUserPermissions
+namespace Demo.Application.CurrentUser.Queries.GetCurrentUserPermissions;
+
+public class GetCurrentUserPermissionsQueryResult
 {
-    public class GetCurrentUserPermissionsQueryResult
-    {
-        public IEnumerable<PermissionDto> Permissions { get; set; }
-    }
+    public IEnumerable<PermissionDto> Permissions { get; set; }
 }

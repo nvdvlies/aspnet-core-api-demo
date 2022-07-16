@@ -6,36 +6,35 @@ using Demo.Domain.Shared.DomainEntity;
 using Demo.Domain.Shared.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace Demo.Domain.Role.Validators
+namespace Demo.Domain.Role.Validators;
+
+internal class NotAllowedToDeleteRoleLinkedToUserValidator : IValidator<Role>
 {
-    internal class NotAllowedToDeleteRoleLinkedToUserValidator : IValidator<Role>
+    private readonly IDbQuery<User.User> _userQuery;
+
+    public NotAllowedToDeleteRoleLinkedToUserValidator(IDbQuery<User.User> userQuery)
     {
-        private readonly IDbQuery<User.User> _userQuery;
+        _userQuery = userQuery;
+    }
 
-        public NotAllowedToDeleteRoleLinkedToUserValidator(IDbQuery<User.User> userQuery)
+    public async Task<IEnumerable<ValidationMessage>> ValidateAsync(IDomainEntityContext<Role> context,
+        CancellationToken cancellationToken = default)
+    {
+        if (context.EditMode != EditMode.Delete)
         {
-            _userQuery = userQuery;
-        }
-
-        public async Task<IEnumerable<ValidationMessage>> ValidateAsync(IDomainEntityContext<Role> context,
-            CancellationToken cancellationToken = default)
-        {
-            if (context.EditMode != EditMode.Delete)
-            {
-                return ValidationResult.Ok();
-            }
-
-            var isRoleInUse = await _userQuery.AsQueryable()
-                .Where(user => user.UserRoles.Any(userRole => userRole.RoleId == context.Entity.Id))
-                .AnyAsync(cancellationToken);
-
-            if (isRoleInUse)
-            {
-                return ValidationResult.Invalid(
-                    "Cannot delete role, because one or more users are linked to this role.");
-            }
-
             return ValidationResult.Ok();
         }
+
+        var isRoleInUse = await _userQuery.AsQueryable()
+            .Where(user => user.UserRoles.Any(userRole => userRole.RoleId == context.Entity.Id))
+            .AnyAsync(cancellationToken);
+
+        if (isRoleInUse)
+        {
+            return ValidationResult.Invalid(
+                "Cannot delete role, because one or more users are linked to this role.");
+        }
+
+        return ValidationResult.Ok();
     }
 }

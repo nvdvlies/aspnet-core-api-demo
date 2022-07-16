@@ -3,27 +3,26 @@ using System.Threading.Tasks;
 using Demo.Domain.Shared.DomainEntity;
 using Demo.Domain.Shared.Interfaces;
 
-namespace Demo.Domain.User.Hooks
+namespace Demo.Domain.User.Hooks;
+
+internal class ExcludeNavigationPropertiesHook : IBeforeCreate<User>, IBeforeUpdate<User>, IBeforeDelete<User>
 {
-    internal class ExcludeNavigationPropertiesHook : IBeforeCreate<User>, IBeforeUpdate<User>, IBeforeDelete<User>
+    public Task ExecuteAsync(HookType type, IDomainEntityContext<User> context,
+        CancellationToken cancellationToken = default)
     {
-        public Task ExecuteAsync(HookType type, IDomainEntityContext<User> context,
-            CancellationToken cancellationToken = default)
-        {
-            context.Entity.UserRoles?.ForEach(x => { x.Role = null; });
+        context.Entity.UserRoles?.ForEach(x => { x.Role = null; });
 
-            return Task.CompletedTask;
-        }
+        return Task.CompletedTask;
     }
+}
 
-    internal class DisallowDeleteAdministratorHook : IBeforeDelete<User>
+internal class DisallowDeleteAdministratorHook : IBeforeDelete<User>
+{
+    public Task ExecuteAsync(HookType type, IDomainEntityContext<User> context,
+        CancellationToken cancellationToken = default)
     {
-        public Task ExecuteAsync(HookType type, IDomainEntityContext<User> context,
-            CancellationToken cancellationToken = default)
-        {
-            context.Entity.UserRoles?.ForEach(x => { x.Role = null; });
+        context.Entity.UserRoles?.ForEach(x => { x.Role = null; });
 
-            return Task.CompletedTask;
-        }
+        return Task.CompletedTask;
     }
 }

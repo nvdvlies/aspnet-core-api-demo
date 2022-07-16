@@ -1,9 +1,8 @@
-﻿namespace Demo.Domain.Shared.Interfaces
+﻿namespace Demo.Domain.Shared.Interfaces;
+
+public interface IReadonlyDomainEntityOptions
 {
-    public interface IReadonlyDomainEntityOptions
-    {
-        bool IncludeDeleted { get; }
-        bool AsNoTracking { get; }
-        bool DisableSoftDelete { get; }
-    }
+    bool IncludeDeleted { get; }
+    bool AsNoTracking { get; }
+    bool DisableSoftDelete { get; }
 }

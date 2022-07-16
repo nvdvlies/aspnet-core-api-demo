@@ -6,46 +6,45 @@ using Demo.Domain.Auditlog;
 using Demo.Domain.Auditlog.Interfaces;
 using Demo.Domain.Shared.Interfaces;
 
-namespace Demo.Infrastructure.Auditlogging.Shared
+namespace Demo.Infrastructure.Auditlogging.Shared;
+
+internal abstract class AuditloggerBase<T> where T : IEntity
 {
-    internal abstract class AuditloggerBase<T> where T : IEntity
+    private readonly IAuditlogDomainEntity _auditlogDomainEntity;
+    private readonly ICurrentUserIdProvider _currentUserIdProvider;
+    private readonly IDateTime _dateTime;
+
+    protected AuditloggerBase(
+        ICurrentUserIdProvider currentUserIdProvider,
+        IDateTime dateTime,
+        IAuditlogDomainEntity auditlogDomainEntity
+    )
     {
-        private readonly IAuditlogDomainEntity _auditlogDomainEntity;
-        private readonly ICurrentUserIdProvider _currentUserIdProvider;
-        private readonly IDateTime _dateTime;
+        _currentUserIdProvider = currentUserIdProvider;
+        _dateTime = dateTime;
+        _auditlogDomainEntity = auditlogDomainEntity;
+    }
 
-        protected AuditloggerBase(
-            ICurrentUserIdProvider currentUserIdProvider,
-            IDateTime dateTime,
-            IAuditlogDomainEntity auditlogDomainEntity
-        )
+    protected abstract List<AuditlogItem> AuditlogItems(T current, T previous);
+
+    public async Task CreateAuditLogAsync(T current, T previous, CancellationToken cancellationToken)
+    {
+        var auditLogItems = AuditlogItems(current, previous);
+
+        if (auditLogItems?.Count == 0)
         {
-            _currentUserIdProvider = currentUserIdProvider;
-            _dateTime = dateTime;
-            _auditlogDomainEntity = auditlogDomainEntity;
+            return;
         }
 
-        protected abstract List<AuditlogItem> AuditlogItems(T current, T previous);
-
-        public async Task CreateAuditLogAsync(T current, T previous, CancellationToken cancellationToken)
+        await _auditlogDomainEntity.NewAsync(cancellationToken);
+        _auditlogDomainEntity.With(x =>
         {
-            var auditLogItems = AuditlogItems(current, previous);
-
-            if (auditLogItems?.Count == 0)
-            {
-                return;
-            }
-
-            await _auditlogDomainEntity.NewAsync(cancellationToken);
-            _auditlogDomainEntity.With(x =>
-            {
-                x.EntityName = current.GetType().Name;
-                x.EntityId = current.Id;
-                x.ModifiedBy = _currentUserIdProvider.Id;
-                x.ModifiedOn = _dateTime.UtcNow;
-                x.AuditlogItems = auditLogItems;
-            });
-            await _auditlogDomainEntity.CreateAsync(cancellationToken);
-        }
+            x.EntityName = current.GetType().Name;
+            x.EntityId = current.Id;
+            x.ModifiedBy = _currentUserIdProvider.Id;
+            x.ModifiedOn = _dateTime.UtcNow;
+            x.AuditlogItems = auditLogItems;
+        });
+        await _auditlogDomainEntity.CreateAsync(cancellationToken);
     }
 }

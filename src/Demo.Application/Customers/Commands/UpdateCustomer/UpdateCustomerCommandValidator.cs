@@ -1,13 +1,12 @@
-using FluentValidation;
+﻿using FluentValidation;
 
-namespace Demo.Application.Customers.Commands.UpdateCustomer
+namespace Demo.Application.Customers.Commands.UpdateCustomer;
+
+public class UpdateCustomerCommandValidator : AbstractValidator<UpdateCustomerCommand>
 {
-    public class UpdateCustomerCommandValidator : AbstractValidator<UpdateCustomerCommand>
+    public UpdateCustomerCommandValidator()
     {
-        public UpdateCustomerCommandValidator()
-        {
-            RuleFor(x => x.Id).NotEmpty();
-            RuleFor(x => x.Name).NotEmpty();
-        }
+        RuleFor(x => x.Id).NotEmpty();
+        RuleFor(x => x.Name).NotEmpty();
     }
 }

@@ -4,28 +4,28 @@ using Demo.Scaffold.Tool.Changes;
 using Demo.Scaffold.Tool.Helpers;
 using Demo.Scaffold.Tool.Interfaces;
 
-namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.DomainEntity.OutputCollectors
+namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.DomainEntity.OutputCollectors;
+
+internal class EventHookOutputCollector : IOutputCollector
 {
-    internal class EventHookOutputCollector : IOutputCollector
+    public IEnumerable<IChange> CollectChanges(ScaffolderContext context)
     {
-        public IEnumerable<IChange> CollectChanges(ScaffolderContext context)
-        {
-            var changes = new List<IChange>();
+        var changes = new List<IChange>();
 
-            var entityName = context.Variables.Get<string>(Constants.EntityName);
+        var entityName = context.Variables.Get<string>(Constants.EntityName);
 
-            changes.Add(new CreateNewClass(
-                Path.Combine(context.GetEntityDirectory(entityName), "Hooks"),
-                $"{entityName}CreatedUpdatedDeletedDomainEventHook.cs",
-                GetTemplate(entityName)
-            ));
+        changes.Add(new CreateNewClass(
+            Path.Combine(context.GetEntityDirectory(entityName), "Hooks"),
+            $"{entityName}CreatedUpdatedDeletedDomainEventHook.cs",
+            GetTemplate(entityName)
+        ));
 
-            return changes;
-        }
+        return changes;
+    }
 
-        private static string GetTemplate(string entityName)
-        {
-            var code = @"
+    private static string GetTemplate(string entityName)
+    {
+        var code = @"
 using Demo.Common.Interfaces;
 using Demo.Domain.Shared.DomainEntity;
 using Demo.Domain.Shared.Interfaces;
@@ -66,8 +66,7 @@ namespace Demo.Domain.%ENTITY%.Hooks
         }
     }
 }";
-            code = code.Replace("%ENTITY%", entityName);
-            return code;
-        }
+        code = code.Replace("%ENTITY%", entityName);
+        return code;
     }
 }

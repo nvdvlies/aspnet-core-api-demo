@@ -1,15 +1,14 @@
-﻿namespace Demo.Events
+﻿namespace Demo.Events;
+
+public enum Topics
 {
-    public enum Topics
-    {
-        ApplicationSettings,
-        Customer,
-        Invoice,
-        User,
-        Role,
-        OutboxEvent,
-        OutboxMessage,
-        FeatureFlagSettings,
-        UserPreferences
-    }
+    ApplicationSettings,
+    Customer,
+    Invoice,
+    User,
+    Role,
+    OutboxEvent,
+    OutboxMessage,
+    FeatureFlagSettings,
+    UserPreferences
 }

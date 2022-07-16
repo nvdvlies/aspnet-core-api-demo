@@ -1,8 +1,7 @@
-﻿namespace Demo.Domain.Shared.Interfaces
+﻿namespace Demo.Domain.Shared.Interfaces;
+
+public interface IJsonService<T>
 {
-    public interface IJsonService<T>
-    {
-        string ToJson(T entity);
-        T FromJson(string json);
-    }
+    string ToJson(T entity);
+    T FromJson(string json);
 }

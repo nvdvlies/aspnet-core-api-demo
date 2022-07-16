@@ -2,10 +2,9 @@
 using Demo.Scaffold.Tool.Changes;
 using Demo.Scaffold.Tool.Scaffolders;
 
-namespace Demo.Scaffold.Tool.Interfaces
+namespace Demo.Scaffold.Tool.Interfaces;
+
+internal interface IOutputCollector
 {
-    internal interface IOutputCollector
-    {
-        IEnumerable<IChange> CollectChanges(ScaffolderContext context);
-    }
+    IEnumerable<IChange> CollectChanges(ScaffolderContext context);
 }

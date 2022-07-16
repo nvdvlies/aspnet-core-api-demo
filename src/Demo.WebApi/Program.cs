@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -32,7 +32,7 @@ var environmentSettings = new EnvironmentSettings();
 builder.Configuration.Bind(environmentSettings);
 builder.Services.AddSingleton(environmentSettings);
 
-builder.Host.UseSerilog((ctx, lc) => lc
+builder.Host.UseSerilog((_, config) => config
     .Enrich.FromLogContext()
     .Enrich.WithExceptionDetails()
     .Enrich.WithMachineName()
@@ -64,9 +64,9 @@ builder.Services.AddSwaggerDocument(config =>
     );
 });
 
-builder.Services.AddCors(o => o.AddDefaultPolicy(builder =>
+builder.Services.AddCors(o => o.AddDefaultPolicy(corsPolicyBuilder =>
 {
-    builder.WithOrigins("http://localhost:4401", "http://localhost:5500")
+    corsPolicyBuilder.WithOrigins("http://localhost:4401", "http://localhost:5500")
         .AllowAnyMethod()
         .AllowAnyHeader()
         .AllowCredentials();

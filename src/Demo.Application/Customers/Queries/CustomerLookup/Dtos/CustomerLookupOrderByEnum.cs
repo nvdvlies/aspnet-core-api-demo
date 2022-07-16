@@ -1,8 +1,7 @@
-﻿namespace Demo.Application.Customers.Queries.CustomerLookup.Dtos
+﻿namespace Demo.Application.Customers.Queries.CustomerLookup.Dtos;
+
+public enum CustomerLookupOrderByEnum
 {
-    public enum CustomerLookupOrderByEnum
-    {
-        Code,
-        Name
-    }
+    Code,
+    Name
 }

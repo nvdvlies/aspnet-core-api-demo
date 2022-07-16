@@ -1,8 +1,7 @@
-﻿namespace Demo.Application.Invoices.Queries.InvoiceLookup.Dtos
+﻿namespace Demo.Application.Invoices.Queries.InvoiceLookup.Dtos;
+
+public enum InvoiceLookupOrderByEnum
 {
-    public enum InvoiceLookupOrderByEnum
-    {
-        InvoiceNumber,
-        InvoiceDate
-    }
+    InvoiceNumber,
+    InvoiceDate
 }

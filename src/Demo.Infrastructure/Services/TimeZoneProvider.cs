@@ -2,18 +2,17 @@
 using Demo.Domain.Shared.Interfaces;
 using Demo.Infrastructure.Settings;
 
-namespace Demo.Infrastructure.Services
-{
-    internal class TimeZoneProvider : ITimeZoneProvider
-    {
-        public TimeZoneProvider(
-            EnvironmentSettings environmentSettings
-        )
-        {
-            TimeZone = TimeZoneInfo.FindSystemTimeZoneById(environmentSettings.DefaultTimeZone ??
-                                                           "W. Europe Standard Time");
-        }
+namespace Demo.Infrastructure.Services;
 
-        public TimeZoneInfo TimeZone { get; }
+internal class TimeZoneProvider : ITimeZoneProvider
+{
+    public TimeZoneProvider(
+        EnvironmentSettings environmentSettings
+    )
+    {
+        TimeZone = TimeZoneInfo.FindSystemTimeZoneById(environmentSettings.DefaultTimeZone ??
+                                                       "W. Europe Standard Time");
     }
+
+    public TimeZoneInfo TimeZone { get; }
 }

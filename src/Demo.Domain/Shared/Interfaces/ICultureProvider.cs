@@ -1,9 +1,8 @@
-using System.Globalization;
+﻿using System.Globalization;
 
-namespace Demo.Domain.Shared.Interfaces
+namespace Demo.Domain.Shared.Interfaces;
+
+public interface ICultureProvider
 {
-    public interface ICultureProvider
-    {
-        CultureInfo Culture { get; }
-    }
+    CultureInfo Culture { get; }
 }

@@ -1,9 +1,8 @@
-using System;
+﻿using System;
 
-namespace Demo.Application.Customers.Commands.CreateCustomer
+namespace Demo.Application.Customers.Commands.CreateCustomer;
+
+public class CreateCustomerResponse
 {
-    public class CreateCustomerResponse
-    {
-        public Guid Id { get; set; }
-    }
+    public Guid Id { get; set; }
 }

@@ -1,7 +1,6 @@
-﻿namespace Demo.Application.CurrentUser.Messages.SendChangePasswordEmail
+﻿namespace Demo.Application.CurrentUser.Messages.SendChangePasswordEmail;
+
+public class ChangePasswordEmailBodyTemplateModel
 {
-    public class ChangePasswordEmailBodyTemplateModel
-    {
-        public string ChangePasswordUrl { get; set; }
-    }
+    public string ChangePasswordUrl { get; set; }
 }

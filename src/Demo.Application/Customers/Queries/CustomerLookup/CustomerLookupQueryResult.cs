@@ -1,11 +1,10 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Demo.Application.Customers.Queries.CustomerLookup.Dtos;
 using Demo.Application.Shared.Models;
 
-namespace Demo.Application.Customers.Queries.CustomerLookup
+namespace Demo.Application.Customers.Queries.CustomerLookup;
+
+public class CustomerLookupQueryResult : BasePaginatedResult
 {
-    public class CustomerLookupQueryResult : BasePaginatedResult
-    {
-        public IEnumerable<CustomerLookupDto> Customers { get; set; }
-    }
+    public IEnumerable<CustomerLookupDto> Customers { get; set; }
 }

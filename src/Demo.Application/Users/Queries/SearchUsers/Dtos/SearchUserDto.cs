@@ -1,10 +1,9 @@
 ﻿using Demo.Application.Shared.Dtos;
 
-namespace Demo.Application.Users.Queries.SearchUsers.Dtos
+namespace Demo.Application.Users.Queries.SearchUsers.Dtos;
+
+public class SearchUserDto : SoftDeleteEntityDto
 {
-    public class SearchUserDto : SoftDeleteEntityDto
-    {
-        public string Fullname { get; set; }
-        public string Email { get; set; }
-    }
+    public string Fullname { get; set; }
+    public string Email { get; set; }
 }

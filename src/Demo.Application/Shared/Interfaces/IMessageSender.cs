@@ -3,11 +3,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using Demo.Messages;
 
-namespace Demo.Application.Shared.Interfaces
+namespace Demo.Application.Shared.Interfaces;
+
+public interface IMessageSender
 {
-    public interface IMessageSender
-    {
-        Task SendAsync(IMessage message, CancellationToken cancellationToken);
-        Task SendAsync(IEnumerable<IMessage> messages, CancellationToken cancellationToken);
-    }
+    Task SendAsync(IMessage message, CancellationToken cancellationToken);
+    Task SendAsync(IEnumerable<IMessage> messages, CancellationToken cancellationToken);
 }

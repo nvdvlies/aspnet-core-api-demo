@@ -2,13 +2,12 @@
 using System.Threading.Tasks;
 using Demo.Domain.Shared.DomainEntity;
 
-namespace Demo.Domain.Shared.Interfaces
-{
-    internal interface IAfterDelete<T> where T : IEntity
-    {
-        int Order => 0;
+namespace Demo.Domain.Shared.Interfaces;
 
-        Task ExecuteAsync(HookType type, IDomainEntityContext<T> context,
-            CancellationToken cancellationToken = default);
-    }
+internal interface IAfterDelete<T> where T : IEntity
+{
+    int Order => 0;
+
+    Task ExecuteAsync(HookType type, IDomainEntityContext<T> context,
+        CancellationToken cancellationToken = default);
 }

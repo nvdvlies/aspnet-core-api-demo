@@ -1,4 +1,4 @@
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -8,30 +8,29 @@ using Demo.Domain.Shared.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace Demo.Application.Customers.Queries.GetCustomerById
+namespace Demo.Application.Customers.Queries.GetCustomerById;
+
+public class GetCustomerByIdQueryHandler : IRequestHandler<GetCustomerByIdQuery, GetCustomerByIdQueryResult>
 {
-    public class GetCustomerByIdQueryHandler : IRequestHandler<GetCustomerByIdQuery, GetCustomerByIdQueryResult>
+    private readonly IMapper _mapper;
+    private readonly IDbQuery<Customer> _query;
+
+    public GetCustomerByIdQueryHandler(
+        IDbQuery<Customer> query,
+        IMapper mapper
+    )
     {
-        private readonly IMapper _mapper;
-        private readonly IDbQuery<Customer> _query;
+        _query = query;
+        _mapper = mapper;
+    }
 
-        public GetCustomerByIdQueryHandler(
-            IDbQuery<Customer> query,
-            IMapper mapper
-        )
-        {
-            _query = query;
-            _mapper = mapper;
-        }
+    public async Task<GetCustomerByIdQueryResult> Handle(GetCustomerByIdQuery request,
+        CancellationToken cancellationToken)
+    {
+        var customer = await _query.AsQueryable()
+            .ProjectTo<CustomerDto>(_mapper.ConfigurationProvider)
+            .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
-        public async Task<GetCustomerByIdQueryResult> Handle(GetCustomerByIdQuery request,
-            CancellationToken cancellationToken)
-        {
-            var customer = await _query.AsQueryable()
-                .ProjectTo<CustomerDto>(_mapper.ConfigurationProvider)
-                .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
-
-            return new GetCustomerByIdQueryResult { Customer = customer };
-        }
+        return new GetCustomerByIdQueryResult { Customer = customer };
     }
 }

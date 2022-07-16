@@ -1,35 +1,34 @@
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using Demo.Application.Shared.Mappings;
 using Demo.Domain.Customer.Interfaces;
 using MediatR;
 
-namespace Demo.Application.Customers.Commands.UpdateCustomer
+namespace Demo.Application.Customers.Commands.UpdateCustomer;
+
+public class UpdateCustomerCommandHandler : IRequestHandler<UpdateCustomerCommand, Unit>
 {
-    public class UpdateCustomerCommandHandler : IRequestHandler<UpdateCustomerCommand, Unit>
+    private readonly ICustomerDomainEntity _customerDomainEntity;
+    private readonly IMapper _mapper;
+
+    public UpdateCustomerCommandHandler(
+        ICustomerDomainEntity customerDomainEntity,
+        IMapper mapper
+    )
     {
-        private readonly ICustomerDomainEntity _customerDomainEntity;
-        private readonly IMapper _mapper;
+        _customerDomainEntity = customerDomainEntity;
+        _mapper = mapper;
+    }
 
-        public UpdateCustomerCommandHandler(
-            ICustomerDomainEntity customerDomainEntity,
-            IMapper mapper
-        )
-        {
-            _customerDomainEntity = customerDomainEntity;
-            _mapper = mapper;
-        }
+    public async Task<Unit> Handle(UpdateCustomerCommand request, CancellationToken cancellationToken)
+    {
+        await _customerDomainEntity.GetAsync(request.Id, cancellationToken);
 
-        public async Task<Unit> Handle(UpdateCustomerCommand request, CancellationToken cancellationToken)
-        {
-            await _customerDomainEntity.GetAsync(request.Id, cancellationToken);
+        _customerDomainEntity.MapFrom(request, _mapper);
 
-            _customerDomainEntity.MapFrom(request, _mapper);
+        await _customerDomainEntity.UpdateAsync(cancellationToken);
 
-            await _customerDomainEntity.UpdateAsync(cancellationToken);
-
-            return Unit.Value;
-        }
+        return Unit.Value;
     }
 }

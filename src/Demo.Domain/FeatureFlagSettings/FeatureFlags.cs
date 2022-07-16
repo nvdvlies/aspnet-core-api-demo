@@ -1,7 +1,6 @@
-﻿namespace Demo.Domain.FeatureFlagSettings
+﻿namespace Demo.Domain.FeatureFlagSettings;
+
+public static class FeatureFlags
 {
-    public static class FeatureFlags
-    {
-        public static string FeatureFlagX => "FeatureFlagX";
-    }
+    public static string FeatureFlagX => "FeatureFlagX";
 }

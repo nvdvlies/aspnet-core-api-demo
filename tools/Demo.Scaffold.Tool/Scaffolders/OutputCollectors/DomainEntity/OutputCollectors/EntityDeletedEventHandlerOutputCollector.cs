@@ -4,29 +4,29 @@ using Demo.Scaffold.Tool.Changes;
 using Demo.Scaffold.Tool.Helpers;
 using Demo.Scaffold.Tool.Interfaces;
 
-namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.DomainEntity.OutputCollectors
+namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.DomainEntity.OutputCollectors;
+
+internal class EntityDeletedEventHandlerOutputCollector : IOutputCollector
 {
-    internal class EntityDeletedEventHandlerOutputCollector : IOutputCollector
+    public IEnumerable<IChange> CollectChanges(ScaffolderContext context)
     {
-        public IEnumerable<IChange> CollectChanges(ScaffolderContext context)
-        {
-            var changes = new List<IChange>();
+        var changes = new List<IChange>();
 
-            var entityName = context.Variables.Get<string>(Constants.EntityName);
-            var collectionName = context.Variables.Get<string>(Constants.CollectionName);
+        var entityName = context.Variables.Get<string>(Constants.EntityName);
+        var collectionName = context.Variables.Get<string>(Constants.CollectionName);
 
-            changes.Add(new CreateNewClass(
-                Path.Combine(context.GetApplicationDirectory(), collectionName, "Events", $"{entityName}Deleted"),
-                $"{entityName}DeletedEventHandler.cs",
-                GetTemplate(collectionName, entityName)
-            ));
+        changes.Add(new CreateNewClass(
+            Path.Combine(context.GetApplicationDirectory(), collectionName, "Events", $"{entityName}Deleted"),
+            $"{entityName}DeletedEventHandler.cs",
+            GetTemplate(collectionName, entityName)
+        ));
 
-            return changes;
-        }
+        return changes;
+    }
 
-        private static string GetTemplate(string collectionName, string entityName)
-        {
-            var code = @"
+    private static string GetTemplate(string collectionName, string entityName)
+    {
+        var code = @"
 using Demo.Application.Shared.Interfaces;
 using Demo.Events.%ENTITY%;
 using MediatR;
@@ -55,9 +55,8 @@ namespace Demo.Application.%COLLECTIONNAME%.Events.%ENTITY%Deleted
         }
     }
 }";
-            code = code.Replace("%COLLECTIONNAME%", collectionName);
-            code = code.Replace("%ENTITY%", entityName);
-            return code;
-        }
+        code = code.Replace("%COLLECTIONNAME%", collectionName);
+        code = code.Replace("%ENTITY%", entityName);
+        return code;
     }
 }

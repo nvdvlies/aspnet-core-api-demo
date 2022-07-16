@@ -1,14 +1,13 @@
 ﻿using System.Collections.Generic;
 
-namespace Demo.Domain.FeatureFlagSettings
-{
-    public class FeatureFlagSettingsSettings
-    {
-        public FeatureFlagSettingsSettings()
-        {
-            FeatureFlags = new List<FeatureFlag>();
-        }
+namespace Demo.Domain.FeatureFlagSettings;
 
-        public List<FeatureFlag> FeatureFlags { get; set; }
+public class FeatureFlagSettingsSettings
+{
+    public FeatureFlagSettingsSettings()
+    {
+        FeatureFlags = new List<FeatureFlag>();
     }
+
+    public List<FeatureFlag> FeatureFlags { get; set; }
 }

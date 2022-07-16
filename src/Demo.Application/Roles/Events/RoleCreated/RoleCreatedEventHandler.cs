@@ -5,26 +5,25 @@ using Demo.Events.Role;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
-namespace Demo.Application.Roles.Events.RoleCreated
+namespace Demo.Application.Roles.Events.RoleCreated;
+
+public class RoleCreatedEventHandler : INotificationHandler<RoleCreatedEvent>
 {
-    public class RoleCreatedEventHandler : INotificationHandler<RoleCreatedEvent>
+    private readonly IEventHubContext _eventHubContext;
+    private readonly ILogger<RoleCreatedEventHandler> _logger;
+
+    public RoleCreatedEventHandler(
+        ILogger<RoleCreatedEventHandler> logger,
+        IEventHubContext eventHubContext
+    )
     {
-        private readonly IEventHubContext _eventHubContext;
-        private readonly ILogger<RoleCreatedEventHandler> _logger;
+        _logger = logger;
+        _eventHubContext = eventHubContext;
+    }
 
-        public RoleCreatedEventHandler(
-            ILogger<RoleCreatedEventHandler> logger,
-            IEventHubContext eventHubContext
-        )
-        {
-            _logger = logger;
-            _eventHubContext = eventHubContext;
-        }
-
-        public Task Handle(RoleCreatedEvent @event, CancellationToken cancellationToken)
-        {
-            _logger.LogInformation($"Handling {nameof(RoleCreatedEvent)}");
-            return _eventHubContext.All.RoleCreated(@event.Data.Id, @event.Data.CreatedBy);
-        }
+    public Task Handle(RoleCreatedEvent @event, CancellationToken cancellationToken)
+    {
+        _logger.LogInformation($"Handling {nameof(RoleCreatedEvent)}");
+        return _eventHubContext.All.RoleCreated(@event.Data.Id, @event.Data.CreatedBy);
     }
 }

@@ -6,35 +6,34 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace Demo.Scaffold.Tool
+namespace Demo.Scaffold.Tool;
+
+internal static class Program
 {
-    internal static class Program
+    public static void Main(string[] args)
     {
-        public static void Main(string[] args)
-        {
-            using var host = new HostBuilder()
-                .ConfigureLogging((_, builder) => { builder.AddConsole(); })
-                .ConfigureServices((_, services) =>
-                {
-                    var configuration = new ConfigurationBuilder()
-                        .SetBasePath(Directory.GetCurrentDirectory())
-                        .AddJsonFile("appsettings.json", false)
-                        .AddJsonFile(Constants.UserSettingsFileName, true)
-                        .Build();
+        using var host = new HostBuilder()
+            .ConfigureLogging((_, builder) => { builder.AddConsole(); })
+            .ConfigureServices((_, services) =>
+            {
+                var configuration = new ConfigurationBuilder()
+                    .SetBasePath(Directory.GetCurrentDirectory())
+                    .AddJsonFile("appsettings.json", false)
+                    .AddJsonFile(Constants.UserSettingsFileName, true)
+                    .Build();
 
-                    var appSettings = new AppSettings();
-                    configuration.Bind(appSettings);
-                    services.AddSingleton(appSettings);
+                var appSettings = new AppSettings();
+                configuration.Bind(appSettings);
+                services.AddSingleton(appSettings);
 
-                    services.AddSingleton<ScaffolderService>();
-                })
-                .Build();
+                services.AddSingleton<ScaffolderService>();
+            })
+            .Build();
 
-            using var scope = host.Services.CreateScope();
-            var serviceProvider = scope.ServiceProvider;
+        using var scope = host.Services.CreateScope();
+        var serviceProvider = scope.ServiceProvider;
 
-            var scaffolderService = serviceProvider.GetRequiredService<ScaffolderService>();
-            scaffolderService.Run();
-        }
+        var scaffolderService = serviceProvider.GetRequiredService<ScaffolderService>();
+        scaffolderService.Run();
     }
 }

@@ -2,13 +2,12 @@
 using Demo.Application.Roles.Queries.SearchRoles.Dtos;
 using Demo.Domain.Role;
 
-namespace Demo.Application.Roles.Queries.SearchRoles
+namespace Demo.Application.Roles.Queries.SearchRoles;
+
+public class SearchRolesQueryMappingProfile : Profile
 {
-    public class SearchRolesQueryMappingProfile : Profile
+    public SearchRolesQueryMappingProfile()
     {
-        public SearchRolesQueryMappingProfile()
-        {
-            CreateMap<Role, SearchRoleDto>();
-        }
+        CreateMap<Role, SearchRoleDto>();
     }
 }

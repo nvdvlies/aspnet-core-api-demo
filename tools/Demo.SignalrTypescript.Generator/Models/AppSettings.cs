@@ -1,7 +1,6 @@
-﻿namespace Demo.SignalrTypescript.Generator.Models
+﻿namespace Demo.SignalrTypescript.Generator.Models;
+
+internal class AppSettings
 {
-    internal class AppSettings
-    {
-        public string TargetDirectory { get; set; }
-    }
+    public string TargetDirectory { get; set; }
 }

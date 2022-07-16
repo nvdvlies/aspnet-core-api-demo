@@ -1,12 +1,11 @@
-using FluentValidation;
+﻿using FluentValidation;
 
-namespace Demo.Application.Customers.Commands.DeleteCustomer
+namespace Demo.Application.Customers.Commands.DeleteCustomer;
+
+public class DeleteCustomerCommandValidator : AbstractValidator<DeleteCustomerCommand>
 {
-    public class DeleteCustomerCommandValidator : AbstractValidator<DeleteCustomerCommand>
+    public DeleteCustomerCommandValidator()
     {
-        public DeleteCustomerCommandValidator()
-        {
-            RuleFor(x => x.Id).NotEmpty();
-        }
+        RuleFor(x => x.Id).NotEmpty();
     }
 }

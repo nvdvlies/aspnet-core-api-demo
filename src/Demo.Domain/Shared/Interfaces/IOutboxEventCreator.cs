@@ -2,10 +2,9 @@
 using System.Threading.Tasks;
 using Demo.Events;
 
-namespace Demo.Domain.Shared.Interfaces
+namespace Demo.Domain.Shared.Interfaces;
+
+public interface IOutboxEventCreator
 {
-    public interface IOutboxEventCreator
-    {
-        Task CreateAsync(IEvent @event, CancellationToken cancellationToken);
-    }
+    Task CreateAsync(IEvent @event, CancellationToken cancellationToken);
 }

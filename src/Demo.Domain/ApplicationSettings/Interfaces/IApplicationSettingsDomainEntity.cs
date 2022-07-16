@@ -2,10 +2,9 @@
 using System.Threading.Tasks;
 using Demo.Domain.Shared.Interfaces;
 
-namespace Demo.Domain.ApplicationSettings.Interfaces
+namespace Demo.Domain.ApplicationSettings.Interfaces;
+
+public interface IApplicationSettingsDomainEntity : IDomainEntity<ApplicationSettings>
 {
-    public interface IApplicationSettingsDomainEntity : IDomainEntity<ApplicationSettings>
-    {
-        Task GetAsync(CancellationToken cancellationToken = default);
-    }
+    Task GetAsync(CancellationToken cancellationToken = default);
 }

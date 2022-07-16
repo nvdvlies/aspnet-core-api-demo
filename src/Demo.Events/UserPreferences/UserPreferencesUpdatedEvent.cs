@@ -1,32 +1,31 @@
-using System;
+﻿using System;
 
-namespace Demo.Events.UserPreferences
+namespace Demo.Events.UserPreferences;
+
+public class UserPreferencesUpdatedEvent : Event<UserPreferencesUpdatedEvent, UserPreferencesUpdatedEventData>
 {
-    public class UserPreferencesUpdatedEvent : Event<UserPreferencesUpdatedEvent, UserPreferencesUpdatedEventData>
+    public static UserPreferencesUpdatedEvent Create(Guid correlationId, Guid id, Guid updatedBy)
     {
-        public static UserPreferencesUpdatedEvent Create(Guid correlationId, Guid id, Guid updatedBy)
+        var data = new UserPreferencesUpdatedEventData
         {
-            var data = new UserPreferencesUpdatedEventData
-            {
-                CorrelationId = correlationId, Id = id, UpdatedBy = updatedBy
-            };
-            return new UserPreferencesUpdatedEvent
-            {
-                Topic = Topics.UserPreferences,
-                Subject = $"UserPreferences/{data.Id}",
-                Data = data,
-                DataVersion = data.EventDataVersion,
-                CreatedBy = updatedBy,
-                CorrelationId = correlationId
-            };
-        }
+            CorrelationId = correlationId, Id = id, UpdatedBy = updatedBy
+        };
+        return new UserPreferencesUpdatedEvent
+        {
+            Topic = Topics.UserPreferences,
+            Subject = $"UserPreferences/{data.Id}",
+            Data = data,
+            DataVersion = data.EventDataVersion,
+            CreatedBy = updatedBy,
+            CorrelationId = correlationId
+        };
     }
+}
 
-    public class UserPreferencesUpdatedEventData : IEventData
-    {
-        public Guid Id { get; set; }
-        public Guid UpdatedBy { get; set; }
-        public string EventDataVersion => "1.0";
-        public Guid CorrelationId { get; set; }
-    }
+public class UserPreferencesUpdatedEventData : IEventData
+{
+    public Guid Id { get; set; }
+    public Guid UpdatedBy { get; set; }
+    public string EventDataVersion => "1.0";
+    public Guid CorrelationId { get; set; }
 }

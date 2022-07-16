@@ -7,39 +7,38 @@ using Demo.Domain.Shared.Interfaces;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 
-namespace Demo.Domain.User.Validators
+namespace Demo.Domain.User.Validators;
+
+internal class UniqueEmailValidator : AbstractValidator<User>, Shared.Interfaces.IValidator<User>
 {
-    internal class UniqueEmailValidator : AbstractValidator<User>, Shared.Interfaces.IValidator<User>
+    private readonly IDbQuery<User> _userQuery;
+
+    public UniqueEmailValidator(IDbQuery<User> userQuery)
     {
-        private readonly IDbQuery<User> _userQuery;
+        _userQuery = userQuery;
+    }
 
-        public UniqueEmailValidator(IDbQuery<User> userQuery)
+    public async Task<IEnumerable<ValidationMessage>> ValidateAsync(IDomainEntityContext<User> context,
+        CancellationToken cancellationToken = default)
+    {
+        if (context.EditMode == EditMode.Delete)
         {
-            _userQuery = userQuery;
-        }
-
-        public async Task<IEnumerable<ValidationMessage>> ValidateAsync(IDomainEntityContext<User> context,
-            CancellationToken cancellationToken = default)
-        {
-            if (context.EditMode == EditMode.Delete)
-            {
-                return ValidationResult.Ok();
-            }
-
-            if (context.IsPropertyDirty(x => x.Email))
-            {
-                var alreadyExists = await _userQuery.AsQueryable()
-                    .Where(x => x.Id != context.Entity.Id)
-                    .Where(x => x.Email == context.Entity.Email)
-                    .AnyAsync(cancellationToken);
-
-                if (alreadyExists)
-                {
-                    return ValidationResult.Invalid($"A user with email '{context.Entity.Email}' already exists.");
-                }
-            }
-
             return ValidationResult.Ok();
         }
+
+        if (context.IsPropertyDirty(x => x.Email))
+        {
+            var alreadyExists = await _userQuery.AsQueryable()
+                .Where(x => x.Id != context.Entity.Id)
+                .Where(x => x.Email == context.Entity.Email)
+                .AnyAsync(cancellationToken);
+
+            if (alreadyExists)
+            {
+                return ValidationResult.Invalid($"A user with email '{context.Entity.Email}' already exists.");
+            }
+        }
+
+        return ValidationResult.Ok();
     }
 }

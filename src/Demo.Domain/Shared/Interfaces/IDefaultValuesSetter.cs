@@ -1,11 +1,10 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 
-namespace Demo.Domain.Shared.Interfaces
+namespace Demo.Domain.Shared.Interfaces;
+
+internal interface IDefaultValuesSetter<T> where T : IEntity
 {
-    internal interface IDefaultValuesSetter<T> where T : IEntity
-    {
-        int Order => 0;
-        Task SetDefaultValuesAsync(T entity, IDomainEntityState state, CancellationToken cancellationToken = default);
-    }
+    int Order => 0;
+    Task SetDefaultValuesAsync(T entity, IDomainEntityState state, CancellationToken cancellationToken = default);
 }

@@ -7,17 +7,16 @@ using Demo.Application.Roles.Events;
 using Demo.Application.UserPreferences.Events;
 using Demo.Application.Users.Events;
 
-namespace Demo.Application.Shared.Interfaces
+namespace Demo.Application.Shared.Interfaces;
+
+public interface IEventHub :
+    ICustomerEventHub,
+    IInvoiceEventHub,
+    IApplicationSettingsEventHub,
+    IUserEventHub,
+    IRoleEventHub,
+    IFeatureFlagSettingsEventHub,
+    IUserPreferencesEventHub,
+    ICurrentUserEventHub // SCAFFOLD-MARKER: EVENTHUB_INTERFACE
 {
-    public interface IEventHub :
-        ICustomerEventHub,
-        IInvoiceEventHub,
-        IApplicationSettingsEventHub,
-        IUserEventHub,
-        IRoleEventHub,
-        IFeatureFlagSettingsEventHub,
-        IUserPreferencesEventHub,
-        ICurrentUserEventHub // SCAFFOLD-MARKER: EVENTHUB_INTERFACE
-    {
-    }
 }

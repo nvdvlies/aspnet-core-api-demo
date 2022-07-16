@@ -1,10 +1,9 @@
-﻿namespace Demo.Domain.Invoice
+﻿namespace Demo.Domain.Invoice;
+
+public enum InvoiceStatus
 {
-    public enum InvoiceStatus
-    {
-        Draft = 0,
-        Sent = 1,
-        Paid = 2,
-        Cancelled = 3
-    }
+    Draft = 0,
+    Sent = 1,
+    Paid = 2,
+    Cancelled = 3
 }

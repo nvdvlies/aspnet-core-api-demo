@@ -2,10 +2,9 @@
 using System.Threading.Tasks;
 using Demo.Messages;
 
-namespace Demo.Domain.Shared.Interfaces
+namespace Demo.Domain.Shared.Interfaces;
+
+public interface IOutboxMessageCreator
 {
-    public interface IOutboxMessageCreator
-    {
-        Task CreateAsync(IMessage message, CancellationToken cancellationToken = default);
-    }
+    Task CreateAsync(IMessage message, CancellationToken cancellationToken = default);
 }

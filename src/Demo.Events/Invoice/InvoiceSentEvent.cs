@@ -1,28 +1,27 @@
 ﻿using System;
 
-namespace Demo.Events.Invoice
-{
-    public class InvoiceSentEvent : Event<InvoiceSentEvent, InvoiceSentEventData>
-    {
-        public static InvoiceSentEvent Create(Guid createdBy, Guid correlationId, Guid id)
-        {
-            var data = new InvoiceSentEventData { CorrelationId = correlationId, Id = id };
-            return new InvoiceSentEvent
-            {
-                Topic = Topics.Invoice,
-                Data = data,
-                Subject = $"Invoice/{data.Id}",
-                DataVersion = data.EventDataVersion,
-                CreatedBy = createdBy,
-                CorrelationId = data.CorrelationId
-            };
-        }
-    }
+namespace Demo.Events.Invoice;
 
-    public class InvoiceSentEventData : IEventData
+public class InvoiceSentEvent : Event<InvoiceSentEvent, InvoiceSentEventData>
+{
+    public static InvoiceSentEvent Create(Guid createdBy, Guid correlationId, Guid id)
     {
-        public Guid Id { get; set; }
-        public string EventDataVersion => "1.0";
-        public Guid CorrelationId { get; set; }
+        var data = new InvoiceSentEventData { CorrelationId = correlationId, Id = id };
+        return new InvoiceSentEvent
+        {
+            Topic = Topics.Invoice,
+            Data = data,
+            Subject = $"Invoice/{data.Id}",
+            DataVersion = data.EventDataVersion,
+            CreatedBy = createdBy,
+            CorrelationId = data.CorrelationId
+        };
     }
+}
+
+public class InvoiceSentEventData : IEventData
+{
+    public Guid Id { get; set; }
+    public string EventDataVersion => "1.0";
+    public Guid CorrelationId { get; set; }
 }

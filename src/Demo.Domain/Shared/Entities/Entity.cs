@@ -1,34 +1,33 @@
 ﻿using System;
 using Demo.Domain.Shared.Interfaces;
 
-namespace Demo.Domain.Shared.Entities
+namespace Demo.Domain.Shared.Entities;
+
+public abstract class Entity : IEntity, IEquatable<IEntity>
 {
-    public abstract class Entity : IEntity, IEquatable<IEntity>
+    public Guid Id { get; set; }
+
+    // ReSharper disable once InconsistentNaming
+    public uint xmin { get; set; }
+
+    public bool Equals(IEntity other)
     {
-        public Guid Id { get; set; }
-
-        // ReSharper disable once InconsistentNaming
-        public uint xmin { get; set; }
-
-        public bool Equals(IEntity other)
+        if (other is null)
         {
-            if (other is null)
-            {
-                return false;
-            }
-
-            return Id == other.Id;
+            return false;
         }
 
-        public override bool Equals(object obj)
-        {
-            return Equals(obj as IEntity);
-        }
+        return Id == other.Id;
+    }
 
-        public override int GetHashCode()
-        {
-            // ReSharper disable once NonReadonlyMemberInGetHashCode
-            return Id.GetHashCode();
-        }
+    public override bool Equals(object obj)
+    {
+        return Equals(obj as IEntity);
+    }
+
+    public override int GetHashCode()
+    {
+        // ReSharper disable once NonReadonlyMemberInGetHashCode
+        return Id.GetHashCode();
     }
 }

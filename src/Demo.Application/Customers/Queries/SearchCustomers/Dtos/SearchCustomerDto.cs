@@ -1,11 +1,10 @@
 ﻿using System;
 
-namespace Demo.Application.Customers.Queries.SearchCustomers.Dtos
+namespace Demo.Application.Customers.Queries.SearchCustomers.Dtos;
+
+public class SearchCustomerDto
 {
-    public class SearchCustomerDto
-    {
-        public Guid Id { get; set; }
-        public int Code { get; set; }
-        public string Name { get; set; }
-    }
+    public Guid Id { get; set; }
+    public int Code { get; set; }
+    public string Name { get; set; }
 }

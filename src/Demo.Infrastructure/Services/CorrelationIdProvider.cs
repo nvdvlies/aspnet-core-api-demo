@@ -2,27 +2,26 @@
 using Demo.Common.Interfaces;
 using Microsoft.Extensions.Logging;
 
-namespace Demo.Infrastructure.Services
+namespace Demo.Infrastructure.Services;
+
+internal class CorrelationIdProvider : ICorrelationIdProvider
 {
-    internal class CorrelationIdProvider : ICorrelationIdProvider
+    private readonly ILogger<CorrelationIdProvider> _logger;
+
+    public CorrelationIdProvider(ILogger<CorrelationIdProvider> logger)
     {
-        private readonly ILogger<CorrelationIdProvider> _logger;
+        _logger = logger;
+    }
 
-        public CorrelationIdProvider(ILogger<CorrelationIdProvider> logger)
+    public Guid Id { get; private set; }
+
+    public void SwitchToCorrelationId(Guid id)
+    {
+        if (Id != Guid.Empty && Id != id)
         {
-            _logger = logger;
+            _logger.LogInformation("Switching correlation id from '{0}' to '{1}'", Id, id);
         }
 
-        public Guid Id { get; private set; }
-
-        public void SwitchToCorrelationId(Guid id)
-        {
-            if (Id != Guid.Empty && Id != id)
-            {
-                _logger.LogInformation("Switching correlation id from '{0}' to '{1}'", Id, id);
-            }
-
-            Id = id;
-        }
+        Id = id;
     }
 }

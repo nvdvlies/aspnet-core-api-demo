@@ -1,9 +1,8 @@
-using Demo.Application.Shared.Interfaces;
+﻿using Demo.Application.Shared.Interfaces;
 using MediatR;
 
-namespace Demo.Application.Permissions.Queries.GetAllPermissionGroups
+namespace Demo.Application.Permissions.Queries.GetAllPermissionGroups;
+
+public class GetAllPermissionGroupsQuery : IQuery, IRequest<GetAllPermissionGroupsQueryResult>
 {
-    public class GetAllPermissionGroupsQuery : IQuery, IRequest<GetAllPermissionGroupsQueryResult>
-    {
-    }
 }

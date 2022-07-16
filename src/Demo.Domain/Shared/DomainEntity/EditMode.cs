@@ -1,10 +1,9 @@
-﻿namespace Demo.Domain.Shared.DomainEntity
+﻿namespace Demo.Domain.Shared.DomainEntity;
+
+public enum EditMode
 {
-    public enum EditMode
-    {
-        None,
-        Create,
-        Update,
-        Delete
-    }
+    None,
+    Create,
+    Update,
+    Delete
 }

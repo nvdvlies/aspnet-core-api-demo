@@ -5,25 +5,24 @@ using Demo.Events.Invoice;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
-namespace Demo.Application.Invoices.Events.InvoiceDeleted
+namespace Demo.Application.Invoices.Events.InvoiceDeleted;
+
+public class InvoiceDeletedEventHandler : INotificationHandler<InvoiceDeletedEvent>
 {
-    public class InvoiceDeletedEventHandler : INotificationHandler<InvoiceDeletedEvent>
+    private readonly IEventHubContext _eventHubContext;
+    private readonly ILogger<InvoiceDeletedEventHandler> _logger;
+
+    public InvoiceDeletedEventHandler(
+        ILogger<InvoiceDeletedEventHandler> logger,
+        IEventHubContext eventHubContext)
     {
-        private readonly IEventHubContext _eventHubContext;
-        private readonly ILogger<InvoiceDeletedEventHandler> _logger;
+        _logger = logger;
+        _eventHubContext = eventHubContext;
+    }
 
-        public InvoiceDeletedEventHandler(
-            ILogger<InvoiceDeletedEventHandler> logger,
-            IEventHubContext eventHubContext)
-        {
-            _logger = logger;
-            _eventHubContext = eventHubContext;
-        }
-
-        public Task Handle(InvoiceDeletedEvent @event, CancellationToken cancellationToken)
-        {
-            _logger.LogInformation($"Handling {nameof(InvoiceDeletedEvent)}");
-            return _eventHubContext.All.InvoiceDeleted(@event.Data.Id, @event.Data.DeletedBy);
-        }
+    public Task Handle(InvoiceDeletedEvent @event, CancellationToken cancellationToken)
+    {
+        _logger.LogInformation($"Handling {nameof(InvoiceDeletedEvent)}");
+        return _eventHubContext.All.InvoiceDeleted(@event.Data.Id, @event.Data.DeletedBy);
     }
 }

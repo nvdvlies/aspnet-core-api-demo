@@ -1,10 +1,9 @@
 ﻿using System;
 using Demo.Common.Interfaces;
 
-namespace Demo.Infrastructure.Services
+namespace Demo.Infrastructure.Services;
+
+internal class DateTimeProvider : IDateTime
 {
-    internal class DateTimeProvider : IDateTime
-    {
-        public DateTime UtcNow => DateTime.UtcNow;
-    }
+    public DateTime UtcNow => DateTime.UtcNow;
 }

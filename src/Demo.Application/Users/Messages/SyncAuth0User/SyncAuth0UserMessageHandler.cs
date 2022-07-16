@@ -5,32 +5,31 @@ using Demo.Domain.User.Interfaces;
 using Demo.Messages.User;
 using MediatR;
 
-namespace Demo.Application.Users.Messages.SyncAuth0User
+namespace Demo.Application.Users.Messages.SyncAuth0User;
+
+public class SyncAuth0UserMessageHandler : IRequestHandler<SyncAuth0UserMessage, Unit>
 {
-    public class SyncAuth0UserMessageHandler : IRequestHandler<SyncAuth0UserMessage, Unit>
+    private readonly IAuth0UserManagementClient _auth0UserManagementClient;
+    private readonly IUserDomainEntity _userDomainEntity;
+
+    public SyncAuth0UserMessageHandler(
+        IUserDomainEntity userDomainEntity,
+        IAuth0UserManagementClient auth0UserManagementClient
+    )
     {
-        private readonly IAuth0UserManagementClient _auth0UserManagementClient;
-        private readonly IUserDomainEntity _userDomainEntity;
+        _userDomainEntity = userDomainEntity;
+        _auth0UserManagementClient = auth0UserManagementClient;
+    }
 
-        public SyncAuth0UserMessageHandler(
-            IUserDomainEntity userDomainEntity,
-            IAuth0UserManagementClient auth0UserManagementClient
-        )
-        {
-            _userDomainEntity = userDomainEntity;
-            _auth0UserManagementClient = auth0UserManagementClient;
-        }
+    public async Task<Unit> Handle(SyncAuth0UserMessage request, CancellationToken cancellationToken)
+    {
+        await _userDomainEntity
+            .WithOptions(x => x.AsNoTracking = true)
+            .GetAsync(request.Data.Id, cancellationToken);
 
-        public async Task<Unit> Handle(SyncAuth0UserMessage request, CancellationToken cancellationToken)
-        {
-            await _userDomainEntity
-                .WithOptions(x => x.AsNoTracking = true)
-                .GetAsync(request.Data.Id, cancellationToken);
+        await _auth0UserManagementClient.SyncAsync(_userDomainEntity.Entity, request.Data.EmailChanged,
+            cancellationToken);
 
-            await _auth0UserManagementClient.SyncAsync(_userDomainEntity.Entity, request.Data.EmailChanged,
-                cancellationToken);
-
-            return Unit.Value;
-        }
+        return Unit.Value;
     }
 }

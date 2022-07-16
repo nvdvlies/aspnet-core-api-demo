@@ -1,24 +1,23 @@
 ﻿using System.Linq;
 using Demo.Domain.Shared.Interfaces;
 
-namespace Demo.Infrastructure.Persistence
+namespace Demo.Infrastructure.Persistence;
+
+internal class SoftDeleteDbQuery<T> : DbQuery<T>, IDbQuery<T> where T : class, IEntity, ISoftDeleteEntity
 {
-    internal class SoftDeleteDbQuery<T> : DbQuery<T>, IDbQuery<T> where T : class, IEntity, ISoftDeleteEntity
+    public SoftDeleteDbQuery(IApplicationDbContext dbContext) : base(dbContext)
     {
-        public SoftDeleteDbQuery(IApplicationDbContext dbContext) : base(dbContext)
+    }
+
+    public new IQueryable<T> AsQueryable()
+    {
+        var query = base.AsQueryable();
+
+        if (!Options.IncludeDeleted)
         {
+            query = query.Where(x => !x.Deleted);
         }
 
-        public new IQueryable<T> AsQueryable()
-        {
-            var query = base.AsQueryable();
-
-            if (!Options.IncludeDeleted)
-            {
-                query = query.Where(x => !x.Deleted);
-            }
-
-            return query;
-        }
+        return query;
     }
 }

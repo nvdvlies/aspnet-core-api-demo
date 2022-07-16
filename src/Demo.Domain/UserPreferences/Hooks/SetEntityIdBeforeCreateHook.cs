@@ -4,26 +4,25 @@ using System.Threading.Tasks;
 using Demo.Domain.Shared.DomainEntity;
 using Demo.Domain.Shared.Interfaces;
 
-namespace Demo.Domain.UserPreferences.Hooks
+namespace Demo.Domain.UserPreferences.Hooks;
+
+internal class SetEntityIdBeforeCreateHook : IBeforeCreate<UserPreferences>
 {
-    internal class SetEntityIdBeforeCreateHook : IBeforeCreate<UserPreferences>
+    private readonly ICurrentUserIdProvider _currentUserIdProvider;
+
+    public SetEntityIdBeforeCreateHook(ICurrentUserIdProvider currentUserIdProvider)
     {
-        private readonly ICurrentUserIdProvider _currentUserIdProvider;
+        _currentUserIdProvider = currentUserIdProvider;
+    }
 
-        public SetEntityIdBeforeCreateHook(ICurrentUserIdProvider currentUserIdProvider)
+    public Task ExecuteAsync(HookType type, IDomainEntityContext<UserPreferences> context,
+        CancellationToken cancellationToken = default)
+    {
+        if (context.Entity.Id == Guid.Empty)
         {
-            _currentUserIdProvider = currentUserIdProvider;
+            context.Entity.Id = _currentUserIdProvider.Id;
         }
 
-        public Task ExecuteAsync(HookType type, IDomainEntityContext<UserPreferences> context,
-            CancellationToken cancellationToken = default)
-        {
-            if (context.Entity.Id == Guid.Empty)
-            {
-                context.Entity.Id = _currentUserIdProvider.Id;
-            }
-
-            return Task.CompletedTask;
-        }
+        return Task.CompletedTask;
     }
 }

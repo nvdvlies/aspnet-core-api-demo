@@ -4,37 +4,37 @@ using Demo.Scaffold.Tool.Helpers;
 using Demo.Scaffold.Tool.Interfaces;
 using Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint.OutputCollectors.Command.InputCollectors;
 
-namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint.OutputCollectors.Command.OutputCollectors
+namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint.OutputCollectors.Command.OutputCollectors;
+
+internal class CreateCommandOutputCollector : IOutputCollector
 {
-    internal class CreateCommandOutputCollector : IOutputCollector
+    public IEnumerable<IChange> CollectChanges(ScaffolderContext context)
     {
-        public IEnumerable<IChange> CollectChanges(ScaffolderContext context)
-        {
-            var changes = new List<IChange>();
+        var changes = new List<IChange>();
 
-            var commandEndpointType = context.Variables.Get<CommandEndpointTypes>(Constants.CommandEndpointType);
-            var controllerName = context.Variables.Get<string>(Constants.ControllerName);
-            var commandName = context.Variables.Get<string>(Constants.CommandName);
-            var entityName = controllerName.EndsWith("s") ? controllerName[..^1] : controllerName;
+        var commandEndpointType = context.Variables.Get<CommandEndpointTypes>(Constants.CommandEndpointType);
+        var controllerName = context.Variables.Get<string>(Constants.ControllerName);
+        var commandName = context.Variables.Get<string>(Constants.CommandName);
+        var entityName = controllerName.EndsWith("s") ? controllerName[..^1] : controllerName;
 
-            changes.Add(new CreateNewClass(
-                context.GetCommandDirectory(controllerName, commandName),
-                $"{commandName}Command.cs",
-                GetTemplate(commandEndpointType, controllerName, commandName, entityName)
-            ));
+        changes.Add(new CreateNewClass(
+            context.GetCommandDirectory(controllerName, commandName),
+            $"{commandName}Command.cs",
+            GetTemplate(commandEndpointType, controllerName, commandName, entityName)
+        ));
 
-            return changes;
-        }
+        return changes;
+    }
 
-        private static string GetTemplate(CommandEndpointTypes commandEndpointType, string controllerName,
-            string commandName, string entityName)
-        {
-            var code = commandEndpointType == CommandEndpointTypes.CreateSubEndpoint
-                       || commandEndpointType == CommandEndpointTypes.UpdateSubEndpoint
-                       || commandEndpointType == CommandEndpointTypes.DeleteSubEndpoint
-                       || commandEndpointType == CommandEndpointTypes.Update
-                       || commandEndpointType == CommandEndpointTypes.Delete
-                ? @"using Demo.Application.Shared.Interfaces;
+    private static string GetTemplate(CommandEndpointTypes commandEndpointType, string controllerName,
+        string commandName, string entityName)
+    {
+        var code = commandEndpointType == CommandEndpointTypes.CreateSubEndpoint
+                   || commandEndpointType == CommandEndpointTypes.UpdateSubEndpoint
+                   || commandEndpointType == CommandEndpointTypes.DeleteSubEndpoint
+                   || commandEndpointType == CommandEndpointTypes.Update
+                   || commandEndpointType == CommandEndpointTypes.Delete
+            ? @"using Demo.Application.Shared.Interfaces;
 using MediatR;
 using System;
 
@@ -51,7 +51,7 @@ namespace Demo.Application.%CONTROLLERNAME%.Commands.%COMMANDNAME%
     }
 }
 "
-                : @"
+            : @"
 using MediatR;
 using System;
 
@@ -62,12 +62,11 @@ namespace Demo.Application.%CONTROLLERNAME%.Commands.%COMMANDNAME%
     }
 }
 ";
-            var hasResponse = commandEndpointType == CommandEndpointTypes.Create;
-            code = code.Replace("%RESPONSE%", !hasResponse ? "Unit" : $"{commandName}Response");
-            code = code.Replace("%CONTROLLERNAME%", controllerName);
-            code = code.Replace("%COMMANDNAME%", commandName);
-            code = code.Replace("%ENTITYNAME%", entityName);
-            return code;
-        }
+        var hasResponse = commandEndpointType == CommandEndpointTypes.Create;
+        code = code.Replace("%RESPONSE%", !hasResponse ? "Unit" : $"{commandName}Response");
+        code = code.Replace("%CONTROLLERNAME%", controllerName);
+        code = code.Replace("%COMMANDNAME%", commandName);
+        code = code.Replace("%ENTITYNAME%", entityName);
+        return code;
     }
 }

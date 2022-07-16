@@ -1,9 +1,8 @@
-﻿namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint
+﻿namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint;
+
+internal enum EndpointTypes
 {
-    internal enum EndpointTypes
-    {
-        Unknown,
-        Command,
-        Query
-    }
+    Unknown,
+    Command,
+    Query
 }

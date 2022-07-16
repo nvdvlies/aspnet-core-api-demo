@@ -1,11 +1,10 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Demo.Application.Roles.Queries.RoleLookup.Dtos;
 using Demo.Application.Shared.Models;
 
-namespace Demo.Application.Roles.Queries.RoleLookup
+namespace Demo.Application.Roles.Queries.RoleLookup;
+
+public class RoleLookupQueryResult : BasePaginatedResult
 {
-    public class RoleLookupQueryResult : BasePaginatedResult
-    {
-        public IEnumerable<RoleLookupDto> Roles { get; set; }
-    }
+    public IEnumerable<RoleLookupDto> Roles { get; set; }
 }

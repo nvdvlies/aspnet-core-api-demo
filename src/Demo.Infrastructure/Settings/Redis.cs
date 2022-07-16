@@ -1,7 +1,6 @@
-﻿namespace Demo.Infrastructure.Settings
+﻿namespace Demo.Infrastructure.Settings;
+
+public class Redis
 {
-    public class Redis
-    {
-        public string Connection { get; set; }
-    }
+    public string Connection { get; set; }
 }

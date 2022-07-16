@@ -1,7 +1,6 @@
-namespace Demo.Infrastructure.Settings
+﻿namespace Demo.Infrastructure.Settings;
+
+public class ElasticSearch
 {
-    public class ElasticSearch
-    {
-        public string Uri { get; set; }
-    }
+    public string Uri { get; set; }
 }

@@ -3,67 +3,66 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace Demo.Common.Helpers
+namespace Demo.Common.Helpers;
+
+public class ClassFinder
 {
-    public class ClassFinder
+    private IEnumerable<Type> _types;
+
+    public ClassFinder(IEnumerable<Assembly> assemblies)
     {
-        private IEnumerable<Type> _types;
+        _types = assemblies
+            .SelectMany(x => x.DefinedTypes.Distinct())
+            .Where(t => t.IsClass)
+            .Where(t => !t.IsInterface)
+            .Where(t => !t.IsAbstract);
+    }
 
-        public ClassFinder(IEnumerable<Assembly> assemblies)
+    public ClassFinder ClassesThatImplementInterface(Type type)
+    {
+        if (type.IsGenericType)
         {
-            _types = assemblies
-                .SelectMany(x => x.DefinedTypes.Distinct())
-                .Where(t => t.IsClass)
-                .Where(t => !t.IsInterface)
-                .Where(t => !t.IsAbstract);
+            _types = _types.Where(t =>
+                t.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == type));
+        }
+        else
+        {
+            _types = _types.Where(t => type.IsAssignableFrom(t));
         }
 
-        public ClassFinder ClassesThatImplementInterface(Type type)
-        {
-            if (type.IsGenericType)
-            {
-                _types = _types.Where(t =>
-                    t.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == type));
-            }
-            else
-            {
-                _types = _types.Where(t => type.IsAssignableFrom(t));
-            }
+        return this;
+    }
 
-            return this;
+    public ClassFinder ClassesThatDoNotImplementInterface(Type type)
+    {
+        if (type.IsGenericType)
+        {
+            _types = _types.Where(t =>
+                !t.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == type));
+        }
+        else
+        {
+            _types = _types.Where(t => !type.IsAssignableFrom(t));
         }
 
-        public ClassFinder ClassesThatDoNotImplementInterface(Type type)
-        {
-            if (type.IsGenericType)
-            {
-                _types = _types.Where(t =>
-                    !t.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == type));
-            }
-            else
-            {
-                _types = _types.Where(t => !type.IsAssignableFrom(t));
-            }
+        return this;
+    }
 
-            return this;
-        }
-
-        public void ForEach(Action<Type> action)
+    public void ForEach(Action<Type> action)
+    {
+        foreach (var type in _types)
         {
-            foreach (var type in _types)
-            {
-                action(type);
-            }
+            action(type);
         }
+    }
 
-        public static ClassFinder SearchInAssemblies(IEnumerable<Assembly> assemblies)
-        {
-            return new ClassFinder(assemblies);
-        }
+    public static ClassFinder SearchInAssemblies(IEnumerable<Assembly> assemblies)
+    {
+        return new ClassFinder(assemblies);
+    }
 
-        public static ClassFinder SearchInAssembly(Assembly assembly)
-        {
-            return SearchInAssemblies(new[] { assembly });
-        }
+    public static ClassFinder SearchInAssembly(Assembly assembly)
+    {
+        return SearchInAssemblies(new[] { assembly });
     }
 }

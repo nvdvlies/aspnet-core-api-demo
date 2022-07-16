@@ -1,9 +1,8 @@
 ﻿using Demo.Domain.Shared.Interfaces;
 
-namespace Demo.Infrastructure.Persistence
+namespace Demo.Infrastructure.Persistence;
+
+public class DbCommandOptions : IDbCommandOptions
 {
-    public class DbCommandOptions : IDbCommandOptions
-    {
-        public bool AsNoTracking { get; set; } = false;
-    }
+    public bool AsNoTracking { get; set; } = false;
 }

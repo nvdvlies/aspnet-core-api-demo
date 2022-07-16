@@ -1,9 +1,8 @@
-using Demo.Application.Roles.Queries.GetRoleById.Dtos;
+﻿using Demo.Application.Roles.Queries.GetRoleById.Dtos;
 
-namespace Demo.Application.Roles.Queries.GetRoleById
+namespace Demo.Application.Roles.Queries.GetRoleById;
+
+public class GetRoleByIdQueryResult
 {
-    public class GetRoleByIdQueryResult
-    {
-        public RoleDto Role { get; set; }
-    }
+    public RoleDto Role { get; set; }
 }

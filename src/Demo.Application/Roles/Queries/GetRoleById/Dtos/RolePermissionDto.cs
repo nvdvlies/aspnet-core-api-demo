@@ -1,9 +1,8 @@
 ﻿using System;
 
-namespace Demo.Application.Roles.Queries.GetRoleById.Dtos
+namespace Demo.Application.Roles.Queries.GetRoleById.Dtos;
+
+public class RolePermissionDto
 {
-    public class RolePermissionDto
-    {
-        public Guid PermissionId { get; set; }
-    }
+    public Guid PermissionId { get; set; }
 }

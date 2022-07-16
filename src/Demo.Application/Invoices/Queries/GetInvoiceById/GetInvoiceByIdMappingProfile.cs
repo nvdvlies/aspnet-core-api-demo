@@ -2,14 +2,13 @@
 using Demo.Application.Invoices.Queries.GetInvoiceById.Dtos;
 using Demo.Domain.Invoice;
 
-namespace Demo.Application.Invoices.Queries.GetInvoiceById
+namespace Demo.Application.Invoices.Queries.GetInvoiceById;
+
+public class GetInvoiceByIdMappingProfile : Profile
 {
-    public class GetInvoiceByIdMappingProfile : Profile
+    public GetInvoiceByIdMappingProfile()
     {
-        public GetInvoiceByIdMappingProfile()
-        {
-            CreateMap<InvoiceLine, InvoiceLineDto>();
-            CreateMap<Invoice, InvoiceDto>();
-        }
+        CreateMap<InvoiceLine, InvoiceLineDto>();
+        CreateMap<Invoice, InvoiceDto>();
     }
 }

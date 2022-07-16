@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace Demo.Application.FeatureFlagSettings.Commands.SaveFeatureFlagSettings.Dtos
+namespace Demo.Application.FeatureFlagSettings.Commands.SaveFeatureFlagSettings.Dtos;
+
+public class SaveFeatureFlagSettingsCommandSettingsDto
 {
-    public class SaveFeatureFlagSettingsCommandSettingsDto
-    {
-        public List<SaveFeatureFlagSettingsCommandSettingsFeatureFlagDto> FeatureFlags { get; set; }
-    }
+    public List<SaveFeatureFlagSettingsCommandSettingsFeatureFlagDto> FeatureFlags { get; set; }
 }

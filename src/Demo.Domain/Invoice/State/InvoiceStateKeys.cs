@@ -1,7 +1,6 @@
-﻿namespace Demo.Domain.Invoice.State
+﻿namespace Demo.Domain.Invoice.State;
+
+public static class InvoiceStateKeys
 {
-    public static class InvoiceStateKeys
-    {
-        public static string ThrowIfPdfIsNotSynced => "ThrowIfPdfIsNotSynced";
-    }
+    public static string ThrowIfPdfIsNotSynced => "ThrowIfPdfIsNotSynced";
 }

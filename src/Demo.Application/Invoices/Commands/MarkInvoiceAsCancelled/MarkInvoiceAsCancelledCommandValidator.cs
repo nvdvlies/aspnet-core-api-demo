@@ -1,12 +1,11 @@
-using FluentValidation;
+﻿using FluentValidation;
 
-namespace Demo.Application.Invoices.Commands.MarkInvoiceAsCancelled
+namespace Demo.Application.Invoices.Commands.MarkInvoiceAsCancelled;
+
+public class MarkInvoiceAsCancelledCommandValidator : AbstractValidator<MarkInvoiceAsCancelledCommand>
 {
-    public class MarkInvoiceAsCancelledCommandValidator : AbstractValidator<MarkInvoiceAsCancelledCommand>
+    public MarkInvoiceAsCancelledCommandValidator()
     {
-        public MarkInvoiceAsCancelledCommandValidator()
-        {
-            RuleFor(x => x.Id).NotEmpty();
-        }
+        RuleFor(x => x.Id).NotEmpty();
     }
 }

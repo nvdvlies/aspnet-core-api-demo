@@ -5,25 +5,24 @@ using Demo.Events.Customer;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
-namespace Demo.Application.Customers.Events.CustomerUpdated
+namespace Demo.Application.Customers.Events.CustomerUpdated;
+
+public class CustomerUpdatedEventHandler : INotificationHandler<CustomerUpdatedEvent>
 {
-    public class CustomerUpdatedEventHandler : INotificationHandler<CustomerUpdatedEvent>
+    private readonly IEventHubContext _eventHubContext;
+    private readonly ILogger<CustomerUpdatedEventHandler> _logger;
+
+    public CustomerUpdatedEventHandler(
+        ILogger<CustomerUpdatedEventHandler> logger,
+        IEventHubContext eventHubContext)
     {
-        private readonly IEventHubContext _eventHubContext;
-        private readonly ILogger<CustomerUpdatedEventHandler> _logger;
+        _logger = logger;
+        _eventHubContext = eventHubContext;
+    }
 
-        public CustomerUpdatedEventHandler(
-            ILogger<CustomerUpdatedEventHandler> logger,
-            IEventHubContext eventHubContext)
-        {
-            _logger = logger;
-            _eventHubContext = eventHubContext;
-        }
-
-        public Task Handle(CustomerUpdatedEvent @event, CancellationToken cancellationToken)
-        {
-            _logger.LogInformation($"Handling {nameof(CustomerUpdatedEvent)}");
-            return _eventHubContext.All.CustomerUpdated(@event.Data.Id, @event.Data.UpdatedBy);
-        }
+    public Task Handle(CustomerUpdatedEvent @event, CancellationToken cancellationToken)
+    {
+        _logger.LogInformation($"Handling {nameof(CustomerUpdatedEvent)}");
+        return _eventHubContext.All.CustomerUpdated(@event.Data.Id, @event.Data.UpdatedBy);
     }
 }

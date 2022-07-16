@@ -1,9 +1,8 @@
 ﻿using System;
 
-namespace Demo.Application.Shared.Interfaces
+namespace Demo.Application.Shared.Interfaces;
+
+public interface ICreateOrUpdateEntityDto
 {
-    public interface ICreateOrUpdateEntityDto
-    {
-        public Guid? Id { get; set; }
-    }
+    public Guid? Id { get; set; }
 }

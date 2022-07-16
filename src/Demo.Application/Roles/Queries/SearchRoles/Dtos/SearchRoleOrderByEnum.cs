@@ -1,7 +1,6 @@
-﻿namespace Demo.Application.Roles.Queries.SearchRoles.Dtos
+﻿namespace Demo.Application.Roles.Queries.SearchRoles.Dtos;
+
+public enum SearchRoleOrderByEnum
 {
-    public enum SearchRoleOrderByEnum
-    {
-        Name
-    }
+    Name
 }

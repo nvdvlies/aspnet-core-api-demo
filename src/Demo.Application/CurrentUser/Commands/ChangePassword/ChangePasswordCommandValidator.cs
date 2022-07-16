@@ -1,8 +1,7 @@
-using FluentValidation;
+﻿using FluentValidation;
 
-namespace Demo.Application.CurrentUser.Commands.ChangePassword
+namespace Demo.Application.CurrentUser.Commands.ChangePassword;
+
+public class ChangePasswordCommandValidator : AbstractValidator<ChangePasswordCommand>
 {
-    public class ChangePasswordCommandValidator : AbstractValidator<ChangePasswordCommand>
-    {
-    }
 }

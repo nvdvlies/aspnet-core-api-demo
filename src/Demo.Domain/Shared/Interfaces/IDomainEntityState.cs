@@ -1,9 +1,8 @@
-﻿namespace Demo.Domain.Shared.Interfaces
+﻿namespace Demo.Domain.Shared.Interfaces;
+
+public interface IDomainEntityState
 {
-    public interface IDomainEntityState
-    {
-        T Get<T>(string key);
-        void Set<T>(string key, T value);
-        bool TryGet<T>(string key, out T value);
-    }
+    T Get<T>(string key);
+    void Set<T>(string key, T value);
+    bool TryGet<T>(string key, out T value);
 }

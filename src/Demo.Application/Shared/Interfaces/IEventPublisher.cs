@@ -2,10 +2,9 @@
 using System.Threading.Tasks;
 using Demo.Events;
 
-namespace Demo.Application.Shared.Interfaces
+namespace Demo.Application.Shared.Interfaces;
+
+public interface IEventPublisher
 {
-    public interface IEventPublisher
-    {
-        Task PublishAsync(IEvent @event, CancellationToken cancellationToken);
-    }
+    Task PublishAsync(IEvent @event, CancellationToken cancellationToken);
 }

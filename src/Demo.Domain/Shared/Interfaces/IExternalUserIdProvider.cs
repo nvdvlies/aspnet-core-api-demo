@@ -1,10 +1,9 @@
-using System;
+﻿using System;
 
-namespace Demo.Domain.Shared.Interfaces
+namespace Demo.Domain.Shared.Interfaces;
+
+public interface IExternalUserIdProvider
 {
-    public interface IExternalUserIdProvider
-    {
-        string Get(Guid userId);
-        string Get(Guid userId, bool refreshCache);
-    }
+    string Get(Guid userId);
+    string Get(Guid userId, bool refreshCache);
 }

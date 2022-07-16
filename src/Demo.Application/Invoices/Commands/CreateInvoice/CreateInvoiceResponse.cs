@@ -1,9 +1,8 @@
-using System;
+﻿using System;
 
-namespace Demo.Application.Invoices.Commands.CreateInvoice
+namespace Demo.Application.Invoices.Commands.CreateInvoice;
+
+public class CreateInvoiceResponse
 {
-    public class CreateInvoiceResponse
-    {
-        public Guid Id { get; set; }
-    }
+    public Guid Id { get; set; }
 }

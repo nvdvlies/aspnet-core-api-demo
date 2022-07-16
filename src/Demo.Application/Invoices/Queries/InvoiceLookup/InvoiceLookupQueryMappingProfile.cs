@@ -2,13 +2,12 @@
 using Demo.Application.Invoices.Queries.InvoiceLookup.Dtos;
 using Demo.Domain.Invoice;
 
-namespace Demo.Application.Invoices.Queries.InvoiceLookup
+namespace Demo.Application.Invoices.Queries.InvoiceLookup;
+
+public class InvoiceLookupQueryMappingProfile : Profile
 {
-    public class InvoiceLookupQueryMappingProfile : Profile
+    public InvoiceLookupQueryMappingProfile()
     {
-        public InvoiceLookupQueryMappingProfile()
-        {
-            CreateMap<Invoice, InvoiceLookupDto>();
-        }
+        CreateMap<Invoice, InvoiceLookupDto>();
     }
 }

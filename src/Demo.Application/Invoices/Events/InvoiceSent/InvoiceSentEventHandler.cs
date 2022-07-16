@@ -5,25 +5,24 @@ using Demo.Events.Invoice;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
-namespace Demo.Application.Invoices.Events.InvoiceSent
+namespace Demo.Application.Invoices.Events.InvoiceSent;
+
+public class InvoiceSentEventHandler : INotificationHandler<InvoiceSentEvent>
 {
-    public class InvoiceSentEventHandler : INotificationHandler<InvoiceSentEvent>
+    private readonly IEventHubContext _eventHubContext;
+    private readonly ILogger<InvoiceSentEventHandler> _logger;
+
+    public InvoiceSentEventHandler(
+        ILogger<InvoiceSentEventHandler> logger,
+        IEventHubContext eventHubContext)
     {
-        private readonly IEventHubContext _eventHubContext;
-        private readonly ILogger<InvoiceSentEventHandler> _logger;
+        _logger = logger;
+        _eventHubContext = eventHubContext;
+    }
 
-        public InvoiceSentEventHandler(
-            ILogger<InvoiceSentEventHandler> logger,
-            IEventHubContext eventHubContext)
-        {
-            _logger = logger;
-            _eventHubContext = eventHubContext;
-        }
-
-        public Task Handle(InvoiceSentEvent @event, CancellationToken cancellationToken)
-        {
-            _logger.LogInformation($"Handling {nameof(InvoiceSentEvent)}");
-            return _eventHubContext.All.InvoiceSent(@event.Data.Id);
-        }
+    public Task Handle(InvoiceSentEvent @event, CancellationToken cancellationToken)
+    {
+        _logger.LogInformation($"Handling {nameof(InvoiceSentEvent)}");
+        return _eventHubContext.All.InvoiceSent(@event.Data.Id);
     }
 }

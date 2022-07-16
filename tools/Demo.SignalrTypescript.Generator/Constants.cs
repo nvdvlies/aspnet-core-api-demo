@@ -1,7 +1,6 @@
-﻿namespace Demo.SignalrTypescript.Generator
+﻿namespace Demo.SignalrTypescript.Generator;
+
+internal static class Constants
 {
-    internal static class Constants
-    {
-        public const string TargetFileName = "signalr.generated.services.ts";
-    }
+    public const string TargetFileName = "signalr.generated.services.ts";
 }

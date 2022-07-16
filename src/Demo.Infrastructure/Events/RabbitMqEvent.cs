@@ -1,8 +1,7 @@
-namespace Demo.Infrastructure.Events
+﻿namespace Demo.Infrastructure.Events;
+
+public class RabbitMqEvent
 {
-    public class RabbitMqEvent
-    {
-        public string ContentType { get; set; }
-        public string Payload { get; set; }
-    }
+    public string ContentType { get; set; }
+    public string Payload { get; set; }
 }

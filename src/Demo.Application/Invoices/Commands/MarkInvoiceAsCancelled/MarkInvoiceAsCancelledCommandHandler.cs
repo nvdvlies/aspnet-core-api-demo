@@ -1,31 +1,30 @@
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using Demo.Domain.Invoice;
 using Demo.Domain.Invoice.Interfaces;
 using MediatR;
 
-namespace Demo.Application.Invoices.Commands.MarkInvoiceAsCancelled
+namespace Demo.Application.Invoices.Commands.MarkInvoiceAsCancelled;
+
+public class MarkInvoiceAsCancelledCommandHandler : IRequestHandler<MarkInvoiceAsCancelledCommand, Unit>
 {
-    public class MarkInvoiceAsCancelledCommandHandler : IRequestHandler<MarkInvoiceAsCancelledCommand, Unit>
+    private readonly IInvoiceDomainEntity _invoiceDomainEntity;
+
+    public MarkInvoiceAsCancelledCommandHandler(
+        IInvoiceDomainEntity invoiceDomainEntity
+    )
     {
-        private readonly IInvoiceDomainEntity _invoiceDomainEntity;
+        _invoiceDomainEntity = invoiceDomainEntity;
+    }
 
-        public MarkInvoiceAsCancelledCommandHandler(
-            IInvoiceDomainEntity invoiceDomainEntity
-        )
-        {
-            _invoiceDomainEntity = invoiceDomainEntity;
-        }
+    public async Task<Unit> Handle(MarkInvoiceAsCancelledCommand request, CancellationToken cancellationToken)
+    {
+        await _invoiceDomainEntity.GetAsync(request.Id, cancellationToken);
 
-        public async Task<Unit> Handle(MarkInvoiceAsCancelledCommand request, CancellationToken cancellationToken)
-        {
-            await _invoiceDomainEntity.GetAsync(request.Id, cancellationToken);
+        _invoiceDomainEntity.SetStatus(InvoiceStatus.Cancelled);
 
-            _invoiceDomainEntity.SetStatus(InvoiceStatus.Cancelled);
+        await _invoiceDomainEntity.UpdateAsync(cancellationToken);
 
-            await _invoiceDomainEntity.UpdateAsync(cancellationToken);
-
-            return Unit.Value;
-        }
+        return Unit.Value;
     }
 }

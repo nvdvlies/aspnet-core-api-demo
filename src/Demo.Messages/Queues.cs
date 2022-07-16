@@ -1,12 +1,11 @@
-﻿namespace Demo.Messages
+﻿namespace Demo.Messages;
+
+public enum Queues
 {
-    public enum Queues
-    {
-        SynchronizeInvoicePdf,
-        CreateAuth0User,
-        SyncAuth0User,
-        DeleteAuth0User,
-        SendUserInvitationEmail,
-        SendChangePasswordEmail
-    }
+    SynchronizeInvoicePdf,
+    CreateAuth0User,
+    SyncAuth0User,
+    DeleteAuth0User,
+    SendUserInvitationEmail,
+    SendChangePasswordEmail
 }

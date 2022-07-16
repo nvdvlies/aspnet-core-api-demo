@@ -3,34 +3,34 @@ using Demo.Scaffold.Tool.Changes;
 using Demo.Scaffold.Tool.Helpers;
 using Demo.Scaffold.Tool.Interfaces;
 
-namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.DomainEntity.OutputCollectors
+namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.DomainEntity.OutputCollectors;
+
+internal class CreateAuditloggerOutputCollector : IOutputCollector
 {
-    internal class CreateAuditloggerOutputCollector : IOutputCollector
+    public IEnumerable<IChange> CollectChanges(ScaffolderContext context)
     {
-        public IEnumerable<IChange> CollectChanges(ScaffolderContext context)
+        var changes = new List<IChange>();
+
+        context.Variables.TryGet<bool>(Constants.EnableAuditlogging, out var enableAuditlogging);
+        if (!enableAuditlogging)
         {
-            var changes = new List<IChange>();
-
-            context.Variables.TryGet<bool>(Constants.EnableAuditlogging, out var enableAuditlogging);
-            if (!enableAuditlogging)
-            {
-                return changes;
-            }
-
-            var entityName = context.Variables.Get<string>(Constants.EntityName);
-
-            changes.Add(new CreateNewClass(
-                context.GetAuditloggerDirectory(),
-                $"{entityName}Auditlogger.cs",
-                GetTemplate(entityName)
-            ));
-
             return changes;
         }
 
-        private static string GetTemplate(string entityName)
-        {
-            var code = @"
+        var entityName = context.Variables.Get<string>(Constants.EntityName);
+
+        changes.Add(new CreateNewClass(
+            context.GetAuditloggerDirectory(),
+            $"{entityName}Auditlogger.cs",
+            GetTemplate(entityName)
+        ));
+
+        return changes;
+    }
+
+    private static string GetTemplate(string entityName)
+    {
+        var code = @"
 using Demo.Common.Interfaces;
 using Demo.Domain.Auditlog;
 using Demo.Domain.Auditlog.Interfaces;
@@ -58,8 +58,7 @@ namespace Demo.Infrastructure.Auditlogging
     }
 }
 ";
-            code = code.Replace("%ENTITY%", entityName);
-            return code;
-        }
+        code = code.Replace("%ENTITY%", entityName);
+        return code;
     }
 }

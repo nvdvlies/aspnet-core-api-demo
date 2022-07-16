@@ -1,9 +1,8 @@
-﻿namespace Demo.Application.Shared.Interfaces
+﻿namespace Demo.Application.Shared.Interfaces;
+
+public interface IEventHubContext
 {
-    public interface IEventHubContext
-    {
-        IEventHub All { get; }
-        IEventHub CurrentUser { get; }
-        IEventHub User(string externalUserId);
-    }
+    IEventHub All { get; }
+    IEventHub CurrentUser { get; }
+    IEventHub User(string externalUserId);
 }

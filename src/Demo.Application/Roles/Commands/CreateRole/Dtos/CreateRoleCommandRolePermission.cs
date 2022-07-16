@@ -1,9 +1,8 @@
 ﻿using System;
 
-namespace Demo.Application.Roles.Commands.CreateRole.Dtos
+namespace Demo.Application.Roles.Commands.CreateRole.Dtos;
+
+public class CreateRoleCommandRolePermission
 {
-    public class CreateRoleCommandRolePermission
-    {
-        public Guid PermissionId { get; set; }
-    }
+    public Guid PermissionId { get; set; }
 }

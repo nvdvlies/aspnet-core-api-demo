@@ -1,9 +1,8 @@
-using System;
+﻿using System;
 
-namespace Demo.Application.Roles.Commands.CreateRole
+namespace Demo.Application.Roles.Commands.CreateRole;
+
+public class CreateRoleResponse
 {
-    public class CreateRoleResponse
-    {
-        public Guid Id { get; set; }
-    }
+    public Guid Id { get; set; }
 }

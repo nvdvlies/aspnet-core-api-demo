@@ -1,9 +1,8 @@
 ﻿using Demo.Scaffold.Tool.Scaffolders;
 
-namespace Demo.Scaffold.Tool.Interfaces
+namespace Demo.Scaffold.Tool.Interfaces;
+
+internal interface IInputCollector
 {
-    internal interface IInputCollector
-    {
-        void CollectInput(ScaffolderContext context);
-    }
+    void CollectInput(ScaffolderContext context);
 }

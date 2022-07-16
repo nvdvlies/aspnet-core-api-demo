@@ -1,8 +1,7 @@
-﻿namespace Demo.Application.Invoices.Queries.SearchInvoices.Dtos
+﻿namespace Demo.Application.Invoices.Queries.SearchInvoices.Dtos;
+
+public enum SearchInvoicesOrderByEnum
 {
-    public enum SearchInvoicesOrderByEnum
-    {
-        InvoiceNumber,
-        InvoiceDate
-    }
+    InvoiceNumber,
+    InvoiceDate
 }

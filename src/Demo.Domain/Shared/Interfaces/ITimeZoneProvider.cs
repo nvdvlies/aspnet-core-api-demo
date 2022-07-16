@@ -1,9 +1,8 @@
-using System;
+﻿using System;
 
-namespace Demo.Domain.Shared.Interfaces
+namespace Demo.Domain.Shared.Interfaces;
+
+public interface ITimeZoneProvider
 {
-    public interface ITimeZoneProvider
-    {
-        TimeZoneInfo TimeZone { get; }
-    }
+    TimeZoneInfo TimeZone { get; }
 }

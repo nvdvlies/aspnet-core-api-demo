@@ -1,12 +1,11 @@
 ﻿using FluentValidation;
 
-namespace Demo.Application.Invoices.Commands.MarkInvoiceAsPaid
+namespace Demo.Application.Invoices.Commands.MarkInvoiceAsPaid;
+
+public class MarkInvoiceAsPaidCommandValidator : AbstractValidator<MarkInvoiceAsPaidCommand>
 {
-    public class MarkInvoiceAsPaidCommandValidator : AbstractValidator<MarkInvoiceAsPaidCommand>
+    public MarkInvoiceAsPaidCommandValidator()
     {
-        public MarkInvoiceAsPaidCommandValidator()
-        {
-            RuleFor(x => x.Id).NotEmpty();
-        }
+        RuleFor(x => x.Id).NotEmpty();
     }
 }

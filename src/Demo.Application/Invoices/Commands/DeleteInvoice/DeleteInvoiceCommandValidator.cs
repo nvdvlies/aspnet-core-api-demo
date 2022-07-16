@@ -1,12 +1,11 @@
 ﻿using FluentValidation;
 
-namespace Demo.Application.Invoices.Commands.DeleteInvoice
+namespace Demo.Application.Invoices.Commands.DeleteInvoice;
+
+public class DeleteInvoiceCommandValidator : AbstractValidator<DeleteInvoiceCommand>
 {
-    public class DeleteInvoiceCommandValidator : AbstractValidator<DeleteInvoiceCommand>
+    public DeleteInvoiceCommandValidator()
     {
-        public DeleteInvoiceCommandValidator()
-        {
-            RuleFor(x => x.Id).NotEmpty();
-        }
+        RuleFor(x => x.Id).NotEmpty();
     }
 }

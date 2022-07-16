@@ -1,9 +1,8 @@
 ﻿using Demo.Application.Shared.Dtos;
 
-namespace Demo.Application.ApplicationSettings.Queries.GetApplicationSettings.Dtos
+namespace Demo.Application.ApplicationSettings.Queries.GetApplicationSettings.Dtos;
+
+public class ApplicationSettingsDto : AuditableEntityDto
 {
-    public class ApplicationSettingsDto : AuditableEntityDto
-    {
-        public ApplicationSettingsSettingsDto Settings { get; set; }
-    }
+    public ApplicationSettingsSettingsDto Settings { get; set; }
 }

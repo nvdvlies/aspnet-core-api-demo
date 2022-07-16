@@ -1,31 +1,30 @@
 ﻿using System;
 
-namespace Demo.Domain.Shared.Exceptions
+namespace Demo.Domain.Shared.Exceptions;
+
+public static class Guard
 {
-    public static class Guard
+    public static void NotNull(object value, string paramName, string message = null)
     {
-        public static void NotNull(object value, string paramName, string message = null)
+        if (value == null)
         {
-            if (value == null)
-            {
-                throw new ArgumentNullException(paramName, message);
-            }
+            throw new ArgumentNullException(paramName, message);
         }
+    }
 
-        public static void NotNullOrWhiteSpace(string value, string paramName, string message = null)
+    public static void NotNullOrWhiteSpace(string value, string paramName, string message = null)
+    {
+        if (string.IsNullOrWhiteSpace(value))
         {
-            if (string.IsNullOrWhiteSpace(value))
-            {
-                throw new ArgumentNullException(paramName, message);
-            }
+            throw new ArgumentNullException(paramName, message);
         }
+    }
 
-        public static void NotTrue(bool value, string paramName, string message = null)
+    public static void NotTrue(bool value, string paramName, string message = null)
+    {
+        if (value)
         {
-            if (value)
-            {
-                throw new ArgumentNullException(paramName, message);
-            }
+            throw new ArgumentNullException(paramName, message);
         }
     }
 }

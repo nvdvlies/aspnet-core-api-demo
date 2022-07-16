@@ -2,26 +2,25 @@
 using Demo.Scaffold.Tool.Interfaces;
 using Spectre.Console;
 
-namespace Demo.Scaffold.Tool.Scaffolders.InputCollectors
+namespace Demo.Scaffold.Tool.Scaffolders.InputCollectors;
+
+internal class ScaffoldTypeInputCollector : IInputCollector
 {
-    internal class ScaffoldTypeInputCollector : IInputCollector
+    private const string DomainEntity = "DomainEntity";
+    private const string Endpoint = "Endpoint";
+
+    public void CollectInput(ScaffolderContext context)
     {
-        private const string DomainEntity = "DomainEntity";
-        private const string Endpoint = "Endpoint";
+        var option = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+                .Title("What would you like to scaffold?")
+                .AddChoices(DomainEntity, Endpoint));
 
-        public void CollectInput(ScaffolderContext context)
+        context.ScaffolderType = option switch
         {
-            var option = AnsiConsole.Prompt(
-                new SelectionPrompt<string>()
-                    .Title("What would you like to scaffold?")
-                    .AddChoices(DomainEntity, Endpoint));
-
-            context.ScaffolderType = option switch
-            {
-                DomainEntity => ScaffolderTypes.DomainEntity,
-                Endpoint => ScaffolderTypes.Endpoint,
-                _ => throw new Exception($"Invalid option {option}")
-            };
-        }
+            DomainEntity => ScaffolderTypes.DomainEntity,
+            Endpoint => ScaffolderTypes.Endpoint,
+            _ => throw new Exception($"Invalid option {option}")
+        };
     }
 }

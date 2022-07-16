@@ -1,52 +1,51 @@
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using Demo.Common.Interfaces;
 using Demo.Domain.Shared.DomainEntity;
 using Demo.Domain.Shared.Interfaces;
 using Demo.Events.Role;
 
-namespace Demo.Domain.Role.Hooks
+namespace Demo.Domain.Role.Hooks;
+
+internal class RoleCreatedUpdatedDeletedEventHook : IAfterCreate<Role>, IAfterUpdate<Role>, IAfterDelete<Role>
 {
-    internal class RoleCreatedUpdatedDeletedEventHook : IAfterCreate<Role>, IAfterUpdate<Role>, IAfterDelete<Role>
+    private readonly ICorrelationIdProvider _correlationIdProvider;
+    private readonly ICurrentUserIdProvider _currentUserIdProvider;
+
+    public RoleCreatedUpdatedDeletedEventHook(
+        ICurrentUserIdProvider currentUserIdProvider,
+        ICorrelationIdProvider correlationIdProvider
+    )
     {
-        private readonly ICorrelationIdProvider _correlationIdProvider;
-        private readonly ICurrentUserIdProvider _currentUserIdProvider;
+        _currentUserIdProvider = currentUserIdProvider;
+        _correlationIdProvider = correlationIdProvider;
+    }
 
-        public RoleCreatedUpdatedDeletedEventHook(
-            ICurrentUserIdProvider currentUserIdProvider,
-            ICorrelationIdProvider correlationIdProvider
-        )
+    public Task ExecuteAsync(HookType type, IDomainEntityContext<Role> context,
+        CancellationToken cancellationToken = default)
+    {
+        switch (context.EditMode)
         {
-            _currentUserIdProvider = currentUserIdProvider;
-            _correlationIdProvider = correlationIdProvider;
+            case EditMode.Create:
+                context.AddEventAsync(
+                    RoleCreatedEvent.Create(_correlationIdProvider.Id, context.Entity.Id,
+                        _currentUserIdProvider.Id),
+                    cancellationToken);
+                break;
+            case EditMode.Update:
+                context.AddEventAsync(
+                    RoleUpdatedEvent.Create(_correlationIdProvider.Id, context.Entity.Id,
+                        _currentUserIdProvider.Id),
+                    cancellationToken);
+                break;
+            case EditMode.Delete:
+                context.AddEventAsync(
+                    RoleDeletedEvent.Create(_correlationIdProvider.Id, context.Entity.Id,
+                        _currentUserIdProvider.Id),
+                    cancellationToken);
+                break;
         }
 
-        public Task ExecuteAsync(HookType type, IDomainEntityContext<Role> context,
-            CancellationToken cancellationToken = default)
-        {
-            switch (context.EditMode)
-            {
-                case EditMode.Create:
-                    context.AddEventAsync(
-                        RoleCreatedEvent.Create(_correlationIdProvider.Id, context.Entity.Id,
-                            _currentUserIdProvider.Id),
-                        cancellationToken);
-                    break;
-                case EditMode.Update:
-                    context.AddEventAsync(
-                        RoleUpdatedEvent.Create(_correlationIdProvider.Id, context.Entity.Id,
-                            _currentUserIdProvider.Id),
-                        cancellationToken);
-                    break;
-                case EditMode.Delete:
-                    context.AddEventAsync(
-                        RoleDeletedEvent.Create(_correlationIdProvider.Id, context.Entity.Id,
-                            _currentUserIdProvider.Id),
-                        cancellationToken);
-                    break;
-            }
-
-            return Task.CompletedTask;
-        }
+        return Task.CompletedTask;
     }
 }

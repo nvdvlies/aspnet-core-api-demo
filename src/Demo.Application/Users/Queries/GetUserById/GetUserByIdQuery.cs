@@ -1,11 +1,10 @@
-using System;
+﻿using System;
 using Demo.Application.Shared.Interfaces;
 using MediatR;
 
-namespace Demo.Application.Users.Queries.GetUserById
+namespace Demo.Application.Users.Queries.GetUserById;
+
+public class GetUserByIdQuery : IQuery, IRequest<GetUserByIdQueryResult>
 {
-    public class GetUserByIdQuery : IQuery, IRequest<GetUserByIdQueryResult>
-    {
-        public Guid Id { get; set; }
-    }
+    public Guid Id { get; set; }
 }

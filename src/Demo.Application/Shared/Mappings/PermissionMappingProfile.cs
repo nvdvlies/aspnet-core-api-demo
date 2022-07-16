@@ -1,17 +1,16 @@
-using AutoMapper;
+﻿using AutoMapper;
 using Demo.Application.Roles.Queries.GetRoleById.Dtos;
 using Demo.Application.Shared.Dtos;
 using Demo.Domain.Role;
 
-namespace Demo.Application.Shared.Mappings
+namespace Demo.Application.Shared.Mappings;
+
+public class PermissionMappingProfile : Profile
 {
-    public class PermissionMappingProfile : Profile
+    public PermissionMappingProfile()
     {
-        public PermissionMappingProfile()
-        {
-            CreateMap<Permission, PermissionDto>();
-            CreateMap<PermissionGroup, PermissionGroupDto>();
-            CreateMap<RolePermission, RolePermissionDto>();
-        }
+        CreateMap<Permission, PermissionDto>();
+        CreateMap<PermissionGroup, PermissionGroupDto>();
+        CreateMap<RolePermission, RolePermissionDto>();
     }
 }

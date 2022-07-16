@@ -1,8 +1,7 @@
-﻿namespace Demo.Application.Users.Queries.GetUserById.Dtos
+﻿namespace Demo.Application.Users.Queries.GetUserById.Dtos;
+
+public enum GenderEnum
 {
-    public enum GenderEnum
-    {
-        Male = 1,
-        Female = 2
-    }
+    Male = 1,
+    Female = 2
 }

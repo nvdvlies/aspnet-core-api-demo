@@ -6,40 +6,39 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace Demo.WebApi.Tests.Helpers
+namespace Demo.WebApi.Tests.Helpers;
+
+public class TestAuthHandler : AuthenticationHandler<AuthenticationSchemeOptions>
 {
-    public class TestAuthHandler : AuthenticationHandler<AuthenticationSchemeOptions>
+    public const string DefaultScheme = "Test";
+
+    private readonly TestUser _testUser;
+
+    public TestAuthHandler(
+        IOptionsMonitor<AuthenticationSchemeOptions> options,
+        ILoggerFactory logger,
+        UrlEncoder encoder,
+        ISystemClock clock,
+        TestUser testUser)
+        : base(options, logger, encoder, clock)
     {
-        public const string DefaultScheme = "Test";
+        _testUser = testUser;
+    }
 
-        private readonly TestUser _testUser;
-
-        public TestAuthHandler(
-            IOptionsMonitor<AuthenticationSchemeOptions> options,
-            ILoggerFactory logger,
-            UrlEncoder encoder,
-            ISystemClock clock,
-            TestUser testUser)
-            : base(options, logger, encoder, clock)
+    protected override Task<AuthenticateResult> HandleAuthenticateAsync()
+    {
+        if (!_testUser.IsAuthenticated)
         {
-            _testUser = testUser;
+            return Task.FromResult(AuthenticateResult.Fail(""));
         }
 
-        protected override Task<AuthenticateResult> HandleAuthenticateAsync()
-        {
-            if (!_testUser.IsAuthenticated)
-            {
-                return Task.FromResult(AuthenticateResult.Fail(""));
-            }
+        var claims = new List<Claim> { new(ClaimTypes.NameIdentifier, _testUser.User.ExternalId) };
+        var identity = new ClaimsIdentity(claims, DefaultScheme);
+        var principal = new ClaimsPrincipal(identity);
+        var ticket = new AuthenticationTicket(principal, DefaultScheme);
 
-            var claims = new List<Claim> { new(ClaimTypes.NameIdentifier, _testUser.User.ExternalId) };
-            var identity = new ClaimsIdentity(claims, DefaultScheme);
-            var principal = new ClaimsPrincipal(identity);
-            var ticket = new AuthenticationTicket(principal, DefaultScheme);
+        var result = AuthenticateResult.Success(ticket);
 
-            var result = AuthenticateResult.Success(ticket);
-
-            return Task.FromResult(result);
-        }
+        return Task.FromResult(result);
     }
 }

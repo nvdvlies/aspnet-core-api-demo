@@ -1,10 +1,9 @@
 ﻿using System;
 
-namespace Demo.Messages
+namespace Demo.Messages;
+
+public interface IMessageData
 {
-    public interface IMessageData
-    {
-        string MessageDataVersion { get; }
-        Guid CorrelationId { get; }
-    }
+    string MessageDataVersion { get; }
+    Guid CorrelationId { get; }
 }

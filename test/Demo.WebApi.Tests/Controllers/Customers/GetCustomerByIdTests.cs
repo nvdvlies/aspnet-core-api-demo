@@ -9,65 +9,64 @@ using Demo.WebApi.Tests.Helpers;
 using FluentAssertions;
 using Xunit;
 
-namespace Demo.WebApi.Tests.Controllers.Customers
+namespace Demo.WebApi.Tests.Controllers.Customers;
+
+[Collection(nameof(SharedFixture))]
+public class GetCustomerByIdTests : TestBase
 {
-    [Collection(nameof(SharedFixture))]
-    public class GetCustomerByIdTests : TestBase
+    public GetCustomerByIdTests(SharedFixture fixture) : base(fixture)
     {
-        public GetCustomerByIdTests(SharedFixture fixture) : base(fixture)
-        {
-        }
+    }
 
-        [Fact]
-        public async Task GetCustomerById_When_customer_exists_It_should_return_statuscode_OK()
-        {
-            // Arrange
-            await SetTestUserWithPermissionAsync(Domain.Role.Permissions.CustomersRead);
+    [Fact]
+    public async Task GetCustomerById_When_customer_exists_It_should_return_statuscode_OK()
+    {
+        // Arrange
+        await SetTestUserWithPermissionAsync(Domain.Role.Permissions.CustomersRead);
 
-            var existingCustomer = new Customer { Id = Guid.NewGuid(), Name = "Test" };
-            await AddAsExistingEntityAsync(existingCustomer);
+        var existingCustomer = new Customer { Id = Guid.NewGuid(), Name = "Test" };
+        await AddAsExistingEntityAsync(existingCustomer);
 
-            // Act
-            var response = await Client.CustomersController().GetById(existingCustomer.Id);
+        // Act
+        var response = await Client.CustomersController().GetById(existingCustomer.Id);
 
-            // Assert
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
 
-            var content = await response.Content.ReadFromJsonAsync<GetCustomerByIdQueryResult>();
-            content.Should().NotBeNull();
-            content!.Customer.Should().NotBeNull();
-            content.Customer.Id.Should().Be(existingCustomer.Id);
-            content.Customer.Name.Should().Be(existingCustomer.Name);
-        }
+        var content = await response.Content.ReadFromJsonAsync<GetCustomerByIdQueryResult>();
+        content.Should().NotBeNull();
+        content!.Customer.Should().NotBeNull();
+        content.Customer.Id.Should().Be(existingCustomer.Id);
+        content.Customer.Name.Should().Be(existingCustomer.Name);
+    }
 
-        [Fact]
-        public async Task GetCustomerById_When_customer_does_not_exist_It_should_return_statuscode_NotFound()
-        {
-            // Arrange
-            await SetTestUserWithPermissionAsync(Domain.Role.Permissions.CustomersRead);
+    [Fact]
+    public async Task GetCustomerById_When_customer_does_not_exist_It_should_return_statuscode_NotFound()
+    {
+        // Arrange
+        await SetTestUserWithPermissionAsync(Domain.Role.Permissions.CustomersRead);
 
-            var customerId = Guid.NewGuid();
+        var customerId = Guid.NewGuid();
 
-            // Act
-            var response = await Client.CustomersController().GetById(customerId);
+        // Act
+        var response = await Client.CustomersController().GetById(customerId);
 
-            // Assert
-            response.StatusCode.Should().Be(HttpStatusCode.NotFound);
-        }
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
 
-        [Fact]
-        public async Task GetCustomerById_When_user_has_no_permission_It_should_return_statuscode_Forbidden()
-        {
-            // Arrange
-            await SetTestUserWithoutPermissionAsync();
+    [Fact]
+    public async Task GetCustomerById_When_user_has_no_permission_It_should_return_statuscode_Forbidden()
+    {
+        // Arrange
+        await SetTestUserWithoutPermissionAsync();
 
-            var customerId = Guid.NewGuid();
+        var customerId = Guid.NewGuid();
 
-            // Act
-            var response = await Client.CustomersController().GetById(customerId);
+        // Act
+        var response = await Client.CustomersController().GetById(customerId);
 
-            // Assert
-            response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
-        }
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
     }
 }

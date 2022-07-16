@@ -4,23 +4,22 @@ using System.Threading.Tasks;
 using Demo.Domain.Shared.DomainEntity;
 using Demo.Domain.Shared.Interfaces;
 
-namespace Demo.Domain.UserPreferences.Hooks
+namespace Demo.Domain.UserPreferences.Hooks;
+
+internal class UserPreferencesAuditlogOnCreateHook : IAfterCreate<UserPreferences>
 {
-    internal class UserPreferencesAuditlogOnCreateHook : IAfterCreate<UserPreferences>
+    private readonly Lazy<IAuditlogger<UserPreferences>> _auditlogger;
+
+    public UserPreferencesAuditlogOnCreateHook(
+        Lazy<IAuditlogger<UserPreferences>> auditlogger
+    )
     {
-        private readonly Lazy<IAuditlogger<UserPreferences>> _auditlogger;
+        _auditlogger = auditlogger;
+    }
 
-        public UserPreferencesAuditlogOnCreateHook(
-            Lazy<IAuditlogger<UserPreferences>> auditlogger
-        )
-        {
-            _auditlogger = auditlogger;
-        }
-
-        public Task ExecuteAsync(HookType type, IDomainEntityContext<UserPreferences> context,
-            CancellationToken cancellationToken = default)
-        {
-            return _auditlogger.Value.CreateAuditLogAsync(context.Entity, context.Pristine, cancellationToken);
-        }
+    public Task ExecuteAsync(HookType type, IDomainEntityContext<UserPreferences> context,
+        CancellationToken cancellationToken = default)
+    {
+        return _auditlogger.Value.CreateAuditLogAsync(context.Entity, context.Pristine, cancellationToken);
     }
 }

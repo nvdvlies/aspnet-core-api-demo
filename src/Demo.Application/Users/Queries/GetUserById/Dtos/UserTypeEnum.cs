@@ -1,8 +1,7 @@
-﻿namespace Demo.Application.Users.Queries.GetUserById.Dtos
+﻿namespace Demo.Application.Users.Queries.GetUserById.Dtos;
+
+public enum UserTypeEnum
 {
-    public enum UserTypeEnum
-    {
-        Regular = 1,
-        System = 2
-    }
+    Regular = 1,
+    System = 2
 }

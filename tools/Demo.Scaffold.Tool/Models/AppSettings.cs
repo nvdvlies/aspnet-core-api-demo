@@ -1,7 +1,6 @@
-﻿namespace Demo.Scaffold.Tool.Models
+﻿namespace Demo.Scaffold.Tool.Models;
+
+internal class AppSettings
 {
-    internal class AppSettings
-    {
-        public string PathToSolutionRootDirectory { get; set; }
-    }
+    public string PathToSolutionRootDirectory { get; set; }
 }

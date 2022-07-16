@@ -7,63 +7,62 @@ using Demo.Domain.FeatureFlagSettings.Interfaces;
 using Demo.Domain.Shared.Interfaces;
 using Microsoft.Extensions.Caching.Distributed;
 
-namespace Demo.Infrastructure.Services
+namespace Demo.Infrastructure.Services;
+
+internal class FeatureFlagSettingsProvider : IFeatureFlagSettingsProvider
 {
-    internal class FeatureFlagSettingsProvider : IFeatureFlagSettingsProvider
+    public const string CacheKey = "FeatureFlagSettings";
+
+    private readonly IDistributedCache _cache;
+    private readonly IFeatureFlagSettingsDomainEntity _featureFlagSettingsDomainEntity;
+    private readonly IJsonService<FeatureFlagSettings> _jsonService;
+
+    public FeatureFlagSettingsProvider(
+        IDistributedCache cache,
+        IJsonService<FeatureFlagSettings> jsonService,
+        IFeatureFlagSettingsDomainEntity featureFlagSettingsDomainEntity
+    )
     {
-        public const string CacheKey = "FeatureFlagSettings";
+        _cache = cache;
+        _jsonService = jsonService;
+        _featureFlagSettingsDomainEntity = featureFlagSettingsDomainEntity;
+    }
 
-        private readonly IDistributedCache _cache;
-        private readonly IFeatureFlagSettingsDomainEntity _featureFlagSettingsDomainEntity;
-        private readonly IJsonService<FeatureFlagSettings> _jsonService;
+    public Task<FeatureFlagSettings> GetAsync(CancellationToken cancellationToken = default)
+    {
+        return GetAsync(false, cancellationToken);
+    }
 
-        public FeatureFlagSettingsProvider(
-            IDistributedCache cache,
-            IJsonService<FeatureFlagSettings> jsonService,
-            IFeatureFlagSettingsDomainEntity featureFlagSettingsDomainEntity
-        )
+    public async Task<FeatureFlagSettings> GetAsync(bool refreshCache,
+        CancellationToken cancellationToken = default)
+    {
+        var cacheValue = await _cache.GetAsync(CacheKey, cancellationToken);
+
+        if (refreshCache || cacheValue == null)
         {
-            _cache = cache;
-            _jsonService = jsonService;
-            _featureFlagSettingsDomainEntity = featureFlagSettingsDomainEntity;
+            _featureFlagSettingsDomainEntity.WithOptions(x => x.AsNoTracking = true);
+            await _featureFlagSettingsDomainEntity.GetAsync(cancellationToken);
+
+            var featureFlagSettings = _featureFlagSettingsDomainEntity.Entity;
+
+            var cacheEntryOptions = new DistributedCacheEntryOptions()
+                .SetAbsoluteExpiration(TimeSpan.FromHours(8));
+
+            await _cache.SetAsync(CacheKey, Encode(featureFlagSettings), cacheEntryOptions, cancellationToken);
+
+            return featureFlagSettings;
         }
 
-        public Task<FeatureFlagSettings> GetAsync(CancellationToken cancellationToken = default)
-        {
-            return GetAsync(false, cancellationToken);
-        }
+        return Decode(cacheValue);
+    }
 
-        public async Task<FeatureFlagSettings> GetAsync(bool refreshCache,
-            CancellationToken cancellationToken = default)
-        {
-            var cacheValue = await _cache.GetAsync(CacheKey, cancellationToken);
+    private FeatureFlagSettings Decode(byte[] value)
+    {
+        return _jsonService.FromJson(Encoding.UTF8.GetString(value));
+    }
 
-            if (refreshCache || cacheValue == null)
-            {
-                _featureFlagSettingsDomainEntity.WithOptions(x => x.AsNoTracking = true);
-                await _featureFlagSettingsDomainEntity.GetAsync(cancellationToken);
-
-                var featureFlagSettings = _featureFlagSettingsDomainEntity.Entity;
-
-                var cacheEntryOptions = new DistributedCacheEntryOptions()
-                    .SetAbsoluteExpiration(TimeSpan.FromHours(8));
-
-                await _cache.SetAsync(CacheKey, Encode(featureFlagSettings), cacheEntryOptions, cancellationToken);
-
-                return featureFlagSettings;
-            }
-
-            return Decode(cacheValue);
-        }
-
-        private FeatureFlagSettings Decode(byte[] value)
-        {
-            return _jsonService.FromJson(Encoding.UTF8.GetString(value));
-        }
-
-        private byte[] Encode(FeatureFlagSettings featureFlagSettings)
-        {
-            return Encoding.UTF8.GetBytes(_jsonService.ToJson(featureFlagSettings));
-        }
+    private byte[] Encode(FeatureFlagSettings featureFlagSettings)
+    {
+        return Encoding.UTF8.GetBytes(_jsonService.ToJson(featureFlagSettings));
     }
 }

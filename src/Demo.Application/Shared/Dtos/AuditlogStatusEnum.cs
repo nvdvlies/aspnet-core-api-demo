@@ -1,10 +1,9 @@
-﻿namespace Demo.Application.Shared.Dtos
+﻿namespace Demo.Application.Shared.Dtos;
+
+public enum AuditlogStatusEnum
 {
-    public enum AuditlogStatusEnum
-    {
-        Unchanged,
-        Added,
-        Updated,
-        Removed
-    }
+    Unchanged,
+    Added,
+    Updated,
+    Removed
 }

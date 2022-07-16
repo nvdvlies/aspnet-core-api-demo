@@ -2,15 +2,14 @@
 using System.Text;
 using System.Text.Json;
 
-namespace Demo.Domain.Invoice.Models
+namespace Demo.Domain.Invoice.Models;
+
+public static class InvoiceToPdfModelExtensions
 {
-    public static class InvoiceToPdfModelExtensions
+    public static string GetChecksum(this InvoiceToPdfModel invoiceToPdfModel)
     {
-        public static string GetChecksum(this InvoiceToPdfModel invoiceToPdfModel)
-        {
-            var json = JsonSerializer.Serialize(invoiceToPdfModel);
-            var bytes = Encoding.UTF8.GetBytes(json);
-            return Convert.ToBase64String(bytes);
-        }
+        var json = JsonSerializer.Serialize(invoiceToPdfModel);
+        var bytes = Encoding.UTF8.GetBytes(json);
+        return Convert.ToBase64String(bytes);
     }
 }

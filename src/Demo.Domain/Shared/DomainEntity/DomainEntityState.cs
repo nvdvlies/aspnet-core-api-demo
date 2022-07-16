@@ -1,37 +1,36 @@
 ﻿using System.Collections.Generic;
 using Demo.Domain.Shared.Interfaces;
 
-namespace Demo.Domain.Shared.DomainEntity
+namespace Demo.Domain.Shared.DomainEntity;
+
+internal class DomainEntityState : IDomainEntityState
 {
-    internal class DomainEntityState : IDomainEntityState
+    private readonly Dictionary<string, object> _dictionary;
+
+    public DomainEntityState()
     {
-        private readonly Dictionary<string, object> _dictionary;
+        _dictionary = new Dictionary<string, object>();
+    }
 
-        public DomainEntityState()
+    public T Get<T>(string key)
+    {
+        return (T)_dictionary[key];
+    }
+
+    public void Set<T>(string key, T value)
+    {
+        _dictionary[key] = value;
+    }
+
+    public bool TryGet<T>(string key, out T value)
+    {
+        if (_dictionary.TryGetValue(key, out var internalValue) && internalValue is T result)
         {
-            _dictionary = new Dictionary<string, object>();
+            value = result;
+            return true;
         }
 
-        public T Get<T>(string key)
-        {
-            return (T)_dictionary[key];
-        }
-
-        public void Set<T>(string key, T value)
-        {
-            _dictionary[key] = value;
-        }
-
-        public bool TryGet<T>(string key, out T value)
-        {
-            if (_dictionary.TryGetValue(key, out var internalValue) && internalValue is T result)
-            {
-                value = result;
-                return true;
-            }
-
-            value = default;
-            return false;
-        }
+        value = default;
+        return false;
     }
 }

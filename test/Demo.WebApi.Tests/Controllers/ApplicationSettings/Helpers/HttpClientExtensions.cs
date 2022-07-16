@@ -1,12 +1,11 @@
 ﻿using System.Net.Http;
 
-namespace Demo.WebApi.Tests.Controllers.ApplicationSettings.Helpers
+namespace Demo.WebApi.Tests.Controllers.ApplicationSettings.Helpers;
+
+internal static class HttpClientExtensions
 {
-    internal static class HttpClientExtensions
+    public static ApplicationSettingsOperations ApplicationSettingsController(this HttpClient httpClient)
     {
-        public static ApplicationSettingsOperations ApplicationSettingsController(this HttpClient httpClient)
-        {
-            return new ApplicationSettingsOperations(httpClient);
-        }
+        return new ApplicationSettingsOperations(httpClient);
     }
 }

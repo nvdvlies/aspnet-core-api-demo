@@ -1,12 +1,11 @@
-using FluentValidation;
+﻿using FluentValidation;
 
-namespace Demo.Application.UserPreferences.Commands.SaveUserPreferences
+namespace Demo.Application.UserPreferences.Commands.SaveUserPreferences;
+
+public class SaveUserPreferencesCommandValidator : AbstractValidator<SaveUserPreferencesCommand>
 {
-    public class SaveUserPreferencesCommandValidator : AbstractValidator<SaveUserPreferencesCommand>
+    public SaveUserPreferencesCommandValidator()
     {
-        public SaveUserPreferencesCommandValidator()
-        {
-            RuleFor(x => x.Preferences).NotNull();
-        }
+        RuleFor(x => x.Preferences).NotNull();
     }
 }

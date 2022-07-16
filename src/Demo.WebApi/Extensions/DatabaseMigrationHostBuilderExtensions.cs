@@ -3,97 +3,94 @@ using System.Linq;
 using Demo.Domain.Role.Seed;
 using Demo.Domain.User.Seed;
 using Demo.Infrastructure.Persistence;
-using Demo.Infrastructure.Settings;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using StackExchange.Redis;
 
-namespace Demo.WebApi.Extensions
+namespace Demo.WebApi.Extensions;
+
+public static class DatabaseMigrationHostBuilderExtensions
 {
-    public static class DatabaseMigrationHostBuilderExtensions
+    public static IHost MigrateDatabase(this IHost host)
     {
-        public static IHost MigrateDatabase(this IHost host)
+        using var scope = host.Services.CreateScope();
+        using var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        var logger = scope.ServiceProvider.GetRequiredService<ILoggerFactory>()
+            .CreateLogger(nameof(DatabaseMigrationHostBuilderExtensions));
+        try
         {
-            using var scope = host.Services.CreateScope();
-            using var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-            var logger = scope.ServiceProvider.GetRequiredService<ILoggerFactory>()
-                .CreateLogger(nameof(DatabaseMigrationHostBuilderExtensions));
-            try
+            var databaseExistedBeforeMigrate =
+                (dbContext.Database.GetService<IDatabaseCreator>() as RelationalDatabaseCreator)!.Exists();
+
+            logger.LogInformation("Retrieving pending database migrations.");
+
+            var pendingMigrations = dbContext.Database.GetPendingMigrations().ToList();
+
+            if (pendingMigrations.Any())
             {
-                var databaseExistedBeforeMigrate =
-                    (dbContext.Database.GetService<IDatabaseCreator>() as RelationalDatabaseCreator)!.Exists();
+                logger.LogInformation("Pending database migrations are available.");
 
-                logger.LogInformation("Retrieving pending database migrations.");
-
-                var pendingMigrations = dbContext.Database.GetPendingMigrations().ToList();
-
-                if (pendingMigrations.Any())
+                var lastAppliedMigration = dbContext.Database.GetAppliedMigrations().LastOrDefault();
+                if (!string.IsNullOrEmpty(lastAppliedMigration))
                 {
-                    logger.LogInformation("Pending database migrations are available.");
+                    logger.LogInformation("Database currently on migration '{lastAppliedMigration}'.",
+                        lastAppliedMigration);
+                }
 
-                    var lastAppliedMigration = dbContext.Database.GetAppliedMigrations().LastOrDefault();
-                    if (!string.IsNullOrEmpty(lastAppliedMigration))
+                logger.LogInformation("Applying {count} migration(s) ({names}).", pendingMigrations.Count,
+                    string.Join(",", pendingMigrations));
+
+                dbContext.Database.Migrate();
+
+                lastAppliedMigration = dbContext.Database.GetAppliedMigrations().Last();
+
+                logger.LogInformation("Database migrated to '{lastAppliedMigration}'.", lastAppliedMigration);
+
+                if (!databaseExistedBeforeMigrate)
+                {
+                    logger.LogInformation("Database was newly created. Seeding with data.");
+
+                    if (!dbContext.Roles.Any())
                     {
-                        logger.LogInformation("Database currently on migration '{lastAppliedMigration}'.",
-                            lastAppliedMigration);
+                        logger.LogInformation("Seeding default roles.");
+                        dbContext.Roles.AddRange(AdministratorRole.Create(), UserRole.Create());
                     }
 
-                    logger.LogInformation("Applying {count} migration(s) ({names}).", pendingMigrations.Count,
-                        string.Join(",", pendingMigrations));
-
-                    dbContext.Database.Migrate();
-
-                    lastAppliedMigration = dbContext.Database.GetAppliedMigrations().Last();
-
-                    logger.LogInformation("Database migrated to '{lastAppliedMigration}'.", lastAppliedMigration);
-
-                    if (!databaseExistedBeforeMigrate)
+                    if (!dbContext.Users.Any())
                     {
-                        logger.LogInformation("Database was newly created. Seeding with data.");
-
-                        if (!dbContext.Roles.Any())
-                        {
-                            logger.LogInformation("Seeding default roles.");
-                            dbContext.Roles.AddRange(AdministratorRole.Create(), UserRole.Create());
-                        }
-
-                        if (!dbContext.Users.Any())
-                        {
-                            logger.LogInformation("Seeding default user(s).");
-                            dbContext.Users.Add(DefaultAdministratorUser.Create());
-                        }
-
-                        dbContext.SaveChanges();
-
-                        logger.LogInformation("Finished seeding.");
+                        logger.LogInformation("Seeding default user(s).");
+                        dbContext.Users.Add(DefaultAdministratorUser.Create());
                     }
 
-                    // TODO
-                    // var environmentSettings = scope.ServiceProvider.GetRequiredService<EnvironmentSettings>();
-                    // if (!string.IsNullOrEmpty(environmentSettings.Redis.Connection))
-                    // {
-                    //     logger.LogInformation("Clearing Redis cache.");
-                    //     using var redis = scope.ServiceProvider.GetRequiredService<IConnectionMultiplexer>();
-                    //     redis.GetServer(environmentSettings.Redis.Connection).FlushDatabase();
-                    //     logger.LogInformation("Finished clearing Redis cache.");
-                    // }
-                }
-                else
-                {
-                    logger.LogInformation("No pending database migrations available.");
-                }
-            }
-            catch (Exception ex)
-            {
-                logger.LogCritical(ex, "Database migration failed with error: {message}.", ex.Message);
-                throw;
-            }
+                    dbContext.SaveChanges();
 
-            return host;
+                    logger.LogInformation("Finished seeding.");
+                }
+
+                // TODO
+                // var environmentSettings = scope.ServiceProvider.GetRequiredService<EnvironmentSettings>();
+                // if (!string.IsNullOrEmpty(environmentSettings.Redis.Connection))
+                // {
+                //     logger.LogInformation("Clearing Redis cache.");
+                //     using var redis = scope.ServiceProvider.GetRequiredService<IConnectionMultiplexer>();
+                //     redis.GetServer(environmentSettings.Redis.Connection).FlushDatabase();
+                //     logger.LogInformation("Finished clearing Redis cache.");
+                // }
+            }
+            else
+            {
+                logger.LogInformation("No pending database migrations available.");
+            }
         }
+        catch (Exception ex)
+        {
+            logger.LogCritical(ex, "Database migration failed with error: {message}.", ex.Message);
+            throw;
+        }
+
+        return host;
     }
 }

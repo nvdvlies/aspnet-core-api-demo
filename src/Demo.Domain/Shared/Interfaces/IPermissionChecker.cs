@@ -1,10 +1,9 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 
-namespace Demo.Domain.Shared.Interfaces
+namespace Demo.Domain.Shared.Interfaces;
+
+public interface IPermissionChecker
 {
-    public interface IPermissionChecker
-    {
-        Task<bool> HasPermissionAsync(string permissionName, CancellationToken cancellationToken = default);
-    }
+    Task<bool> HasPermissionAsync(string permissionName, CancellationToken cancellationToken = default);
 }

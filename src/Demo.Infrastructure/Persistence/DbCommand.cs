@@ -6,58 +6,57 @@ using Demo.Domain.Shared.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 
-namespace Demo.Infrastructure.Persistence
+namespace Demo.Infrastructure.Persistence;
+
+internal class DbCommand<T> : IDbCommand<T> where T : class, IEntity
 {
-    internal class DbCommand<T> : IDbCommand<T> where T : class, IEntity
+    protected readonly IApplicationDbContext DbContext;
+    protected readonly IDbCommandOptions Options;
+
+    public DbCommand(IApplicationDbContext dbContext)
     {
-        protected readonly IApplicationDbContext DbContext;
-        protected readonly IDbCommandOptions Options;
+        DbContext = dbContext;
+        Options = new DbCommandOptions();
+    }
 
-        public DbCommand(IApplicationDbContext dbContext)
+    public IDbCommand<T> WithOptions(Action<IDbCommandOptions> action)
+    {
+        action(Options);
+        return this;
+    }
+
+    public virtual Task<T> GetAsync(Guid id,
+        Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null,
+        CancellationToken cancellationToken = default)
+    {
+        var query = Options.AsNoTracking
+            ? DbContext.Set<T>().AsNoTracking().AsQueryable()
+            : DbContext.Set<T>().AsQueryable();
+
+        if (include != null)
         {
-            DbContext = dbContext;
-            Options = new DbCommandOptions();
+            query = include(query);
         }
 
-        public IDbCommand<T> WithOptions(Action<IDbCommandOptions> action)
-        {
-            action(Options);
-            return this;
-        }
+        return query.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+    }
 
-        public virtual Task<T> GetAsync(Guid id,
-            Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null,
-            CancellationToken cancellationToken = default)
-        {
-            var query = Options.AsNoTracking
-                ? DbContext.Set<T>().AsNoTracking().AsQueryable()
-                : DbContext.Set<T>().AsQueryable();
+    public virtual Task InsertAsync(T entity, CancellationToken cancellationToken = default)
+    {
+        DbContext.Set<T>().Add(entity);
+        return Task.CompletedTask;
+    }
 
-            if (include != null)
-            {
-                query = include(query);
-            }
+    public virtual Task UpdateAsync(T entity, CancellationToken cancellationToken = default)
+    {
+        DbContext.Entry(entity).OriginalValues[nameof(entity.xmin)] = entity.xmin;
+        DbContext.Set<T>().Update(entity);
+        return Task.CompletedTask;
+    }
 
-            return query.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
-        }
-
-        public virtual Task InsertAsync(T entity, CancellationToken cancellationToken = default)
-        {
-            DbContext.Set<T>().Add(entity);
-            return Task.CompletedTask;
-        }
-
-        public virtual Task UpdateAsync(T entity, CancellationToken cancellationToken = default)
-        {
-            DbContext.Entry(entity).OriginalValues[nameof(entity.xmin)] = entity.xmin;
-            DbContext.Set<T>().Update(entity);
-            return Task.CompletedTask;
-        }
-
-        public virtual Task DeleteAsync(T entity, CancellationToken cancellationToken = default)
-        {
-            DbContext.Set<T>().Remove(entity);
-            return Task.CompletedTask;
-        }
+    public virtual Task DeleteAsync(T entity, CancellationToken cancellationToken = default)
+    {
+        DbContext.Set<T>().Remove(entity);
+        return Task.CompletedTask;
     }
 }

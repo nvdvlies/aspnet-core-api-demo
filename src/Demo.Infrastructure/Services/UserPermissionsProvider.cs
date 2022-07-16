@@ -6,42 +6,41 @@ using System.Threading.Tasks;
 using Demo.Domain.Role;
 using Demo.Domain.Shared.Interfaces;
 
-namespace Demo.Infrastructure.Services
+namespace Demo.Infrastructure.Services;
+
+internal class UserPermissionsProvider : IUserPermissionsProvider
 {
-    internal class UserPermissionsProvider : IUserPermissionsProvider
+    private readonly IPermissionsProvider _permissionsProvider;
+    private readonly IUserProvider _userProvider;
+
+    public UserPermissionsProvider(
+        IUserProvider userProvider,
+        IPermissionsProvider permissionsProvider
+    )
     {
-        private readonly IPermissionsProvider _permissionsProvider;
-        private readonly IUserProvider _userProvider;
+        _userProvider = userProvider;
+        _permissionsProvider = permissionsProvider;
+    }
 
-        public UserPermissionsProvider(
-            IUserProvider userProvider,
-            IPermissionsProvider permissionsProvider
-        )
-        {
-            _userProvider = userProvider;
-            _permissionsProvider = permissionsProvider;
-        }
+    public Task<List<Permission>> GetAsync(Guid userId, CancellationToken cancellationToken)
+    {
+        return GetAsync(userId, false, cancellationToken);
+    }
 
-        public Task<List<Permission>> GetAsync(Guid userId, CancellationToken cancellationToken)
-        {
-            return GetAsync(userId, false, cancellationToken);
-        }
+    public async Task<List<Permission>> GetAsync(Guid userId, bool refreshCache,
+        CancellationToken cancellationToken)
+    {
+        var user = await _userProvider.GetAsync(userId, cancellationToken);
 
-        public async Task<List<Permission>> GetAsync(Guid userId, bool refreshCache,
-            CancellationToken cancellationToken)
-        {
-            var user = await _userProvider.GetAsync(userId, cancellationToken);
+        var userRoleIds = user.UserRoles.Select(x => x.RoleId);
 
-            var userRoleIds = user.UserRoles.Select(x => x.RoleId);
+        var allPermissions = await _permissionsProvider.GetAsync(cancellationToken);
 
-            var allPermissions = await _permissionsProvider.GetAsync(cancellationToken);
+        var userPermissions = allPermissions
+            .Where(permission =>
+                permission.RolePermissions.Any(rolePermission => userRoleIds.Contains(rolePermission.RoleId)))
+            .ToList();
 
-            var userPermissions = allPermissions
-                .Where(permission =>
-                    permission.RolePermissions.Any(rolePermission => userRoleIds.Contains(rolePermission.RoleId)))
-                .ToList();
-
-            return userPermissions;
-        }
+        return userPermissions;
     }
 }

@@ -1,12 +1,11 @@
-using FluentValidation;
+﻿using FluentValidation;
 
-namespace Demo.Application.ApplicationSettings.Commands.SaveApplicationSettings
+namespace Demo.Application.ApplicationSettings.Commands.SaveApplicationSettings;
+
+public class SaveApplicationSettingsCommandValidator : AbstractValidator<SaveApplicationSettingsCommand>
 {
-    public class SaveApplicationSettingsCommandValidator : AbstractValidator<SaveApplicationSettingsCommand>
+    public SaveApplicationSettingsCommandValidator()
     {
-        public SaveApplicationSettingsCommandValidator()
-        {
-            RuleFor(x => x.Settings).NotNull();
-        }
+        RuleFor(x => x.Settings).NotNull();
     }
 }

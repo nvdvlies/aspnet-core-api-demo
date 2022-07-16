@@ -2,31 +2,30 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Demo.Infrastructure.Persistence.Configuration
+namespace Demo.Infrastructure.Persistence.Configuration;
+
+public class OutboxEventEntityTypeConfiguration : IEntityTypeConfiguration<OutboxEvent>
 {
-    public class OutboxEventEntityTypeConfiguration : IEntityTypeConfiguration<OutboxEvent>
+    public void Configure(EntityTypeBuilder<OutboxEvent> builder)
     {
-        public void Configure(EntityTypeBuilder<OutboxEvent> builder)
-        {
-            builder.ToTable(nameof(OutboxEvent))
-                .HasKey(x => x.Id);
+        builder.ToTable(nameof(OutboxEvent))
+            .HasKey(x => x.Id);
 
-            builder.HasIndex(x => x.IsPublished);
-            builder.HasIndex(x => x.LockedUntil);
+        builder.HasIndex(x => x.IsPublished);
+        builder.HasIndex(x => x.LockedUntil);
 
-            builder.Property(x => x.Type)
-                .HasMaxLength(250)
-                .IsRequired();
-            builder.Property(x => x.Event)
-                .HasColumnType("jsonb");
-            builder.Property(x => x.LockedUntil);
-            builder.Property(x => x.LockToken)
-                .HasMaxLength(50)
-                .IsConcurrencyToken();
-            builder.Property(x => x.IsPublished)
-                .HasDefaultValue(false);
+        builder.Property(x => x.Type)
+            .HasMaxLength(250)
+            .IsRequired();
+        builder.Property(x => x.Event)
+            .HasColumnType("jsonb");
+        builder.Property(x => x.LockedUntil);
+        builder.Property(x => x.LockToken)
+            .HasMaxLength(50)
+            .IsConcurrencyToken();
+        builder.Property(x => x.IsPublished)
+            .HasDefaultValue(false);
 
-            builder.UseXminAsConcurrencyToken();
-        }
+        builder.UseXminAsConcurrencyToken();
     }
 }

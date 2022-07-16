@@ -5,64 +5,63 @@ using Demo.Domain.Shared.Interfaces;
 using Demo.Domain.User;
 using Microsoft.Extensions.Caching.Distributed;
 
-namespace Demo.Infrastructure.Services
+namespace Demo.Infrastructure.Services;
+
+internal class UserIdProvider : IUserIdProvider
 {
-    internal class UserIdProvider : IUserIdProvider
+    private const string CacheKeyPrefix = "UsersIds";
+
+    private readonly IDistributedCache _cache;
+    private readonly IDbQuery<User> _query;
+
+    public UserIdProvider(
+        IDistributedCache cache,
+        IDbQuery<User> query
+    )
     {
-        private const string CacheKeyPrefix = "UsersIds";
+        _cache = cache;
+        _query = query;
+    }
 
-        private readonly IDistributedCache _cache;
-        private readonly IDbQuery<User> _query;
+    public Guid Get(string externalId)
+    {
+        return Get(externalId, false);
+    }
 
-        public UserIdProvider(
-            IDistributedCache cache,
-            IDbQuery<User> query
-        )
+    public Guid Get(string externalId, bool refreshCache)
+    {
+        var cacheKey = $"{CacheKeyPrefix}/{externalId}";
+        var cacheValue = _cache.Get(cacheKey);
+
+        if (refreshCache || cacheValue == null)
         {
-            _cache = cache;
-            _query = query;
-        }
+            var userId = _query
+                .AsQueryable()
+                .Where(x => x.ExternalId == externalId)
+                .Select(x => x.Id)
+                .FirstOrDefault();
 
-        public Guid Get(string externalId)
-        {
-            return Get(externalId, false);
-        }
-
-        public Guid Get(string externalId, bool refreshCache)
-        {
-            var cacheKey = $"{CacheKeyPrefix}/{externalId}";
-            var cacheValue = _cache.Get(cacheKey);
-
-            if (refreshCache || cacheValue == null)
+            if (userId != Guid.Empty)
             {
-                var userId = _query
-                    .AsQueryable()
-                    .Where(x => x.ExternalId == externalId)
-                    .Select(x => x.Id)
-                    .FirstOrDefault();
+                var cacheEntryOptions = new DistributedCacheEntryOptions()
+                    .SetAbsoluteExpiration(TimeSpan.FromHours(8));
 
-                if (userId != Guid.Empty)
-                {
-                    var cacheEntryOptions = new DistributedCacheEntryOptions()
-                        .SetAbsoluteExpiration(TimeSpan.FromHours(8));
-
-                    _cache.Set(cacheKey, Encode(userId), cacheEntryOptions);
-                }
-
-                return userId;
+                _cache.Set(cacheKey, Encode(userId), cacheEntryOptions);
             }
 
-            return Decode(cacheValue);
+            return userId;
         }
 
-        private Guid Decode(byte[] value)
-        {
-            return Guid.Parse(Encoding.UTF8.GetString(value));
-        }
+        return Decode(cacheValue);
+    }
 
-        private byte[] Encode(Guid id)
-        {
-            return Encoding.UTF8.GetBytes(id.ToString());
-        }
+    private Guid Decode(byte[] value)
+    {
+        return Guid.Parse(Encoding.UTF8.GetString(value));
+    }
+
+    private byte[] Encode(Guid id)
+    {
+        return Encoding.UTF8.GetBytes(id.ToString());
     }
 }

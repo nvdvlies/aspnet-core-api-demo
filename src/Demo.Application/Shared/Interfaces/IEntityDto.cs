@@ -1,9 +1,8 @@
 ﻿using System;
 
-namespace Demo.Application.Shared.Interfaces
+namespace Demo.Application.Shared.Interfaces;
+
+public interface IEntityDto
 {
-    public interface IEntityDto
-    {
-        public Guid Id { get; set; }
-    }
+    public Guid Id { get; set; }
 }

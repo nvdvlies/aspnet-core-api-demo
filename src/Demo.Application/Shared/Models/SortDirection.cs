@@ -1,8 +1,7 @@
-﻿namespace Demo.Application.Shared.Models
+﻿namespace Demo.Application.Shared.Models;
+
+public enum SortDirection
 {
-    public enum SortDirection
-    {
-        Ascending,
-        Descending
-    }
+    Ascending,
+    Descending
 }

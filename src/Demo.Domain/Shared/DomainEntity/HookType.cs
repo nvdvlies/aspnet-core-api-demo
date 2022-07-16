@@ -1,12 +1,11 @@
-﻿namespace Demo.Domain.Shared.DomainEntity
+﻿namespace Demo.Domain.Shared.DomainEntity;
+
+internal enum HookType
 {
-    internal enum HookType
-    {
-        BeforeCreate,
-        AfterCreate,
-        BeforeUpdate,
-        AfterUpdate,
-        BeforeDelete,
-        AfterDelete
-    }
+    BeforeCreate,
+    AfterCreate,
+    BeforeUpdate,
+    AfterUpdate,
+    BeforeDelete,
+    AfterDelete
 }

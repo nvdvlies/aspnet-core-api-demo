@@ -3,29 +3,29 @@ using Demo.Scaffold.Tool.Changes;
 using Demo.Scaffold.Tool.Helpers;
 using Demo.Scaffold.Tool.Interfaces;
 
-namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint.OutputCollectors.Query.OutputCollectors
+namespace Demo.Scaffold.Tool.Scaffolders.OutputCollectors.Endpoint.OutputCollectors.Query.OutputCollectors;
+
+internal class CreateQueryResultOutputCollector : IOutputCollector
 {
-    internal class CreateQueryResultOutputCollector : IOutputCollector
+    public IEnumerable<IChange> CollectChanges(ScaffolderContext context)
     {
-        public IEnumerable<IChange> CollectChanges(ScaffolderContext context)
-        {
-            var changes = new List<IChange>();
+        var changes = new List<IChange>();
 
-            var controllerName = context.Variables.Get<string>(Constants.ControllerName);
-            var queryName = context.Variables.Get<string>(Constants.QueryName);
+        var controllerName = context.Variables.Get<string>(Constants.ControllerName);
+        var queryName = context.Variables.Get<string>(Constants.QueryName);
 
-            changes.Add(new CreateNewClass(
-                context.GetQueryDirectory(controllerName, queryName),
-                $"{queryName}QueryResult.cs",
-                GetTemplate(controllerName, queryName)
-            ));
+        changes.Add(new CreateNewClass(
+            context.GetQueryDirectory(controllerName, queryName),
+            $"{queryName}QueryResult.cs",
+            GetTemplate(controllerName, queryName)
+        ));
 
-            return changes;
-        }
+        return changes;
+    }
 
-        private static string GetTemplate(string controllerName, string queryName)
-        {
-            var code = @"
+    private static string GetTemplate(string controllerName, string queryName)
+    {
+        var code = @"
 using Demo.Application.Shared.Dtos;
 
 namespace Demo.Application.%CONTROLLERNAME%.Queries.%QUERYNAME%
@@ -36,9 +36,8 @@ namespace Demo.Application.%CONTROLLERNAME%.Queries.%QUERYNAME%
     }
 }
 ";
-            code = code.Replace("%CONTROLLERNAME%", controllerName);
-            code = code.Replace("%QUERYNAME%", queryName);
-            return code;
-        }
+        code = code.Replace("%CONTROLLERNAME%", controllerName);
+        code = code.Replace("%QUERYNAME%", queryName);
+        return code;
     }
 }

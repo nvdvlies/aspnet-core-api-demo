@@ -1,8 +1,7 @@
 ﻿using Demo.Domain.Shared.Interfaces;
 
-namespace Demo.Domain.Customer.Interfaces
+namespace Demo.Domain.Customer.Interfaces;
+
+public interface ICustomerDomainEntity : IDomainEntity<Customer>
 {
-    public interface ICustomerDomainEntity : IDomainEntity<Customer>
-    {
-    }
 }

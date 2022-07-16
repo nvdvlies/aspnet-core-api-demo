@@ -1,9 +1,8 @@
 ﻿using Xunit;
 
-namespace Demo.WebApi.Tests.Helpers
+namespace Demo.WebApi.Tests.Helpers;
+
+[CollectionDefinition(nameof(SharedFixture))]
+public class SharedFixtureCollection : ICollectionFixture<SharedFixture>
 {
-    [CollectionDefinition(nameof(SharedFixture))]
-    public class SharedFixtureCollection : ICollectionFixture<SharedFixture>
-    {
-    }
 }

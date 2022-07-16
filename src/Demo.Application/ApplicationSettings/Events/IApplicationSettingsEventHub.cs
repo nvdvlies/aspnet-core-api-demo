@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace Demo.Application.ApplicationSettings.Events
+namespace Demo.Application.ApplicationSettings.Events;
+
+public interface IApplicationSettingsEventHub
 {
-    public interface IApplicationSettingsEventHub
-    {
-        Task ApplicationSettingsUpdated(Guid id, Guid updatedBy);
-    }
+    Task ApplicationSettingsUpdated(Guid id, Guid updatedBy);
 }

@@ -1,7 +1,6 @@
-﻿namespace Demo.Infrastructure.Settings
+﻿namespace Demo.Infrastructure.Settings;
+
+public class ConnectionStrings
 {
-    public class ConnectionStrings
-    {
-        public string PostgresDatabase { get; set; }
-    }
+    public string PostgresDatabase { get; set; }
 }

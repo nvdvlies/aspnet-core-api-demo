@@ -4,31 +4,30 @@ using System.Threading.Tasks;
 using Demo.Domain.Shared.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace Demo.Infrastructure.Persistence
+namespace Demo.Infrastructure.Persistence;
+
+internal class DbCommandForTableWithSingleRecord<T> : DbCommand<T>, IDbCommandForTableWithSingleRecord<T>
+    where T : class, IEntity
 {
-    internal class DbCommandForTableWithSingleRecord<T> : DbCommand<T>, IDbCommandForTableWithSingleRecord<T>
-        where T : class, IEntity
+    public DbCommandForTableWithSingleRecord(IApplicationDbContext dbContext) : base(dbContext)
     {
-        public DbCommandForTableWithSingleRecord(IApplicationDbContext dbContext) : base(dbContext)
+    }
+
+    public Task<T> GetAsync(CancellationToken cancellationToken = default)
+    {
+        var query = DbContext.Set<T>().AsQueryable();
+        return query.SingleOrDefaultAsync(cancellationToken);
+    }
+
+    public override async Task InsertAsync(T entity, CancellationToken cancellationToken = default)
+    {
+        var query = DbContext.Set<T>().AsQueryable();
+        var existing = await query.SingleOrDefaultAsync(cancellationToken);
+        if (existing != null)
         {
+            throw new Exception("Cannot insert item. Only one record is allowed in this recordset");
         }
 
-        public Task<T> GetAsync(CancellationToken cancellationToken = default)
-        {
-            var query = DbContext.Set<T>().AsQueryable();
-            return query.SingleOrDefaultAsync(cancellationToken);
-        }
-
-        public override async Task InsertAsync(T entity, CancellationToken cancellationToken = default)
-        {
-            var query = DbContext.Set<T>().AsQueryable();
-            var existing = await query.SingleOrDefaultAsync(cancellationToken);
-            if (existing != null)
-            {
-                throw new Exception("Cannot insert item. Only one record is allowed in this recordset");
-            }
-
-            await base.InsertAsync(entity, cancellationToken);
-        }
+        await base.InsertAsync(entity, cancellationToken);
     }
 }

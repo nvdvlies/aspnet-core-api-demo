@@ -1,9 +1,8 @@
 ﻿using System;
 
-namespace Demo.Application.Invoices.Commands.CopyInvoice
+namespace Demo.Application.Invoices.Commands.CopyInvoice;
+
+public class CopyInvoiceResponse
 {
-    public class CopyInvoiceResponse
-    {
-        public Guid Id { get; set; }
-    }
+    public Guid Id { get; set; }
 }

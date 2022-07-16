@@ -1,6 +1,5 @@
-﻿namespace Demo.Domain.Shared.Interfaces
+﻿namespace Demo.Domain.Shared.Interfaces;
+
+public interface IQueryableEntity
 {
-    public interface IQueryableEntity
-    {
-    }
 }

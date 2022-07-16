@@ -1,9 +1,8 @@
-using Demo.Application.Shared.Interfaces;
+﻿using Demo.Application.Shared.Interfaces;
 using MediatR;
 
-namespace Demo.Application.CurrentUser.Commands.ChangePassword
+namespace Demo.Application.CurrentUser.Commands.ChangePassword;
+
+public class ChangePasswordCommand : ICommand, IRequest<Unit>
 {
-    public class ChangePasswordCommand : ICommand, IRequest<Unit>
-    {
-    }
 }

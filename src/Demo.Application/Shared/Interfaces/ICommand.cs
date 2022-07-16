@@ -1,6 +1,5 @@
-﻿namespace Demo.Application.Shared.Interfaces
+﻿namespace Demo.Application.Shared.Interfaces;
+
+internal interface ICommand
 {
-    internal interface ICommand
-    {
-    }
 }

@@ -2,9 +2,8 @@
 using Demo.Domain.Shared.Interfaces;
 using Demo.Events.OutboxEvent;
 
-namespace Demo.Infrastructure.Events
+namespace Demo.Infrastructure.Events;
+
+internal class OutboxEventCreatedEvents : List<OutboxEventCreatedEvent>, IOutboxEventCreatedEvents
 {
-    internal class OutboxEventCreatedEvents : List<OutboxEventCreatedEvent>, IOutboxEventCreatedEvents
-    {
-    }
 }

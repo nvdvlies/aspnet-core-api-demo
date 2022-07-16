@@ -7,64 +7,63 @@ using Demo.Domain.User;
 using Demo.Domain.User.Interfaces;
 using Microsoft.Extensions.Caching.Distributed;
 
-namespace Demo.Infrastructure.Services
+namespace Demo.Infrastructure.Services;
+
+internal class UserProvider : IUserProvider
 {
-    internal class UserProvider : IUserProvider
+    private const string CacheKeyPrefix = "Users";
+
+    private readonly IDistributedCache _cache;
+    private readonly IJsonService<User> _jsonService;
+    private readonly IUserDomainEntity _userDomainEntity;
+
+    public UserProvider(
+        IDistributedCache cache,
+        IJsonService<User> jsonService,
+        IUserDomainEntity userDomainEntity
+    )
     {
-        private const string CacheKeyPrefix = "Users";
+        _cache = cache;
+        _jsonService = jsonService;
+        _userDomainEntity = userDomainEntity;
+    }
 
-        private readonly IDistributedCache _cache;
-        private readonly IJsonService<User> _jsonService;
-        private readonly IUserDomainEntity _userDomainEntity;
+    public Task<User> GetAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        return GetAsync(id, false, cancellationToken);
+    }
 
-        public UserProvider(
-            IDistributedCache cache,
-            IJsonService<User> jsonService,
-            IUserDomainEntity userDomainEntity
-        )
+    public async Task<User> GetAsync(Guid id, bool refreshCache, CancellationToken cancellationToken = default)
+    {
+        var cacheKey = $"{CacheKeyPrefix}/{id}";
+        var cacheValue = await _cache.GetAsync(cacheKey, cancellationToken);
+
+        if (refreshCache || cacheValue == null)
         {
-            _cache = cache;
-            _jsonService = jsonService;
-            _userDomainEntity = userDomainEntity;
+            await _userDomainEntity
+                .WithOptions(x => x.AsNoTracking = true)
+                .GetAsync(id, cancellationToken);
+
+            var user = _userDomainEntity.Entity;
+
+            var cacheEntryOptions = new DistributedCacheEntryOptions()
+                .SetAbsoluteExpiration(TimeSpan.FromHours(8));
+
+            await _cache.SetAsync(cacheKey, Encode(user), cacheEntryOptions, cancellationToken);
+
+            return user;
         }
 
-        public Task<User> GetAsync(Guid id, CancellationToken cancellationToken = default)
-        {
-            return GetAsync(id, false, cancellationToken);
-        }
+        return Decode(cacheValue);
+    }
 
-        public async Task<User> GetAsync(Guid id, bool refreshCache, CancellationToken cancellationToken = default)
-        {
-            var cacheKey = $"{CacheKeyPrefix}/{id}";
-            var cacheValue = await _cache.GetAsync(cacheKey, cancellationToken);
+    private User Decode(byte[] value)
+    {
+        return _jsonService.FromJson(Encoding.UTF8.GetString(value));
+    }
 
-            if (refreshCache || cacheValue == null)
-            {
-                await _userDomainEntity
-                    .WithOptions(x => x.AsNoTracking = true)
-                    .GetAsync(id, cancellationToken);
-
-                var user = _userDomainEntity.Entity;
-
-                var cacheEntryOptions = new DistributedCacheEntryOptions()
-                    .SetAbsoluteExpiration(TimeSpan.FromHours(8));
-
-                await _cache.SetAsync(cacheKey, Encode(user), cacheEntryOptions, cancellationToken);
-
-                return user;
-            }
-
-            return Decode(cacheValue);
-        }
-
-        private User Decode(byte[] value)
-        {
-            return _jsonService.FromJson(Encoding.UTF8.GetString(value));
-        }
-
-        private byte[] Encode(User user)
-        {
-            return Encoding.UTF8.GetBytes(_jsonService.ToJson(user));
-        }
+    private byte[] Encode(User user)
+    {
+        return Encoding.UTF8.GetBytes(_jsonService.ToJson(user));
     }
 }

@@ -4,29 +4,28 @@ using Demo.Domain.Shared.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace Demo.WebApi.Permissions
+namespace Demo.WebApi.Permissions;
+
+public class PermissionAuthorizationFilterAttribute : Attribute, IAsyncAuthorizationFilter
 {
-    public class PermissionAuthorizationFilterAttribute : Attribute, IAsyncAuthorizationFilter
+    private readonly IPermissionChecker _permissionChecker;
+    private readonly PermissionRequirement _permissionRequirement;
+
+    public PermissionAuthorizationFilterAttribute(
+        IPermissionChecker permissionChecker,
+        PermissionRequirement permissionRequirement
+    )
     {
-        private readonly IPermissionChecker _permissionChecker;
-        private readonly PermissionRequirement _permissionRequirement;
+        _permissionChecker = permissionChecker;
+        _permissionRequirement = permissionRequirement;
+    }
 
-        public PermissionAuthorizationFilterAttribute(
-            IPermissionChecker permissionChecker,
-            PermissionRequirement permissionRequirement
-        )
+    public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
+    {
+        var hasPermission = await _permissionChecker.HasPermissionAsync(_permissionRequirement.PermissionName);
+        if (!hasPermission)
         {
-            _permissionChecker = permissionChecker;
-            _permissionRequirement = permissionRequirement;
-        }
-
-        public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
-        {
-            var hasPermission = await _permissionChecker.HasPermissionAsync(_permissionRequirement.PermissionName);
-            if (!hasPermission)
-            {
-                context.Result = new ForbidResult();
-            }
+            context.Result = new ForbidResult();
         }
     }
 }

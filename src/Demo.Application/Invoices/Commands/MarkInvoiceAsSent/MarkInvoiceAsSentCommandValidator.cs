@@ -1,12 +1,11 @@
 ﻿using FluentValidation;
 
-namespace Demo.Application.Invoices.Commands.MarkInvoiceAsSent
+namespace Demo.Application.Invoices.Commands.MarkInvoiceAsSent;
+
+public class MarkInvoiceAsSentCommandValidator : AbstractValidator<MarkInvoiceAsSentCommand>
 {
-    public class MarkInvoiceAsSentCommandValidator : AbstractValidator<MarkInvoiceAsSentCommand>
+    public MarkInvoiceAsSentCommandValidator()
     {
-        public MarkInvoiceAsSentCommandValidator()
-        {
-            RuleFor(x => x.Id).NotEmpty();
-        }
+        RuleFor(x => x.Id).NotEmpty();
     }
 }

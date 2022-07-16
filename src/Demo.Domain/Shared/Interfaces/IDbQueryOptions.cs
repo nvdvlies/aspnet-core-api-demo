@@ -1,7 +1,6 @@
-﻿namespace Demo.Domain.Shared.Interfaces
+﻿namespace Demo.Domain.Shared.Interfaces;
+
+public interface IDbQueryOptions
 {
-    public interface IDbQueryOptions
-    {
-        bool IncludeDeleted { get; set; }
-    }
+    bool IncludeDeleted { get; set; }
 }

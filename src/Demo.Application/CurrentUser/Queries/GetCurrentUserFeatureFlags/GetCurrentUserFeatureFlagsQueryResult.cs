@@ -1,9 +1,8 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace Demo.Application.CurrentUser.Queries.GetCurrentUserFeatureFlags
+namespace Demo.Application.CurrentUser.Queries.GetCurrentUserFeatureFlags;
+
+public class GetCurrentUserFeatureFlagsQueryResult
 {
-    public class GetCurrentUserFeatureFlagsQueryResult
-    {
-        public List<string> FeatureFlags { get; set; }
-    }
+    public List<string> FeatureFlags { get; set; }
 }

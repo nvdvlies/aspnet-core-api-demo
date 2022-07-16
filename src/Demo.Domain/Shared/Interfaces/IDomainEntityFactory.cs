@@ -1,7 +1,6 @@
-﻿namespace Demo.Domain.Shared.Interfaces
+﻿namespace Demo.Domain.Shared.Interfaces;
+
+public interface IDomainEntityFactory
 {
-    public interface IDomainEntityFactory
-    {
-        T CreateInstance<T>() where T : IDomainEntity;
-    }
+    T CreateInstance<T>() where T : IDomainEntity;
 }

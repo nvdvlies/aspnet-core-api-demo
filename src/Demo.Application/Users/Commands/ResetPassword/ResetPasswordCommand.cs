@@ -1,16 +1,15 @@
-using System;
+﻿using System;
 using Demo.Application.Shared.Interfaces;
 using MediatR;
 
-namespace Demo.Application.Users.Commands.ResetPassword
-{
-    public class ResetPasswordCommand : ICommand, IRequest<Unit>
-    {
-        internal Guid Id { get; set; }
+namespace Demo.Application.Users.Commands.ResetPassword;
 
-        public void SetUserId(Guid id)
-        {
-            Id = id;
-        }
+public class ResetPasswordCommand : ICommand, IRequest<Unit>
+{
+    internal Guid Id { get; set; }
+
+    public void SetUserId(Guid id)
+    {
+        Id = id;
     }
 }

@@ -1,15 +1,14 @@
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 using Demo.Domain.Shared.Entities;
 
-namespace Demo.Domain.FeatureFlagSettings
-{
-    public class FeatureFlagSettings : AuditableEntity
-    {
-        public FeatureFlagSettings()
-        {
-            Settings = new FeatureFlagSettingsSettings();
-        }
+namespace Demo.Domain.FeatureFlagSettings;
 
-        [JsonInclude] public FeatureFlagSettingsSettings Settings { get; internal set; }
+public class FeatureFlagSettings : AuditableEntity
+{
+    public FeatureFlagSettings()
+    {
+        Settings = new FeatureFlagSettingsSettings();
     }
+
+    [JsonInclude] public FeatureFlagSettingsSettings Settings { get; internal set; }
 }

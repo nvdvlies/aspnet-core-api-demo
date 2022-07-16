@@ -1,12 +1,11 @@
-using FluentValidation;
+﻿using FluentValidation;
 
-namespace Demo.Application.Invoices.Commands.CopyInvoice
+namespace Demo.Application.Invoices.Commands.CopyInvoice;
+
+public class CopyInvoiceCommandValidator : AbstractValidator<CopyInvoiceCommand>
 {
-    public class CopyInvoiceCommandValidator : AbstractValidator<CopyInvoiceCommand>
+    public CopyInvoiceCommandValidator()
     {
-        public CopyInvoiceCommandValidator()
-        {
-            RuleFor(x => x.Id).NotEmpty();
-        }
+        RuleFor(x => x.Id).NotEmpty();
     }
 }

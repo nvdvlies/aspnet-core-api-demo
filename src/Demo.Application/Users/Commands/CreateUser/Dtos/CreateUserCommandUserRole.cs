@@ -1,9 +1,8 @@
 ﻿using System;
 
-namespace Demo.Application.Users.Commands.CreateUser.Dtos
+namespace Demo.Application.Users.Commands.CreateUser.Dtos;
+
+public class CreateUserCommandUserRole
 {
-    public class CreateUserCommandUserRole
-    {
-        public Guid RoleId { get; set; }
-    }
+    public Guid RoleId { get; set; }
 }
