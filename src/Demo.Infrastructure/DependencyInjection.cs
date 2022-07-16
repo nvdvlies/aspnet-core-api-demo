@@ -36,8 +36,7 @@ namespace Demo.Infrastructure
 {
     public static class DependencyInjection
     {
-        public static IServiceCollection AddInfrastructure(this IServiceCollection services,
-            IConfiguration configuration, EnvironmentSettings environmentSettings)
+        public static IServiceCollection AddInfrastructure(this IServiceCollection services, EnvironmentSettings environmentSettings)
         {
             services.AddTransient<IDateTime, DateTimeProvider>();
             services.AddScoped(typeof(IJsonService<>), typeof(JsonService<>));
@@ -151,7 +150,7 @@ namespace Demo.Infrastructure
             services.AddSingleton<IMessageSender, RabbitMqMessageSender>();
 
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseNpgsql(configuration.GetConnectionString("PostgresDatabase"))
+                options.UseNpgsql(environmentSettings.ConnectionStrings.PostgresDatabase)
             );
 
             services.AddScoped<IApplicationDbContext>(provider => provider.GetService<ApplicationDbContext>());

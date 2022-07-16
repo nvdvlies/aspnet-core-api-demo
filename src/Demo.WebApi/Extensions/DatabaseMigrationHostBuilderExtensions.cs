@@ -72,14 +72,15 @@ namespace Demo.WebApi.Extensions
                         logger.LogInformation("Finished seeding.");
                     }
 
-                    var environmentSettings = scope.ServiceProvider.GetRequiredService<EnvironmentSettings>();
-                    if (!string.IsNullOrEmpty(environmentSettings.Redis.Connection))
-                    {
-                        logger.LogInformation("Clearing Redis cache.");
-                        using var redis = scope.ServiceProvider.GetRequiredService<IConnectionMultiplexer>();
-                        redis.GetServer(environmentSettings.Redis.Connection).FlushDatabase();
-                        logger.LogInformation("Finished clearing Redis cache.");
-                    }
+                    // TODO
+                    // var environmentSettings = scope.ServiceProvider.GetRequiredService<EnvironmentSettings>();
+                    // if (!string.IsNullOrEmpty(environmentSettings.Redis.Connection))
+                    // {
+                    //     logger.LogInformation("Clearing Redis cache.");
+                    //     using var redis = scope.ServiceProvider.GetRequiredService<IConnectionMultiplexer>();
+                    //     redis.GetServer(environmentSettings.Redis.Connection).FlushDatabase();
+                    //     logger.LogInformation("Finished clearing Redis cache.");
+                    // }
                 }
                 else
                 {

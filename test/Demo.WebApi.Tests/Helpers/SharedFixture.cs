@@ -24,7 +24,7 @@ namespace Demo.WebApi.Tests.Helpers
         };
 
         public readonly HttpClient Client;
-        public readonly CustomWebApplicationFactory Factory;
+        internal readonly CustomWebApplicationFactory Factory;
         public readonly HubConnection HubConnection;
 
         public SharedFixture()

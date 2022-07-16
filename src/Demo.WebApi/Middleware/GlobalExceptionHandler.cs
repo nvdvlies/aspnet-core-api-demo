@@ -22,7 +22,7 @@ namespace Demo.WebApi.Middleware
         {
             return async context =>
             {
-                var logger = context.RequestServices.GetRequiredService<ILogger>();
+                var logger = context.RequestServices.GetRequiredService<ILogger<Program>>();
                 var exception = context.Features.Get<IExceptionHandlerFeature>().Error;
 
                 var includeDetailsInResponse = !env.IsProduction();

@@ -1,8 +1,0 @@
-{
-  "ConnectionStrings": {
-    "PostgresDatabase": "Server=localhost;Port=5502;Database=Demo_IntegrationTest;User Id=postgres;Password=postgres;",
-    "Redis": {
-      "Connection": null
-    }
-  }
-}

@@ -30,24 +30,24 @@ namespace Demo.WebApi.Tests.Helpers
         protected readonly Fixture AutoFixture;
         protected readonly HttpClient Client;
 
-        protected readonly CustomWebApplicationFactory Factory;
+        private readonly CustomWebApplicationFactory _factory;
         protected readonly HubConnection HubConnection;
 
-        protected IServiceProvider ServiceProvider;
+        private IServiceProvider _serviceProvider;
 
         protected TestBase(SharedFixture fixture)
         {
             _fixture = fixture;
 
-            Factory = _fixture.Factory;
-            ServiceProvider = _fixture.Factory.Services;
+            _factory = _fixture.Factory;
+            _serviceProvider = _fixture.Factory.Services;
             Client = _fixture.Client;
             HubConnection = _fixture.HubConnection;
             AutoFixture = AutoFixtureFactory.CreateAutofixtureWithDefaultConfiguration();
 
             ResetDatabaseAsync().Wait();
 
-            var cache = ServiceProvider.GetRequiredService<IDistributedCache>();
+            var cache = _serviceProvider.GetRequiredService<IDistributedCache>();
             cache.Remove(RolesProvider.CacheKey);
             cache.Remove(FeatureFlagSettingsProvider.CacheKey);
             cache.Remove(ApplicationSettingsProvider.CacheKey);
@@ -58,17 +58,17 @@ namespace Demo.WebApi.Tests.Helpers
 
         protected HttpClient CreateHttpClientWithCustomConfiguration(Action<IServiceCollection> servicesConfiguration)
         {
-            var webhost = Factory
+            var webhost = _factory
                 .WithWebHostBuilder(builder => { builder.ConfigureTestServices(servicesConfiguration); });
             var client = webhost.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(TestAuthHandler.DefaultScheme);
-            ServiceProvider = webhost.Services;
+            _serviceProvider = webhost.Services;
             return client;
         }
 
         protected async Task ResetDatabaseAsync()
         {
-            using var scope = ServiceProvider.CreateScope();
+            using var scope = _serviceProvider.CreateScope();
             var environmentSettings = scope.ServiceProvider.GetRequiredService<EnvironmentSettings>();
 
             await using var connection = new NpgsqlConnection(environmentSettings.ConnectionStrings.PostgresDatabase);
@@ -98,7 +98,7 @@ namespace Demo.WebApi.Tests.Helpers
 
         private async Task SetTestUserAsync(bool isAuthenticated, IEnumerable<string> permissionNames)
         {
-            var testUser = ServiceProvider.GetRequiredService<TestUser>();
+            var testUser = _serviceProvider.GetRequiredService<TestUser>();
 
             testUser.IsAuthenticated = isAuthenticated;
 
@@ -131,7 +131,7 @@ namespace Demo.WebApi.Tests.Helpers
 
         protected async Task AddAsExistingEntityAsync<TEntity>(TEntity entity) where TEntity : class
         {
-            using var scope = ServiceProvider.CreateScope();
+            using var scope = _serviceProvider.CreateScope();
             await using var applicationDbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
             applicationDbContext.Set<TEntity>().Add(entity);
             await applicationDbContext.SaveChangesAsync();
@@ -139,7 +139,7 @@ namespace Demo.WebApi.Tests.Helpers
 
         protected async Task AddAsExistingEntitiesAsync<TEntity>(IEnumerable<TEntity> entities) where TEntity : class
         {
-            using var scope = ServiceProvider.CreateScope();
+            using var scope = _serviceProvider.CreateScope();
             await using var applicationDbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
             applicationDbContext.Set<TEntity>().AddRange(entities);
             await applicationDbContext.SaveChangesAsync();
@@ -154,7 +154,7 @@ namespace Demo.WebApi.Tests.Helpers
         protected async Task<IEnumerable<TEntity>> FindExistingEntitiesAsync<TEntity>(
             Expression<Func<TEntity, bool>> predicate) where TEntity : class
         {
-            using var scope = ServiceProvider.CreateScope();
+            using var scope = _serviceProvider.CreateScope();
             await using var applicationDbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
             return await applicationDbContext
                 .Set<TEntity>()

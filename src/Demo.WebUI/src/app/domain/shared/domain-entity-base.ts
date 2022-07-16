@@ -349,7 +349,6 @@ export abstract class DomainEntityBase<T extends IDomainEntity<T>>
     if (!this.form.valid) {
       return this.setProblemDetailsAndRethrow(new Error('Form is not valid.'));
     }
-    debugger;
     if (!this.hasWritePermission.value) {
       return this.setProblemDetailsAndRethrow(new PermissionDeniedError());
     }
