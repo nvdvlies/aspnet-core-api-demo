@@ -462,14 +462,14 @@ namespace Demo.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = new Guid("537d9994-517f-490b-8c7e-5da886e80d44"),
-                            Name = "FeatureFlags:Read",
+                            Name = "FeatureFlagSettings:Read",
                             PermissionGroupId = new Guid("6fd39917-5f96-472d-ac69-d2a8c56880b7"),
                             xmin = 0u
                         },
                         new
                         {
                             Id = new Guid("7f77e408-04ce-496c-b347-bac63b0bc870"),
-                            Name = "FeatureFlags:Write",
+                            Name = "FeatureFlagSettings:Write",
                             PermissionGroupId = new Guid("6fd39917-5f96-472d-ac69-d2a8c56880b7"),
                             xmin = 0u
                         },
