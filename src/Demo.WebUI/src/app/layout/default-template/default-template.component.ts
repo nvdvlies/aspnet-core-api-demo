@@ -8,8 +8,23 @@ import {
 } from '@angular/core';
 import { AuthService } from '@auth0/auth0-angular';
 import { environment } from '@env/environment';
+import { ModalService } from '@shared/services/modal.service';
+import { SignalrHealthService } from '@shared/services/signalr-health.service';
 import { UserPermissionService } from '@shared/services/user-permission.service';
-import { Subject, takeUntil } from 'rxjs';
+import {
+  combineLatest,
+  map,
+  Observable,
+  tap,
+  debounceTime,
+  Subject,
+  takeUntil,
+  BehaviorSubject
+} from 'rxjs';
+
+interface ViewModel {
+  signalrHealthy: boolean;
+}
 
 @Component({
   templateUrl: './default-template.component.html',
@@ -24,10 +39,25 @@ export class DefaultTemplateComponent implements OnInit, OnDestroy {
 
   protected onDestroy$ = this.onDestroy.asObservable();
 
+  private vm: Readonly<ViewModel> | undefined;
+
+  public vm$ = combineLatest([this.signalrHealthService.isHealthy$]).pipe(
+    debounceTime(0),
+    map(([signalrHealthy]) => {
+      const vm: ViewModel = {
+        signalrHealthy
+      };
+      return vm;
+    }),
+    tap((vm) => (this.vm = vm))
+  ) as Observable<ViewModel>;
+
   constructor(
-    public readonly authService: AuthService,
+    private readonly authService: AuthService,
     private readonly changeDetectorRef: ChangeDetectorRef,
-    private readonly userPermissionService: UserPermissionService
+    private readonly userPermissionService: UserPermissionService,
+    private readonly signalrHealthService: SignalrHealthService,
+    private readonly modalService: ModalService
   ) {}
 
   ngOnInit(): void {
@@ -43,6 +73,13 @@ export class DefaultTemplateComponent implements OnInit, OnDestroy {
 
   public logout(): void {
     this.authService.logout({ returnTo: environment.auth.redirectUri });
+  }
+
+  public showSignalrUnhealthyModal(): void {
+    this.modalService.showMessage(
+      `Server connection lost. Please check your network connection. If the problem persists contact your administrator for help.`,
+      'Connection lost'
+    );
   }
 
   ngOnDestroy(): void {

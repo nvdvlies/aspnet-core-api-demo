@@ -47,7 +47,7 @@ export class SignalRService {
       .withUrl(this.baseUrl + '/hub', {
         accessTokenFactory: () => lastValueFrom(this.authService.getAccessTokenSilently())
       } as IHttpConnectionOptions)
-      .withAutomaticReconnect()
+      .withAutomaticReconnect([0, 2000, 5000, ...Array(60).fill(10000), ...Array(60).fill(60000)])
       .configureLogging(signalR.LogLevel.Warning)
       .build();
 

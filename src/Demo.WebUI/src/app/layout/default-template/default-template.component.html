@@ -1,67 +1,80 @@
-<mat-toolbar color="primary" *ngIf="flag">
-  Demo
-  <span style="flex: 1 1 auto"></span>
-  <a
-    *appIfPermissionGranted="'CustomersRead'"
-    mat-button
-    routerLink="/customers"
-    routerLinkActive="active"
-  >
-    Customers
-  </a>
-  <a
-    *appIfPermissionGranted="'InvoicesRead'"
-    mat-button
-    [routerLink]="'/invoices'"
-    routerLinkActive="active"
-  >
-    Invoices
-  </a>
-  <div
-    *appIfAnyPermissionGranted="[
-      'ApplicationSettingsRead',
-      'FeatureFlagSettingsRead',
-      'UsersRead',
-      'RolesRead'
-    ]"
-  >
-    <button mat-icon-button [matMenuTriggerFor]="systemMenu"><mat-icon>menu</mat-icon></button>
-    <mat-menu #systemMenu [overlapTrigger]="false" yPosition="below">
-      <button
-        *appIfPermissionGranted="'ApplicationSettingsRead'"
-        mat-menu-item
-        routerLink="/application-settings"
-      >
-        Application settings
-      </button>
+<ng-container *ngIf="vm$ | async as vm; else loading">
+  <mat-toolbar color="primary" *ngIf="flag">
+    Demo
+    <span style="flex: 1 1 auto"></span>
+    <a
+      *appIfPermissionGranted="'CustomersRead'"
+      mat-button
+      routerLink="/customers"
+      routerLinkActive="active"
+    >
+      Customers
+    </a>
+    <a
+      *appIfPermissionGranted="'InvoicesRead'"
+      mat-button
+      [routerLink]="'/invoices'"
+      routerLinkActive="active"
+    >
+      Invoices
+    </a>
+    <div
+      *appIfAnyPermissionGranted="[
+        'ApplicationSettingsRead',
+        'FeatureFlagSettingsRead',
+        'UsersRead',
+        'RolesRead'
+      ]"
+    >
+      <button mat-icon-button [matMenuTriggerFor]="systemMenu"><mat-icon>menu</mat-icon></button>
+      <mat-menu #systemMenu [overlapTrigger]="false" yPosition="below">
+        <button
+          *appIfPermissionGranted="'ApplicationSettingsRead'"
+          mat-menu-item
+          routerLink="/application-settings"
+        >
+          Application settings
+        </button>
 
-      <button
-        *appIfPermissionGranted="'FeatureFlagSettingsRead'"
-        mat-menu-item
-        routerLink="/feature-flag-settings"
-      >
-        Feature flags
-      </button>
-      <button *appIfPermissionGranted="'UsersRead'" mat-menu-item routerLink="/users">Users</button>
-      <button *appIfPermissionGranted="'RolesRead'" mat-menu-item routerLink="/roles">Roles</button>
-    </mat-menu>
-  </div>
-  <div>
-    <button mat-icon-button [matMenuTriggerFor]="accountMenu">
-      <mat-icon>account_circle</mat-icon>
+        <button
+          *appIfPermissionGranted="'FeatureFlagSettingsRead'"
+          mat-menu-item
+          routerLink="/feature-flag-settings"
+        >
+          Feature flags
+        </button>
+        <button *appIfPermissionGranted="'UsersRead'" mat-menu-item routerLink="/users">
+          Users
+        </button>
+        <button *appIfPermissionGranted="'RolesRead'" mat-menu-item routerLink="/roles">
+          Roles
+        </button>
+      </mat-menu>
+    </div>
+    <button *ngIf="!vm.signalrHealthy" mat-icon-button (click)="showSignalrUnhealthyModal()">
+      <mat-icon class="text-amber-300">warning</mat-icon>
     </button>
-    <mat-menu #accountMenu [overlapTrigger]="false" yPosition="below">
-      <button mat-menu-item routerLink="/profile">
-        <mat-icon>person</mat-icon><span>Profile</span>
+    <div>
+      <button mat-icon-button [matMenuTriggerFor]="accountMenu">
+        <mat-icon>account_circle</mat-icon>
       </button>
-      <button mat-menu-item routerLink="/user-preferences">
-        <mat-icon>settings</mat-icon><span>Preferences</span>
-      </button>
-      <mat-divider></mat-divider>
-      <button mat-menu-item (click)="logout()"><mat-icon>logout</mat-icon>Logout</button>
-    </mat-menu>
+      <mat-menu #accountMenu [overlapTrigger]="false" yPosition="below">
+        <button mat-menu-item routerLink="/profile">
+          <mat-icon>person</mat-icon><span>Profile</span>
+        </button>
+        <button mat-menu-item routerLink="/user-preferences">
+          <mat-icon>settings</mat-icon><span>Preferences</span>
+        </button>
+        <mat-divider></mat-divider>
+        <button mat-menu-item (click)="logout()"><mat-icon>logout</mat-icon>Logout</button>
+      </mat-menu>
+    </div>
+  </mat-toolbar>
+  <div style="height: calc(100% - 47px); margin: 0">
+    <router-outlet></router-outlet>
   </div>
-</mat-toolbar>
-<div style="height: calc(100% - 47px); margin: 0">
-  <router-outlet></router-outlet>
-</div>
+</ng-container>
+
+<ng-template #loading>
+  <app-spinner diameter="50" fullHeight="true"></app-spinner>
+</ng-template>
