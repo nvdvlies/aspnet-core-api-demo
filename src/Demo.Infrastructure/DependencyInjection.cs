@@ -2,7 +2,6 @@
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
-using System.Security.Authentication;
 using Auth0.ManagementApi;
 using Demo.Application.Shared.Interfaces;
 using Demo.Common.Extensions;

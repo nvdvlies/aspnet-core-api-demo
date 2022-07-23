@@ -35,9 +35,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 var environmentName = builder.Environment.EnvironmentName;
 
-if (environmentName.Equals(
-        "LocalIntegrationTest",
-        StringComparison.OrdinalIgnoreCase))
+if (builder.Environment.IsLocalIntegrationTest())
 {
     builder.Configuration.AddUserSecrets(Assembly.GetExecutingAssembly(), true);
 }
@@ -55,7 +53,9 @@ builder.Host.UseSerilog((_, config) => config
     .WriteTo.Console()
     .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(environmentSettings.ElasticSearch.Uri))
     {
-        ModifyConnectionSettings = x => x.BasicAuthentication(environmentSettings.ElasticSearch.Username, environmentSettings.ElasticSearch.Password),
+        ModifyConnectionSettings =
+            x => x.BasicAuthentication(environmentSettings.ElasticSearch.Username,
+                environmentSettings.ElasticSearch.Password),
         AutoRegisterTemplate = true,
         AutoRegisterTemplateVersion = AutoRegisterTemplateVersion.ESv7,
         IndexFormat =
@@ -155,26 +155,27 @@ var healthChecksBuilder = builder.Services.AddHealthChecks()
         .WithUrl($"{environmentSettings.WebApiBaseUrl}/hub",
             o =>
             {
-               o.AccessTokenProvider = async () =>
-               {
-                   var auth0Client = new AuthenticationApiClient(environmentSettings.Auth0.IntegrationTestUser.Domain);
-                   var tokenRequest = new ClientCredentialsTokenRequest()
-                   {
-                       ClientId = environmentSettings.Auth0.IntegrationTestUser.ClientId,
-                       ClientSecret = environmentSettings.Auth0.IntegrationTestUser.ClientSecret,
-                       Audience = environmentSettings.Auth0.Audience
-                   };
-                   var tokenResponse = await auth0Client.GetTokenAsync(tokenRequest);
+                o.AccessTokenProvider = async () =>
+                {
+                    var auth0Client = new AuthenticationApiClient(environmentSettings.Auth0.IntegrationTestUser.Domain);
+                    var tokenRequest = new ClientCredentialsTokenRequest
+                    {
+                        ClientId = environmentSettings.Auth0.IntegrationTestUser.ClientId,
+                        ClientSecret = environmentSettings.Auth0.IntegrationTestUser.ClientSecret,
+                        Audience = environmentSettings.Auth0.Audience
+                    };
+                    var tokenResponse = await auth0Client.GetTokenAsync(tokenRequest);
 
-                   return tokenResponse.AccessToken;
-               };
+                    return tokenResponse.AccessToken;
+                };
             })
         .Build())
     .AddElasticsearch(options =>
     {
         options
             .UseServer(environmentSettings.ElasticSearch.Uri)
-            .UseBasicAuthentication(environmentSettings.ElasticSearch.Username, environmentSettings.ElasticSearch.Password);
+            .UseBasicAuthentication(environmentSettings.ElasticSearch.Username,
+                environmentSettings.ElasticSearch.Password);
     });
 
 if (!string.IsNullOrEmpty(environmentSettings.Redis.Host))
@@ -188,7 +189,7 @@ if (!string.IsNullOrEmpty(environmentSettings.Redis.Host))
 }
 
 builder.Services
-    .AddHealthChecksUI(setupSettings: settings =>
+    .AddHealthChecksUI(settings =>
     {
         settings.SetEvaluationTimeInSeconds(60);
         settings.AddHealthCheckEndpoint("hc", "/hc");
@@ -230,11 +231,7 @@ app.UseMiddleware<CurrentUserIdMiddleware>();
 app.UseAuthorization();
 
 app.UseHealthChecks("/hc",
-    new HealthCheckOptions
-    {
-        Predicate = _ => true,
-        ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-    }
+    new HealthCheckOptions { Predicate = _ => true, ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse }
 );
 
 app.UseHealthChecksUI(o =>

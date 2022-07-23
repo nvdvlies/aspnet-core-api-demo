@@ -86,6 +86,7 @@ public static class DatabaseMigrationHostBuilderExtensions
                     {
                         redisConnection.GetServer(endPoint).FlushDatabase();
                     }
+
                     logger.LogInformation("Finished clearing Redis cache.");
                 }
             }

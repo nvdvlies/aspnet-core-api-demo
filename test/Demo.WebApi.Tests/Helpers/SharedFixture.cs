@@ -1,13 +1,11 @@
 ﻿using System.Linq;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Auth0.AuthenticationApi;
 using Auth0.AuthenticationApi.Models;
 using AutoFixture;
 using Demo.Domain.Role;
 using Demo.Infrastructure.Settings;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,7 +17,12 @@ namespace Demo.WebApi.Tests.Helpers;
 
 public class SharedFixture : ICollectionFixture<CustomWebApplicationFactory>
 {
-
+    internal readonly string AccessToken;
+    internal readonly Fixture AutoFixture;
+    internal readonly HttpClient Client;
+    internal readonly EnvironmentSettings EnvironmentSettings;
+    internal readonly CustomWebApplicationFactory Factory;
+    internal readonly HubConnection HubConnection;
 
     public readonly Checkpoint Checkpoint = new()
     {
@@ -28,13 +31,6 @@ public class SharedFixture : ICollectionFixture<CustomWebApplicationFactory>
         WithReseed = true,
         DbAdapter = DbAdapter.Postgres
     };
-
-    internal readonly EnvironmentSettings EnvironmentSettings;
-    internal readonly HttpClient Client;
-    internal readonly CustomWebApplicationFactory Factory;
-    internal readonly HubConnection HubConnection;
-    internal readonly Fixture AutoFixture;
-    internal readonly string AccessToken;
 
     public SharedFixture()
     {
@@ -57,7 +53,7 @@ public class SharedFixture : ICollectionFixture<CustomWebApplicationFactory>
             .WithUrl("http://localhost/hub",
                 o =>
                 {
-                    o.AccessTokenProvider = AccessTokenProvider;
+                    o.AccessTokenProvider = () => Task.FromResult(AccessToken);
                     o.HttpMessageHandlerFactory = _ => Factory.Server.CreateHandler();
                 })
             .Build();
@@ -67,7 +63,7 @@ public class SharedFixture : ICollectionFixture<CustomWebApplicationFactory>
     private async Task<string> GetAccessToken()
     {
         var auth0Client = new AuthenticationApiClient(EnvironmentSettings.Auth0.IntegrationTestUser.Domain);
-        var tokenRequest = new ClientCredentialsTokenRequest()
+        var tokenRequest = new ClientCredentialsTokenRequest
         {
             ClientId = EnvironmentSettings.Auth0.IntegrationTestUser.ClientId,
             ClientSecret = EnvironmentSettings.Auth0.IntegrationTestUser.ClientSecret,
@@ -77,10 +73,4 @@ public class SharedFixture : ICollectionFixture<CustomWebApplicationFactory>
 
         return tokenResponse.AccessToken;
     }
-
-    private Task<string> AccessTokenProvider()
-    {
-        return Task.FromResult(AccessToken);
-    }
-
 }

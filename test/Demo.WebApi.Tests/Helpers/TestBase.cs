@@ -40,9 +40,9 @@ public abstract class TestBase : IClassFixture<CustomWebApplicationFactory>
     protected TestBase(SharedFixture fixture)
     {
         _fixture = fixture;
-
         _factory = _fixture.Factory;
         _serviceProvider = _fixture.Factory.Services;
+
         Client = _fixture.Client;
         HubConnection = _fixture.HubConnection;
         AutoFixture = _fixture.AutoFixture;
@@ -65,13 +65,17 @@ public abstract class TestBase : IClassFixture<CustomWebApplicationFactory>
     {
         var webhost = _factory
             .WithWebHostBuilder(builder => { builder.ConfigureTestServices(servicesConfiguration); });
-        var client = webhost.CreateClient(new WebApplicationFactoryClientOptions { BaseAddress = new Uri("http://localhost"), AllowAutoRedirect = false });
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(JwtBearerDefaults.AuthenticationScheme);
+        var client = webhost.CreateClient(new WebApplicationFactoryClientOptions
+        {
+            BaseAddress = new Uri("http://localhost"), AllowAutoRedirect = false
+        });
+        client.DefaultRequestHeaders.Authorization =
+            new AuthenticationHeaderValue(JwtBearerDefaults.AuthenticationScheme);
         _serviceProvider = webhost.Services;
         return client;
     }
 
-    protected async Task ResetDatabaseAsync()
+    private async Task ResetDatabaseAsync()
     {
         using var scope = _serviceProvider.CreateScope();
         var environmentSettings = scope.ServiceProvider.GetRequiredService<EnvironmentSettings>();
@@ -112,33 +116,30 @@ public abstract class TestBase : IClassFixture<CustomWebApplicationFactory>
         return SetTestUserAsync(httpClient, true, permissionNames);
     }
 
-    private async Task SetTestUserAsync(HttpClient httpClient, bool isAuthenticated, IEnumerable<string> permissionNames)
+    private async Task SetTestUserAsync(HttpClient httpClient, bool isAuthenticated,
+        IEnumerable<string> permissionNames)
     {
         httpClient.DefaultRequestHeaders.Authorization = isAuthenticated
             ? new AuthenticationHeaderValue(JwtBearerDefaults.AuthenticationScheme, _fixture.AccessToken)
-            : default;
+            : new AuthenticationHeaderValue(JwtBearerDefaults.AuthenticationScheme);
 
-        var roleId = Guid.NewGuid();
-        var testRole = new Role
+        if (permissionNames.Any())
         {
-            Id = roleId,
-            ExternalId = "test_role",
-            Name = "TestRole",
-            RolePermissions = permissionNames.Select(permissionName => new RolePermission
-                {
-                    PermissionId = _allPermissions.Single(permission => permission.Name == permissionName).Id
-                })
-                .ToList(),
-            UserRoles = new List<UserRole>()
+            var roleId = Guid.NewGuid();
+            var testRole = new Role
             {
-                new()
-                {
-                    RoleId = roleId,
-                    UserId = TestUserId
-                }
-            }
-        };
-        await AddAsExistingEntityAsync(testRole);
+                Id = roleId,
+                ExternalId = "test_role",
+                Name = "TestRole",
+                RolePermissions = permissionNames.Select(permissionName => new RolePermission
+                    {
+                        PermissionId = _allPermissions.Single(permission => permission.Name == permissionName).Id
+                    })
+                    .ToList(),
+                UserRoles = new List<UserRole> { new() { RoleId = roleId, UserId = TestUserId } }
+            };
+            await AddAsExistingEntityAsync(testRole);
+        }
     }
 
     protected async Task AddAsExistingEntityAsync<TEntity>(TEntity entity) where TEntity : class

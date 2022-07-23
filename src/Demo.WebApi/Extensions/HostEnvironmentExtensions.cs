@@ -14,4 +14,15 @@ public static class HostEnvironmentExtensions
 
         return hostEnvironment.IsEnvironment("DockerDev");
     }
+
+    public static bool IsLocalIntegrationTest(this IHostEnvironment hostEnvironment)
+    {
+        if (hostEnvironment == null)
+        {
+            throw new ArgumentNullException(nameof(hostEnvironment));
+        }
+
+        return hostEnvironment.IsEnvironment("LocalIntegrationTest");
+    }
+
 }

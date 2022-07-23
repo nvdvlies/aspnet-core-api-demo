@@ -23,7 +23,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=DockerDev
       - DefaultTimeZone=Europe/Amsterdam
       - DefaultCulture=nl-NL
-      - WebApiBaseUrl=http://localhost:5500
+      - WebApiBaseUrl=http://demo:80
       - Auth0__Domain=https://dev-spke9m2i.us.auth0.com/
       - Auth0__Audience=https://demo
       - Auth0__RedirectUrl=http://localhost:5500
