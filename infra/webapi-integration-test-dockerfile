@@ -1,0 +1,15 @@
+﻿FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+WORKDIR .
+COPY ["./test/Demo.WebApi.Tests/Demo.WebApi.Tests.csproj", "/test/Demo.WebApi.Tests/"]
+COPY ["./src/Demo.WebApi/Demo.WebApi.csproj", "/src/Demo.WebApi/"]
+COPY ["./src/Demo.Application/Demo.Application.csproj", "/src/Demo.Application/"]
+COPY ["./src/Demo.Common/Demo.Common.csproj", "/src/Demo.Common/"]
+COPY ["./src/Demo.Domain/Demo.Domain.csproj", "/src/Demo.Domain/"]
+COPY ["./src/Demo.Events/Demo.Events.csproj", "/src/Demo.Events/"]
+COPY ["./src/Demo.Messages/Demo.Messages.csproj", "/src/Demo.Messages/"]
+COPY ["./src/Demo.Infrastructure/Demo.Infrastructure.csproj", "/src/Demo.Infrastructure/"]
+RUN dotnet restore "/test/Demo.WebApi.Tests/Demo.WebApi.Tests.csproj"
+
+COPY ./src ./src
+COPY ./test/Demo.WebApi.Tests ./test/Demo.WebApi.Tests
+WORKDIR "/test/Demo.WebApi.Tests"

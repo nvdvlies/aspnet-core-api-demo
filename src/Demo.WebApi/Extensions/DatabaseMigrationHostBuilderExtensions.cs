@@ -72,20 +72,22 @@ public static class DatabaseMigrationHostBuilderExtensions
                     logger.LogInformation("Finished seeding.");
                 }
 
-                // TODO
-                // var environmentSettings = scope.ServiceProvider.GetRequiredService<EnvironmentSettings>();
-                // if (!string.IsNullOrEmpty(environmentSettings.Redis.Host))
-                // {
-                //     logger.LogInformation("Clearing Redis cache.");
-                //     using var redis = ConnectionMultiplexer.Connect(new ConfigurationOptions
-                //     {
-                //         EndPoints = { { environmentSettings.Redis.Host, environmentSettings.Redis.Port } },
-                //         AllowAdmin = true,
-                //         Password = environmentSettings.Redis.Password
-                //     });
-                //     redis.GetServer(environmentSettings.Redis.Host).FlushDatabase();
-                //     logger.LogInformation("Finished clearing Redis cache.");
-                // }
+                var environmentSettings = scope.ServiceProvider.GetRequiredService<EnvironmentSettings>();
+                if (!string.IsNullOrEmpty(environmentSettings.Redis.Host))
+                {
+                    logger.LogInformation("Clearing Redis cache.");
+                    using var redisConnection = ConnectionMultiplexer.Connect(new ConfigurationOptions
+                    {
+                        EndPoints = { { environmentSettings.Redis.Host, environmentSettings.Redis.Port } },
+                        AllowAdmin = true,
+                        Password = environmentSettings.Redis.Password
+                    });
+                    foreach (var endPoint in redisConnection.GetEndPoints())
+                    {
+                        redisConnection.GetServer(endPoint).FlushDatabase();
+                    }
+                    logger.LogInformation("Finished clearing Redis cache.");
+                }
             }
             else
             {

@@ -1,0 +1,88 @@
+version: "3.4"
+
+services:
+
+  webapi:
+    container_name: 'integration_test_demo_webapi'
+    image: 'demo_webapi-integration-test'
+    build:
+      context: ./../
+      dockerfile: ./infra/webapi-integration-test-dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=IntegrationTest
+      - DefaultTimeZone=Europe/Amsterdam
+      - DefaultCulture=nl-NL
+      - WebApiBaseUrl=http://localhost
+      - Auth0__Domain=https://dev-spke9m2i.us.auth0.com/
+      - Auth0__Audience=https://demo
+      - Auth0__RedirectUrl=http://localhost
+      - Auth0__Management__ClientId=uRAKIp1D24jeOktYy9JGtLz5mnjMLb17
+      - Auth0__Management__ClientSecret=${AUTH0_MANAGEMENT_CLIENTSECRET}
+      - Auth0__Management__UserDatabaseIdentifier=Username-Password-Authentication
+      - Auth0__IntegrationTestUser__Domain=dev-spke9m2i.us.auth0.com
+      - Auth0__IntegrationTestUser__ClientId=8zGi9PhWgHlRgSsRAQYcctUhU4mj16xu
+      - Auth0__IntegrationTestUser__ClientSecret=${AUTH0_INTEGRATIONTESTUSER_CLIENTSECRET}
+      - Postgres__ConnectionString=Server=postgres;Port=5432;Database=Demo;User Id=demo;Password=P@ssw0rd!;
+      - RabbitMq__Host=rabbitmq:5672
+      - RabbitMq__Username=demo
+      - RabbitMq__Password=P@ssw0rd!
+      - Redis__Host=redis
+      - Redis__Port=6379
+      - Redis__Password=P4ssw0rd!
+      - ElasticSearch__Uri=http://elasticsearch:9200
+      - ElasticSearch__Username=elastic
+      - ElasticSearch__Password=P@ssw0rd!
+      - Email__Host=mailhog
+      - Email__Port=1025
+      - Email__FromAddress=noreply@demo.com
+      - Email__Username=
+      - Email__Password=
+    depends_on:
+      - postgres
+      - rabbitmq
+      - redis
+    volumes:
+      - webapi_testresult_data:/tests
+    entrypoint:
+      - dotnet
+      - test
+      - --logger
+      - trx;LogFileName=/tests/web-api-test-results.xml
+
+  postgres:
+    container_name: 'integration_test_demo_postgres'
+    image: postgres:14.1-alpine
+    environment:
+      - POSTGRES_USER=demo
+      - POSTGRES_PASSWORD=P@ssw0rd!
+      
+  rabbitmq:
+    container_name: 'integration_test_demo_rabbitmq'
+    image: rabbitmq:3-management-alpine
+    environment:
+      - DEFAULT_USER=demo
+      - DEFAULT_PASS=P@ssw0rd!
+            
+  redis:
+    container_name: 'integration_test_demo_redis'
+    image: redis:alpine3.16
+    environment:
+      - REDIS_PASSWORD=P4ssw0rd!
+
+  elasticsearch:
+    container_name: 'integration_test_demo_elasticsearch'
+    image: elasticsearch:7.9.2
+    environment:
+      - ELASTIC_USERNAME=elastic
+      - ELASTIC_PASSWORD=P@ssw0rd!
+      - http.cors.enabled=true
+      - http.cors.allow-origin=*
+      - xpack.security.enabled=true
+      - discovery.type=single-node
+
+  mailhog:
+    container_name: 'integration_test_demo_mailhog'
+    image: mailhog/mailhog:latest
+
+volumes:
+  integration_test_webapi_testresult_data:

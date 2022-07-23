@@ -3,6 +3,8 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Web;
+using Auth0.AuthenticationApi;
+using Auth0.AuthenticationApi.Models;
 using Demo.Application;
 using Demo.Application.Shared.Interfaces;
 using Demo.Common;
@@ -17,6 +19,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation;
+using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
@@ -148,7 +151,25 @@ var healthChecksBuilder = builder.Services.AddHealthChecks()
         rabbitConnectionString:
         $"amqp://{HttpUtility.UrlEncode(environmentSettings.RabbitMq.Username)}:{HttpUtility.UrlEncode(environmentSettings.RabbitMq.Password)}@{environmentSettings.RabbitMq.Host}/%2F")
     .AddNpgSql(environmentSettings.Postgres.ConnectionString)
-    .AddSignalRHub($"{environmentSettings.WebApiBaseUrl}/hub") // TODO
+    .AddSignalRHub(() => new HubConnectionBuilder()
+        .WithUrl($"{environmentSettings.WebApiBaseUrl}/hub",
+            o =>
+            {
+               o.AccessTokenProvider = async () =>
+               {
+                   var auth0Client = new AuthenticationApiClient(environmentSettings.Auth0.IntegrationTestUser.Domain);
+                   var tokenRequest = new ClientCredentialsTokenRequest()
+                   {
+                       ClientId = environmentSettings.Auth0.IntegrationTestUser.ClientId,
+                       ClientSecret = environmentSettings.Auth0.IntegrationTestUser.ClientSecret,
+                       Audience = environmentSettings.Auth0.Audience
+                   };
+                   var tokenResponse = await auth0Client.GetTokenAsync(tokenRequest);
+
+                   return tokenResponse.AccessToken;
+               };
+            })
+        .Build())
     .AddElasticsearch(options =>
     {
         options

@@ -70,7 +70,7 @@ public class SharedFixture : ICollectionFixture<CustomWebApplicationFactory>
         var tokenRequest = new ClientCredentialsTokenRequest()
         {
             ClientId = EnvironmentSettings.Auth0.IntegrationTestUser.ClientId,
-            ClientSecret = EnvironmentSettings.Auth0.IntegrationTestUser.ClientSecret, // TODO
+            ClientSecret = EnvironmentSettings.Auth0.IntegrationTestUser.ClientSecret,
             Audience = EnvironmentSettings.Auth0.Audience
         };
         var tokenResponse = await auth0Client.GetTokenAsync(tokenRequest);
