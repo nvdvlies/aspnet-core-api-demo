@@ -11,7 +11,7 @@ namespace Demo.Infrastructure.Services;
 
 internal class UserProvider : IUserProvider
 {
-    private const string CacheKeyPrefix = "Users";
+    public const string CacheKeyPrefix = "Users";
 
     private readonly IDistributedCache _cache;
     private readonly IJsonService<User> _jsonService;

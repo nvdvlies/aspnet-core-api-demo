@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
+using System.Security.Authentication;
 using Auth0.ManagementApi;
 using Demo.Application.Shared.Interfaces;
 using Demo.Common.Extensions;
@@ -30,6 +31,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using StackExchange.Redis;
 
 namespace Demo.Infrastructure;
 
@@ -150,7 +152,7 @@ public static class DependencyInjection
         services.AddSingleton<IMessageSender, RabbitMqMessageSender>();
 
         services.AddDbContext<ApplicationDbContext>(options =>
-            options.UseNpgsql(environmentSettings.ConnectionStrings.PostgresDatabase)
+            options.UseNpgsql(environmentSettings.Postgres.ConnectionString)
         );
 
         services.AddScoped<IApplicationDbContext>(provider => provider.GetService<ApplicationDbContext>());
@@ -164,7 +166,7 @@ public static class DependencyInjection
 
         services.AddAuditlogging();
 
-        if (string.IsNullOrEmpty(environmentSettings.Redis.Connection))
+        if (string.IsNullOrEmpty(environmentSettings.Redis.Host))
         {
             services.AddDistributedMemoryCache();
         }
@@ -172,7 +174,11 @@ public static class DependencyInjection
         {
             services.AddStackExchangeRedisCache(options =>
             {
-                options.Configuration = environmentSettings.Redis.Connection;
+                options.ConfigurationOptions = new ConfigurationOptions
+                {
+                    EndPoints = { { environmentSettings.Redis.Host, environmentSettings.Redis.Port } },
+                    Password = environmentSettings.Redis.Password
+                };
             });
         }
 

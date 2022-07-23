@@ -35,7 +35,7 @@ public class UpdateCustomerTests : TestBase
     public async Task UpdateCustomer_When_a_customer_is_updated_It_should_return_statuscode_Updated()
     {
         // Arrange
-        await SetTestUserWithPermissionAsync(Domain.Role.Permissions.CustomersWrite);
+        await SetTestUserWithPermissionAsync(Client, Domain.Role.Permissions.CustomersWrite);
         var customerId = Guid.NewGuid();
         var existingCustomer = new Customer { Id = customerId, Name = "Test" };
         await AddAsExistingEntityAsync(existingCustomer);
@@ -53,7 +53,7 @@ public class UpdateCustomerTests : TestBase
     public async Task UpdateCustomer_When_a_customer_is_updated_It_should_be_persisted_to_the_database()
     {
         // Arrange
-        await SetTestUserWithPermissionAsync(Domain.Role.Permissions.CustomersWrite);
+        await SetTestUserWithPermissionAsync(Client, Domain.Role.Permissions.CustomersWrite);
         var customerId = Guid.NewGuid();
         var existingCustomer = new Customer { Id = customerId, Name = "Test" };
         await AddAsExistingEntityAsync(existingCustomer);
@@ -75,7 +75,7 @@ public class UpdateCustomerTests : TestBase
     public async Task UpdateCustomer_When_a_customer_is_updated_It_should_publish_a_CustomerUpdated_event()
     {
         // Arrange
-        await SetTestUserWithPermissionAsync(Domain.Role.Permissions.CustomersWrite);
+        await SetTestUserWithPermissionAsync(Client, Domain.Role.Permissions.CustomersWrite);
         var customerId = Guid.NewGuid();
         var existingCustomer = new Customer { Id = customerId, Name = "Test" };
         await AddAsExistingEntityAsync(existingCustomer);
@@ -101,7 +101,7 @@ public class UpdateCustomerTests : TestBase
         UpdateCustomer_When_a_command_validator_throws_a_ValidationException_It_should_return_statuscode_BadRequest()
     {
         // Arrange
-        await SetTestUserWithPermissionAsync(Domain.Role.Permissions.CustomersWrite);
+        await SetTestUserWithPermissionAsync(Client, Domain.Role.Permissions.CustomersWrite);
         var customerId = Guid.NewGuid();
         var existingCustomer = new Customer { Id = customerId, Name = "Test" };
         await AddAsExistingEntityAsync(existingCustomer);
@@ -135,7 +135,7 @@ public class UpdateCustomerTests : TestBase
 
             services.AddSingleton(mock.Object);
         });
-        await SetTestUserWithPermissionAsync(Domain.Role.Permissions.CustomersWrite);
+        await SetTestUserWithPermissionAsync(client, Domain.Role.Permissions.CustomersWrite);
 
         var customerId = Guid.NewGuid();
         var existingCustomer = new Customer { Id = customerId, Name = "Test" };
@@ -169,7 +169,7 @@ public class UpdateCustomerTests : TestBase
 
             services.AddSingleton(mock.Object);
         });
-        await SetTestUserWithPermissionAsync(Domain.Role.Permissions.CustomersWrite);
+        await SetTestUserWithPermissionAsync(client, Domain.Role.Permissions.CustomersWrite);
 
         var customerId = Guid.NewGuid();
         var existingCustomer = new Customer { Id = customerId, Name = "Test" };
@@ -202,7 +202,7 @@ public class UpdateCustomerTests : TestBase
 
             services.AddSingleton(mock.Object);
         });
-        await SetTestUserWithPermissionAsync(Domain.Role.Permissions.CustomersWrite);
+        await SetTestUserWithPermissionAsync(client, Domain.Role.Permissions.CustomersWrite);
 
         var customerId = Guid.NewGuid();
         var existingCustomer = new Customer { Id = customerId, Name = "Test" };
@@ -226,7 +226,7 @@ public class UpdateCustomerTests : TestBase
     public async Task UpdateCustomer_When_user_has_no_permission_It_should_return_statuscode_Forbidden()
     {
         // Arrange
-        await SetTestUserWithoutPermissionAsync();
+        await SetTestUserWithoutPermissionAsync(Client);
         var command = new UpdateCustomerCommand { Id = Guid.NewGuid(), Name = "Test" };
 
         // Act
@@ -240,7 +240,7 @@ public class UpdateCustomerTests : TestBase
     public async Task UpdateCustomer_When_request_is_not_authenticated_It_should_return_statuscode_Unauthorized()
     {
         // Arrange
-        await SetTestUserToUnauthenticatedAsync();
+        await SetTestUserToUnauthenticatedAsync(Client);
         var command = new UpdateCustomerCommand { Id = Guid.NewGuid(), Name = "Test" };
 
         // Act
@@ -255,7 +255,7 @@ public class UpdateCustomerTests : TestBase
         UpdateCustomer_When_an_incorrect_concurrency_token_is_used_It_should_return_statuscode_BadRequest()
     {
         // Arrange
-        await SetTestUserWithPermissionAsync(Domain.Role.Permissions.CustomersWrite);
+        await SetTestUserWithPermissionAsync(Client, Domain.Role.Permissions.CustomersWrite);
         var customerId = Guid.NewGuid();
         var existingCustomer = new Customer { Id = customerId, Name = "Test" };
         await AddAsExistingEntityAsync(existingCustomer);

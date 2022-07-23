@@ -22,7 +22,7 @@ public class GetCustomerByIdTests : TestBase
     public async Task GetCustomerById_When_customer_exists_It_should_return_statuscode_OK()
     {
         // Arrange
-        await SetTestUserWithPermissionAsync(Domain.Role.Permissions.CustomersRead);
+        await SetTestUserWithPermissionAsync(Client, Domain.Role.Permissions.CustomersRead);
 
         var existingCustomer = new Customer { Id = Guid.NewGuid(), Name = "Test" };
         await AddAsExistingEntityAsync(existingCustomer);
@@ -44,7 +44,7 @@ public class GetCustomerByIdTests : TestBase
     public async Task GetCustomerById_When_customer_does_not_exist_It_should_return_statuscode_NotFound()
     {
         // Arrange
-        await SetTestUserWithPermissionAsync(Domain.Role.Permissions.CustomersRead);
+        await SetTestUserWithPermissionAsync(Client, Domain.Role.Permissions.CustomersRead);
 
         var customerId = Guid.NewGuid();
 
@@ -59,7 +59,7 @@ public class GetCustomerByIdTests : TestBase
     public async Task GetCustomerById_When_user_has_no_permission_It_should_return_statuscode_Forbidden()
     {
         // Arrange
-        await SetTestUserWithoutPermissionAsync();
+        await SetTestUserWithoutPermissionAsync(Client);
 
         var customerId = Guid.NewGuid();
 

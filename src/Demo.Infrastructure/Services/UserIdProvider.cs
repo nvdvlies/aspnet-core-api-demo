@@ -9,7 +9,7 @@ namespace Demo.Infrastructure.Services;
 
 internal class UserIdProvider : IUserIdProvider
 {
-    private const string CacheKeyPrefix = "UsersIds";
+    public const string CacheKeyPrefix = "UsersIds";
 
     private readonly IDistributedCache _cache;
     private readonly IDbQuery<User> _query;

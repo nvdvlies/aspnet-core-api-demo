@@ -20,7 +20,7 @@ A DomainEntity offers:
 ## Run locally
 
 - Install Docker Desktop (https://www.docker.com/products/docker-desktop/)
-- Run `docker compose -p demo up -d` from `./infra` directory
+- Run `docker compose -f docker-compose.development.yml -p demo up -d` from `./infra` directory
 - Browse to `http://localhost:5500/`
 - Login with user `demo@demo.com` and password `P@ssw0rd!`
 

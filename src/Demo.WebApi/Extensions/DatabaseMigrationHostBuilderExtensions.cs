@@ -3,12 +3,14 @@ using System.Linq;
 using Demo.Domain.Role.Seed;
 using Demo.Domain.User.Seed;
 using Demo.Infrastructure.Persistence;
+using Demo.Infrastructure.Settings;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using StackExchange.Redis;
 
 namespace Demo.WebApi.Extensions;
 
@@ -72,11 +74,16 @@ public static class DatabaseMigrationHostBuilderExtensions
 
                 // TODO
                 // var environmentSettings = scope.ServiceProvider.GetRequiredService<EnvironmentSettings>();
-                // if (!string.IsNullOrEmpty(environmentSettings.Redis.Connection))
+                // if (!string.IsNullOrEmpty(environmentSettings.Redis.Host))
                 // {
                 //     logger.LogInformation("Clearing Redis cache.");
-                //     using var redis = scope.ServiceProvider.GetRequiredService<IConnectionMultiplexer>();
-                //     redis.GetServer(environmentSettings.Redis.Connection).FlushDatabase();
+                //     using var redis = ConnectionMultiplexer.Connect(new ConfigurationOptions
+                //     {
+                //         EndPoints = { { environmentSettings.Redis.Host, environmentSettings.Redis.Port } },
+                //         AllowAdmin = true,
+                //         Password = environmentSettings.Redis.Password
+                //     });
+                //     redis.GetServer(environmentSettings.Redis.Host).FlushDatabase();
                 //     logger.LogInformation("Finished clearing Redis cache.");
                 // }
             }

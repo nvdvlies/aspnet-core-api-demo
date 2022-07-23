@@ -9,7 +9,7 @@ namespace Demo.Infrastructure.Services;
 
 internal class ExternalUserIdProvider : IExternalUserIdProvider
 {
-    private const string CacheKeyPrefix = "ExternalUsersIds";
+    public const string CacheKeyPrefix = "ExternalUsersIds";
 
     private readonly IDistributedCache _cache;
     private readonly IDbQuery<User> _query;

@@ -1,0 +1,81 @@
+version: "3.4"
+
+services:
+
+  postgres:
+    container_name: 'integration_test_demo_postgres'
+    image: postgres:14.1-alpine
+    #restart: always
+    environment:
+      - POSTGRES_USER=demo
+      - POSTGRES_PASSWORD=P@ssw0rd!
+    ports:
+      - '5552:5432'
+      
+  rabbitmq:
+    container_name: 'integration_test_demo_rabbitmq'
+    image: rabbitmq:3-management-alpine
+    #restart: always
+    ports:
+      - 5553:5672
+      - 5554:15672
+    environment:
+      - DEFAULT_USER=demo
+      - DEFAULT_PASS=P@ssw0rd!
+            
+  redis:
+    container_name: 'integration_test_demo_redis'
+    image: redis:alpine3.16
+    #restart: always
+    ports:
+      - 5555:6379
+    environment:
+      - REDIS_PASSWORD=P4ssw0rd!
+
+  redis-commander:
+    container_name: 'integration_test_demo_redis_commander'
+    image: rediscommander/redis-commander:latest
+    #restart: always
+    environment:
+      - REDIS_HOSTS=local:redis:6379
+      - REDIS_PASSWORD=P4ssw0rd!
+      - HTTP_USER=demo
+      - HTTP_PASSWORD=P@ssw0rd!
+    ports:
+      - 5556:8081
+
+  elasticsearch:
+    container_name: 'integration_test_demo_elasticsearch'
+    image: elasticsearch:7.9.2
+    #restart: always
+    environment:
+      - ELASTIC_USERNAME=elastic
+      - ELASTIC_PASSWORD=P@ssw0rd!
+      - http.cors.enabled=true
+      - http.cors.allow-origin=*
+      - xpack.security.enabled=true
+      - discovery.type=single-node
+    ports:
+      - 5557:9200
+
+  kibana:
+    container_name: 'integration_test_demo_kibana'
+    image: kibana:7.9.2
+    #restart: always
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - ELASTICSEARCH_USERNAME=elastic
+      - ELASTICSEARCH_PASSWORD=P@ssw0rd!
+      - XPACK_SECURITY_ENABLED=true
+    ports:
+      - 5558:5601
+    depends_on:
+      - elasticsearch
+
+  mailhog:
+    container_name: 'integration_test_demo_mailhog'
+    image: mailhog/mailhog:latest
+    #restart: always
+    ports:
+      - 5559:1025
+      - 5560:8025
