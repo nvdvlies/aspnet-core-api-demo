@@ -11,6 +11,8 @@ services:
       dockerfile: ./infra/webui-dockerfile
     ports:
       - 5500:80
+    depends_on:
+      - webapi
 
   webapi:
     container_name: 'demo_webapi'
