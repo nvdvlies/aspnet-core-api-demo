@@ -23,7 +23,7 @@ public static class GlobalExceptionHandler
         return async context =>
         {
             var logger = context.RequestServices.GetRequiredService<ILogger<Program>>();
-            var exception = context.Features.Get<IExceptionHandlerFeature>().Error;
+            var exception = context.Features.Get<IExceptionHandlerFeature>()?.Error;
 
             var includeDetailsInResponse = !env.IsProduction();
 
