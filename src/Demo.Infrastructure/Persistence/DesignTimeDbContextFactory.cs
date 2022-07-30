@@ -9,7 +9,7 @@ public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<Applicatio
     {
         var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
         var connectionString =
-            "Server=localhost;Port=5502;Database=Demo_Migrations;User Id=postgres;Password=postgres;";
+            "Server=localhost;Port=5502;Database=Demo_Migrations;User Id=demo;Password=P@ssw0rd!;";
         optionsBuilder.UseNpgsql(connectionString, b => b.MigrationsAssembly("Demo.Infrastructure"));
 
         return new ApplicationDbContext(optionsBuilder.Options);
