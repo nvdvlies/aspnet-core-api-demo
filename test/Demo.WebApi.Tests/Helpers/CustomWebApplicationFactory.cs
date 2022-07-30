@@ -10,7 +10,8 @@ internal class CustomWebApplicationFactory : WebApplicationFactory<Program>
     {
         var environmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 
-        if (environmentName.Equals(
+        if (string.Equals(
+                environmentName,
                 "Development",
                 StringComparison.OrdinalIgnoreCase))
         {

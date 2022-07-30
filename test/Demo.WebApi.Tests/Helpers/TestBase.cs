@@ -96,28 +96,28 @@ public abstract class TestBase : IClassFixture<CustomWebApplicationFactory>
         await applicationDbContext.SaveChangesAsync();
     }
 
-    protected Task SetTestUserToUnauthenticatedAsync(HttpClient httpClient)
+    protected Task ConfigureTestUserAsUnauthenticatedAsync(HttpClient httpClient)
     {
-        return SetTestUserAsync(httpClient, false, Array.Empty<string>());
+        return ConfigureTestUserAsync(httpClient, false, Array.Empty<string>());
     }
 
-    protected Task SetTestUserWithoutPermissionAsync(HttpClient httpClient)
+    protected Task ConfigureTestUserWithoutPermissionAsync(HttpClient httpClient)
     {
-        return SetTestUserAsync(httpClient, true, Array.Empty<string>());
+        return ConfigureTestUserAsync(httpClient, true, Array.Empty<string>());
     }
 
-    protected Task SetTestUserWithPermissionAsync(HttpClient httpClient, string permissionName)
+    protected Task ConfigureTestUserWithPermissionAsync(HttpClient httpClient, string permissionName)
     {
-        return SetTestUserAsync(httpClient, true, new[] { permissionName });
+        return ConfigureTestUserAsync(httpClient, true, new[] { permissionName });
     }
 
-    protected Task SetTestUserWithPermissionAsync(HttpClient httpClient, IEnumerable<string> permissionNames)
+    protected Task ConfigureTestUserWithPermissionAsync(HttpClient httpClient, IList<string> permissionNames)
     {
-        return SetTestUserAsync(httpClient, true, permissionNames);
+        return ConfigureTestUserAsync(httpClient, true, permissionNames);
     }
 
-    private async Task SetTestUserAsync(HttpClient httpClient, bool isAuthenticated,
-        IEnumerable<string> permissionNames)
+    private async Task ConfigureTestUserAsync(HttpClient httpClient, bool isAuthenticated,
+        IList<string> permissionNames)
     {
         httpClient.DefaultRequestHeaders.Authorization = isAuthenticated
             ? new AuthenticationHeaderValue(JwtBearerDefaults.AuthenticationScheme, _fixture.AccessToken)

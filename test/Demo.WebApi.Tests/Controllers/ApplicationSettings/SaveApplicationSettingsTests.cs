@@ -21,7 +21,7 @@ public class SaveApplicationSettingsTests : TestBase
         SaveApplicationSettings_When_application_settings_can_be_saved_It_should_return_statuscode_NoContent()
     {
         // Arrange
-        await SetTestUserWithPermissionAsync(Client, Domain.Role.Permissions.ApplicationSettingsWrite);
+        await ConfigureTestUserWithPermissionAsync(Client, Domain.Role.Permissions.ApplicationSettingsWrite);
         var command = new SaveApplicationSettingsCommand
         {
             Settings = new SaveApplicationSettingsSettingsDto { Setting1 = true }
@@ -39,7 +39,7 @@ public class SaveApplicationSettingsTests : TestBase
         SaveApplicationSettings_When_user_does_not_have_write_permission_It_should_return_statuscode_Forbidden()
     {
         // Arrange
-        await SetTestUserWithPermissionAsync(Client, Domain.Role.Permissions.ApplicationSettingsRead);
+        await ConfigureTestUserWithPermissionAsync(Client, Domain.Role.Permissions.ApplicationSettingsRead);
         var command = new SaveApplicationSettingsCommand
         {
             Settings = new SaveApplicationSettingsSettingsDto { Setting1 = true }
