@@ -1,8 +1,9 @@
-﻿using Demo.Application.ApplicationSettings.Events;
+using Demo.Application.ApplicationSettings.Events;
 using Demo.Application.CurrentUser.Events;
 using Demo.Application.Customers.Events;
 using Demo.Application.FeatureFlagSettings.Events;
 using Demo.Application.Invoices.Events;
+using Demo.Application.Locations.Events;
 using Demo.Application.Roles.Events;
 using Demo.Application.UserPreferences.Events;
 using Demo.Application.Users.Events;
@@ -17,6 +18,7 @@ public interface IEventHub :
     IRoleEventHub,
     IFeatureFlagSettingsEventHub,
     IUserPreferencesEventHub,
-    ICurrentUserEventHub // SCAFFOLD-MARKER: EVENTHUB_INTERFACE
+    ICurrentUserEventHub,
+    ILocationEventHub// SCAFFOLD-MARKER: EVENTHUB_INTERFACE
 {
 }

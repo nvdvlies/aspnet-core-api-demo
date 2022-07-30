@@ -11,7 +11,7 @@ import { IHasForm } from '@shared/guards/unsaved-changes.guard';
 import { CustomerListRouteState } from '@customers/pages/customer-list/customer-list.component';
 import { ConfirmDeleteModalComponent } from '@shared/modals/confirm-delete-modal/confirm-delete-modal.component';
 import { ModalService } from '@shared/services/modal.service';
-import { UserPermissionService } from '@shared/services/user-permission.service';
+import { ILocationAutocompleteOption } from '@shared/components/location-autocomplete-form-field-control/location-autocomplete-form-field-control.component';
 
 interface ViewModel extends ICustomerDomainEntityContext {}
 
@@ -98,5 +98,13 @@ export class CustomerDetailsComponent implements IHasForm {
   public closeShortcut(event: KeyboardEvent) {
     this.router.navigateByUrl('/customers');
     event.preventDefault();
+  }
+
+  public onAddressSelected(selectedLocation: ILocationAutocompleteOption): void {
+    this.customerDomainEntityService.setAddress(selectedLocation);
+  }
+
+  public onAddressCleared(): void {
+    this.customerDomainEntityService.removeAddress();
   }
 }

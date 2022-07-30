@@ -3,6 +3,8 @@ using Demo.Common.Interfaces;
 using Demo.Domain.Auditlog;
 using Demo.Domain.Auditlog.Interfaces;
 using Demo.Domain.Customer;
+using Demo.Domain.Location;
+using Demo.Domain.Shared.Entities;
 using Demo.Domain.Shared.Interfaces;
 using Demo.Infrastructure.Auditlogging.Shared;
 
@@ -23,6 +25,9 @@ internal class CustomerAuditlogger : AuditloggerBase<Customer>, IAuditlogger<Cus
         return new AuditlogBuilder<Customer>()
             .WithProperty(c => c.Name)
             .WithProperty(c => c.InvoiceEmailAddress)
+            .WithChildEntity(x => x.Address, new AuditlogBuilder<Location>()
+                .WithProperty(c => c.DisplayName)
+            )
             .Build(current, previous);
     }
 }

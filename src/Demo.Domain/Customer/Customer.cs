@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using Demo.Domain.Shared.Entities;
 using Demo.Domain.Shared.Interfaces;
@@ -11,5 +12,8 @@ public class Customer : SoftDeleteEntity, IQueryableEntity
 
     public string Name { get; set; }
     public string InvoiceEmailAddress { get; set; }
+
+    public Guid? AddressId { get; set; }
+    public Location.Location Address { get; set; }
     public List<Invoice.Invoice> Invoices { get; set; }
 }

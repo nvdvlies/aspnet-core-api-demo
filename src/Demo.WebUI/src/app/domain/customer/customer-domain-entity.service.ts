@@ -3,7 +3,7 @@ import { AbstractControl, UntypedFormControl, UntypedFormGroup, Validators } fro
 import { ActivatedRoute } from '@angular/router';
 import { combineLatest, Observable, of } from 'rxjs';
 import { debounceTime, map } from 'rxjs/operators';
-import { CustomerDto, ICustomerDto } from '@api/api.generated.clients';
+import { CustomerDto, ICustomerDto, ILocationDto, LocationDto } from '@api/api.generated.clients';
 import { CustomerStoreService } from '@domain/customer/customer-store.service';
 import {
   DomainEntityBase,
@@ -27,6 +27,13 @@ export class CustomerDomainEntityContext
 
 type CustomerControls = { [key in keyof ICustomerDto]-?: AbstractControl };
 export type CustomerFormGroup = UntypedFormGroup & { controls: CustomerControls };
+
+type LocationControls = {
+  [key in keyof ILocationDto]-?: AbstractControl;
+};
+export type LocationFormGroup = UntypedFormGroup & {
+  controls: LocationControls;
+};
 
 @Injectable()
 export class CustomerDomainEntityService
@@ -82,6 +89,17 @@ export class CustomerDomainEntityService
         [Validators.required, Validators.minLength(2), Validators.maxLength(200)],
         []
       ),
+      addressId: new UntypedFormControl(null),
+      address: new UntypedFormGroup({
+        displayName: new UntypedFormControl(super.readonlyFormState),
+        streetName: new UntypedFormControl(super.readonlyFormState),
+        houseNumber: new UntypedFormControl(super.readonlyFormState),
+        postalCode: new UntypedFormControl(super.readonlyFormState),
+        city: new UntypedFormControl(super.readonlyFormState),
+        countryCode: new UntypedFormControl(super.readonlyFormState),
+        latitude: new UntypedFormControl({ value: 0, disabled: true }),
+        longitude: new UntypedFormControl({ value: 0, disabled: true })
+      } as LocationControls) as LocationFormGroup,
       deleted: new UntypedFormControl(super.readonlyFormState),
       deletedBy: new UntypedFormControl(super.readonlyFormState),
       deletedOn: new UntypedFormControl(super.readonlyFormState),
@@ -128,5 +146,21 @@ export class CustomerDomainEntityService
 
   public override reset(): void {
     super.reset();
+  }
+
+  public setAddress(location: ILocationDto): void {
+    this.form.controls.address.patchValue({
+      ...location
+    });
+  }
+
+  public removeAddress(): void {
+    if (this.form.controls.addressId.value) {
+      this.form.controls.addressId.setValue(null);
+    }
+    this.form.controls.address.reset({
+      latitude: 0,
+      longitude: 0
+    } as ILocationDto);
   }
 }

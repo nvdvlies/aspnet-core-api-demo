@@ -9,6 +9,7 @@ import {
 import { CustomerEventsService } from '@api/signalr.generated.services';
 import { CustomerStoreService } from '@domain/customer/customer-store.service';
 import {
+  IEntityUpdatedEvent,
   ITableFilterCriteria,
   TableDataBase,
   TableDataContext,
@@ -55,7 +56,12 @@ export class CustomerTableDataService extends TableDataBase<SearchCustomerDto> {
     })
   );
 
-  protected entityUpdatedInStore$ = this.customerStoreService.customerUpdatedInStore$;
+  protected entityUpdatedInStore$ = this.customerStoreService.customerUpdatedInStore$.pipe(
+    map(
+      ([event, entity]) =>
+        [event, { ...entity, addressDisplayName: null }] as [IEntityUpdatedEvent, any]
+    )
+  );
   protected entityDeletedEvent$ = this.customerEventsService.customerDeleted$;
 
   constructor(

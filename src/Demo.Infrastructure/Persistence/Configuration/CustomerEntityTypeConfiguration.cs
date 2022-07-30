@@ -27,6 +27,10 @@ public class CustomerEntityTypeConfiguration : IEntityTypeConfiguration<Customer
         builder.Property(x => x.InvoiceEmailAddress)
             .HasMaxLength(320);
 
+        builder.HasOne(x => x.Address)
+            .WithOne()
+            .HasForeignKey<Customer>(x => x.AddressId);
+
         builder.Property(x => x.CreatedOn).IsRequired();
         builder.Property(x => x.CreatedBy).HasMaxLength(64).IsRequired();
         builder.Property(x => x.LastModifiedBy).HasMaxLength(64);

@@ -151,8 +151,13 @@ public static class DependencyInjection
         services.AddSingleton<IMessageSender, RabbitMqMessageSender>();
 
         services.AddDbContext<ApplicationDbContext>(options =>
-            options.UseNpgsql(environmentSettings.Postgres.ConnectionString)
-        );
+        {
+            options.UseNpgsql(environmentSettings.Postgres.ConnectionString);
+#if DEBUG
+            options.EnableDetailedErrors();
+            options.EnableSensitiveDataLogging();
+#endif
+        });
 
         services.AddScoped<IApplicationDbContext>(provider => provider.GetService<ApplicationDbContext>());
 

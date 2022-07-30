@@ -28,6 +28,7 @@ public class GetCustomerByIdQueryHandler : IRequestHandler<GetCustomerByIdQuery,
         CancellationToken cancellationToken)
     {
         var customer = await _query.AsQueryable()
+            .Include(customer => customer.Address)
             .ProjectTo<CustomerDto>(_mapper.ConfigurationProvider)
             .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 

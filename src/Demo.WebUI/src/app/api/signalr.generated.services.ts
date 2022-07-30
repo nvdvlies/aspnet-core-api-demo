@@ -337,3 +337,43 @@ export class CurrentUserEventsService {
   }
 }
 
+export interface LocationCreatedEvent {
+  id: string;
+  createdBy: string;
+}
+
+export interface LocationUpdatedEvent {
+  id: string;
+  updatedBy: string;
+}
+
+export interface LocationDeletedEvent {
+  id: string;
+  deletedBy: string;
+}
+
+@Injectable({
+  providedIn: 'root'
+})
+export class LocationEventsService {
+  private locationCreated = new Subject<LocationCreatedEvent>();
+  private locationUpdated = new Subject<LocationUpdatedEvent>();
+  private locationDeleted = new Subject<LocationDeletedEvent>();
+
+  public locationCreated$ = this.locationCreated.asObservable();
+  public locationUpdated$ = this.locationUpdated.asObservable();
+  public locationDeleted$ = this.locationDeleted.asObservable();
+
+  constructor(private signalRService: SignalRService) {
+    this.signalRService.hubConnection.on('LocationCreated', (id: string, createdBy: string) =>
+      this.locationCreated.next({ id, createdBy })
+    );
+    this.signalRService.hubConnection.on('LocationUpdated', (id: string, updatedBy: string) =>
+      this.locationUpdated.next({ id, updatedBy })
+    );
+    this.signalRService.hubConnection.on('LocationDeleted', (id: string, deletedBy: string) =>
+      this.locationDeleted.next({ id, deletedBy })
+    );
+  }
+}
+

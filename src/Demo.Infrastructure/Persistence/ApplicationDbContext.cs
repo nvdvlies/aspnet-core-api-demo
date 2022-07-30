@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+using Demo.Domain.Location;
+using System.Reflection;
 using Demo.Domain.ApplicationSettings;
 using Demo.Domain.Auditlog;
 using Demo.Domain.Customer;
@@ -11,6 +12,7 @@ using Demo.Domain.User;
 using Demo.Domain.UserPreferences;
 using Demo.Infrastructure.Persistence.Configuration;
 using Microsoft.EntityFrameworkCore;
+using Demo.Domain.Shared.Entities;
 
 namespace Demo.Infrastructure.Persistence;
 
@@ -32,7 +34,7 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     public DbSet<Role> Roles { get; set; }
     public DbSet<FeatureFlagSettings> FeatureFlagSettings { get; set; }
     public DbSet<UserPreferences> UserPreferences { get; set; }
-
+    public DbSet<Location> Locations { get; set; }
     // SCAFFOLD-MARKER: DBSET
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

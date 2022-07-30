@@ -1,5 +1,8 @@
 ﻿using AutoMapper;
+using Demo.Application.Customers.Commands.UpdateCustomer.Dtos;
 using Demo.Domain.Customer;
+using Demo.Domain.Location;
+using Demo.Domain.Shared.Entities;
 
 namespace Demo.Application.Customers.Commands.UpdateCustomer;
 
@@ -19,5 +22,9 @@ public class UpdateCustomerMappingProfile : Profile
             .ForMember(x => x.CreatedOn, opt => opt.Ignore())
             .ForMember(x => x.LastModifiedBy, opt => opt.Ignore())
             .ForMember(x => x.LastModifiedOn, opt => opt.Ignore());
+
+        CreateMap<UpdateCustomerLocationDto, Location>()
+            .ForMember(x => x.Id, opt => opt.Ignore())
+            .ForMember(x => x.xmin, opt => opt.Ignore());
     }
 }

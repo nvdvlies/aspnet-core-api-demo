@@ -10,5 +10,6 @@ public enum Topics
     OutboxEvent,
     OutboxMessage,
     FeatureFlagSettings,
-    UserPreferences
+    UserPreferences,
+    Location
 }

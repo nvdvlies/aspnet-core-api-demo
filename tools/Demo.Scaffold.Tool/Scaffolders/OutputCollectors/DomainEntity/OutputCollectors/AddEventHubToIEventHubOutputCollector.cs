@@ -27,7 +27,7 @@ internal class AddEventHubToIEventHubOutputCollector : IOutputCollector
     private static string GetTemplate(string entityName)
     {
         var code = @",
-        I%ENTITY%EventHub";
+    I%ENTITY%EventHub";
 
         code = code.Replace("%ENTITY%", entityName);
         return code;

@@ -12,6 +12,7 @@ internal class ExcludeNavigationPropertiesHook : IBeforeCreate<Customer>, IBefor
         CancellationToken cancellationToken = default)
     {
         context.Entity.Invoices = null;
+        context.Entity.Address = null;
 
         return Task.CompletedTask;
     }

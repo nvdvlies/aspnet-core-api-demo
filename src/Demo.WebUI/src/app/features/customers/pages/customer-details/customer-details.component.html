@@ -77,7 +77,7 @@
               </button>
             </div>
           </app-message>
-          <mat-card class="card bg-white pb-1 pl-3 pr-3 pt-0 mt-1">
+          <mat-card class="card bg-white pb-1 pl-2 pr-2 pt-0 mt-1">
             <mat-card-title class="pl-1 pt-1 mb-1 text-lg">General</mat-card-title>
             <mat-card-content>
               <div class="row">
@@ -95,10 +95,48 @@
                   </mat-form-field>
                 </div>
               </div>
+
+              <div class="row">
+                <div class="col">
+                  <mat-form-field appearance="fill" class="full-width">
+                    <mat-label>Address</mat-label>
+                    <button
+                      type="button"
+                      mat-button
+                      matPrefix
+                      mat-icon-button
+                      (click)="addressAutocomplete.focus()"
+                      *ngIf="!addressAutocomplete.disabled"
+                    >
+                      <mat-icon>search</mat-icon>
+                    </button>
+                    <app-location-autocomplete-form-field-control
+                      #addressAutocomplete
+                      matInput
+                      placeholder="Address"
+                      formControlName="addressId"
+                      (optionSelected)="onAddressSelected($event)"
+                      (optionCleared)="onAddressCleared()"
+                    >
+                    </app-location-autocomplete-form-field-control>
+                    <button
+                      *ngIf="addressAutocomplete.value != null && !addressAutocomplete.disabled"
+                      type="button"
+                      mat-button
+                      mat-icon-button
+                      matSuffix
+                      (click)="addressAutocomplete.clearSearchField()"
+                    >
+                      <mat-icon>close</mat-icon>
+                    </button>
+                    <mat-error appDomainEntityErrorMessage></mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
             </mat-card-content>
           </mat-card>
         </div>
-        <!-- <pre>{{ form.value | json }}</pre> -->
+        <!-- <pre>{{ form.getRawValue() | json }}</pre> -->
       </form>
     </ng-container>
   </ng-container>

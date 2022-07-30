@@ -63,7 +63,9 @@
                 <th mat-header-cell *matHeaderCellDef disableClear>Address</th>
                 <td mat-cell *matCellDef="let row">
                   <app-highlight
-                    [value]="(row.addressId | locationIdToName | async) ?? ''"
+                    [value]="
+                      row.addressDisplayName ?? (row.addressId | locationIdToName | async) ?? ''
+                    "
                     [highlight]="searchTerm.value"
                   ></app-highlight>
                 </td>

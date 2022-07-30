@@ -32,6 +32,7 @@ using Demo.Events.%ENTITY%;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace Demo.Application.%COLLECTIONNAME%.Events.%ENTITY%Created
 {
@@ -45,6 +46,7 @@ namespace Demo.Application.%COLLECTIONNAME%.Events.%ENTITY%Created
             IEventHubContext eventHubContext
         )
         {
+            _logger = logger;
             _eventHubContext = eventHubContext;
         }
 

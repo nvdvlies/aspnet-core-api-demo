@@ -55,6 +55,7 @@ public class SearchCustomersQueryHandler : IRequestHandler<SearchCustomersQuery,
         };
 
         var customers = await query
+            .Include(customer => customer.Address)
             .Skip(request.PageSize * request.PageIndex)
             .Take(request.PageSize)
             .ProjectTo<SearchCustomerDto>(_mapper.ConfigurationProvider)

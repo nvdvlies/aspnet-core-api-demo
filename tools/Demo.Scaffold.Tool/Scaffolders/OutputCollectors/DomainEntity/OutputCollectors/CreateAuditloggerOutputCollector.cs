@@ -44,10 +44,10 @@ namespace Demo.Infrastructure.Auditlogging
     internal class %ENTITY%Auditlogger : AuditloggerBase<%ENTITY%>, IAuditlogger<%ENTITY%>
     {
         public %ENTITY%Auditlogger(            
-            ICurrentUser currentUser, 
+            ICurrentUserIdProvider currentUserIdProvider, 
             IDateTime dateTime,
             IAuditlogDomainEntity auditlogDomainEntity
-        ) : base(currentUser, dateTime, auditlogDomainEntity)
+        ) : base(currentUserIdProvider, dateTime, auditlogDomainEntity)
         {
         }
 

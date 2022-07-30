@@ -11,6 +11,8 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
+#nullable disable
+
 namespace Demo.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
@@ -21,9 +23,10 @@ namespace Demo.Infrastructure.Persistence.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("demo")
-                .HasAnnotation("Relational:MaxIdentifierLength", 63)
-                .HasAnnotation("ProductVersion", "5.0.17")
-                .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                .HasAnnotation("ProductVersion", "6.0.0")
+                .HasAnnotation("Relational:MaxIdentifierLength", 63);
+
+            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.HasSequence<int>("CustomerCode")
                 .HasMin(1L)
@@ -46,14 +49,14 @@ namespace Demo.Infrastructure.Persistence.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid>("LastModifiedBy")
                         .HasMaxLength(64)
                         .HasColumnType("uuid");
 
                     b.Property<DateTime?>("LastModifiedOn")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<ApplicationSettingsSettings>("Settings")
                         .HasColumnType("jsonb");
@@ -65,7 +68,7 @@ namespace Demo.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ApplicationSettings");
+                    b.ToTable("ApplicationSettings", "demo");
                 });
 
             modelBuilder.Entity("Demo.Domain.Auditlog.Auditlog", b =>
@@ -90,7 +93,7 @@ namespace Demo.Infrastructure.Persistence.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("ModifiedOn")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<uint>("xmin")
                         .IsConcurrencyToken()
@@ -103,13 +106,16 @@ namespace Demo.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("EntityName");
 
-                    b.ToTable("Auditlog");
+                    b.ToTable("Auditlog", "demo");
                 });
 
             modelBuilder.Entity("Demo.Domain.Customer.Customer", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("AddressId")
                         .HasColumnType("uuid");
 
                     b.Property<int>("Code")
@@ -123,7 +129,7 @@ namespace Demo.Infrastructure.Persistence.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<bool>("Deleted")
                         .ValueGeneratedOnAdd()
@@ -134,7 +140,7 @@ namespace Demo.Infrastructure.Persistence.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("InvoiceEmailAddress")
                         .HasMaxLength(320)
@@ -145,7 +151,7 @@ namespace Demo.Infrastructure.Persistence.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<DateTime?>("LastModifiedOn")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -159,6 +165,9 @@ namespace Demo.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AddressId")
+                        .IsUnique();
+
                     b.HasIndex("Code")
                         .IsUnique();
 
@@ -166,7 +175,7 @@ namespace Demo.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("Name");
 
-                    b.ToTable("Customer");
+                    b.ToTable("Customer", "demo");
                 });
 
             modelBuilder.Entity("Demo.Domain.FeatureFlagSettings.FeatureFlagSettings", b =>
@@ -179,13 +188,13 @@ namespace Demo.Infrastructure.Persistence.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid>("LastModifiedBy")
                         .HasColumnType("uuid");
 
                     b.Property<DateTime?>("LastModifiedOn")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<FeatureFlagSettingsSettings>("Settings")
                         .HasColumnType("jsonb");
@@ -197,7 +206,7 @@ namespace Demo.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("FeatureFlagSettings");
+                    b.ToTable("FeatureFlagSettings", "demo");
                 });
 
             modelBuilder.Entity("Demo.Domain.Invoice.Invoice", b =>
@@ -211,7 +220,7 @@ namespace Demo.Infrastructure.Persistence.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid>("CustomerId")
                         .HasColumnType("uuid");
@@ -225,7 +234,7 @@ namespace Demo.Infrastructure.Persistence.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime>("InvoiceDate")
                         .HasColumnType("date")
@@ -243,7 +252,7 @@ namespace Demo.Infrastructure.Persistence.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<DateTime?>("LastModifiedOn")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("OrderReference")
                         .HasMaxLength(50)
@@ -279,7 +288,7 @@ namespace Demo.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("Status");
 
-                    b.ToTable("Invoice");
+                    b.ToTable("Invoice", "demo");
                 });
 
             modelBuilder.Entity("Demo.Domain.Invoice.InvoiceLine", b =>
@@ -316,7 +325,71 @@ namespace Demo.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("InvoiceId");
 
-                    b.ToTable("InvoiceLine");
+                    b.ToTable("InvoiceLine", "demo");
+                });
+
+            modelBuilder.Entity("Demo.Domain.Location.Location", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("CountryCode")
+                        .IsRequired()
+                        .HasMaxLength(3)
+                        .HasColumnType("character varying(3)");
+
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("DisplayName")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("HouseNumber")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("character varying(10)");
+
+                    b.Property<Guid>("LastModifiedBy")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("LastModifiedOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<double>("Latitude")
+                        .HasColumnType("double precision");
+
+                    b.Property<double>("Longitude")
+                        .HasColumnType("double precision");
+
+                    b.Property<string>("PostalCode")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("character varying(10)");
+
+                    b.Property<string>("StreetName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<uint>("xmin")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Location", "demo");
                 });
 
             modelBuilder.Entity("Demo.Domain.OutboxEvent.OutboxEvent", b =>
@@ -339,7 +412,7 @@ namespace Demo.Infrastructure.Persistence.Migrations
                         .HasColumnType("character varying(50)");
 
                     b.Property<DateTime?>("LockedUntil")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Type")
                         .IsRequired()
@@ -357,7 +430,7 @@ namespace Demo.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("LockedUntil");
 
-                    b.ToTable("OutboxEvent");
+                    b.ToTable("OutboxEvent", "demo");
                 });
 
             modelBuilder.Entity("Demo.Domain.OutboxMessage.OutboxMessage", b =>
@@ -377,7 +450,7 @@ namespace Demo.Infrastructure.Persistence.Migrations
                         .HasColumnType("character varying(50)");
 
                     b.Property<DateTime?>("LockedUntil")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Message")
                         .HasColumnType("jsonb");
@@ -398,7 +471,7 @@ namespace Demo.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("LockedUntil");
 
-                    b.ToTable("OutboxMessage");
+                    b.ToTable("OutboxMessage", "demo");
                 });
 
             modelBuilder.Entity("Demo.Domain.Role.Permission", b =>
@@ -428,7 +501,7 @@ namespace Demo.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("PermissionGroupId");
 
-                    b.ToTable("Permission");
+                    b.ToTable("Permission", "demo");
 
                     b.HasData(
                         new
@@ -538,7 +611,7 @@ namespace Demo.Infrastructure.Persistence.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("PermissionGroup");
+                    b.ToTable("PermissionGroup", "demo");
 
                     b.HasData(
                         new
@@ -556,7 +629,7 @@ namespace Demo.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = new Guid("6fd39917-5f96-472d-ac69-d2a8c56880b7"),
-                            Name = "FeatureFlags",
+                            Name = "FeatureFlagSettings",
                             xmin = 0u
                         },
                         new
@@ -589,7 +662,7 @@ namespace Demo.Infrastructure.Persistence.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<bool>("Deleted")
                         .ValueGeneratedOnAdd()
@@ -600,7 +673,7 @@ namespace Demo.Infrastructure.Persistence.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("ExternalId")
                         .IsRequired()
@@ -611,7 +684,7 @@ namespace Demo.Infrastructure.Persistence.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<DateTime?>("LastModifiedOn")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -628,7 +701,7 @@ namespace Demo.Infrastructure.Persistence.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Role");
+                    b.ToTable("Role", "demo");
                 });
 
             modelBuilder.Entity("Demo.Domain.Role.RolePermission", b =>
@@ -643,7 +716,7 @@ namespace Demo.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("PermissionId");
 
-                    b.ToTable("RolePermission");
+                    b.ToTable("RolePermission", "demo");
                 });
 
             modelBuilder.Entity("Demo.Domain.User.User", b =>
@@ -660,7 +733,7 @@ namespace Demo.Infrastructure.Persistence.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<bool>("Deleted")
                         .ValueGeneratedOnAdd()
@@ -671,7 +744,7 @@ namespace Demo.Infrastructure.Persistence.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -703,7 +776,7 @@ namespace Demo.Infrastructure.Persistence.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<DateTime?>("LastModifiedOn")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("MiddleName")
                         .HasMaxLength(50)
@@ -725,7 +798,7 @@ namespace Demo.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("Fullname");
 
-                    b.ToTable("User");
+                    b.ToTable("User", "demo");
                 });
 
             modelBuilder.Entity("Demo.Domain.User.UserRole", b =>
@@ -740,7 +813,7 @@ namespace Demo.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("UserRole");
+                    b.ToTable("UserRole", "demo");
                 });
 
             modelBuilder.Entity("Demo.Domain.UserPreferences.UserPreferences", b =>
@@ -752,13 +825,13 @@ namespace Demo.Infrastructure.Persistence.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid>("LastModifiedBy")
                         .HasColumnType("uuid");
 
                     b.Property<DateTime?>("LastModifiedOn")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<UserPreferencesPreferences>("Preferences")
                         .HasColumnType("jsonb");
@@ -770,7 +843,16 @@ namespace Demo.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("UserPreferences");
+                    b.ToTable("UserPreferences", "demo");
+                });
+
+            modelBuilder.Entity("Demo.Domain.Customer.Customer", b =>
+                {
+                    b.HasOne("Demo.Domain.Location.Location", "Address")
+                        .WithOne()
+                        .HasForeignKey("Demo.Domain.Customer.Customer", "AddressId");
+
+                    b.Navigation("Address");
                 });
 
             modelBuilder.Entity("Demo.Domain.Invoice.Invoice", b =>
@@ -809,13 +891,13 @@ namespace Demo.Infrastructure.Persistence.Migrations
             modelBuilder.Entity("Demo.Domain.Role.RolePermission", b =>
                 {
                     b.HasOne("Demo.Domain.Role.Permission", "Permission")
-                        .WithMany("Roles")
+                        .WithMany("RolePermissions")
                         .HasForeignKey("PermissionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Demo.Domain.Role.Role", "Role")
-                        .WithMany("Permissions")
+                        .WithMany("RolePermissions")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -867,7 +949,7 @@ namespace Demo.Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Demo.Domain.Role.Permission", b =>
                 {
-                    b.Navigation("Roles");
+                    b.Navigation("RolePermissions");
                 });
 
             modelBuilder.Entity("Demo.Domain.Role.PermissionGroup", b =>
@@ -877,7 +959,7 @@ namespace Demo.Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Demo.Domain.Role.Role", b =>
                 {
-                    b.Navigation("Permissions");
+                    b.Navigation("RolePermissions");
 
                     b.Navigation("UserRoles");
                 });

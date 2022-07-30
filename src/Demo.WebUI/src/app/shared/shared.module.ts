@@ -40,6 +40,7 @@ import { BackButtonDirective } from './directives/back-button.directive';
 import { CustomerIdToCustomerPipe } from './pipes/customer-id-to-customer.pipe';
 import { InvoiceStatusBadgeComponent } from './components/invoice-status-badge/invoice-status-badge.component';
 import { InlineCopyIconComponent } from './components/inline-copy-icon/inline-copy-icon.component';
+import { LocationAutocompleteFormFieldControlComponent } from './components/location-autocomplete-form-field-control/location-autocomplete-form-field-control.component';
 import { LocationIdToNamePipe } from './pipes/location-id-to-name.pipe';
 
 const components = [
@@ -59,7 +60,8 @@ const components = [
   MessageModalComponent,
   ConfirmModalComponent,
   InvoiceStatusBadgeComponent,
-  InlineCopyIconComponent
+  InlineCopyIconComponent,
+  LocationAutocompleteFormFieldControlComponent
 ];
 
 const directives = [
