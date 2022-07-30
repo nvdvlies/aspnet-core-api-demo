@@ -39,7 +39,7 @@ namespace Demo.Domain.%ENTITY%
     {
         public %ENTITY%DomainEntity(
             ILogger<%ENTITY%DomainEntity> logger,
-            ICurrentUser currentUser,
+            ICurrentUserIdProvider currentUserIdProvider,
             IDateTime dateTime,
             IDbCommand<%ENTITY%> dbCommand, 
             Lazy<IEnumerable<IDefaultValuesSetter<%ENTITY%>>> defaultValuesSetters, 
@@ -55,7 +55,7 @@ namespace Demo.Domain.%ENTITY%
             Lazy<IJsonService<%ENTITY%>> jsonService,
             Lazy<IAuditlogger<%ENTITY%>> auditlogger
         ) 
-            : base(logger, currentUser, dateTime, dbCommand, defaultValuesSetters, validators, beforeCreateHooks, afterCreateHooks, beforeUpdateHooks, afterUpdateHooks, beforeDeleteHooks, afterDeleteHooks, outboxEventCreator, outboxMessageCreator, jsonService, auditlogger)
+            : base(logger, currentUserIdProvider, dateTime, dbCommand, defaultValuesSetters, validators, beforeCreateHooks, afterCreateHooks, beforeUpdateHooks, afterUpdateHooks, beforeDeleteHooks, afterDeleteHooks, outboxEventCreator, outboxMessageCreator, jsonService, auditlogger)
         {
         }
     }

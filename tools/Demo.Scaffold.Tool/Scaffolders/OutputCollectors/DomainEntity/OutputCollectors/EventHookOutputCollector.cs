@@ -37,15 +37,15 @@ namespace Demo.Domain.%ENTITY%.Hooks
 {
     internal class %ENTITY%CreatedUpdatedDeletedEventHook : IAfterCreate<%ENTITY%>, IAfterUpdate<%ENTITY%>, IAfterDelete<%ENTITY%>
     {
-        private readonly ICurrentUser _currentUser;
+        private readonly ICurrentUserIdProvider _currentUserIdProvider;
         private readonly ICorrelationIdProvider _correlationIdProvider;
 
         public %ENTITY%CreatedUpdatedDeletedEventHook(
-            ICurrentUser currentUser,
+            ICurrentUserIdProvider currentUserIdProvider,
             ICorrelationIdProvider correlationIdProvider
         )
         {
-            _currentUser = currentUser;
+            _currentUserIdProvider = currentUserIdProvider;
             _correlationIdProvider = correlationIdProvider;
         }
 
@@ -54,13 +54,13 @@ namespace Demo.Domain.%ENTITY%.Hooks
             switch (context.EditMode)
             {
                 case EditMode.Create:
-                    await context.AddEventAsync(%ENTITY%CreatedEvent.Create(_correlationIdProvider.Id, context.Entity.Id, _currentUser.Id), cancellationToken);
+                    await context.AddEventAsync(%ENTITY%CreatedEvent.Create(_correlationIdProvider.Id, context.Entity.Id, _currentUserIdProvider.Id), cancellationToken);
                     break;
                 case EditMode.Update:
-                    await context.AddEventAsync(%ENTITY%UpdatedEvent.Create(_correlationIdProvider.Id, context.Entity.Id, _currentUser.Id), cancellationToken);
+                    await context.AddEventAsync(%ENTITY%UpdatedEvent.Create(_correlationIdProvider.Id, context.Entity.Id, _currentUserIdProvider.Id), cancellationToken);
                     break;
                 case EditMode.Delete:
-                    await context.AddEventAsync(%ENTITY%DeletedEvent.Create(_correlationIdProvider.Id, context.Entity.Id, _currentUser.Id), cancellationToken);
+                    await context.AddEventAsync(%ENTITY%DeletedEvent.Create(_correlationIdProvider.Id, context.Entity.Id, _currentUserIdProvider.Id), cancellationToken);
                     break;
             }
         }
