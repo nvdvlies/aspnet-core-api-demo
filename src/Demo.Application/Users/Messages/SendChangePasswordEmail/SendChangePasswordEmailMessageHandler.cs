@@ -5,7 +5,7 @@ using Demo.Domain.User.Interfaces;
 using Demo.Messages.Email;
 using MediatR;
 
-namespace Demo.Application.CurrentUser.Messages.SendChangePasswordEmail;
+namespace Demo.Application.Users.Messages.SendChangePasswordEmail;
 
 public class SendChangePasswordEmailMessageHandler : IRequestHandler<SendChangePasswordEmailMessage, Unit>
 {
