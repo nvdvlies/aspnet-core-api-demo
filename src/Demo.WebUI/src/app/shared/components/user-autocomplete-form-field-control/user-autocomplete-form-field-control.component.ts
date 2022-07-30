@@ -13,7 +13,8 @@ import { MatFormFieldControl } from '@angular/material/form-field';
 import { ApiUsersClient, UserLookupOrderByEnum } from '@api/api.generated.clients';
 import {
   AutocompleteMatFormFieldControlBase,
-  AutocompleteOption
+  AutocompleteOption,
+  IAutocompleteOption
 } from '@shared/base/autocomplete-mat-form-field-control-base';
 import { UserLookupService } from '@shared/services/user-lookup.service';
 import { map } from 'rxjs';
@@ -33,7 +34,7 @@ import { map } from 'rxjs';
     }
   ]
 })
-export class UserAutocompleteFormFieldControlComponent extends AutocompleteMatFormFieldControlBase {
+export class UserAutocompleteFormFieldControlComponent extends AutocompleteMatFormFieldControlBase<IAutocompleteOption> {
   constructor(
     @Optional() elementRef: ElementRef<HTMLElement>,
     @Optional() focusMonitor: FocusMonitor,

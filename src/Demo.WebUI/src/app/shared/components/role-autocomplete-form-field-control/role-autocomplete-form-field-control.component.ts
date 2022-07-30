@@ -13,7 +13,8 @@ import { MatFormFieldControl } from '@angular/material/form-field';
 import { ApiRolesClient, RoleLookupOrderByEnum } from '@api/api.generated.clients';
 import {
   AutocompleteMatFormFieldControlBase,
-  AutocompleteOption
+  AutocompleteOption,
+  IAutocompleteOption
 } from '@shared/base/autocomplete-mat-form-field-control-base';
 import { RoleLookupService } from '@shared/services/role-lookup.service';
 import { map } from 'rxjs';
@@ -33,7 +34,7 @@ import { map } from 'rxjs';
     }
   ]
 })
-export class RoleAutocompleteFormFieldControlComponent extends AutocompleteMatFormFieldControlBase {
+export class RoleAutocompleteFormFieldControlComponent extends AutocompleteMatFormFieldControlBase<IAutocompleteOption> {
   constructor(
     @Optional() elementRef: ElementRef<HTMLElement>,
     @Optional() focusMonitor: FocusMonitor,

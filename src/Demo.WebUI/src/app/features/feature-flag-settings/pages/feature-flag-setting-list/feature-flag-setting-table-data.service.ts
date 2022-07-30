@@ -15,14 +15,14 @@ import {
   FeatureFlagSettingListPageSettingsService
 } from './feature-flag-setting-list-page-settings.service';
 import { FeatureFlag } from '@shared/enums/feature-flag.enum';
-import { UserFeatureFlagService } from '@shared/services/user-feature-flag.service';
 
 export declare type FeatureFlagSettingSortColumn =
   | 'name'
   | 'description'
   | 'enabledForAll'
   | 'enabledForUsers'
-  | 'enabledForCurrentUser'
+  | 'createdOn'
+  | 'lastModifiedOn'
   | undefined;
 
 export class FeatureFlagSettingTableFilterCriteria
@@ -48,7 +48,8 @@ export interface IFeatureFlagSettingsTableRow {
   description?: string | undefined;
   enabledForAll: boolean;
   enabledForUsers?: string[] | undefined;
-  enabledForCurrentUser: boolean;
+  createdOn?: Date | undefined;
+  lastModifiedOn?: Date | undefined;
 }
 
 @Injectable()
@@ -74,8 +75,7 @@ export class FeatureFlagSettingTableDataService extends TableDataBase<IFeatureFl
 
   constructor(
     private readonly featureFlagSettingsStoreService: FeatureFlagSettingsStoreService,
-    private readonly featureFlagSettingListPageSettingsService: FeatureFlagSettingListPageSettingsService,
-    private readonly userFeatureFlagService: UserFeatureFlagService
+    private readonly featureFlagSettingListPageSettingsService: FeatureFlagSettingListPageSettingsService
   ) {
     super();
     const pageSettings = this.featureFlagSettingListPageSettingsService.settings;
@@ -104,7 +104,8 @@ export class FeatureFlagSettingTableDataService extends TableDataBase<IFeatureFl
             enabledForUsers: persistedFeatureFlag?.enabledForAll
               ? []
               : persistedFeatureFlag?.enabledForUsers,
-            enabledForCurrentUser: this.userFeatureFlagService.isEnabled(value)
+            createdOn: persistedFeatureFlag?.createdOn,
+            lastModifiedOn: persistedFeatureFlag?.lastModifiedOn
           };
 
           return featureFlagSettingsTableRow;

@@ -1,5 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { CacheBase } from '@shared/base/cache-base';
+import { StringUtils } from '@shared/utils/string.utils';
 import { map, Observable, of, Subject, takeUntil, tap } from 'rxjs';
 
 export interface ILookupItem {
@@ -9,7 +10,7 @@ export interface ILookupItem {
 @Injectable()
 export abstract class LookupBase<T extends ILookupItem> extends CacheBase<T> implements OnDestroy {
   protected abstract lookupFunction: (ids: string[]) => Observable<T[]>;
-  protected abstract itemUpdatedEvent$: Observable<string>;
+  protected abstract itemUpdatedEvent$: Observable<string> | undefined;
 
   private readonly onDestroy = new Subject<void>();
   private onDestroy$ = this.onDestroy.asObservable();
@@ -22,7 +23,7 @@ export abstract class LookupBase<T extends ILookupItem> extends CacheBase<T> imp
 
   private subscribeToItemUpdatedEvent(): void {
     if (!this.isSubscribedToUpdateEvents) {
-      this.itemUpdatedEvent$.pipe(takeUntil(this.onDestroy$)).subscribe((id) => {
+      this.itemUpdatedEvent$?.pipe(takeUntil(this.onDestroy$)).subscribe((id) => {
         this.removeFromCache(id);
       });
       this.isSubscribedToUpdateEvents = true;
@@ -30,6 +31,9 @@ export abstract class LookupBase<T extends ILookupItem> extends CacheBase<T> imp
   }
 
   public getById(id: string, skipCache: boolean = false): Observable<T | undefined> {
+    if (StringUtils.isEmptyGuid(id)) {
+      return of(undefined);
+    }
     this.subscribeToItemUpdatedEvent();
     const itemInCache = !skipCache
       ? this.cache.value.find(
@@ -51,6 +55,10 @@ export abstract class LookupBase<T extends ILookupItem> extends CacheBase<T> imp
   }
 
   public getByIds(ids: string[], skipCache: boolean = false): Observable<T[]> {
+    ids = ids.slice().filter((id) => !StringUtils.isEmptyGuid(id));
+    if (ids.length === 0) {
+      return of([]);
+    }
     this.subscribeToItemUpdatedEvent();
     const itemsInCache = !skipCache
       ? this.cache.value.filter((item) =>

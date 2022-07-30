@@ -9,7 +9,7 @@ body {
 }
 
 .content-container {
-  margin: 0 8px;
+  margin: 0 4px;
 }
 
 .page-load-error-container {
@@ -46,6 +46,12 @@ body {
   background-color: #ffffff !important;
 }
 
+th.mat-header-cell:last-of-type,
+td.mat-cell:last-of-type,
+td.mat-footer-cell:last-of-type {
+  padding-right: 8px !important;
+}
+
 .mat-header-row,
 .mat-row {
   height: 27px !important;
@@ -54,6 +60,20 @@ body {
 .mat-row .mat-icon {
   font-size: 21px !important;
   vertical-align: middle !important;
+  color: #6b7280;
+}
+
+.mat-row .mat-icon-button {
+  width: 25px !important;
+  height: 25px !important;
+  font-size: 20px !important;
+  vertical-align: middle !important;
+  line-height: 20px;
+  color: #6b7280;
+}
+
+.mat-row .mat-icon-button:hover {
+  background-color: #e5e7eb !important;
 }
 
 .mat-form-field-appearance-fill .mat-form-field-infix {
@@ -74,6 +94,14 @@ body {
   bottom: 1em !important;
 }
 
+.form-field-no-subscript .mat-form-field-wrapper {
+  padding-bottom: 0.5em !important;
+}
+
+.form-field-no-subscript .mat-form-field-underline {
+  bottom: 0.5em !important;
+}
+
 th.mat-header-cell:first-of-type,
 td.mat-cell:first-of-type,
 td.mat-footer-cell:first-of-type {
@@ -86,4 +114,23 @@ td.mat-footer-cell:first-of-type {
 
 .mat-form-field-appearance-fill.mat-form-field-disabled .mat-form-field-label {
   color: rgba(0, 0, 0, 0.6) !important;
+}
+
+span .copy-icon-wrapper,
+.copy-text .copy-icon-wrapper {
+  opacity: 0;
+}
+
+span:hover .copy-icon-wrapper,
+.copy-text:hover .copy-icon-wrapper {
+  opacity: 1;
+}
+
+.copy-icon {
+  vertical-align: middle !important;
+  color: #9ca3af;
+}
+
+.copy-icon:hover {
+  color: #03a9f4;
 }

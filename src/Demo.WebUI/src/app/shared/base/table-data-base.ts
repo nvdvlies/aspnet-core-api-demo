@@ -27,7 +27,7 @@ export class TableFilterCriteria implements ITableFilterCriteria {
 
   constructor(pageSize?: number) {
     this.pageIndex = 0;
-    this.pageSize = pageSize ?? 10;
+    this.pageSize = pageSize ?? 25;
   }
 }
 
@@ -209,7 +209,7 @@ export abstract class TableDataBase<T extends ITableDataSearchResultItem> {
           const result: TableDataSearchResult<T> = {
             items: [item],
             pageIndex: 0,
-            pageSize: this.criteria.value?.pageSize ?? 10,
+            pageSize: this.criteria.value?.pageSize ?? 25,
             totalItems: 1,
             totalPages: 1,
             hasPreviousPage: false,

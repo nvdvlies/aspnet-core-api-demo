@@ -8,11 +8,11 @@
     </app-page-header>
 
     <div class="content-container">
-      <mat-card class="pl-3 pr-3 pb-0 pt-3 bg-white h-full">
+      <mat-card class="pl-1.5 pr-1.5 pt-1.5 pb-0 bg-white h-full">
         <div appTableFilterContainer [filterCriteria]="vm.criteria" (filterChange)="search($event)">
           <div class="flex gap-2">
             <div class="grow">
-              <mat-form-field appearance="fill" class="w-full">
+              <mat-form-field appearance="fill" class="w-full form-field-no-subscript">
                 <mat-label>Search</mat-label>
                 <input
                   appTableFilter
@@ -39,7 +39,7 @@
               </mat-form-field>
             </div>
             <div class="flex-none">
-              <mat-form-field appearance="fill">
+              <mat-form-field appearance="fill" class="form-field-no-subscript">
                 <mat-label>Status</mat-label>
                 <mat-select appTableFilter [formControl]="invoiceStatus">
                   <mat-option
@@ -68,12 +68,16 @@
               <ng-container matColumnDef="InvoiceNumber">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Number</th>
                 <td mat-cell *matCellDef="let row" class="w-40">
-                  <app-highlight
-                    [value]="row.invoiceNumber"
-                    [highlight]="searchTerm.value"
-                  ></app-highlight>
+                  <span>
+                    <app-highlight
+                      [value]="row.invoiceNumber"
+                      [highlight]="searchTerm.value"
+                    ></app-highlight>
+                    <app-inline-copy-icon [value]="row.invoiceNumber"></app-inline-copy-icon>
+                  </span>
                 </td>
               </ng-container>
+
               <ng-container matColumnDef="CustomerName">
                 <th mat-header-cell *matHeaderCellDef disableClear>Customer</th>
                 <td mat-cell *matCellDef="let row">
@@ -83,6 +87,7 @@
                   ></app-highlight>
                 </td>
               </ng-container>
+
               <ng-container matColumnDef="InvoiceDate">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Date</th>
                 <td mat-cell *matCellDef="let row">
@@ -107,11 +112,11 @@
               <ng-container matColumnDef="Status">
                 <th mat-header-cell *matHeaderCellDef disableClear>Status</th>
                 <td mat-cell *matCellDef="let row">
-                  {{ row.status | invoiceStatusEnumToName }}
+                  <app-invoice-status-badge [status]="row.status"></app-invoice-status-badge>
                 </td>
               </ng-container>
 
-              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
               <tr
                 mat-row
                 *matRowDef="let row; let i = index; columns: displayedColumns"

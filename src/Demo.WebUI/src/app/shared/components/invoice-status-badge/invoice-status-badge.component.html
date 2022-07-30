@@ -1,0 +1,12 @@
+<ng-container *ngIf="status != null">
+  <span
+    class="badge"
+    [ngClass]="{
+      draft: status === InvoiceStatusEnum.Draft,
+      sent: status === InvoiceStatusEnum.Sent,
+      paid: status === InvoiceStatusEnum.Paid,
+      cancelled: status === InvoiceStatusEnum.Cancelled
+    }"
+    >{{ status | invoiceStatusEnumToName }}</span
+  >
+</ng-container>

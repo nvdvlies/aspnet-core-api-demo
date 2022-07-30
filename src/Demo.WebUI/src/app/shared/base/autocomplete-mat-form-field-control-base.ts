@@ -27,8 +27,8 @@ import {
 import { MatOptionSelectionChange } from '@angular/material/core';
 import { MatInput } from '@angular/material/input';
 
-export interface ViewModel {
-  options: AutocompleteOption[];
+export interface ViewModel<T> {
+  options: T[];
   isLookupOngoing: boolean;
   isSearching: boolean;
 }
@@ -37,6 +37,7 @@ export interface IAutocompleteOption {
   id: string;
   label: string;
 }
+
 export class AutocompleteOption implements IAutocompleteOption {
   constructor(public id: string, public label: string) {}
 }
@@ -45,21 +46,22 @@ export class AutocompleteOption implements IAutocompleteOption {
   template: ''
 })
 /* eslint-disable-next-line @angular-eslint/component-class-suffix */
-export abstract class AutocompleteMatFormFieldControlBase
+export abstract class AutocompleteMatFormFieldControlBase<T extends IAutocompleteOption>
   extends MatFormFieldControlBase<string>
   implements OnInit
 {
   @ViewChild(MatInput) matInput!: MatInput;
 
   @Output()
-  public optionSelected = new EventEmitter<IAutocompleteOption>();
+  public optionSelected = new EventEmitter<T>();
 
-  protected abstract searchFunction: (
-    searchTerm: string | undefined
-  ) => Observable<IAutocompleteOption[]>;
-  protected abstract lookupFunction: (id: string) => Observable<IAutocompleteOption | undefined>;
+  @Output()
+  public optionCleared = new EventEmitter();
 
-  private readonly options = new BehaviorSubject<IAutocompleteOption[]>([]);
+  protected abstract searchFunction: (searchTerm: string | undefined) => Observable<T[]>;
+  protected abstract lookupFunction: (id: string) => Observable<T | undefined>;
+
+  private readonly options = new BehaviorSubject<T[]>([]);
   private readonly isLookupOngoing = new BehaviorSubject<boolean>(false);
   private readonly isSearching = new BehaviorSubject<boolean>(false);
 
@@ -67,14 +69,14 @@ export abstract class AutocompleteMatFormFieldControlBase
   public isLookupOngoing$ = this.isLookupOngoing.asObservable();
   public isSearching$ = this.isSearching.asObservable();
 
-  public vm$: Observable<ViewModel> = combineLatest([
+  public vm$: Observable<ViewModel<T>> = combineLatest([
     this.options$,
     this.isLookupOngoing$,
     this.isSearching$
   ]).pipe(
     debounceTime(0),
     map(([options, isLookupOngoing, isSearching]) => {
-      const vm: ViewModel = {
+      const vm: ViewModel<T> = {
         options,
         isLookupOngoing,
         isSearching
@@ -85,11 +87,11 @@ export abstract class AutocompleteMatFormFieldControlBase
 
   public searchFormControl = new UntypedFormControl(null);
 
-  private _selectedOption: IAutocompleteOption | undefined;
-  private get selectedOption(): IAutocompleteOption | undefined {
+  private _selectedOption: T | undefined;
+  private get selectedOption(): T | undefined {
     return this._selectedOption;
   }
-  private set selectedOption(value: IAutocompleteOption | undefined) {
+  private set selectedOption(value: T | undefined) {
     this._selectedOption = value;
   }
 
@@ -178,7 +180,7 @@ export abstract class AutocompleteMatFormFieldControlBase
     }
   }
 
-  public onSelect(event: MatOptionSelectionChange, option: IAutocompleteOption): void {
+  public onSelect(event: MatOptionSelectionChange, option: T): void {
     if (event.isUserInput) {
       this.selectedOption = option;
       this.searchFormControl.setValue(option.label, { emitEvent: false });
@@ -190,6 +192,7 @@ export abstract class AutocompleteMatFormFieldControlBase
   public clearSearchField(): void {
     this.selectedOption = undefined;
     this.value = null;
+    this.optionCleared.next(null);
   }
 
   public focus(): void {

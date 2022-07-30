@@ -42,7 +42,8 @@ export class FeatureFlagSettingListComponent implements OnInit, OnDestroy {
     'description',
     'enabledForAll',
     'enabledForUsers',
-    'enabledForCurrentUser'
+    'createdOn',
+    'lastModifiedOn'
   ];
   public dataSource!: FeatureFlagSettingTableDataSource;
   public searchTerm = this.featureFlagSettingTableDataService.searchTerm;

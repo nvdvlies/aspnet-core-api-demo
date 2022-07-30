@@ -1,0 +1,30 @@
+.badge {
+  padding: 0.2em 0.45em;
+  text-align: center;
+  border-radius: 0.23em;
+  font-size: 0.85em;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+  vertical-align: baseline;
+}
+
+.draft {
+  background-color: #e2e8f0;
+  color: #1e293b;
+}
+
+.sent {
+  background-color: #22d3ee;
+  color: white;
+}
+
+.paid {
+  background-color: #4ade80;
+  color: white;
+}
+
+.cancelled {
+  background-color: #fb7185;
+  color: white;
+}

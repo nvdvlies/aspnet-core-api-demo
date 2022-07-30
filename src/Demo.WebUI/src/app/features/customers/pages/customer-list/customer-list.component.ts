@@ -7,11 +7,10 @@ import {
   OnInit,
   QueryList,
   ViewChild,
-  ViewChildren,
-  ViewContainerRef
+  ViewChildren
 } from '@angular/core';
-import { Location, PlatformLocation } from '@angular/common';
-import { BehaviorSubject, combineLatest, map, Observable, tap } from 'rxjs';
+import { Location } from '@angular/common';
+import { combineLatest, map, Observable, tap } from 'rxjs';
 import { CustomerTableDataSource } from '@customers/pages/customer-list/customer-table-datasource';
 import {
   CustomerTableDataContext,
@@ -37,7 +36,7 @@ export class CustomerListComponent implements OnInit, OnDestroy {
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator | undefined;
   @ViewChildren('tableRows', { read: ElementRef }) tableRows: QueryList<ElementRef> | undefined;
 
-  public displayedColumns = ['code', 'name'];
+  public displayedColumns = ['code', 'name', 'address'];
   public dataSource!: CustomerTableDataSource;
   public searchTerm = this.customerTableDataService.searchTerm;
 

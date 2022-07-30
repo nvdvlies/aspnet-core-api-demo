@@ -37,6 +37,10 @@ import { IfPermissionGrantedDirective } from './directives/if-permission-granted
 import { IfPermissionDeniedDirective } from './directives/if-permission-denied.directive';
 import { IfAnyPermissionGrantedDirective } from './directives/if-any-permission-granted.directive';
 import { BackButtonDirective } from './directives/back-button.directive';
+import { CustomerIdToCustomerPipe } from './pipes/customer-id-to-customer.pipe';
+import { InvoiceStatusBadgeComponent } from './components/invoice-status-badge/invoice-status-badge.component';
+import { InlineCopyIconComponent } from './components/inline-copy-icon/inline-copy-icon.component';
+import { LocationIdToNamePipe } from './pipes/location-id-to-name.pipe';
 
 const components = [
   PageHeaderComponent,
@@ -53,7 +57,9 @@ const components = [
   HighlightComponent,
   AuditlogItemComponent,
   MessageModalComponent,
-  ConfirmModalComponent
+  ConfirmModalComponent,
+  InvoiceStatusBadgeComponent,
+  InlineCopyIconComponent
 ];
 
 const directives = [
@@ -79,7 +85,9 @@ const pipes = [
   RoleIdsToNamesPipe,
   AuditlogItemValuePipe,
   InvoiceStatusEnumToNamePipe,
-  PermissionIdsToNamesPipe
+  PermissionIdsToNamesPipe,
+  CustomerIdToCustomerPipe,
+  LocationIdToNamePipe
 ];
 
 @NgModule({

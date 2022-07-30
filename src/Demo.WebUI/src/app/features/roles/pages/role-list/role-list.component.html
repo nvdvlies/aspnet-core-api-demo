@@ -5,9 +5,9 @@
     </app-page-header>
 
     <div class="content-container">
-      <mat-card class="pl-3 pr-3 pb-0 pt-3 bg-white h-full">
+      <mat-card class="pl-1.5 pr-1.5 pt-1.5 pb-0 bg-white h-full">
         <div appTableFilterContainer [filterCriteria]="vm.criteria" (filterChange)="search($event)">
-          <mat-form-field appearance="fill" class="w-full">
+          <mat-form-field appearance="fill" class="w-full form-field-no-subscript">
             <mat-label>Search</mat-label>
             <input
               appTableFilter
@@ -52,7 +52,7 @@
                 </td>
               </ng-container>
 
-              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
               <tr
                 mat-row
                 *matRowDef="let row; let i = index; columns: displayedColumns"

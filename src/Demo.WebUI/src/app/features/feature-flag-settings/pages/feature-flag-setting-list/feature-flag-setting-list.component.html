@@ -2,9 +2,9 @@
   <ng-container *ngIf="!vm.isLoadingForFirstTime; else loading">
     <app-page-header headerTitle="Feature flags" [showButtonBar]="false"></app-page-header>
     <div class="content-container">
-      <mat-card class="pl-3 pr-3 pb-0 mt-1 bg-white h-full">
+      <mat-card class="pl-1.5 pr-1.5 pt-1.5 pb-0 mt-1.5 bg-white h-full">
         <div appTableFilterContainer [filterCriteria]="vm.criteria" (filterChange)="search($event)">
-          <mat-form-field appearance="fill" class="w-full">
+          <mat-form-field appearance="fill" class="w-full form-field-no-subscript">
             <mat-label>Search</mat-label>
             <input
               appTableFilter
@@ -45,7 +45,7 @@
               <ng-container matColumnDef="name">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Name</th>
                 <td mat-cell *matCellDef="let row" class="w-40">
-                  <app-highlight [value]="row.name" [highlight]="searchTerm.value"></app-highlight>
+                  <app-highlight [value]="row.name" [highlight]="searchTerm.value"> </app-highlight>
                 </td>
               </ng-container>
 
@@ -82,16 +82,23 @@
                 </td>
               </ng-container>
 
-              <ng-container matColumnDef="enabledForCurrentUser">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>
-                  Enabled for current user
-                </th>
+              <ng-container matColumnDef="createdOn">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Created on</th>
                 <td mat-cell *matCellDef="let row">
-                  <mat-icon *ngIf="row.enabledForCurrentUser">done</mat-icon>
+                  {{ row.createdOn | date: 'dd-MM-yyyy hh:mm' }}
                 </td>
               </ng-container>
 
-              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <ng-container matColumnDef="lastModifiedOn">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>
+                  Last modified on
+                </th>
+                <td mat-cell *matCellDef="let row">
+                  {{ row.lastModifiedOn | date: 'dd-MM-yyyy hh:mm' }}
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
               <tr
                 mat-row
                 *matRowDef="let row; let i = index; columns: displayedColumns"
