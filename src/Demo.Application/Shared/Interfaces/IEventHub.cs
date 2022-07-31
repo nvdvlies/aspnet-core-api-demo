@@ -19,6 +19,6 @@ public interface IEventHub :
     IFeatureFlagSettingsEventHub,
     IUserPreferencesEventHub,
     ICurrentUserEventHub,
-    ILocationEventHub// SCAFFOLD-MARKER: EVENTHUB_INTERFACE
+    ILocationEventHub // SCAFFOLD-MARKER: EVENTHUB_INTERFACE
 {
 }

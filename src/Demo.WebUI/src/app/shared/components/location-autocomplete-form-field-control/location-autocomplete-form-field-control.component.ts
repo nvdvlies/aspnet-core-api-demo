@@ -20,8 +20,8 @@ import {
   LocationSearchRequest,
   LocationSearchService
 } from '@shared/services/location-search.service';
+import { StringUtils } from '@shared/utils/string.utils';
 import { map } from 'rxjs';
-import { v4 as uuidv4 } from 'uuid';
 
 export interface ILocationAutocompleteOption extends ILocationDto, IAutocompleteOption {}
 
@@ -61,7 +61,7 @@ export class LocationAutocompleteFormFieldControlComponent extends AutocompleteM
         (response) =>
           response.locations?.map((location) => {
             const autocompleteOption: ILocationAutocompleteOption = {
-              id: uuidv4(),
+              id: StringUtils.EmptyGuid,
               label: location.displayName!,
               ...location
             };

@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Demo.Common.Interfaces;
 using Demo.Domain.Customer.Interfaces;
 using Demo.Domain.Shared.DomainEntity;
 using Demo.Domain.Shared.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.Extensions.Logging;
 
 namespace Demo.Domain.Customer;
@@ -34,4 +37,7 @@ internal class CustomerDomainEntity : DomainEntity<Customer>, ICustomerDomainEnt
             outboxEventCreator, outboxMessageCreator, jsonService, auditlogger)
     {
     }
+
+    protected override Func<IQueryable<Customer>, IIncludableQueryable<Customer, object>> Includes => _ => _
+        .Include(customer => customer.Address);
 }

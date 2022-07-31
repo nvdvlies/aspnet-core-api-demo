@@ -12,8 +12,6 @@ public class UpdateCustomerCommand : ICommand, IRequest<Unit>
     // ReSharper disable once InconsistentNaming
     public uint xmin { get; set; }
     public string Name { get; set; }
-
-    public Guid? AddressId { get; set; }
     public UpdateCustomerLocationDto Address { get; set; }
 
     public void SetCustomerId(Guid id)

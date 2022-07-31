@@ -4,7 +4,6 @@ using Demo.Domain.Auditlog;
 using Demo.Domain.Auditlog.Interfaces;
 using Demo.Domain.Customer;
 using Demo.Domain.Location;
-using Demo.Domain.Shared.Entities;
 using Demo.Domain.Shared.Interfaces;
 using Demo.Infrastructure.Auditlogging.Shared;
 

@@ -24,5 +24,4 @@ public static class HostEnvironmentExtensions
 
         return hostEnvironment.IsEnvironment("LocalIntegrationTest");
     }
-
 }

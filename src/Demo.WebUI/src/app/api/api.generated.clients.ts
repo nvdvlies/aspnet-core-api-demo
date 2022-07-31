@@ -5330,7 +5330,6 @@ export interface ICreateCustomerResponse {
 
 export class CreateCustomerCommand implements ICreateCustomerCommand {
     name?: string | undefined;
-    addressId?: string | undefined;
     address?: CreateCustomerLocationDto | undefined;
 
     constructor(data?: ICreateCustomerCommand) {
@@ -5345,7 +5344,6 @@ export class CreateCustomerCommand implements ICreateCustomerCommand {
     init(_data?: any) {
         if (_data) {
             this.name = _data["name"];
-            this.addressId = _data["addressId"];
             this.address = _data["address"] ? CreateCustomerLocationDto.fromJS(_data["address"]) : <any>undefined;
         }
     }
@@ -5360,7 +5358,6 @@ export class CreateCustomerCommand implements ICreateCustomerCommand {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["name"] = this.name;
-        data["addressId"] = this.addressId;
         data["address"] = this.address ? this.address.toJSON() : <any>undefined;
         return data;
     }
@@ -5375,7 +5372,6 @@ export class CreateCustomerCommand implements ICreateCustomerCommand {
 
 export interface ICreateCustomerCommand {
     name?: string | undefined;
-    addressId?: string | undefined;
     address?: CreateCustomerLocationDto | undefined;
 }
 
@@ -5453,7 +5449,6 @@ export interface ICreateCustomerLocationDto {
 export class UpdateCustomerCommand implements IUpdateCustomerCommand {
     xmin!: number;
     name?: string | undefined;
-    addressId?: string | undefined;
     address?: UpdateCustomerLocationDto | undefined;
 
     constructor(data?: IUpdateCustomerCommand) {
@@ -5469,7 +5464,6 @@ export class UpdateCustomerCommand implements IUpdateCustomerCommand {
         if (_data) {
             this.xmin = _data["xmin"];
             this.name = _data["name"];
-            this.addressId = _data["addressId"];
             this.address = _data["address"] ? UpdateCustomerLocationDto.fromJS(_data["address"]) : <any>undefined;
         }
     }
@@ -5485,7 +5479,6 @@ export class UpdateCustomerCommand implements IUpdateCustomerCommand {
         data = typeof data === 'object' ? data : {};
         data["xmin"] = this.xmin;
         data["name"] = this.name;
-        data["addressId"] = this.addressId;
         data["address"] = this.address ? this.address.toJSON() : <any>undefined;
         return data;
     }
@@ -5501,7 +5494,6 @@ export class UpdateCustomerCommand implements IUpdateCustomerCommand {
 export interface IUpdateCustomerCommand {
     xmin: number;
     name?: string | undefined;
-    addressId?: string | undefined;
     address?: UpdateCustomerLocationDto | undefined;
 }
 

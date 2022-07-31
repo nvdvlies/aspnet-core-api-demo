@@ -28,7 +28,8 @@ public class LocationLookupQueryHandler : IRequestHandler<LocationLookupQuery, L
         _mapper = mapper;
     }
 
-    public async Task<LocationLookupQueryResult> Handle(LocationLookupQuery request, CancellationToken cancellationToken)
+    public async Task<LocationLookupQueryResult> Handle(LocationLookupQuery request,
+        CancellationToken cancellationToken)
     {
         var query = _query.AsQueryable();
 
@@ -57,7 +58,10 @@ public class LocationLookupQueryHandler : IRequestHandler<LocationLookupQuery, L
 
         return new LocationLookupQueryResult
         {
-            PageIndex = request.PageIndex, PageSize = request.PageSize, TotalItems = totalItems, Locations = locations
+            PageIndex = request.PageIndex,
+            PageSize = request.PageSize,
+            TotalItems = totalItems,
+            Locations = locations
         };
     }
 }

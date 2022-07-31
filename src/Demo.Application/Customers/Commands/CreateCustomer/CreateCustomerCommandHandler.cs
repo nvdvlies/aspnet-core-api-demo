@@ -28,15 +28,16 @@ public class CreateCustomerCommandHandler : IRequestHandler<CreateCustomerComman
     public async Task<CreateCustomerResponse> Handle(CreateCustomerCommand request,
         CancellationToken cancellationToken)
     {
-        if (request.AddressId.HasValue)
+        await _customerDomainEntity.NewAsync(cancellationToken);
+
+        if (!string.IsNullOrEmpty(request.Address?.DisplayName))
         {
             await _locationDomainEntity.NewAsync(cancellationToken);
-            _locationDomainEntity.Entity.Id = request.AddressId.Value;
             _locationDomainEntity.MapFrom(request.Address, _mapper);
             await _locationDomainEntity.CreateAsync(cancellationToken);
-        }
 
-        await _customerDomainEntity.NewAsync(cancellationToken);
+            _customerDomainEntity.Entity.AddressId = _locationDomainEntity.Entity.Id;
+        }
 
         _customerDomainEntity.MapFrom(request, _mapper);
 

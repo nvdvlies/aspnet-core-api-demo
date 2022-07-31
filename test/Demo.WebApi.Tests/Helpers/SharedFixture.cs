@@ -19,10 +19,6 @@ public class SharedFixture : ICollectionFixture<CustomWebApplicationFactory>
 {
     internal readonly string AccessToken;
     internal readonly Fixture AutoFixture;
-    internal readonly HttpClient Client;
-    internal readonly EnvironmentSettings EnvironmentSettings;
-    internal readonly CustomWebApplicationFactory Factory;
-    internal readonly HubConnection HubConnection;
 
     public readonly Checkpoint Checkpoint = new()
     {
@@ -31,6 +27,11 @@ public class SharedFixture : ICollectionFixture<CustomWebApplicationFactory>
         WithReseed = true,
         DbAdapter = DbAdapter.Postgres
     };
+
+    internal readonly HttpClient Client;
+    internal readonly EnvironmentSettings EnvironmentSettings;
+    internal readonly CustomWebApplicationFactory Factory;
+    internal readonly HubConnection HubConnection;
 
     public SharedFixture()
     {

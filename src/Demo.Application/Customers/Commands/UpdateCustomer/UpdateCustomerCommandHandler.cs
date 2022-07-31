@@ -29,21 +29,27 @@ public class UpdateCustomerCommandHandler : IRequestHandler<UpdateCustomerComman
     {
         await _customerDomainEntity.GetAsync(request.Id, cancellationToken);
 
-        if (request.AddressId.HasValue)
+        if (!string.IsNullOrEmpty(request.Address?.DisplayName))
         {
             if (_customerDomainEntity.Entity.AddressId.HasValue)
             {
-                await _locationDomainEntity.GetAsync(request.AddressId.Value, cancellationToken);
+                await _locationDomainEntity.GetAsync(_customerDomainEntity.Entity.AddressId.Value, cancellationToken);
                 _locationDomainEntity.MapFrom(request.Address, _mapper);
                 await _locationDomainEntity.UpdateAsync(cancellationToken);
             }
             else
             {
                 await _locationDomainEntity.NewAsync(cancellationToken);
-                _locationDomainEntity.Entity.Id = request.AddressId.Value;
                 _locationDomainEntity.MapFrom(request.Address, _mapper);
                 await _locationDomainEntity.CreateAsync(cancellationToken);
+
+                _customerDomainEntity.Entity.AddressId = _locationDomainEntity.Entity.Id;
             }
+        }
+        else
+        {
+            _customerDomainEntity.Entity.AddressId = null;
+            _customerDomainEntity.Entity.Address = null;
         }
 
         _customerDomainEntity.MapFrom(request, _mapper);

@@ -1,10 +1,10 @@
 using System;
+using System.Collections.Generic;
 using Demo.Common.Interfaces;
-using Demo.Domain.Shared.DomainEntity;
 using Demo.Domain.Location.Interfaces;
+using Demo.Domain.Shared.DomainEntity;
 using Demo.Domain.Shared.Interfaces;
 using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
 
 namespace Demo.Domain.Location;
 
@@ -27,7 +27,9 @@ internal class LocationDomainEntity : DomainEntity<Location>, ILocationDomainEnt
         Lazy<IOutboxMessageCreator> outboxMessageCreator,
         Lazy<IJsonService<Location>> jsonService
     )
-        : base(logger, currentUserIdProvider, dateTime, dbCommand, defaultValuesSetters, validators, beforeCreateHooks, afterCreateHooks, beforeUpdateHooks, afterUpdateHooks, beforeDeleteHooks, afterDeleteHooks, outboxEventCreator, outboxMessageCreator, jsonService, null)
+        : base(logger, currentUserIdProvider, dateTime, dbCommand, defaultValuesSetters, validators, beforeCreateHooks,
+            afterCreateHooks, beforeUpdateHooks, afterUpdateHooks, beforeDeleteHooks, afterDeleteHooks,
+            outboxEventCreator, outboxMessageCreator, jsonService, null)
     {
     }
 }

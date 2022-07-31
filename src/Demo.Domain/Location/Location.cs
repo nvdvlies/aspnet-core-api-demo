@@ -3,7 +3,7 @@ using Demo.Domain.Shared.Interfaces;
 
 namespace Demo.Domain.Location;
 
-public partial class Location : AuditableEntity, IQueryableEntity
+public class Location : AuditableEntity, IQueryableEntity
 {
     public string DisplayName { get; set; }
     public string StreetName { get; set; }

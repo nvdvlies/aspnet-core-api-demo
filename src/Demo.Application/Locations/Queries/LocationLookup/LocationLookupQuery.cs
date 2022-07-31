@@ -1,8 +1,8 @@
-using Demo.Application.Shared.Interfaces;
-using MediatR;
 using System;
 using System.Web;
 using Demo.Application.Locations.Queries.LocationLookup.Dtos;
+using Demo.Application.Shared.Interfaces;
+using MediatR;
 
 namespace Demo.Application.Locations.Queries.LocationLookup;
 
