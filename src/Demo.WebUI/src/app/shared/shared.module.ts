@@ -42,6 +42,8 @@ import { InvoiceStatusBadgeComponent } from './components/invoice-status-badge/i
 import { InlineCopyIconComponent } from './components/inline-copy-icon/inline-copy-icon.component';
 import { LocationAutocompleteFormFieldControlComponent } from './components/location-autocomplete-form-field-control/location-autocomplete-form-field-control.component';
 import { LocationIdToNamePipe } from './pipes/location-id-to-name.pipe';
+import { LetDirective } from './directives/let.directive';
+import { DomainEntityWarningMessageDirective } from './directives/domain-entity-warning-message.directive';
 
 const components = [
   PageHeaderComponent,
@@ -75,7 +77,9 @@ const directives = [
   IfPermissionGrantedDirective,
   IfPermissionDeniedDirective,
   IfAnyPermissionGrantedDirective,
-  BackButtonDirective
+  BackButtonDirective,
+  LetDirective,
+  DomainEntityWarningMessageDirective
 ];
 
 const pipes = [

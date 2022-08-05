@@ -27,6 +27,7 @@ import { FeatureFlag } from '@shared/enums/feature-flag.enum';
 import { v4 as uuidv4 } from 'uuid';
 import { Permission } from '@shared/enums/permission.enum';
 import { UserPermissionService } from '@shared/services/user-permission.service';
+import { ExtendedAbstractControl } from '@domain/shared/form-controls-base';
 
 export interface IFeatureFlagSettingsDomainEntityContext
   extends IDomainEntityContext<FeatureFlagSettingsDto> {}
@@ -40,19 +41,21 @@ export class FeatureFlagSettingsDomainEntityContext
   }
 }
 
-type FeatureFlagSettingsControls = { [key in keyof IFeatureFlagSettingsDto]-?: AbstractControl };
+type FeatureFlagSettingsControls = {
+  [key in keyof IFeatureFlagSettingsDto]-?: ExtendedAbstractControl;
+};
 export type FeatureFlagSettingsFormGroup = UntypedFormGroup & {
   controls: FeatureFlagSettingsControls;
 };
 
 type FeatureFlagSettingsSettingsControls = {
-  [key in keyof IFeatureFlagSettingsSettingsDto]-?: AbstractControl;
+  [key in keyof IFeatureFlagSettingsSettingsDto]-?: ExtendedAbstractControl;
 };
 export type FeatureFlagSettingsSettingsFormGroup = UntypedFormGroup & {
   controls: FeatureFlagSettingsSettingsControls;
 };
 
-type FeatureFlagControls = { [key in keyof IFeatureFlagDto]-?: AbstractControl };
+type FeatureFlagControls = { [key in keyof IFeatureFlagDto]-?: ExtendedAbstractControl };
 export type FeatureFlagFormGroup = UntypedFormGroup & {
   controls: FeatureFlagControls;
 };
@@ -150,7 +153,7 @@ export class FeatureFlagSettingsDomainEntityService
   }
 
   private uniqueUsersValidator(): ValidatorFn {
-    return (formArray: AbstractControl): ValidationErrors | null => {
+    return (formArray: ExtendedAbstractControl): ValidationErrors | null => {
       let userIds: string[] = [];
       if (formArray instanceof UntypedFormArray) {
         for (let formControl of formArray.controls) {
@@ -234,12 +237,12 @@ export class FeatureFlagSettingsDomainEntityService
     });
   }
 
-  public override getErrorMessage(errorKey: string, errorValue: any): string | undefined {
+  public override getFormControlMessage(errorKey: string, errorValue: any): string | undefined {
     switch (errorKey) {
       case 'isDuplicateUser':
         return 'This user already exists.';
       default:
-        return super.getErrorMessage(errorKey, errorValue);
+        return super.getFormControlMessage(errorKey, errorValue);
     }
   }
 

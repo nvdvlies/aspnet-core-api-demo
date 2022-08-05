@@ -257,7 +257,7 @@ export class InvoiceDetailsComponent implements IHasForm {
       .subscribe((response: CopyInvoiceResponse) => {
         this.router
           .navigateByUrl('/', { skipLocationChange: true })
-          .then(() => this.router.navigate(['/invoices', response.id]));
+          .then(() => this.router.navigate(['/invoices', response.id], { replaceUrl: true }));
       });
   }
 

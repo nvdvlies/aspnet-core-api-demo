@@ -62,14 +62,10 @@
         <mat-icon>account_circle</mat-icon>
       </button>
       <mat-menu #accountMenu [overlapTrigger]="false" yPosition="below">
-        <button mat-menu-item routerLink="/profile">
-          <mat-icon>person</mat-icon><span>Profile</span>
-        </button>
-        <button mat-menu-item routerLink="/user-preferences">
-          <mat-icon>settings</mat-icon><span>Preferences</span>
-        </button>
+        <button mat-menu-item routerLink="/profile">Profile</button>
+        <button mat-menu-item routerLink="/user-preferences">Preferences</button>
         <mat-divider></mat-divider>
-        <button mat-menu-item (click)="logout()"><mat-icon>logout</mat-icon>Logout</button>
+        <button mat-menu-item (click)="logout()">Logout</button>
       </mat-menu>
     </div>
   </mat-toolbar>

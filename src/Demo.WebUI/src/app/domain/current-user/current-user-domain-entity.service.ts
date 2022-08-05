@@ -18,6 +18,7 @@ import {
 } from '@domain/shared/domain-entity-base';
 import { Permission } from '@shared/enums/permission.enum';
 import { UserPermissionService } from '@shared/services/user-permission.service';
+import { ExtendedAbstractControl } from '@domain/shared/form-controls-base';
 
 export interface ICurrentUserDomainEntityContext extends IDomainEntityContext<CurrentUserDto> {}
 
@@ -30,10 +31,10 @@ export class CurrentUserDomainEntityContext
   }
 }
 
-type CurrentUserControls = { [key in keyof ICurrentUserDto]-?: AbstractControl };
+type CurrentUserControls = { [key in keyof ICurrentUserDto]-?: ExtendedAbstractControl };
 export type CurrentUserFormGroup = UntypedFormGroup & { controls: CurrentUserControls };
 
-type UserRoleControls = { [key in keyof IUserRoleDto]-?: AbstractControl };
+type UserRoleControls = { [key in keyof IUserRoleDto]-?: ExtendedAbstractControl };
 export type UserRoleFormGroup = UntypedFormGroup & {
   controls: UserRoleControls;
 };

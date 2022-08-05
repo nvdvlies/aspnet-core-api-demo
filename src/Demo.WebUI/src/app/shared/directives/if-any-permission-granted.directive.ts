@@ -6,6 +6,8 @@ import { UserPermissionService } from '@shared/services/user-permission.service'
   selector: '[appIfAnyPermissionGranted]'
 })
 export class IfAnyPermissionGrantedDirective {
+  private hasView = false;
+
   constructor(
     private readonly templateRef: TemplateRef<any>,
     private readonly viewContainerRef: ViewContainerRef,
@@ -14,10 +16,12 @@ export class IfAnyPermissionGrantedDirective {
 
   @Input() set appIfAnyPermissionGranted(permissions: Array<keyof typeof Permission>) {
     const hasPermission = this.userPermissionService.hasAnyPermission(permissions);
-    if (hasPermission) {
+    if (hasPermission && !this.hasView) {
       this.viewContainerRef.createEmbeddedView(this.templateRef);
-    } else {
+      this.hasView = true;
+    } else if (this.hasView) {
       this.viewContainerRef.clear();
+      this.hasView = false;
     }
   }
 }

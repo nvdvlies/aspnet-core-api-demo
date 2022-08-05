@@ -1,5 +1,12 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { AbstractControl, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  UntypedFormControl,
+  UntypedFormGroup,
+  ValidationErrors,
+  ValidatorFn,
+  Validators
+} from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { combineLatest, Observable, of } from 'rxjs';
 import { debounceTime, map } from 'rxjs/operators';
@@ -13,6 +20,7 @@ import {
 } from '@domain/shared/domain-entity-base';
 import { Permission } from '@shared/enums/permission.enum';
 import { UserPermissionService } from '@shared/services/user-permission.service';
+import { ExtendedAbstractControl, ExtendedFormControl } from '@domain/shared/form-controls-base';
 
 export interface ICustomerDomainEntityContext extends IDomainEntityContext<CustomerDto> {}
 
@@ -25,11 +33,13 @@ export class CustomerDomainEntityContext
   }
 }
 
-type CustomerControls = { [key in keyof ICustomerDto]-?: AbstractControl };
+type CustomerControls = { [key in keyof ICustomerDto]-?: ExtendedAbstractControl } & {
+  warnings?: any;
+};
 export type CustomerFormGroup = UntypedFormGroup & { controls: CustomerControls };
 
 type LocationControls = {
-  [key in keyof ILocationDto]-?: AbstractControl;
+  [key in keyof ILocationDto]-?: ExtendedAbstractControl;
 };
 export type LocationFormGroup = UntypedFormGroup & {
   controls: LocationControls;
@@ -84,9 +94,14 @@ export class CustomerDomainEntityService
     const controls: CustomerControls = {
       id: new UntypedFormControl(super.readonlyFormState),
       code: new UntypedFormControl(super.readonlyFormState),
-      name: new UntypedFormControl(
+      name: new ExtendedFormControl(
         null,
-        [Validators.required, Validators.minLength(2), Validators.maxLength(200)],
+        [
+          Validators.required,
+          Validators.minLength(2),
+          Validators.maxLength(200),
+          this.exampleWarningValidator()
+        ],
         []
       ),
       addressId: new UntypedFormControl(null),
@@ -97,8 +112,8 @@ export class CustomerDomainEntityService
         postalCode: new UntypedFormControl(super.readonlyFormState),
         city: new UntypedFormControl(super.readonlyFormState),
         countryCode: new UntypedFormControl(super.readonlyFormState),
-        latitude: new UntypedFormControl({ value: 0, disabled: true }),
-        longitude: new UntypedFormControl({ value: 0, disabled: true })
+        latitude: new UntypedFormControl(super.readonlyFormState),
+        longitude: new UntypedFormControl(super.readonlyFormState)
       } as LocationControls) as LocationFormGroup,
       deleted: new UntypedFormControl(super.readonlyFormState),
       deletedBy: new UntypedFormControl(super.readonlyFormState),
@@ -113,7 +128,11 @@ export class CustomerDomainEntityService
   }
 
   protected instantiateNewEntity(): Observable<CustomerDto> {
-    return of(new CustomerDto());
+    const customer = new CustomerDto();
+    customer.address = new LocationDto();
+    customer.address.latitude = 0;
+    customer.address.longitude = 0;
+    return of(customer);
   }
 
   public override new(): Observable<null> {
@@ -162,5 +181,25 @@ export class CustomerDomainEntityService
       latitude: 0,
       longitude: 0
     } as ILocationDto);
+  }
+
+  private exampleWarningValidator(): ValidatorFn {
+    return (control: ExtendedAbstractControl): ValidationErrors | null => {
+      if (control.value === 'Warning') {
+        control.setWarnings?.({ nameIsWarning: true });
+      } else {
+        control.setWarnings?.(null);
+      }
+      return null;
+    };
+  }
+
+  public override getFormControlMessage(errorKey: string, errorValue: any): string | undefined {
+    switch (errorKey) {
+      case 'nameIsWarning':
+        return 'This is an example warning.';
+      default:
+        return super.getFormControlMessage(errorKey, errorValue);
+    }
   }
 }

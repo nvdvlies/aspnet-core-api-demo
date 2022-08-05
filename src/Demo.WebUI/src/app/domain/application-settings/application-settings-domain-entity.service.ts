@@ -16,6 +16,7 @@ import {
 } from '@domain/shared/domain-entity-base';
 import { Permission } from '@shared/enums/permission.enum';
 import { UserPermissionService } from '@shared/services/user-permission.service';
+import { ExtendedAbstractControl } from '@domain/shared/form-controls-base';
 
 export interface IApplicationSettingsDomainEntityContext
   extends IDomainEntityContext<ApplicationSettingsDto> {}
@@ -29,13 +30,15 @@ export class ApplicationSettingsDomainEntityContext
   }
 }
 
-type ApplicationSettingsControls = { [key in keyof IApplicationSettingsDto]-?: AbstractControl };
+type ApplicationSettingsControls = {
+  [key in keyof IApplicationSettingsDto]-?: ExtendedAbstractControl;
+};
 export type ApplicationSettingsFormGroup = UntypedFormGroup & {
   controls: ApplicationSettingsControls;
 };
 
 type ApplicationSettingsSettingsControls = {
-  [key in keyof IApplicationSettingsSettingsDto]-?: AbstractControl;
+  [key in keyof IApplicationSettingsSettingsDto]-?: ExtendedAbstractControl;
 };
 export type ApplicationSettingsSettingsFormGroup = UntypedFormGroup & {
   controls: ApplicationSettingsSettingsControls;

@@ -27,6 +27,7 @@ import {
 } from '@domain/shared/domain-entity-base';
 import { Permission } from '@shared/enums/permission.enum';
 import { UserPermissionService } from '@shared/services/user-permission.service';
+import { ExtendedAbstractControl } from '@domain/shared/form-controls-base';
 
 export interface IInvoiceDomainEntityContext extends IDomainEntityContext<InvoiceDto> {
   canEditInvoiceContent: boolean;
@@ -43,10 +44,10 @@ export class InvoiceDomainEntityContext
   }
 }
 
-type InvoiceControls = { [key in keyof IInvoiceDto]-?: AbstractControl };
+type InvoiceControls = { [key in keyof IInvoiceDto]-?: ExtendedAbstractControl };
 export type InvoiceFormGroup = UntypedFormGroup & { controls: InvoiceControls };
 
-type InvoiceLineControls = { [key in keyof IInvoiceLineDto]-?: AbstractControl };
+type InvoiceLineControls = { [key in keyof IInvoiceLineDto]-?: ExtendedAbstractControl };
 export type InvoiceLineFormGroup = UntypedFormGroup & {
   controls: InvoiceLineControls;
 };

@@ -6,6 +6,8 @@ import { UserFeatureFlagService } from '@shared/services/user-feature-flag.servi
   selector: '[appIfFeatureFlagEnabled]'
 })
 export class IfFeatureFlagEnabledDirective {
+  private hasView = false;
+
   constructor(
     private readonly templateRef: TemplateRef<any>,
     private readonly viewContainerRef: ViewContainerRef,
@@ -14,10 +16,12 @@ export class IfFeatureFlagEnabledDirective {
 
   @Input() set appIfFeatureFlagEnabled(featureFlag: keyof typeof FeatureFlag) {
     const isEnabled = this.userFeatureFlagService.isEnabled(featureFlag);
-    if (isEnabled) {
+    if (isEnabled && !this.hasView) {
       this.viewContainerRef.createEmbeddedView(this.templateRef);
-    } else {
+      this.hasView = true;
+    } else if (this.hasView) {
       this.viewContainerRef.clear();
+      this.hasView = false;
     }
   }
 }

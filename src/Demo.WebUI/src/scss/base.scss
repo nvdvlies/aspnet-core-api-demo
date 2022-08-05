@@ -54,21 +54,29 @@ td.mat-footer-cell:last-of-type {
 
 .mat-header-row,
 .mat-row {
-  height: 27px !important;
+  height: 25px !important;
+  line-height: 24px;
+}
+
+.mat-cell,
+.mat-footer-cell {
+  font-size: 14px !important;
 }
 
 .mat-row .mat-icon {
+  width: 23px !important;
+  height: 23px !important;
   font-size: 21px !important;
   vertical-align: middle !important;
   color: #6b7280;
 }
 
 .mat-row .mat-icon-button {
-  width: 25px !important;
-  height: 25px !important;
-  font-size: 20px !important;
+  width: 23px !important;
+  height: 23px !important;
+  font-size: 21px !important;
   vertical-align: middle !important;
-  line-height: 20px;
+  line-height: 21px;
   color: #6b7280;
 }
 
@@ -133,4 +141,9 @@ span:hover .copy-icon-wrapper,
 
 .copy-icon:hover {
   color: #03a9f4;
+}
+
+.mat-menu-item {
+  line-height: 32px !important;
+  height: 32px !important;
 }

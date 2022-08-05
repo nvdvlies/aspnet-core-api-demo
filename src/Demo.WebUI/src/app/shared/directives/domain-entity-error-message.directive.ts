@@ -29,7 +29,7 @@ export class DomainEntityErrorMessageDirective implements AfterViewInit {
 
     if (errors) {
       const [errorKey, errorValue] = Object.entries(errors)[0];
-      this.elementRef.nativeElement.innerHTML = this.domainEntityService.getErrorMessage(
+      this.elementRef.nativeElement.innerHTML = this.domainEntityService.getFormControlMessage(
         errorKey,
         errorValue
       );

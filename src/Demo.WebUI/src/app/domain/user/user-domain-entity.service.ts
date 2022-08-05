@@ -30,6 +30,7 @@ import {
 } from '@domain/shared/domain-entity-base';
 import { UserPermissionService } from '@shared/services/user-permission.service';
 import { Permission } from '@shared/enums/permission.enum';
+import { ExtendedAbstractControl, ExtendedFormControl } from '@domain/shared/form-controls-base';
 
 export interface IUserDomainEntityContext extends IDomainEntityContext<UserDto> {
   isSystemUser: boolean;
@@ -46,10 +47,10 @@ export class UserDomainEntityContext
   public isSystemUser: boolean = false;
 }
 
-type UserControls = { [key in keyof IUserDto]-?: AbstractControl };
+type UserControls = { [key in keyof IUserDto]-?: ExtendedAbstractControl };
 export type UserFormGroup = UntypedFormGroup & { controls: UserControls };
 
-type UserRoleControls = { [key in keyof IUserRoleDto]-?: AbstractControl };
+type UserRoleControls = { [key in keyof IUserRoleDto]-?: ExtendedAbstractControl };
 export type UserRoleFormGroup = UntypedFormGroup & {
   controls: UserRoleControls;
 };
@@ -249,7 +250,7 @@ export class UserDomainEntityService extends DomainEntityBase<UserDto> implement
   }
 
   private uniqueEmailValidator(): AsyncValidatorFn {
-    return (control: AbstractControl): Observable<ValidationErrors | null> => {
+    return (control: ExtendedAbstractControl): Observable<ValidationErrors | null> => {
       if (!control.value || !control.dirty) {
         return of(null);
       }
@@ -269,7 +270,7 @@ export class UserDomainEntityService extends DomainEntityBase<UserDto> implement
   }
 
   private uniqueRolesValidator(): ValidatorFn {
-    return (formArray: AbstractControl): ValidationErrors | null => {
+    return (formArray: ExtendedAbstractControl): ValidationErrors | null => {
       let roleIds: string[] = [];
       if (formArray instanceof UntypedFormArray) {
         for (let userRoleFormGroup of formArray.controls as UserRoleFormGroup[]) {
@@ -292,14 +293,14 @@ export class UserDomainEntityService extends DomainEntityBase<UserDto> implement
     };
   }
 
-  public override getErrorMessage(errorKey: string, errorValue: any): string | undefined {
+  public override getFormControlMessage(errorKey: string, errorValue: any): string | undefined {
     switch (errorKey) {
       case 'emailTaken':
         return 'This e-mail address is already taken.';
       case 'isDuplicateRole':
         return 'This role is already assigned.';
       default:
-        return super.getErrorMessage(errorKey, errorValue);
+        return super.getFormControlMessage(errorKey, errorValue);
     }
   }
 

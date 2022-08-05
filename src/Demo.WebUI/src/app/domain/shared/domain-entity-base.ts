@@ -95,7 +95,7 @@ export interface IDomainEntity<T> {
 
 @Injectable()
 export abstract class DomainEntityService {
-  public abstract getErrorMessage(errorKey: string, errorValue: any): string | undefined;
+  public abstract getFormControlMessage(errorKey: string, errorValue: any): string | undefined;
 }
 
 @Injectable()
@@ -427,7 +427,8 @@ export abstract class DomainEntityBase<T extends IDomainEntity<T>>
   }
 
   protected patchFormToEntity(): void {
-    this.entity.next(Object.assign(this.entity.value ?? {}, this.form.getRawValue()));
+    let entity = Object.assign(this.entity.value ?? {}, this.form.getRawValue()) as T;
+    this.entity.next(entity);
   }
 
   protected setProblemDetailsAndRethrow(
@@ -470,7 +471,7 @@ export abstract class DomainEntityBase<T extends IDomainEntity<T>>
       });
   }
 
-  public getErrorMessage(errorKey: string, errorValue: any): string | undefined {
+  public getFormControlMessage(errorKey: string, errorValue: any): string | undefined {
     switch (errorKey) {
       case 'required':
         return 'Field is required.';

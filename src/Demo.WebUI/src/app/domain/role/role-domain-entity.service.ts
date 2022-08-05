@@ -20,6 +20,7 @@ import {
 import { Permission } from '@shared/enums/permission.enum';
 import { PermissionService } from '@shared/services/permission.service';
 import { UserPermissionService } from '@shared/services/user-permission.service';
+import { ExtendedAbstractControl } from '@domain/shared/form-controls-base';
 
 export interface IRoleDomainEntityContext extends IDomainEntityContext<RoleDto> {}
 
@@ -32,7 +33,7 @@ export class RoleDomainEntityContext
   }
 }
 
-type RoleControls = { [key in keyof IRoleDto]-?: AbstractControl };
+type RoleControls = { [key in keyof IRoleDto]-?: ExtendedAbstractControl };
 export type RoleFormGroup = UntypedFormGroup & { controls: RoleControls };
 
 interface IRolePermissionControls extends IRolePermissionDto {
@@ -41,7 +42,7 @@ interface IRolePermissionControls extends IRolePermissionDto {
   checked: boolean;
 }
 
-type RolePermissionControls = { [key in keyof IRolePermissionControls]-?: AbstractControl };
+type RolePermissionControls = { [key in keyof IRolePermissionControls]-?: ExtendedAbstractControl };
 export type RolePermissionFormGroup = UntypedFormGroup & {
   controls: RolePermissionControls;
 };

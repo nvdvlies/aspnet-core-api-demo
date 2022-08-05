@@ -6,6 +6,8 @@ import { UserPermissionService } from '@shared/services/user-permission.service'
   selector: '[appIfPermissionDenied]'
 })
 export class IfPermissionDeniedDirective {
+  private hasView = false;
+
   constructor(
     private readonly templateRef: TemplateRef<any>,
     private readonly viewContainerRef: ViewContainerRef,
@@ -14,10 +16,12 @@ export class IfPermissionDeniedDirective {
 
   @Input() set appIfPermissionDenied(permission: keyof typeof Permission) {
     const hasPermission = this.userPermissionService.hasPermission(permission);
-    if (hasPermission) {
-      this.viewContainerRef.clear();
-    } else {
+    if (!hasPermission && !this.hasView) {
       this.viewContainerRef.createEmbeddedView(this.templateRef);
+      this.hasView = true;
+    } else if (this.hasView) {
+      this.viewContainerRef.clear();
+      this.hasView = false;
     }
   }
 }
