@@ -1,10 +1,10 @@
 import { Directive, HostListener, Inject, ElementRef } from '@angular/core';
 
+/* eslint-disable @angular-eslint/directive-selector */
 @Directive({
   selector:
     'input[type=text]:not(.disable-select-on-focus), input[type=email]:not(.disable-select-on-focus)'
 })
-/* eslint-disable-next-line @angular-eslint/directive-selector */
 export class SelectOnFocusDirective {
   constructor(@Inject(ElementRef) private elementRef: ElementRef) {}
 
@@ -16,3 +16,4 @@ export class SelectOnFocusDirective {
     }, 10);
   }
 }
+/* eslint-enable @angular-eslint/directive-selector */
